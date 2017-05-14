@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MediaCenter.Media
+namespace MediaCenter
 {
-    class Image : MediaItem
+    class MainWindowViewModel
     {
     }
 }

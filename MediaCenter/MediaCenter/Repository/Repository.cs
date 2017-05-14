@@ -43,8 +43,12 @@ namespace MediaCenter.Repository
 
         public async Task AddMediaItems(IEnumerable<FileInfo> newItems)
         {
+            // TODO: var stagingList
             foreach (var fileInfo in newItems.Where(f => f.Extension == ImageFileExtension))
             {
+                string name;
+                Image thumbnail;
+
                 using (FileStream fileStream = fileInfo.OpenRead())
                 {
                     byte[] buffer = new byte[fileStream.Length];
@@ -62,19 +66,12 @@ namespace MediaCenter.Repository
                     using (Stream destination = new MemoryStream(buffer))
                     {
                         var image = new Bitmap(destination);
-
-                        PropertyItem[] propertyItems = image.PropertyItems;
-                        var dateProperty = propertyItems.FirstOrDefault(p => p.Id == datePropertyID);
-                        if (dateProperty != null)
-                            date = encoding.GetString(dateProperty.Value);
+                        name = CreateItemName(ReadImageDate(image));
+                        thumbnail = await CreateThumbnail(image);
                     }
                 }
 
-                // read image date tag
-                string date = await ReadImageDate(fileInfo);
-
-                // create name for media item
-                string name = CreateItemName(date);
+                
 
                 // create thumbnail 
 
@@ -112,34 +109,16 @@ namespace MediaCenter.Repository
             throw new NotImplementedException();
         }
 
-        private async Task<string> ReadImageDate(FileInfo fileInfo)
+        private string ReadImageDate(Image image)
         {
             ASCIIEncoding encoding = new ASCIIEncoding();
             string date = "";
 
-            using (FileStream fileStream = fileInfo.OpenRead())
-            {
-                byte[] buffer = new byte[fileStream.Length];
-                int numBytesToRead = buffer.Length;
-                int numBytesRead = 0;
-                while (numBytesToRead > 0)
-                {
-                    int n = await fileStream.ReadAsync(buffer, numBytesRead, numBytesToRead);
-                    if (n == 0)
-                        break;
-                    numBytesRead += n;
-                    numBytesToRead -= n;
-                }
-
-                using (Stream destination = new MemoryStream(buffer))
-                {
-                    var image = new Bitmap(destination);
-                    PropertyItem[] propertyItems = image.PropertyItems;
-                    var dateProperty = propertyItems.FirstOrDefault(p => p.Id == datePropertyID);
-                    if (dateProperty != null)
-                        date = encoding.GetString(dateProperty.Value);
-                }
-            }
+            PropertyItem[] propertyItems = image.PropertyItems;
+            var dateProperty = propertyItems.FirstOrDefault(p => p.Id == datePropertyID);
+            if (dateProperty != null)
+                date = encoding.GetString(dateProperty.Value);
+                
             return date;
         }
 
@@ -155,6 +134,21 @@ namespace MediaCenter.Repository
                     name = originalName + "_" + cnt;
                 }
             }
+            return name;
+        }
+
+        private async Task<Image> CreateThumbnail(Image source)
+        {
+            Image thumbnail = null;
+            Image.GetThumbnailImageAbort myCallback =
+                             new Image.GetThumbnailImageAbort(ThumbnailCallback);
+            await Task.Run(() => { thumbnail = source.GetThumbnailImage(100, 100, myCallback, IntPtr.Zero); });
+            return thumbnail;
+        }
+
+        public bool ThumbnailCallback()
+        {
+            return false;
         }
     }
 }
