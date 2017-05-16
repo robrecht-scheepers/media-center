@@ -13,7 +13,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
           <Button Grid.Row="0" Command="{Binding AddImagesCommand}">Browse for images</Button>
-          <ListView Grid.Row="1" ItemsSource="{Binding StagingSession.StagedItems}">
+          <ListView Grid.Row="1" ItemsSource="{Binding StagedItems}">
               <ListView.ItemTemplate>
                   <DataTemplate>
                       <Grid>

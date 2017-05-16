@@ -17,12 +17,31 @@ namespace MediaCenter.Sessions
     {
         public StagingSessionViewModel(StagingSession session) : base(session)
         {
-            Thumbnails = new ObservableCollection<Image>();
+            StagedItems = new ObservableCollection<StagedItemViewModel>(session.StagedItems.Select(x => new StagedItemViewModel(x)));
+            session.StagedItems.CollectionChanged += StagedItems_CollectionChanged;
+        }
+
+        private void StagedItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.OldItems != null)
+            {
+                foreach (var oldItem in e.OldItems)
+                {
+                    StagedItems.Remove(StagedItems.First(x => x.FilePath == ((StagedItem) oldItem).FilePath));
+                }
+            }
+            if (e.NewItems != null)
+            {
+                foreach (var newItem in e.NewItems)
+                {
+                    StagedItems.Add(new StagedItemViewModel((StagedItem) newItem));
+                }
+            }
         }
 
         public StagingSession StagingSession => (StagingSession)Session;
 
-        public ObservableCollection<Image> Thumbnails { get; } 
+        public ObservableCollection<StagedItemViewModel> StagedItems { get; } 
         
         private AsyncRelayCommand _addImagesCommand;
         public AsyncRelayCommand AddImagesCommand => _addImagesCommand ?? (_addImagesCommand = new AsyncRelayCommand(AddImages));
