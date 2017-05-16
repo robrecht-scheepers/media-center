@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MediaCenter.MVVM
 {
-    abstract class Observable
+    abstract class Observable : INotifyPropertyChanged
     {
         private void InternalRaisePropertyChanged(string propertyName)
         {
@@ -56,10 +56,7 @@ namespace MediaCenter.MVVM
 
             return expression.Member.Name;
         }
-
-        [field: NonSerialized]
-        public event PropertyChangingEventHandler PropertyChanging;
-
+        
         [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
     }

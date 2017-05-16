@@ -59,7 +59,13 @@
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="Media\ImageItem.cs" />
     <Compile Include="Media\MediaItem.cs" />
+    <Compile Include="MVVM\AsyncRelayCommand.cs" />
+    <Compile Include="MVVM\CommandBase.cs" />
+    <Compile Include="MVVM\IAsyncCommand.cs" />
+    <Compile Include="MVVM\ICommandEx.cs" />
     <Compile Include="MVVM\Observable.cs" />
+    <Compile Include="MVVM\RelayCommand.cs" />
+    <Compile Include="MVVM\RelayCommandBase.cs" />
     <Compile Include="Repository\Repository.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
