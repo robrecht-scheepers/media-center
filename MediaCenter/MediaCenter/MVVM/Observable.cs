@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MediaCenter.MVVM
 {
-    abstract class Observable : INotifyPropertyChanged
+    public abstract class Observable : INotifyPropertyChanged
     {
         private void InternalRaisePropertyChanged(string propertyName)
         {

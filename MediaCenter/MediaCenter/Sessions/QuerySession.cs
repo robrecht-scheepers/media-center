@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MediaCenter.MVVM;
 
-namespace MediaCenter
+namespace MediaCenter.Sessions
 {
-    public class MainWindowViewModel : Observable
+    class QuerySession
     {
-
     }
 }
