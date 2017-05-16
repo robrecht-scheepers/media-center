@@ -74,6 +74,7 @@
     </Compile>
     <Compile Include="Sessions\QuerySessionViewModel.cs" />
     <Compile Include="Sessions\SessionViewModelBase.cs" />
+    <Compile Include="Sessions\StagedItem.cs" />
     <Compile Include="Sessions\StagingSession.cs" />
     <Compile Include="Sessions\QuerySession.cs" />
     <Compile Include="Sessions\SessionBase.cs" />

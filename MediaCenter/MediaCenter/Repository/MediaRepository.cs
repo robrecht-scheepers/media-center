@@ -15,10 +15,10 @@ namespace MediaCenter.Repository
     public class MediaRepository
     {
         private const string ImageFileExtension = "jpg";
-        private const int datePropertyID = 36867;
+        
 
         private string _localStore;
-        private string _remoteStore;
+        private readonly string _remoteStore;
         private DateTime _lastSyncFromRemote;
 
         // tmp
@@ -47,58 +47,6 @@ namespace MediaCenter.Repository
             }
         }
 
-        public async Task AddMediaItems(IEnumerable<FileInfo> newItems)
-        {
-            // TODO: var stagingList
-            foreach (var fileInfo in newItems.Where(f => f.Extension == ImageFileExtension))
-            {
-                string name;
-                Image thumbnail;
-
-                using (FileStream fileStream = fileInfo.OpenRead())
-                {
-                    byte[] buffer = new byte[fileStream.Length];
-                    int numBytesToRead = buffer.Length;
-                    int numBytesRead = 0;
-                    while (numBytesToRead > 0)
-                    {
-                        int n = await fileStream.ReadAsync(buffer, numBytesRead, numBytesToRead);
-                        if (n == 0)
-                            break;
-                        numBytesRead += n;
-                        numBytesToRead -= n;
-                    }
-
-                    using (Stream destination = new MemoryStream(buffer))
-                    {
-                        var image = new Bitmap(destination);
-                        name = CreateItemName(ReadImageDate(image));
-                        thumbnail = await CreateThumbnail(image);
-                    }
-                }
-
-                
-
-                // create thumbnail 
-
-                // create repository entry
-
-                // 
-            }
-        }
-
-
-        public async Task AddMediaItems(IEnumerable<MediaItem> newItems)
-        {
-            foreach (var newItem in newItems)
-            {
-                if(_mediaItems.Any(i => i.Name == newItem.Name))
-                    continue;
-                _mediaItems.Add(newItem);
-            }
-            await Save();
-        }
-
         private async Task Save()
         {
             await UpdateLocalStore();
@@ -115,46 +63,6 @@ namespace MediaCenter.Repository
             throw new NotImplementedException();
         }
 
-        private string ReadImageDate(Image image)
-        {
-            ASCIIEncoding encoding = new ASCIIEncoding();
-            string date = "";
-
-            PropertyItem[] propertyItems = image.PropertyItems;
-            var dateProperty = propertyItems.FirstOrDefault(p => p.Id == datePropertyID);
-            if (dateProperty != null)
-                date = encoding.GetString(dateProperty.Value);
-                
-            return date;
-        }
-
-        private string CreateItemName(string date)
-        {
-            var name = date.Replace(":", "").Replace(" ", "");
-            if (_mediaItems.Any(i => i.Name == name))
-            {
-                var originalName = name;
-                int cnt = 2;
-                while (_mediaItems.Any(i => i.Name == name))
-                {
-                    name = originalName + "_" + cnt;
-                }
-            }
-            return name;
-        }
-
-        private async Task<Image> CreateThumbnail(Image source)
-        {
-            Image thumbnail = null;
-            Image.GetThumbnailImageAbort myCallback =
-                             new Image.GetThumbnailImageAbort(ThumbnailCallback);
-            await Task.Run(() => { thumbnail = source.GetThumbnailImage(100, 100, myCallback, IntPtr.Zero); });
-            return thumbnail;
-        }
-
-        public bool ThumbnailCallback()
-        {
-            return false;
-        }
+        
     }
 }

@@ -9,15 +9,14 @@ namespace MediaCenter.Sessions
 {
     public abstract class SessionViewModelBase : Observable
     {
-        private SessionBase _session;
+        protected readonly SessionBase Session;
 
         protected SessionViewModelBase(SessionBase session)
         {
-            _session = session;
+            Session = session;
         }
 
-
-        public string Name => CreateNameForSession(_session);
+        public string Name => CreateNameForSession(Session);
         protected abstract string CreateNameForSession(SessionBase session);
     }
 }

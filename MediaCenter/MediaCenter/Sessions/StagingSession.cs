@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +15,87 @@ namespace MediaCenter.Sessions
     {
         public StagingSession(MediaRepository repository) : base(repository)
         {
+            StagedItems = new ObservableCollection<StagedItem>();
+        }
+
+        public ObservableCollection<StagedItem> StagedItems { get; }
+
+        public async Task AddMediaItems(IEnumerable<string> newItems)
+        {
+
+            foreach (var filePath in newItems)
+            {
+                string name;
+                Image thumbnail;
+
+                using (FileStream fileStream = File.OpenRead(filePath))
+                {
+                    byte[] buffer = new byte[fileStream.Length];
+                    int numBytesToRead = buffer.Length;
+                    int numBytesRead = 0;
+                    while (numBytesToRead > 0)
+                    {
+                        int n = await fileStream.ReadAsync(buffer, numBytesRead, numBytesToRead);
+                        if (n == 0)
+                            break;
+                        numBytesRead += n;
+                        numBytesToRead -= n;
+                    }
+
+                    using (Stream destination = new MemoryStream(buffer))
+                    {
+                        var image = new Bitmap(destination);
+                        name = CreateItemName(ReadImageDate(image));
+                        thumbnail = await CreateThumbnail(image);
+
+                        StagedItems.Add(new StagedItem {FilePath = filePath,Name = name, Thumbnail = thumbnail});
+                    }
+                }
+            }
+        }
+
+        private string ReadImageDate(Image image)
+        {
+            int datePropertyID = 36867;
+            ASCIIEncoding encoding = new ASCIIEncoding();
+            string date = "";
+
+            PropertyItem[] propertyItems = image.PropertyItems;
+            var dateProperty = propertyItems.FirstOrDefault(p => p.Id == datePropertyID);
+            if (dateProperty != null)
+                date = encoding.GetString(dateProperty.Value);
+
+            return date;
+        }
+
+        private string CreateItemName(string date)
+        {
+            var name = date.Replace("\0","").Replace(":", "").Replace(" ", "");
+            //TODO: guarantee anem uniqueness
+            //if (_mediaItems.Any(i => i.Name == name))
+            //{
+            //    var originalName = name;
+            //    int cnt = 2;
+            //    while (_mediaItems.Any(i => i.Name == name))
+            //    {
+            //        name = originalName + "_" + cnt;
+            //    }
+            //}
+            return name;
+        }
+
+        private async Task<Image> CreateThumbnail(Image source)
+        {
+            Image thumbnail = null;
+            Image.GetThumbnailImageAbort myCallback =
+                             new Image.GetThumbnailImageAbort(ThumbnailCallback);
+            await Task.Run(() => { thumbnail = source.GetThumbnailImage(100, 100, myCallback, IntPtr.Zero); });
+            return thumbnail;
+        }
+
+        public bool ThumbnailCallback()
+        {
+            return false;
         }
     }
 }
