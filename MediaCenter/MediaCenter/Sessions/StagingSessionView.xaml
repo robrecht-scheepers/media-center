@@ -13,19 +13,19 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
           <Button Grid.Row="0" Command="{Binding AddImagesCommand}">Browse for images</Button>
-          <ListView Grid.Row="1" ItemsSource="{Binding StagedItems}">
-              <ListView.ItemTemplate>
-                  <DataTemplate>
-                      <Grid>
-                          <Grid.ColumnDefinitions>
-                          <ColumnDefinition Width="Auto"/>
-                          <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="{Binding Thumbnail}"/>
-                        <TextBlock Grid.Column="1" Text="{Binding Name}"/>  
-                      </Grid>
-                  </DataTemplate>
-              </ListView.ItemTemplate>
-          </ListView>
+        <ListBox Grid.Row="1" ItemsSource="{Binding StagedItems}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                   <Image Source="{Binding Thumbnail}" Height="100" Width="100" Margin="5"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ListBox>
+
     </Grid>
 </UserControl>
