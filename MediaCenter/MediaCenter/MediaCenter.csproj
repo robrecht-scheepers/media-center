@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
@@ -56,6 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Bootstrapper.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="Media\ImageItem.cs" />
     <Compile Include="Media\MediaItem.cs" />
@@ -66,7 +68,19 @@
     <Compile Include="MVVM\Observable.cs" />
     <Compile Include="MVVM\RelayCommand.cs" />
     <Compile Include="MVVM\RelayCommandBase.cs" />
-    <Compile Include="Repository\Repository.cs" />
+    <Compile Include="Repository\MediaRepository.cs" />
+    <Compile Include="Sessions\QuerySessionView.xaml.cs">
+      <DependentUpon>QuerySessionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sessions\QuerySessionViewModel.cs" />
+    <Compile Include="Sessions\SessionViewModelBase.cs" />
+    <Compile Include="Sessions\StagingSession.cs" />
+    <Compile Include="Sessions\QuerySession.cs" />
+    <Compile Include="Sessions\SessionBase.cs" />
+    <Compile Include="Sessions\StagingSessionView.xaml.cs">
+      <DependentUpon>StagingSessionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sessions\StagingSessionViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -79,6 +93,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Sessions\QuerySessionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sessions\StagingSessionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

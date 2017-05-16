@@ -7,12 +7,10 @@ using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions
 {
-    public abstract class SessionBase
+    public class StagingSession : SessionBase
     {
-        protected MediaRepository Repository;
-        protected SessionBase(MediaRepository repository)
+        public StagingSession(MediaRepository repository) : base(repository)
         {
-            Repository = repository;
         }
     }
 }

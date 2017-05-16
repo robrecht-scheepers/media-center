@@ -24,11 +24,14 @@ namespace MediaCenter
             _bootstrapper = bootstrapper;
         }
 
-        private void ApplicationStartup(object sender, StartupEventArgs e)
+        private async void ApplicationStartup(object sender, StartupEventArgs e)
         {
-            Dispatcher.BeginInvoke(new Action(() => {
-                _bootstrapper.Run();
-            }));
+            await _bootstrapper.Run();
+        }
+
+        private void ApplicationExit(object sender, ExitEventArgs e)
+        {
+            _bootstrapper.Exit();
         }
     }
 }

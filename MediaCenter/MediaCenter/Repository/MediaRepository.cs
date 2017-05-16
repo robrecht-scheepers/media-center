@@ -12,7 +12,7 @@ using MediaCenter.Media;
 
 namespace MediaCenter.Repository
 {
-    class Repository
+    public class MediaRepository
     {
         private const string ImageFileExtension = "jpg";
         private const int datePropertyID = 36867;
@@ -22,7 +22,13 @@ namespace MediaCenter.Repository
         private DateTime _lastSyncFromRemote;
 
         // tmp
-        private List<MediaItem> _mediaItems; 
+        private List<MediaItem> _mediaItems;
+
+        public MediaRepository(string remoteStore, string localStore)
+        {
+            _remoteStore = remoteStore;
+            _localStore = localStore;
+        }
 
         public async Task SyncFromRemote()
         {
