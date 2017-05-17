@@ -13,6 +13,9 @@ namespace MediaCenter.Sessions
 {
     public class StagingSession : SessionBase
     {
+        // TODO: share with view model for dialog filter
+        private string[] _imageExtensions = {".jpg", ".png", ".bmp"};
+
         public StagingSession(MediaRepository repository) : base(repository)
         {
             StagedItems = new ObservableCollection<StagedItem>();
@@ -20,13 +23,16 @@ namespace MediaCenter.Sessions
 
         public ObservableCollection<StagedItem> StagedItems { get; }
 
+        public async Task AddMediaItemsFolder(string folderPath)
+        {
+            await AddMediaItems(Directory.GetFiles(folderPath));
+        }
         public async Task AddMediaItems(IEnumerable<string> newItems)
         {
-
             foreach (var filePath in newItems)
             {
-                string name;
-                Image thumbnail;
+                if ((string.IsNullOrEmpty(filePath))||(!_imageExtensions.Contains(Path.GetExtension(filePath).ToLower())))
+                    continue;
 
                 using (FileStream fileStream = File.OpenRead(filePath))
                 {
@@ -45,9 +51,8 @@ namespace MediaCenter.Sessions
                     using (Stream destination = new MemoryStream(buffer))
                     {
                         var image = new Bitmap(destination);
-                        name = CreateItemName(ReadImageDate(image));
-                        thumbnail = await CreateThumbnail(image);
-
+                        var name = CreateItemName(ReadImageDate(image));
+                        var thumbnail = await CreateThumbnail(image);
                         StagedItems.Add(new StagedItem {FilePath = filePath,Name = name, Thumbnail = thumbnail});
                     }
                 }

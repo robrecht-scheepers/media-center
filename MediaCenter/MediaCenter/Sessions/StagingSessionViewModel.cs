@@ -8,8 +8,9 @@ using System.Linq;
 using System.Security.RightsManagement;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using MediaCenter.MVVM;
-using Microsoft.Win32;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace MediaCenter.Sessions
 {
@@ -52,7 +53,7 @@ namespace MediaCenter.Sessions
             {
                 Multiselect = true,
                 Title = "Select the image files to be added",
-                Filter = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF"
+                Filter = "Image Files(*.BMP;*.JPG;*.PNG)|*.BMP;*.JPG;*.PNG"
             };
 
             dialog.ShowDialog();
@@ -62,7 +63,19 @@ namespace MediaCenter.Sessions
             await StagingSession.AddMediaItems(selectedImages);
         }
 
-        
+        private AsyncRelayCommand _addDirectoryCommand;
+        public AsyncRelayCommand AddDirectoryCommand => _addDirectoryCommand ?? (_addDirectoryCommand = new AsyncRelayCommand(AddDirectory));
+
+        private async Task AddDirectory()
+        {
+            var dialog = new FolderBrowserDialog();
+            dialog.ShowDialog();
+
+            var selectedFolder = dialog.SelectedPath;
+            if (string.IsNullOrEmpty(selectedFolder))
+                return;
+            await StagingSession.AddMediaItems(Directory.GetFiles(selectedFolder));
+        }
 
         protected override string CreateNameForSession(SessionBase session)
         {

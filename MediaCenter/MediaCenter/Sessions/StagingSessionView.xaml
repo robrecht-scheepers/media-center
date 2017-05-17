@@ -12,7 +12,10 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-          <Button Grid.Row="0" Command="{Binding AddImagesCommand}">Browse for images</Button>
+        <StackPanel Grid.Row="0" Orientation="Horizontal"> 
+              <Button Command="{Binding AddImagesCommand}" Width="100" Margin="5">Select images files</Button>
+              <Button Command="{Binding AddDirectoryCommand}" Width="100" Margin="5">Select folder</Button>
+        </StackPanel>
         <ListBox Grid.Row="1" ItemsSource="{Binding StagedItems}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ItemsControl.ItemsPanel>
