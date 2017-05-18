@@ -65,7 +65,6 @@ namespace MediaCenter.Sessions
 
         private AsyncRelayCommand _addDirectoryCommand;
         public AsyncRelayCommand AddDirectoryCommand => _addDirectoryCommand ?? (_addDirectoryCommand = new AsyncRelayCommand(AddDirectory));
-
         private async Task AddDirectory()
         {
             var dialog = new FolderBrowserDialog();
@@ -75,6 +74,19 @@ namespace MediaCenter.Sessions
             if (string.IsNullOrEmpty(selectedFolder))
                 return;
             await StagingSession.AddMediaItems(Directory.GetFiles(selectedFolder));
+        }
+
+        private AsyncRelayCommand _saveToRepositoryCommand;
+        public AsyncRelayCommand SaveToRepositoryCommand => _saveToRepositoryCommand ?? (_saveToRepositoryCommand = new AsyncRelayCommand(SaveToRepository,CanExecuteSaveToRepository));
+
+        private bool CanExecuteSaveToRepository()
+        {
+            return StagedItems.Any();
+        }
+
+        private async Task SaveToRepository()
+        {
+            await StagingSession.SaveToRepository();
         }
 
         protected override string CreateNameForSession(SessionBase session)

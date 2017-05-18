@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using MediaCenter.Repository;
@@ -15,6 +16,7 @@ namespace MediaCenter.Sessions
     {
         // TODO: share with view model for dialog filter
         private string[] _imageExtensions = {".jpg", ".png", ".bmp"};
+        private string _statusMessage;
 
         public StagingSession(MediaRepository repository) : base(repository)
         {
@@ -29,8 +31,12 @@ namespace MediaCenter.Sessions
         }
         public async Task AddMediaItems(IEnumerable<string> newItems)
         {
+            var total = newItems.Count();
+            var cnt = 1;
+
             foreach (var filePath in newItems)
             {
+                StatusMessage = $"Loading item {cnt++} of {total}.";
                 if ((string.IsNullOrEmpty(filePath))||(!_imageExtensions.Contains(Path.GetExtension(filePath).ToLower())))
                     continue;
 
@@ -59,6 +65,23 @@ namespace MediaCenter.Sessions
             }
         }
 
+        public async Task SaveToRepository()
+        {
+            var total = StagedItems.Count;
+            var cnt = 1;
+            foreach (var stagedItem in StagedItems)
+            {
+                StatusMessage = $"Uploading item {cnt++} of {total}.";
+                await Repository.AddMediaItem(stagedItem.FilePath, stagedItem.Name, stagedItem.Thumbnail);
+            }
+        }
+
+        public string StatusMessage
+        {
+            get { return _statusMessage; }
+            set { SetValue(ref _statusMessage, value); }
+        }
+
         private string ReadImageDate(Image image)
         {
             int datePropertyID = 36867;
@@ -76,7 +99,7 @@ namespace MediaCenter.Sessions
         private string CreateItemName(string date)
         {
             var name = date.Replace("\0","").Replace(":", "").Replace(" ", "");
-            //TODO: guarantee anem uniqueness
+            //TODO: guarantee name uniqueness
             //if (_mediaItems.Any(i => i.Name == name))
             //{
             //    var originalName = name;
@@ -97,7 +120,6 @@ namespace MediaCenter.Sessions
             await Task.Run(() => { thumbnail = source.GetThumbnailImage(100, 100, myCallback, IntPtr.Zero); });
             return thumbnail;
         }
-
         public bool ThumbnailCallback()
         {
             return false;

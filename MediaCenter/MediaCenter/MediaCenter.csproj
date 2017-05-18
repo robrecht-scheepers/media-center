@@ -59,6 +59,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Helpers\IOHelper.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="Media\ImageItem.cs" />
     <Compile Include="Media\MediaItem.cs" />

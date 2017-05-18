@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 using System.Windows.Media;
+using MediaCenter.Helpers;
 using MediaCenter.Media;
 
 namespace MediaCenter.Repository
@@ -63,6 +64,22 @@ namespace MediaCenter.Repository
             throw new NotImplementedException();
         }
 
-        
+        public async Task AddMediaItem(string filePath, string name, Image thumbnail)
+        {
+            if (string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(name))
+                return;
+
+            // add to remote store
+            var mediaItemFilename = Path.Combine(_remoteStore, name + Path.GetExtension(filePath));
+            await IOHelper.CopyFileAsync(filePath, mediaItemFilename);
+
+            var thumbnailFilename = Path.Combine(_remoteStore, name + "_T.jpg");
+            await IOHelper.SaveImageAsync(thumbnail, thumbnailFilename, ImageFormat.Jpeg);
+
+            var descriptorFilename = Path.Combine(_remoteStore, name + ".mcd");
+            await IOHelper.SaveTextAsync("", descriptorFilename);
+
+            //TODO: update local store
+        }
     }
 }
