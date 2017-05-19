@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using MediaCenter.Helpers;
-using MediaCenter.Media;
+using MediaCenter.MediaItems;
 
 namespace MediaCenter.Repository
 {

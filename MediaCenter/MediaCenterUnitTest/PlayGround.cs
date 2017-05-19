@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using MediaCenter.Helpers;
-using MediaCenter.Media;
+using MediaCenter.MediaItems;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MediaCenterUnitTest

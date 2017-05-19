@@ -63,9 +63,9 @@
     <Compile Include="Helpers\IOHelper.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="Media\ImageItem.cs" />
-    <Compile Include="Media\MediaItem.cs" />
-    <Compile Include="Media\MediaItemCollection.cs" />
+    <Compile Include="MediaItems\ImageItem.cs" />
+    <Compile Include="MediaItems\MediaItem.cs" />
+    <Compile Include="MediaItems\MediaItemCollection.cs" />
     <Compile Include="MVVM\AsyncRelayCommand.cs" />
     <Compile Include="MVVM\CommandBase.cs" />
     <Compile Include="MVVM\IAsyncCommand.cs" />
