@@ -53,8 +53,6 @@ namespace MediaCenter.Repository
 
         public async Task SynchronizeFromRemoteStore()
         {
-            //TODO: lock remote store repository for editing?
-
             var newLastSyncedDate = DateTime.Now;
 
             var remoteStoreDirectory = new DirectoryInfo(_remoteStore);
