@@ -35,7 +35,19 @@ namespace MediaCenter.Repository
 
         private async Task ReadLocalStore()
         {
+            if (!File.Exists(_localStoreFilePath))
+            {
+                _mediaItemCollection = new MediaItemCollection();
+                await UpdateLocalStore();
+                return;
+            }
+
             _mediaItemCollection = await IOHelper.OpenObject<MediaItemCollection>(_localStoreFilePath);
+        }
+
+        private async Task UpdateLocalStore()
+        {
+            await IOHelper.SaveObject(_mediaItemCollection, _localStoreFilePath);
         }
 
         //    public async Task SyncFromRemote()
@@ -66,11 +78,6 @@ namespace MediaCenter.Repository
             throw new NotImplementedException();
         }
 
-        private async Task UpdateLocalStore()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task AddMediaItem(string filePath, string name, Image thumbnail)
         {
             if (string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(name))
@@ -78,6 +85,7 @@ namespace MediaCenter.Repository
 
             // save in localstore
             _mediaItemCollection.Items.Add(new ImageItem(name));
+            await UpdateLocalStore();
             // TODO: refactor so we save only once when processing a staging session
             
             // add to remote store

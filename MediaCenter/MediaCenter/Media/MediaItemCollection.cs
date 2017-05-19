@@ -11,6 +11,11 @@ namespace MediaCenter.Media
     [KnownType(typeof(ImageItem))]
     public class MediaItemCollection 
     {
+        public MediaItemCollection()
+        {
+            Items = new List<MediaItem>();
+        }
+
         [DataMember]
         public List<MediaItem> Items { get; set; }
     }
