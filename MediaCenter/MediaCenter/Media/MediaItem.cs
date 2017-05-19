@@ -19,5 +19,12 @@ namespace MediaCenter.Media
 
         [DataMember]
         public List<string> Tags { get; set; }
+
+        public virtual void UpdateFrom(MediaItem item)
+        {
+            Name = item.Name;
+            Tags.Clear();
+            Tags.InsertRange(0,item.Tags);
+        }
     }
 }

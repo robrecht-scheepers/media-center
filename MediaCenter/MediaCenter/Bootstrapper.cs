@@ -18,12 +18,13 @@ namespace MediaCenter
             _repository = new Repository.MediaRepository(ConfigurationManager.AppSettings["RemoteStore"],
                 ConfigurationManager.AppSettings["LocalStore"]);
 
-            //Task synchronizeRepositoryTask = _repository.SyncFromRemote();
-
+            var repositoryTask = _repository.Initialize();
+            
             var mainViewModel = new MainWindowViewModel(_repository);
             var mainView = new MainWindow {DataContext = mainViewModel};
             mainView.Show();
-            //await synchronizeRepositoryTask;
+
+            await repositoryTask;
         }
 
         public void Exit()
