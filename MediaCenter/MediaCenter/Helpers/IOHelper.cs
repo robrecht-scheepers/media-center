@@ -12,31 +12,47 @@ namespace MediaCenter.Helpers
 {
     public static class IOHelper
     {
-        public static async Task CopyFileAsync(string sourceFile, string destinationFile)
+        public static async Task CopyFile(string sourceFile, string destinationFile)
         {
             using (var sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan))
             using (var destinationStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan))
                 await sourceStream.CopyToAsync(destinationStream);
         }
 
-        public static async Task SaveImageAsync(Image image, string filePath, ImageFormat format)
+        public static async Task SaveImage(Image image, string filePath, ImageFormat format)
         {
             await Task.Run(() => image.Save(filePath, format));
-
-            //using (MemoryStream ms = new MemoryStream())
-            //using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan))
-            //{
-            //    image.Save(ms,format);
-            //    await ms.CopyToAsync(fs);
-            //}
         }
 
-        public static async Task SaveTextAsync(string content, string filePath)
+        public static async Task SaveText(string content, string filePath)
         {
             using (StreamWriter sw = File.CreateText(filePath))
             {
                 await sw.WriteAsync(content);
             }
+        }
+
+        public static async Task<string> OpenText(string filePath)
+        {
+            string content = null;
+            using (StreamReader reader = File.OpenText(filePath))
+            {
+                content = await reader.ReadToEndAsync();
+            }
+            return content;
+        }
+
+        public static async Task SaveObject<T>(T t, string filePath)
+        {
+            var serializedObject = SerializationHelper.Serialize(t);
+            await SaveText(serializedObject, filePath);
+        }
+
+        public static async Task<T> OpenObject<T>(string filePath)
+        {
+            string serialized = await OpenText(filePath);
+            T result = SerializationHelper.Deserialize<T>(serialized);
+            return result;
         }
     }
 }

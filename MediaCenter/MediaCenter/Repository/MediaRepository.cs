@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
@@ -18,35 +19,41 @@ namespace MediaCenter.Repository
         private const string ImageFileExtension = "jpg";
         
 
-        private string _localStore;
+        private string _localStoreFilePath;
         private readonly string _remoteStore;
         private DateTime _lastSyncFromRemote;
+        
+        private MediaItemCollection _mediaItemCollection;
 
-        // tmp
-        private List<MediaItem> _mediaItems;
-
-        public MediaRepository(string remoteStore, string localStore)
+        public MediaRepository(string remoteStore, string localStoreFilePath)
         {
             _remoteStore = remoteStore;
-            _localStore = localStore;
+            _localStoreFilePath = localStoreFilePath;
+            ReadLocalStore(); // TODO: handle that constructor ends without local store read, via a state field
+
         }
 
-        public async Task SyncFromRemote()
+        private async Task ReadLocalStore()
         {
-            // TODO: lock repository for editing
-
-            var remoteDir = new DirectoryInfo(_remoteStore);
-            foreach (var file in remoteDir.GetFiles().Where(f => f.LastWriteTime >= _lastSyncFromRemote))
-            {
-                string content;
-                using (TextReader reader = file.OpenText())
-                {
-                    content = await reader.ReadToEndAsync();
-                }
-                if(_mediaItems.All(i => i.Name != content))
-                    _mediaItems.Add(new ImageItem {Name = content});
-            }
+            _mediaItemCollection = await IOHelper.OpenObject<MediaItemCollection>(_localStoreFilePath);
         }
+
+        //    public async Task SyncFromRemote()
+        //    {
+        //        TODO: lock repository for editing
+
+        //       var remoteDir = new DirectoryInfo(_remoteStore);
+        //        foreach (var file in remoteDir.GetFiles().Where(f => f.LastWriteTime >= _lastSyncFromRemote))
+        //                {
+        //                    string content;
+        //                    using (TextReader reader = file.OpenText())
+        //                    {
+        //                        content = await reader.ReadToEndAsync();
+        //                    }
+        //                    if (_mediaItems.All(i => i.Name != content))
+        //                        _mediaItems.Add(new ImageItem(content});
+        //    }
+        //}
 
         private async Task Save()
         {
@@ -69,15 +76,19 @@ namespace MediaCenter.Repository
             if (string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(name))
                 return;
 
+            // save in localstore
+            _mediaItemCollection.Items.Add(new ImageItem(name));
+            // TODO: refactor so we save only once when processing a staging session
+            
             // add to remote store
             var mediaItemFilename = Path.Combine(_remoteStore, name + Path.GetExtension(filePath));
-            await IOHelper.CopyFileAsync(filePath, mediaItemFilename);
+            await IOHelper.CopyFile(filePath, mediaItemFilename);
 
             var thumbnailFilename = Path.Combine(_remoteStore, name + "_T.jpg");
-            await IOHelper.SaveImageAsync(thumbnail, thumbnailFilename, ImageFormat.Jpeg);
+            await IOHelper.SaveImage(thumbnail, thumbnailFilename, ImageFormat.Jpeg);
 
             var descriptorFilename = Path.Combine(_remoteStore, name + ".mcd");
-            await IOHelper.SaveTextAsync("", descriptorFilename);
+            await IOHelper.SaveText("", descriptorFilename);
 
             //TODO: update local store
         }

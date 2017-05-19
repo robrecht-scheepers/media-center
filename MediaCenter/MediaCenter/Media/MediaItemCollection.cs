@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace MediaCenter.Media
 {
-    [DataContract(Name = "Image")]
-    public class ImageItem : MediaItem
+    [DataContract]
+    [KnownType(typeof(ImageItem))]
+    public class MediaItemCollection 
     {
-        public ImageItem(string name) : base(name)
-        {
-        }
+        [DataMember]
+        public List<MediaItem> Items { get; set; }
     }
 }
