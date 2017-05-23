@@ -74,20 +74,21 @@
     <Compile Include="MVVM\RelayCommand.cs" />
     <Compile Include="MVVM\RelayCommandBase.cs" />
     <Compile Include="Repository\MediaRepository.cs" />
-    <Compile Include="Sessions\QuerySessionView.xaml.cs">
+    <Compile Include="Sessions\Query\QueryCriterion.cs" />
+    <Compile Include="Sessions\Query\QuerySessionView.xaml.cs">
       <DependentUpon>QuerySessionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sessions\QuerySessionViewModel.cs" />
+    <Compile Include="Sessions\Query\QuerySessionViewModel.cs" />
     <Compile Include="Sessions\SessionViewModelBase.cs" />
-    <Compile Include="Sessions\StagedItem.cs" />
-    <Compile Include="Sessions\StagedItemViewModel.cs" />
-    <Compile Include="Sessions\StagingSession.cs" />
-    <Compile Include="Sessions\QuerySession.cs" />
+    <Compile Include="Sessions\Staging\StagedItem.cs" />
+    <Compile Include="Sessions\Staging\StagedItemViewModel.cs" />
+    <Compile Include="Sessions\Staging\StagingSession.cs" />
+    <Compile Include="Sessions\Query\QuerySession.cs" />
     <Compile Include="Sessions\SessionBase.cs" />
-    <Compile Include="Sessions\StagingSessionView.xaml.cs">
+    <Compile Include="Sessions\Staging\StagingSessionView.xaml.cs">
       <DependentUpon>StagingSessionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sessions\StagingSessionViewModel.cs" />
+    <Compile Include="Sessions\Staging\StagingSessionViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -100,11 +101,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Sessions\QuerySessionView.xaml">
+    <Page Include="Sessions\Query\QuerySessionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Sessions\StagingSessionView.xaml">
+    <Page Include="Sessions\Staging\StagingSessionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

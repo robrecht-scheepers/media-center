@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Security.RightsManagement;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MediaCenter.MVVM;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
-namespace MediaCenter.Sessions
+namespace MediaCenter.Sessions.Staging
 {
     public class StagingSessionViewModel : SessionViewModelBase
     {

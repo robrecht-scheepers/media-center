@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MediaCenter"
         xmlns:sessions="clr-namespace:MediaCenter.Sessions"
+        xmlns:staging="clr-namespace:MediaCenter.Sessions.Staging"
+        xmlns:query="clr-namespace:MediaCenter.Sessions.Query"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel}"
         Title="MainWindow" Height="350" Width="525" WindowState="Maximized" Background="DarkSeaGreen">
@@ -34,11 +36,11 @@
                 <DataTemplate>
                     <ContentControl Content="{Binding}">
                         <ContentControl.Resources>
-                            <DataTemplate DataType="{x:Type sessions:StagingSessionViewModel}">
-                                <sessions:StagingSessionView DataContext="{Binding}"/>
+                            <DataTemplate DataType="{x:Type staging:StagingSessionViewModel}">
+                                <staging:StagingSessionView DataContext="{Binding}"/>
                             </DataTemplate>
-                            <DataTemplate DataType="{x:Type sessions:QuerySessionViewModel}">
-                                <sessions:QuerySessionView DataContext="{Binding}"/>
+                            <DataTemplate DataType="{x:Type query:QuerySessionViewModel}">
+                                <query:QuerySessionView DataContext="{Binding}"/>
                             </DataTemplate>
                         </ContentControl.Resources>
                     </ContentControl>

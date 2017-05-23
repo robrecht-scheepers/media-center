@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MediaCenter.Sessions
+namespace MediaCenter.Sessions.Staging
 {
     /// <summary>
-    /// Interaction logic for QuerySessionView.xaml
+    /// Interaction logic for StagingSessionView.xaml
     /// </summary>
-    public partial class QuerySessionView : UserControl
+    public partial class StagingSessionView : UserControl
     {
-        public QuerySessionView()
+        public StagingSessionView()
         {
             InitializeComponent();
         }

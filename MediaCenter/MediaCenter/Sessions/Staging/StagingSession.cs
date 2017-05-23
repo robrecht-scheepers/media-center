@@ -5,12 +5,11 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using MediaCenter.Repository;
 
-namespace MediaCenter.Sessions
+namespace MediaCenter.Sessions.Staging
 {
     public class StagingSession : SessionBase
     {
