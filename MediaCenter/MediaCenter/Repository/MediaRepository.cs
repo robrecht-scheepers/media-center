@@ -97,7 +97,7 @@ namespace MediaCenter.Repository
             await IOHelper.SaveImage(thumbnail, thumbnailFilename, ImageFormat.Jpeg);
 
             var descriptorFilename = Path.Combine(_remoteStore, name + MediaFileExtension);
-            await IOHelper.SaveText("", descriptorFilename);
+            await IOHelper.SaveObject<ImageItem>(new ImageItem(name), descriptorFilename);
 
             await SynchronizeFromRemoteStore();
             // yes, this causes a retrieval of an object we already have in memory, 
