@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MediaCenter.MediaItems
@@ -18,6 +19,8 @@ namespace MediaCenter.MediaItems
 
         [DataMember]
         public List<string> Tags { get; set; }
+
+        public DateTime DateTaken { get; set; }
 
         public virtual void UpdateFrom(MediaItem item)
         {

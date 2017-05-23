@@ -106,5 +106,7 @@ namespace MediaCenter.Repository
 
             // TODO: optimize to do only one sync from remote when all items of a staging session have been saved
         }
+
+         
     }
 }
