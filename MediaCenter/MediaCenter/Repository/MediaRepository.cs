@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using MediaCenter.Helpers;
-using MediaCenter.MediaItems;
 
 namespace MediaCenter.Repository
 {
@@ -20,7 +19,7 @@ namespace MediaCenter.Repository
         private readonly string _remoteStore;
         private DateTime _lastSyncFromRemote;
         
-        private MediaItemCollection _mediaItemCollection;
+        private List<CatalogItem> _catalog;
 
         public MediaRepository(string remoteStore, string localStoreFilePath)
         {
@@ -38,17 +37,17 @@ namespace MediaCenter.Repository
         {
             if (!File.Exists(_localStoreFilePath))
             {
-                _mediaItemCollection = new MediaItemCollection();
+                _catalog = new List<CatalogItem>();
                 await UpdateLocalStore();
                 return;
             }
 
-            _mediaItemCollection = await IOHelper.OpenObject<MediaItemCollection>(_localStoreFilePath);
+            _catalog = await IOHelper.OpenObject<List<CatalogItem>>(_localStoreFilePath);
         }
 
         private async Task UpdateLocalStore()
         {
-            await IOHelper.SaveObject(_mediaItemCollection, _localStoreFilePath);
+            await IOHelper.SaveObject(_catalog, _localStoreFilePath);
         }
 
         public async Task SynchronizeFromRemoteStore()
@@ -61,23 +60,23 @@ namespace MediaCenter.Repository
             // read all remote media files that were created or updates since the last sync
             foreach (var file in remoteStoreMediaFiles.Where(f => f.LastWriteTime >= _lastSyncFromRemote))
             {
-                var mediaItem = await IOHelper.OpenObject<ImageItem>(file.FullName);
-                var existingItem = _mediaItemCollection.Items.FirstOrDefault(x => x.Name == mediaItem.Name);
+                var item = await IOHelper.OpenObject<CatalogItem>(file.FullName);
+                var existingItem = _catalog.FirstOrDefault(x => x.Name == item.Name);
                 if (existingItem == null) // new item
                 {
-                    _mediaItemCollection.Items.Add(mediaItem);
+                    _catalog.Add(item);
                 }
                 else
                 {
-                    existingItem.UpdateFrom(mediaItem);
+                    existingItem.UpdateFrom(item);
                 }
             }
             // find and delete all items in the local store that are not in the remote store anymore
-            var deleteList = _mediaItemCollection.Items.Where(item => 
+            var deleteList = _catalog.Where(item => 
                 remoteStoreMediaFiles.All(f => f.Name.ToLower() != item.Name + MediaFileExtension)).ToList();
             foreach (var mediaItem in deleteList)
             {
-                _mediaItemCollection.Items.Remove(mediaItem);
+                _catalog.Remove(mediaItem);
             }
 
             await UpdateLocalStore();
@@ -97,7 +96,7 @@ namespace MediaCenter.Repository
             await IOHelper.SaveImage(thumbnail, thumbnailFilename, ImageFormat.Jpeg);
 
             var descriptorFilename = Path.Combine(_remoteStore, name + MediaFileExtension);
-            await IOHelper.SaveObject<ImageItem>(new ImageItem(name), descriptorFilename);
+            await IOHelper.SaveObject(new CatalogItem(name), descriptorFilename);
 
             await SynchronizeFromRemoteStore();
             // yes, this causes a retrieval of an object we already have in memory, 

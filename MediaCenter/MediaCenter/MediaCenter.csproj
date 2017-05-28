@@ -63,9 +63,7 @@
     <Compile Include="Helpers\IOHelper.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="MediaItems\ImageItem.cs" />
-    <Compile Include="MediaItems\MediaItem.cs" />
-    <Compile Include="MediaItems\MediaItemCollection.cs" />
+    <Compile Include="Repository\CatalogItem.cs" />
     <Compile Include="MVVM\AsyncRelayCommand.cs" />
     <Compile Include="MVVM\CommandBase.cs" />
     <Compile Include="MVVM\IAsyncCommand.cs" />
@@ -81,6 +79,7 @@
       <DependentUpon>QuerySessionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Query\QuerySessionViewModel.cs" />
+    <Compile Include="Sessions\SessionMediaItem.cs" />
     <Compile Include="Sessions\SessionViewModelBase.cs" />
     <Compile Include="Sessions\Staging\StagedItem.cs" />
     <Compile Include="Sessions\Staging\StagedItemViewModel.cs" />

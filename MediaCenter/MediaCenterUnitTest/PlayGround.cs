@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using MediaCenter.Helpers;
-using MediaCenter.MediaItems;
+using MediaCenter.Repository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MediaCenterUnitTest
@@ -15,20 +15,17 @@ namespace MediaCenterUnitTest
         [TestMethod]
         public void TestMethod1()
         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(MediaItemCollection));
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<CatalogItem>));
 
-            MediaItemCollection collection = new MediaItemCollection
+            List<CatalogItem> collection = new List<CatalogItem>
             {
-                Items = new List<MediaItem>
-                { 
-                    new ImageItem("Item 1")
-                    {
-                        Tags = new List<string> {"Tag 1", "Tag 2"}
-                    },
-                    new ImageItem("Item 2")
-                    {
-                        Tags = new List<string> {"Tag 3", "Tag 4"}
-                    }
+                new CatalogItem("Item 1")
+                {
+                    Tags = new List<string> {"Tag 1", "Tag 2"}
+                },
+                new CatalogItem("Item 2")
+                {
+                    Tags = new List<string> {"Tag 3", "Tag 4"}
                 }
             };
 

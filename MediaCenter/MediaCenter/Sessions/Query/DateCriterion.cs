@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MediaCenter.MediaItems;
+using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions.Query
 {
@@ -24,7 +24,7 @@ namespace MediaCenter.Sessions.Query
         }
 
 
-        public override IEnumerable<MediaItem> Filter(IEnumerable<MediaItem> source, FilterMode filterMode)
+        public override IEnumerable<CatalogItem> Filter(IEnumerable<CatalogItem> source, FilterMode filterMode)
         {
             switch (filterMode)
             {
