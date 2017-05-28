@@ -10,8 +10,8 @@ namespace MediaCenter.Sessions
 {
     public abstract class SessionBase : Observable
     {
-        protected MediaRepository Repository;
-        protected SessionBase(MediaRepository repository)
+        protected RemoteRepository Repository;
+        protected SessionBase(RemoteRepository repository)
         {
             Repository = repository;
         }

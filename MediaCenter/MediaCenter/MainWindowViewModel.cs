@@ -15,13 +15,13 @@ namespace MediaCenter
     public class MainWindowViewModel : Observable
     {
         
-        public MainWindowViewModel(MediaRepository repository)
+        public MainWindowViewModel(RemoteRepository repository)
         {
             Sessions = new ObservableCollection<SessionViewModelBase>();
             Repository = repository;
         }
 
-        public MediaRepository Repository { get; private set; }
+        public RemoteRepository Repository { get; private set; }
         public ObservableCollection<SessionViewModelBase> Sessions { get; private set; }
 
         // Start new staging session

@@ -17,7 +17,7 @@ namespace MediaCenter.Sessions.Staging
         private string[] _imageExtensions = {".jpg", ".png", ".bmp"};
         private string _statusMessage;
 
-        public StagingSession(MediaRepository repository) : base(repository)
+        public StagingSession(RemoteRepository repository) : base(repository)
         {
             StagedItems = new ObservableCollection<StagedItem>();
         }

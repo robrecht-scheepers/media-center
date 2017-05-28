@@ -10,7 +10,7 @@ using MediaCenter.Helpers;
 
 namespace MediaCenter.Repository
 {
-    public class MediaRepository
+    public class RemoteRepository
     {
         // TODO: add "ready-only" mode to avoid concurrent editing
         private const string MediaFileExtension = ".mcd";
@@ -21,7 +21,7 @@ namespace MediaCenter.Repository
         
         private List<CatalogItem> _catalog;
 
-        public MediaRepository(string remoteStore, string localStoreFilePath)
+        public RemoteRepository(string remoteStore, string localStoreFilePath)
         {
             _remoteStore = remoteStore;
             _localStoreFilePath = localStoreFilePath;

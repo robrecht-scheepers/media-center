@@ -6,7 +6,7 @@ namespace MediaCenter.Sessions.Query
 {
     public class QuerySession : SessionBase
     {
-        public QuerySession(MediaRepository repository) : base(repository)
+        public QuerySession(RemoteRepository repository) : base(repository)
         {
             Criteria = new ObservableCollection<Criterion>();
             QueryResult = new ObservableCollection<SessionMediaItem>();

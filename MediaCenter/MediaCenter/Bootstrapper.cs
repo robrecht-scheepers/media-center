@@ -10,12 +10,12 @@ namespace MediaCenter
 {
     public class Bootstrapper
     {
-        private MediaRepository _repository;
+        private RemoteRepository _repository;
 
         public async Task Run()
         {
             // dummy code until repositorx management logic is ready
-            _repository = new Repository.MediaRepository(ConfigurationManager.AppSettings["RemoteStore"],
+            _repository = new Repository.RemoteRepository(ConfigurationManager.AppSettings["RemoteStore"],
                 ConfigurationManager.AppSettings["LocalStore"]);
 
             var repositoryTask = _repository.Initialize();
