@@ -6,12 +6,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MediaCenter.Helpers;
+using MediaCenter.Sessions;
+using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter.Repository
 {
     public class RemoteRepository
     {
-        // TODO: add "ready-only" mode to avoid concurrent editing
         private const string MediaFileExtension = ".mcd";
 
         private readonly string _localStoreFilePath;
@@ -84,29 +85,30 @@ namespace MediaCenter.Repository
             _lastSyncFromRemote = newLastSyncedDate;
         }
 
-        public async Task AddMediaItem(string filePath, string name, Image thumbnail)
+        public async Task SaveStagedItems(IEnumerable<StagedItem> newItems )
         {
-            if (string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(name))
-                return;
-            
-            // add to remote store
-            var mediaItemFilename = Path.Combine(_remoteStore, name + Path.GetExtension(filePath));
-            await IOHelper.CopyFile(filePath, mediaItemFilename);
+            foreach (var newItem in newItems)
+            {
+                if (string.IsNullOrEmpty(newItem.FilePath) || string.IsNullOrEmpty(newItem.Name))
+                    // TODO: error handling
+                    continue;
 
-            var thumbnailFilename = Path.Combine(_remoteStore, name + "_T.jpg");
-            await IOHelper.SaveImage(thumbnail, thumbnailFilename, ImageFormat.Jpeg);
+                // add to remote store
+                var mediaItemFilename = Path.Combine(_remoteStore, newItem.Name + Path.GetExtension(newItem.FilePath));
+                await IOHelper.CopyFile(newItem.FilePath, mediaItemFilename);
 
-            var descriptorFilename = Path.Combine(_remoteStore, name + MediaFileExtension);
-            await IOHelper.SaveObject(new MediaInfo(name), descriptorFilename);
+                var thumbnailFilename = Path.Combine(_remoteStore, newItem.Name + "_T.jpg");
+                await IOHelper.SaveImage(newItem.Thumbnail, thumbnailFilename, ImageFormat.Jpeg);
+
+                var descriptorFilename = Path.Combine(_remoteStore, newItem.Name + MediaFileExtension);
+                await IOHelper.SaveObject(newItem.Info, descriptorFilename);
+            }
 
             await SynchronizeFromRemoteStore();
             // yes, this causes a retrieval of an object we already have in memory, 
             // but it fixes the concurrent access issues by always having the remote as master
             // so it's worth it, as media files are small enough
-
-            // TODO: optimize to do only one sync from remote when all items of a staging session have been saved
         }
 
-         
     }
 }

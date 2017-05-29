@@ -15,6 +15,7 @@ namespace MediaCenter.Sessions
         private Image _thumbnail;
         private Image _fullImage;
 
+        public string Name => Info.Name;
         public MediaInfo Info { get; set; }
 
         public Image Thumbnail

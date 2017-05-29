@@ -58,7 +58,7 @@ namespace MediaCenter.Sessions.Staging
                         var image = new Bitmap(destination);
                         var name = CreateItemName(ReadImageDate(image));
                         var thumbnail = await CreateThumbnail(image);
-                        StagedItems.Add(new StagedItem {FilePath = filePath,Name = name, Thumbnail = thumbnail});
+                        StagedItems.Add(new StagedItem { Info = new MediaInfo(name), FilePath = filePath, Thumbnail = thumbnail});
                     }
                 }
             }
@@ -66,13 +66,7 @@ namespace MediaCenter.Sessions.Staging
 
         public async Task SaveToRepository()
         {
-            var total = StagedItems.Count;
-            var cnt = 1;
-            foreach (var stagedItem in StagedItems)
-            {
-                StatusMessage = $"Uploading item {cnt++} of {total}.";
-                await Repository.AddMediaItem(stagedItem.FilePath, stagedItem.Name, stagedItem.Thumbnail);
-            }
+            await Repository.SaveStagedItems(StagedItems);
         }
 
         public string StatusMessage
