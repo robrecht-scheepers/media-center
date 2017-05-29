@@ -21,16 +21,16 @@ namespace MediaCenter.Sessions.Query
             set { SetValue(ref _until, value); }
         }
 
-        public override IEnumerable<MediaInfo> Apply(IEnumerable<MediaInfo> source, FilterMode filterMode)
+        public override IEnumerable<MediaInfo> Apply(IEnumerable<MediaInfo> source)
         {
-            switch (filterMode)
+            switch (FilterMode)
             {
                 case FilterMode.Match:
                     return source.Where(x => x.DateTaken >= From && x.DateTaken <= Until);
                 case FilterMode.NoMatch:
                     return source.Where(x => x.DateTaken < From || x.DateTaken > Until);
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(filterMode), filterMode, null);
+                    throw new ArgumentOutOfRangeException(nameof(FilterMode), FilterMode, null);
             }
             
         }

@@ -5,7 +5,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Documents;
 using MediaCenter.Helpers;
 
 namespace MediaCenter.Repository
@@ -18,13 +17,15 @@ namespace MediaCenter.Repository
         private readonly string _localStoreFilePath;
         private readonly string _remoteStore;
         private DateTime _lastSyncFromRemote;
+        private List<MediaInfo> _catalog; 
         
-        private List<MediaInfo> _catalog;
+        public IEnumerable<MediaInfo> Catalog => _catalog;
 
         public RemoteRepository(string remoteStore, string localStoreFilePath)
         {
             _remoteStore = remoteStore;
             _localStoreFilePath = localStoreFilePath;
+            _catalog = new List<MediaInfo>();
         }
 
         public async Task Initialize()
@@ -47,7 +48,7 @@ namespace MediaCenter.Repository
 
         private async Task UpdateLocalStore()
         {
-            await IOHelper.SaveObject(_catalog, _localStoreFilePath);
+            await IOHelper.SaveObject(Catalog, _localStoreFilePath);
         }
 
         public async Task SynchronizeFromRemoteStore()
@@ -61,7 +62,7 @@ namespace MediaCenter.Repository
             foreach (var file in remoteStoreMediaFiles.Where(f => f.LastWriteTime >= _lastSyncFromRemote))
             {
                 var item = await IOHelper.OpenObject<MediaInfo>(file.FullName);
-                var existingItem = _catalog.FirstOrDefault(x => x.Name == item.Name);
+                var existingItem = Catalog.FirstOrDefault(x => x.Name == item.Name);
                 if (existingItem == null) // new item
                 {
                     _catalog.Add(item);
@@ -72,7 +73,7 @@ namespace MediaCenter.Repository
                 }
             }
             // find and delete all items in the local store that are not in the remote store anymore
-            var deleteList = _catalog.Where(item => 
+            var deleteList = Catalog.Where(item => 
                 remoteStoreMediaFiles.All(f => f.Name.ToLower() != item.Name + MediaFileExtension)).ToList();
             foreach (var mediaItem in deleteList)
             {
