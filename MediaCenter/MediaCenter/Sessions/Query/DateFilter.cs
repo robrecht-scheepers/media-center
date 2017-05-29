@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions.Query
 {
-    public class DateCriterion : Criterion
+    public class DateFilter : Filter
     {
         private DateTime _from;
         public DateTime From
@@ -23,8 +21,7 @@ namespace MediaCenter.Sessions.Query
             set { SetValue(ref _until, value); }
         }
 
-
-        public override IEnumerable<CatalogItem> Filter(IEnumerable<CatalogItem> source, FilterMode filterMode)
+        public override IEnumerable<CatalogItem> Apply(IEnumerable<CatalogItem> source, FilterMode filterMode)
         {
             switch (filterMode)
             {

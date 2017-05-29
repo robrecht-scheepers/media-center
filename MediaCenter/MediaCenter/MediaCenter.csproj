@@ -72,8 +72,8 @@
     <Compile Include="MVVM\RelayCommand.cs" />
     <Compile Include="MVVM\RelayCommandBase.cs" />
     <Compile Include="Repository\RemoteRepository.cs" />
-    <Compile Include="Sessions\Query\Criterion.cs" />
-    <Compile Include="Sessions\Query\DateCriterion.cs" />
+    <Compile Include="Sessions\Query\Filter.cs" />
+    <Compile Include="Sessions\Query\DateFilter.cs" />
     <Compile Include="Sessions\Query\FilterMode.cs" />
     <Compile Include="Sessions\Query\QuerySessionView.xaml.cs">
       <DependentUpon>QuerySessionView.xaml</DependentUpon>

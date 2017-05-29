@@ -8,11 +8,11 @@ namespace MediaCenter.Sessions.Query
     {
         public QuerySession(RemoteRepository repository) : base(repository)
         {
-            Criteria = new ObservableCollection<Criterion>();
+            Criteria = new ObservableCollection<Filter>();
             QueryResult = new ObservableCollection<SessionMediaItem>();
         }
 
-        public ObservableCollection<Criterion> Criteria { get; } 
+        public ObservableCollection<Filter> Criteria { get; } 
 
         public ObservableCollection<SessionMediaItem> QueryResult { get; }
 
