@@ -4,9 +4,9 @@ using System.Runtime.Serialization;
 
 namespace MediaCenter.Repository
 {
-    public class CatalogItem
+    public class MediaInfo
     {
-        public CatalogItem(string name)
+        public MediaInfo(string name)
         {
             Name = name;
             Tags = new List<string>();
@@ -20,7 +20,7 @@ namespace MediaCenter.Repository
 
         public bool Favorite { get; set; }
 
-        public void UpdateFrom(CatalogItem item)
+        public void UpdateFrom(MediaInfo item)
         {
             Name = item.Name;
             DateTaken = item.DateTaken;

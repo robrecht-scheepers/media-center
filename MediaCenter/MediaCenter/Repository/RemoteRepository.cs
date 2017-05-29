@@ -19,7 +19,7 @@ namespace MediaCenter.Repository
         private readonly string _remoteStore;
         private DateTime _lastSyncFromRemote;
         
-        private List<CatalogItem> _catalog;
+        private List<MediaInfo> _catalog;
 
         public RemoteRepository(string remoteStore, string localStoreFilePath)
         {
@@ -37,12 +37,12 @@ namespace MediaCenter.Repository
         {
             if (!File.Exists(_localStoreFilePath))
             {
-                _catalog = new List<CatalogItem>();
+                _catalog = new List<MediaInfo>();
                 await UpdateLocalStore();
                 return;
             }
 
-            _catalog = await IOHelper.OpenObject<List<CatalogItem>>(_localStoreFilePath);
+            _catalog = await IOHelper.OpenObject<List<MediaInfo>>(_localStoreFilePath);
         }
 
         private async Task UpdateLocalStore()
@@ -60,7 +60,7 @@ namespace MediaCenter.Repository
             // read all remote media files that were created or updates since the last sync
             foreach (var file in remoteStoreMediaFiles.Where(f => f.LastWriteTime >= _lastSyncFromRemote))
             {
-                var item = await IOHelper.OpenObject<CatalogItem>(file.FullName);
+                var item = await IOHelper.OpenObject<MediaInfo>(file.FullName);
                 var existingItem = _catalog.FirstOrDefault(x => x.Name == item.Name);
                 if (existingItem == null) // new item
                 {
@@ -96,7 +96,7 @@ namespace MediaCenter.Repository
             await IOHelper.SaveImage(thumbnail, thumbnailFilename, ImageFormat.Jpeg);
 
             var descriptorFilename = Path.Combine(_remoteStore, name + MediaFileExtension);
-            await IOHelper.SaveObject(new CatalogItem(name), descriptorFilename);
+            await IOHelper.SaveObject(new MediaInfo(name), descriptorFilename);
 
             await SynchronizeFromRemoteStore();
             // yes, this causes a retrieval of an object we already have in memory, 

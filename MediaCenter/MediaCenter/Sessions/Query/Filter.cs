@@ -6,6 +6,6 @@ namespace MediaCenter.Sessions.Query
 {
     public abstract class Filter : Observable
     {
-        public abstract IEnumerable<CatalogItem> Apply(IEnumerable<CatalogItem> source, FilterMode filterMode);
+        public abstract IEnumerable<MediaInfo> Apply(IEnumerable<MediaInfo> source, FilterMode filterMode);
     }
 }

@@ -21,7 +21,7 @@ namespace MediaCenter.Sessions.Query
             set { SetValue(ref _until, value); }
         }
 
-        public override IEnumerable<CatalogItem> Apply(IEnumerable<CatalogItem> source, FilterMode filterMode)
+        public override IEnumerable<MediaInfo> Apply(IEnumerable<MediaInfo> source, FilterMode filterMode)
         {
             switch (filterMode)
             {

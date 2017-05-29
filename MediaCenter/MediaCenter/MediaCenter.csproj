@@ -63,7 +63,7 @@
     <Compile Include="Helpers\IOHelper.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="Repository\CatalogItem.cs" />
+    <Compile Include="Repository\MediaInfo.cs" />
     <Compile Include="MVVM\AsyncRelayCommand.cs" />
     <Compile Include="MVVM\CommandBase.cs" />
     <Compile Include="MVVM\IAsyncCommand.cs" />

@@ -15,15 +15,15 @@ namespace MediaCenterUnitTest
         [TestMethod]
         public void TestMethod1()
         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<CatalogItem>));
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<MediaInfo>));
 
-            List<CatalogItem> collection = new List<CatalogItem>
+            List<MediaInfo> collection = new List<MediaInfo>
             {
-                new CatalogItem("Item 1")
+                new MediaInfo("Item 1")
                 {
                     Tags = new List<string> {"Tag 1", "Tag 2"}
                 },
-                new CatalogItem("Item 2")
+                new MediaInfo("Item 2")
                 {
                     Tags = new List<string> {"Tag 3", "Tag 4"}
                 }
