@@ -5,8 +5,38 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MediaCenter.Sessions.Query"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance local:QuerySessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="FilterDataTemplates.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
     <Grid>
-        <TextBlock> Query Session View</TextBlock>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Column="0" Grid.Row="0">
+            <ComboBox ItemsSource="{Binding FilterNames}" SelectedItem="{Binding SelectedFilterName}"/>
+            <Button Command="{Binding AddFilterCommand}">+</Button>
+        </StackPanel>
+        
+        <ListView Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Filters}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ContentPresenter Content="{Binding}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
     </Grid>
 </UserControl>

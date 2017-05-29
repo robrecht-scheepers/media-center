@@ -1,0 +1,20 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:MediaCenter.Sessions.Query">
+    <DataTemplate DataType="{x:Type local:DatePeriodFilter}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="From "/>
+            <TextBox Text="{Binding From}"/>
+            <TextBlock Text="Until "/>
+            <TextBox Text="{Binding Until}"/>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type local:DayFilter}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Day "/>
+            <TextBox Text="{Binding Day}"/>
+        </StackPanel>
+    </DataTemplate>
+
+</ResourceDictionary>

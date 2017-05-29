@@ -72,8 +72,9 @@
     <Compile Include="MVVM\RelayCommand.cs" />
     <Compile Include="MVVM\RelayCommandBase.cs" />
     <Compile Include="Repository\RemoteRepository.cs" />
+    <Compile Include="Sessions\Query\DayFilter.cs" />
     <Compile Include="Sessions\Query\Filter.cs" />
-    <Compile Include="Sessions\Query\DateFilter.cs" />
+    <Compile Include="Sessions\Query\DatePeriodFilter.cs" />
     <Compile Include="Sessions\Query\FilterMode.cs" />
     <Compile Include="Sessions\Query\QuerySessionView.xaml.cs">
       <DependentUpon>QuerySessionView.xaml</DependentUpon>
@@ -102,6 +103,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Sessions\Query\FilterDataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Sessions\Query\QuerySessionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

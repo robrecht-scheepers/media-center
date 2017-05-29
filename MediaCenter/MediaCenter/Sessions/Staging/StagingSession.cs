@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -56,9 +57,10 @@ namespace MediaCenter.Sessions.Staging
                     using (Stream destination = new MemoryStream(buffer))
                     {
                         var image = new Bitmap(destination);
-                        var name = CreateItemName(ReadImageDate(image));
+                        var date = ReadImageDate(image);
+                        var name = CreateItemName(date);
                         var thumbnail = await CreateThumbnail(image);
-                        StagedItems.Add(new StagedItem { Info = new MediaInfo(name), FilePath = filePath, Thumbnail = thumbnail});
+                        StagedItems.Add(new StagedItem { Info = new MediaInfo(name) {DateTaken = date}, FilePath = filePath, Thumbnail = thumbnail});
                     }
                 }
             }
@@ -75,23 +77,29 @@ namespace MediaCenter.Sessions.Staging
             set { SetValue(ref _statusMessage, value); }
         }
 
-        private string ReadImageDate(Image image)
+        private DateTime ReadImageDate(Image image)
         {
             int datePropertyID = 36867;
             ASCIIEncoding encoding = new ASCIIEncoding();
-            string date = "";
+            string dateString = "";
 
             PropertyItem[] propertyItems = image.PropertyItems;
             var dateProperty = propertyItems.FirstOrDefault(p => p.Id == datePropertyID);
             if (dateProperty != null)
-                date = encoding.GetString(dateProperty.Value);
+            {
+                dateString = encoding.GetString(dateProperty.Value);
+                dateString = dateString.Substring(0, dateString.Length - 1); // drop zero character /0
+            }
+                
+
+            var date = DateTime.ParseExact(dateString, "yyyy:MM:dd HH:mm:ss", new DateTimeFormatInfo());
 
             return date;
         }
 
-        private string CreateItemName(string date)
+        private string CreateItemName(DateTime date)
         {
-            var name = date.Replace("\0","").Replace(":", "").Replace(" ", "");
+            var name = date.ToString("yyyyMMddHHmmss");
             //TODO: guarantee name uniqueness
             //if (_mediaItems.Any(i => i.Name == name))
             //{

@@ -5,30 +5,26 @@ using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions.Query
 {
-    public class DateFilter : Filter
+    public class DayFilter : Filter
     {
-        private DateTime _from;
-        public DateTime From
+        public static string Name = "Day taken";
+
+        private DateTime _day;
+        public DateTime Day
         {
-            get { return _from; }
-            set { SetValue(ref _from,value); }
+            get { return _day; }
+            set { SetValue(ref _day, value); }
         }
 
-        private DateTime _until;
-        public DateTime Until
-        {
-            get { return _until; }
-            set { SetValue(ref _until, value); }
-        }
-
+        
         public override IEnumerable<MediaInfo> Apply(IEnumerable<MediaInfo> source)
         {
             switch (FilterMode)
             {
                 case FilterMode.Match:
-                    return source.Where(x => x.DateTaken >= From && x.DateTaken <= Until);
+                    return source.Where(x => x.DateTaken.Date == Day.Date);
                 case FilterMode.NoMatch:
-                    return source.Where(x => x.DateTaken < From || x.DateTaken > Until);
+                    return source.Where(x => x.DateTaken.Date != Day.Date);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(FilterMode), FilterMode, null);
             }

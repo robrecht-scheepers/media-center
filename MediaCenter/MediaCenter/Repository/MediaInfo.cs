@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 
 namespace MediaCenter.Repository
 {
+    [DataContract]
     public class MediaInfo
     {
         public MediaInfo(string name)
@@ -12,12 +13,16 @@ namespace MediaCenter.Repository
             Tags = new List<string>();
         }
 
+        [DataMember]
         public string Name { get; set; }
 
+        [DataMember]
         public List<string> Tags { get; set; }
 
+        [DataMember]
         public DateTime DateTaken { get; set; }
 
+        [DataMember]
         public bool Favorite { get; set; }
 
         public void UpdateFrom(MediaInfo item)
