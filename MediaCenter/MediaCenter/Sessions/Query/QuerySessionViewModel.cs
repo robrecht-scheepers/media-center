@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using MediaCenter.MVVM;
 using MediaCenter.Sessions.Staging;
 
@@ -67,7 +68,6 @@ namespace MediaCenter.Sessions.Query
 
         private RelayCommand _addFilterCommand;
         public RelayCommand AddFilterCommand => _addFilterCommand ?? (_addFilterCommand = new RelayCommand(AddFilter));
-
         private void AddFilter()
         {
             if(SelectedFilterName == DatePeriodFilter.Name)
@@ -77,12 +77,11 @@ namespace MediaCenter.Sessions.Query
 
         }
 
-        private RelayCommand _applyFiltersCommand;
-        public RelayCommand ApplyFiltersCommand => _applyFiltersCommand ?? (_applyFiltersCommand = new RelayCommand(ApplyFilters));
-
-        private void ApplyFilters()
+        private AsyncRelayCommand _applyFiltersCommand;
+        public AsyncRelayCommand ApplyFiltersCommand => _applyFiltersCommand ?? (_applyFiltersCommand = new AsyncRelayCommand(ExecuteQuery));
+        private async Task ExecuteQuery()
         {
-            QuerySession.ExecuteQuery();
+            await QuerySession.ExecuteQuery();
         }
     }
 }

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using MediaCenter.Helpers;
 using MediaCenter.Sessions;
 using MediaCenter.Sessions.Staging;
+using Image = System.Drawing.Image;
 
 namespace MediaCenter.Repository
 {
@@ -110,5 +111,10 @@ namespace MediaCenter.Repository
             // so it's worth it, as media files are small enough
         }
 
+        public async Task<Image> GetThumbnail(string name)
+        {
+            var thumbnailFilename = Path.Combine(_remoteStore, name + "_T.jpg");
+            return await IOHelper.OpenImage(thumbnailFilename);
+        }
     }
 }

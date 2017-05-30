@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.RightsManagement;
+using System.Threading.Tasks;
 using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions.Query
@@ -18,7 +19,7 @@ namespace MediaCenter.Sessions.Query
 
         public ObservableCollection<SessionItem> QueryResult { get; private set; }
 
-        public void ExecuteQuery()
+        public async Task ExecuteQuery()
         {
             var infos = Filters.Aggregate(Repository.Catalog, (current, filter) => filter.Apply(current));
 
@@ -26,6 +27,11 @@ namespace MediaCenter.Sessions.Query
             foreach (var mediaInfo in infos)
             {
                 QueryResult.Add(new SessionItem { Info = mediaInfo });
+            }
+
+            foreach (var sessionItem in QueryResult)
+            {
+                sessionItem.Thumbnail = await Repository.GetThumbnail(sessionItem.Name);
             }
         }
     }
