@@ -17,7 +17,7 @@ namespace MediaCenter.Sessions.Query
 
         public ObservableCollection<Filter> Filters { get; } 
 
-        public ObservableCollection<SessionItem> QueryResult { get; private set; }
+        public ObservableCollection<SessionItem> QueryResult { get; }
 
         public async Task ExecuteQuery()
         {
@@ -33,6 +33,15 @@ namespace MediaCenter.Sessions.Query
             {
                 sessionItem.Thumbnail = await Repository.GetThumbnail(sessionItem.Name);
             }
+        }
+
+        public async Task LoadImageForSessionItem(string name)
+        {
+            var sessionItem = QueryResult.FirstOrDefault(x => x.Name == name);
+            if (sessionItem == null)
+                return; // TODO: error handling
+
+            sessionItem.FullImage = await Repository.GetImage(name);
         }
     }
 }

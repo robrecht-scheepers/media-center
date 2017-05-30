@@ -40,9 +40,7 @@ namespace MediaCenter.Sessions.Query
 
         private void InitialzeFilterNames()
         {
-            _filterNames = new List<string>();
-            _filterNames.Add(DatePeriodFilter.Name);
-            _filterNames.Add(DayFilter.Name);
+            FilterNames = new List<string> {DatePeriodFilter.Name, DayFilter.Name};
         }
 
         protected override string CreateNameForSession(SessionBase session)
@@ -56,13 +54,9 @@ namespace MediaCenter.Sessions.Query
 
         public ObservableCollection<Filter> Filters => QuerySession.Filters;
 
-        private List<string> _filterNames;
         private string _selectedFilterName;
 
-        public List<string> FilterNames
-        {
-            get { return _filterNames; }
-        }
+        public List<string> FilterNames { get; private set; }
 
         public string SelectedFilterName
         {
@@ -70,6 +64,18 @@ namespace MediaCenter.Sessions.Query
             set { SetValue(ref _selectedFilterName, value);}
         }
 
+        public SessionItemViewModel SelectedItem
+        {
+            get { return _selectedItem; }
+            set { SetValue(ref _selectedItem, value, async () => await SelectedItemChanged()); }
+        }
+
+        private async Task SelectedItemChanged()
+        {
+            await QuerySession.LoadImageForSessionItem(SelectedItem.Name);
+        }
+
+        #region Add filter
         private RelayCommand _addFilterCommand;
         public RelayCommand AddFilterCommand => _addFilterCommand ?? (_addFilterCommand = new RelayCommand(AddFilter));
         private void AddFilter()
@@ -80,12 +86,16 @@ namespace MediaCenter.Sessions.Query
                 Filters.Add(new DayFilter());
 
         }
+        #endregion
 
-        private AsyncRelayCommand _applyFiltersCommand;
-        public AsyncRelayCommand ApplyFiltersCommand => _applyFiltersCommand ?? (_applyFiltersCommand = new AsyncRelayCommand(ExecuteQuery));
+        #region Execute query
+        private AsyncRelayCommand _executeQueryCommand;
+        private SessionItemViewModel _selectedItem;
+        public AsyncRelayCommand ExecuteQueryCommand => _executeQueryCommand ?? (_executeQueryCommand = new AsyncRelayCommand(ExecuteQuery));
         private async Task ExecuteQuery()
         {
             await QuerySession.ExecuteQuery();
         }
+        #endregion
     }
 }

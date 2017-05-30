@@ -116,5 +116,13 @@ namespace MediaCenter.Repository
             var thumbnailFilename = Path.Combine(_remoteStore, name + "_T.jpg");
             return await IOHelper.OpenImage(thumbnailFilename);
         }
+
+        public async Task<Image> GetImage(string name)
+        {
+            var imagePath = Directory.GetFiles(_remoteStore, $"{name}.*").FirstOrDefault();
+            if (string.IsNullOrEmpty(imagePath))
+                return null;
+            return await IOHelper.OpenImage(imagePath);
+        }
     }
 }

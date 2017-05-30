@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using MediaCenter.MVVM;
 
@@ -10,6 +11,7 @@ namespace MediaCenter.Sessions
     {
         protected readonly SessionItem SessionItem;
         private BitmapImage _thumbnail;
+        private BitmapImage _fullImage;
 
         public SessionItemViewModel(SessionItem sessionItem)
         {
@@ -22,6 +24,14 @@ namespace MediaCenter.Sessions
         {
             if (e.PropertyName == "Thumbnail")
                 SessionItem_ThumbnailUpdated();
+            else if (e.PropertyName == "FullImage")
+                SessionItem_FullImageUpdated();
+
+        }
+
+        private void SessionItem_FullImageUpdated()
+        {
+            FullImage = ImageToBitmapImage(SessionItem.FullImage);
         }
 
         private void SessionItem_ThumbnailUpdated()
@@ -57,6 +67,10 @@ namespace MediaCenter.Sessions
             set { SetValue(ref _thumbnail, value); }
         }
 
-        
+        public BitmapImage FullImage
+        {
+            get { return _fullImage; }
+            set { SetValue(ref _fullImage, value); }
+        }
     }
 }
