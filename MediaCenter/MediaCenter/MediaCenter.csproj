@@ -81,6 +81,7 @@
     </Compile>
     <Compile Include="Sessions\Query\QuerySessionViewModel.cs" />
     <Compile Include="Sessions\SessionItem.cs" />
+    <Compile Include="Sessions\SessionItemViewModel.cs" />
     <Compile Include="Sessions\SessionViewModelBase.cs" />
     <Compile Include="Sessions\Staging\StagedItem.cs" />
     <Compile Include="Sessions\Staging\StagedItemViewModel.cs" />

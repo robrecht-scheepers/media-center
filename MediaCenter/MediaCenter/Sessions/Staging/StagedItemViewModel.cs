@@ -1,38 +1,19 @@
 ﻿using System.Drawing;
 using System.IO;
 using System.Windows.Media.Imaging;
+using MediaCenter.MVVM;
 
 namespace MediaCenter.Sessions.Staging
 {
-    public class StagedItemViewModel
+    public class StagedItemViewModel : SessionItemViewModel
     {
-        private readonly StagedItem _stagedItem;
+        public StagedItem StagedItem => (StagedItem)SessionItem;
         
-        public StagedItemViewModel(StagedItem stagedItem)
+        public StagedItemViewModel(StagedItem stagedItem) : base(stagedItem)
         {
-            _stagedItem = stagedItem;
-            Thumbnail = ImageToBitmapImage(_stagedItem.Thumbnail);
+            
         }
-
-        private BitmapImage ImageToBitmapImage(Image source)
-        {
-            BitmapImage result;
-            using (var ms = new MemoryStream())
-            {
-                source.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                ms.Position = 0;
-
-                result = new BitmapImage();
-                result.BeginInit();
-                result.CacheOption = BitmapCacheOption.OnLoad;
-                result.StreamSource = ms;
-                result.EndInit();
-            }
-            return result;
-        }
-
-        public string Name => _stagedItem.Name;
-        public string FilePath => _stagedItem.FilePath;
-        public BitmapImage Thumbnail { get; }
+        
+        public string FilePath => StagedItem.FilePath;
     }
 }

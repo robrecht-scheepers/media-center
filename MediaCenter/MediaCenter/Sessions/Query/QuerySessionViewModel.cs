@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using MediaCenter.MVVM;
+using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter.Sessions.Query
 {
@@ -9,6 +11,26 @@ namespace MediaCenter.Sessions.Query
         public QuerySessionViewModel(SessionBase session) : base(session)
         {
             InitialzeFilterNames();
+            QueryResultItems = new ObservableCollection<SessionItemViewModel>();
+            QuerySession.QueryResult.CollectionChanged += QueryResult_CollectionChanged;
+        }
+
+        private void QueryResult_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.OldItems != null)
+            {
+                foreach (var oldItem in e.OldItems)
+                {
+                    QueryResultItems.Remove(QueryResultItems.First(x => x.Name == ((StagedItem)oldItem).Name));
+                }
+            }
+            if (e.NewItems != null)
+            {
+                foreach (var newItem in e.NewItems)
+                {
+                    QueryResultItems.Add(new SessionItemViewModel((SessionItem)newItem));
+                }
+            }
         }
 
         private void InitialzeFilterNames()
@@ -24,6 +46,8 @@ namespace MediaCenter.Sessions.Query
         }
 
         public QuerySession QuerySession => (QuerySession) Session;
+
+        public ObservableCollection<SessionItemViewModel> QueryResultItems { get; }
 
         public ObservableCollection<Filter> Filters => QuerySession.Filters;
 
@@ -42,11 +66,7 @@ namespace MediaCenter.Sessions.Query
         }
 
         private RelayCommand _addFilterCommand;
-
-        public RelayCommand AddFilterCommand
-        {
-            get { return _addFilterCommand ?? (_addFilterCommand = new RelayCommand(AddFilter)); }
-        }
+        public RelayCommand AddFilterCommand => _addFilterCommand ?? (_addFilterCommand = new RelayCommand(AddFilter));
 
         private void AddFilter()
         {
@@ -55,6 +75,14 @@ namespace MediaCenter.Sessions.Query
             else if(SelectedFilterName == DayFilter.Name)
                 Filters.Add(new DayFilter());
 
+        }
+
+        private RelayCommand _applyFiltersCommand;
+        public RelayCommand ApplyFiltersCommand => _applyFiltersCommand ?? (_applyFiltersCommand = new RelayCommand(ApplyFilters));
+
+        private void ApplyFilters()
+        {
+            QuerySession.ExecuteQuery();
         }
     }
 }

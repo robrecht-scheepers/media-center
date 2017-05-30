@@ -25,7 +25,7 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         
-        <StackPanel Grid.Column="0" Grid.Row="0">
+        <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
             <ComboBox ItemsSource="{Binding FilterNames}" SelectedItem="{Binding SelectedFilterName}"/>
             <Button Command="{Binding AddFilterCommand}">+</Button>
         </StackPanel>
@@ -37,6 +37,10 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
+        <Button Grid.Column="1" Grid.Row="0" Command="{Binding ApplyFiltersCommand}">Search</Button>
+        
+        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding QueryResultItems.Count}"/>
         
     </Grid>
 </UserControl>
