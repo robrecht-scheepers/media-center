@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using MediaCenter.MVVM;
@@ -18,6 +19,9 @@ namespace MediaCenter.Sessions.Query
 
         private void QueryResult_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            if(e.Action == NotifyCollectionChangedAction.Reset)
+                QueryResultItems.Clear();
+
             if (e.OldItems != null)
             {
                 foreach (var oldItem in e.OldItems)

@@ -26,27 +26,7 @@ namespace MediaCenter.Helpers
 
         public static async Task<Image> OpenImage(string filePath)
         {
-            Image image;
-            using (FileStream fileStream = File.OpenRead(filePath))
-            {
-                byte[] buffer = new byte[fileStream.Length];
-                int numBytesToRead = buffer.Length;
-                int numBytesRead = 0;
-                while (numBytesToRead > 0)
-                {
-                    int n = await fileStream.ReadAsync(buffer, numBytesRead, numBytesToRead);
-                    if (n == 0)
-                        break;
-                    numBytesRead += n;
-                    numBytesToRead -= n;
-                }
-                using (Stream destination = new MemoryStream(buffer))
-                {
-                    image = new Bitmap(destination);
-                }
-            }
-
-            return image;
+            return await Task.Run(() => Image.FromFile(filePath));
         }
 
         public static async Task SaveText(string content, string filePath)

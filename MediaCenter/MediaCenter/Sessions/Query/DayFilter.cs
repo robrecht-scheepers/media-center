@@ -15,7 +15,6 @@ namespace MediaCenter.Sessions.Query
             get { return _day; }
             set { SetValue(ref _day, value); }
         }
-
         
         public override IEnumerable<MediaInfo> Apply(IEnumerable<MediaInfo> source)
         {
