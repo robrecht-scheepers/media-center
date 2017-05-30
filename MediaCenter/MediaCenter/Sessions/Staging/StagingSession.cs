@@ -91,15 +91,14 @@ namespace MediaCenter.Sessions.Staging
 
             PropertyItem[] propertyItems = image.PropertyItems;
             var dateProperty = propertyItems.FirstOrDefault(p => p.Id == datePropertyID);
-            if (dateProperty != null)
+            if (dateProperty == null)
             {
-                dateString = encoding.GetString(dateProperty.Value);
-                dateString = dateString.Substring(0, dateString.Length - 1); // drop zero character /0
+                return DateTime.MinValue;
             }
-                
-
+            
+            dateString = encoding.GetString(dateProperty.Value);
+            dateString = dateString.Substring(0, dateString.Length - 1); // drop zero character /0
             var date = DateTime.ParseExact(dateString, "yyyy:MM:dd HH:mm:ss", new DateTimeFormatInfo());
-
             return date;
         }
 
