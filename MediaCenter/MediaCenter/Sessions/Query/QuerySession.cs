@@ -41,7 +41,8 @@ namespace MediaCenter.Sessions.Query
             if (sessionItem == null)
                 return; // TODO: error handling
 
-            sessionItem.FullImage = await Repository.GetImage(name);
+            if(sessionItem.FullImage == null)
+                sessionItem.FullImage = await Repository.GetImage(name);
         }
     }
 }

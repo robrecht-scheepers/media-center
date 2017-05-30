@@ -16,7 +16,7 @@ namespace MediaCenter
         {
             // dummy code until repositorx management logic is ready
             _repository = new Repository.RemoteRepository(ConfigurationManager.AppSettings["RemoteStore"],
-                ConfigurationManager.AppSettings["LocalStore"]);
+                ConfigurationManager.AppSettings["LocalStore"],ConfigurationManager.AppSettings["LocalCache"]);
 
             var repositoryTask = _repository.Initialize();
             

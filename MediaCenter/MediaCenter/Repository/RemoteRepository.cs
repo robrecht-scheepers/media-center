@@ -18,15 +18,17 @@ namespace MediaCenter.Repository
 
         private readonly string _localStoreFilePath;
         private readonly string _remoteStore;
+        private readonly string _localCachePath;
         private DateTime _lastSyncFromRemote;
         private List<MediaInfo> _catalog; 
         
         public IEnumerable<MediaInfo> Catalog => _catalog;
 
-        public RemoteRepository(string remoteStore, string localStoreFilePath)
+        public RemoteRepository(string remoteStore, string localStoreFilePath, string localCachePath)
         {
             _remoteStore = remoteStore;
             _localStoreFilePath = localStoreFilePath;
+            _localCachePath = localCachePath;
             _catalog = new List<MediaInfo>();
         }
 
@@ -122,7 +124,28 @@ namespace MediaCenter.Repository
             var imagePath = Directory.GetFiles(_remoteStore, $"{name}.*").FirstOrDefault();
             if (string.IsNullOrEmpty(imagePath))
                 return null;
-            return await IOHelper.OpenImage(imagePath);
+            
+            // check if image is present in cache, if not, copy to cache
+            var imageCachePath = Path.Combine(_localCachePath, Path.GetFileName(imagePath));
+            if(!File.Exists(imageCachePath))
+                await IOHelper.CopyFile(imagePath, imageCachePath);
+            // TODO: cache cleanup
+
+            // open image from cache
+            return await IOHelper.OpenImage(imageCachePath);
+        }
+
+        public async Task LoadImageToCache(string name)
+        {
+            var imagePath = Directory.GetFiles(_remoteStore, $"{name}.*").FirstOrDefault();
+            if (string.IsNullOrEmpty(imagePath))
+                return;
+
+            // check if image is present in cache, if not, copy to cache
+            var imageCachePath = Path.Combine(_localCachePath, Path.GetFileName(imagePath));
+            if (!File.Exists(imageCachePath))
+                await IOHelper.CopyFile(imagePath, imageCachePath);
+            // TODO: cache cleanup
         }
     }
 }

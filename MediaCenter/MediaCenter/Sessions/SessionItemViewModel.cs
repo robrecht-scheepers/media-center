@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
@@ -41,22 +42,30 @@ namespace MediaCenter.Sessions
 
         private BitmapImage ImageToBitmapImage(Image source)
         {
-            if (source == null)
-                return null;
-
-            BitmapImage result;
-            using (var ms = new MemoryStream())
+            try
             {
-                source.Save(ms, ImageFormat.Png);
-                ms.Position = 0;
+                if (source == null)
+                    return null;
 
-                result = new BitmapImage();
-                result.BeginInit();
-                result.CacheOption = BitmapCacheOption.OnLoad;
-                result.StreamSource = ms;
-                result.EndInit();
+                BitmapImage result;
+                using (var ms = new MemoryStream())
+                {
+                    source.Save(ms, ImageFormat.Png);
+                    ms.Position = 0;
+
+                    result = new BitmapImage();
+                    result.BeginInit();
+                    result.CacheOption = BitmapCacheOption.OnLoad;
+                    result.StreamSource = ms;
+                    result.EndInit();
+                    result.Freeze();
+                }
+                return result;
             }
-            return result;
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public string Name => SessionItem.Name;

@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,7 +27,12 @@ namespace MediaCenter.Helpers
 
         public static async Task<Image> OpenImage(string filePath)
         {
-            return await Task.Run(() => Image.FromFile(filePath));
+            return await Task.Run(() =>
+            {
+                var bytes = File.ReadAllBytes(filePath);
+                var ms = new MemoryStream(bytes);
+                return new Bitmap(ms);
+            });
         }
 
         public static async Task SaveText(string content, string filePath)
