@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
@@ -24,9 +25,10 @@ namespace MediaCenter.Repository
         private readonly string _localCachePath;
         private DateTime _lastSyncFromRemote;
         private List<MediaInfo> _catalog;
-        private Dictionary<string, byte[]> _buffer;
-        private CancellationTokenSource _bufferCancellationTokenSource = new CancellationTokenSource();
+        private ConcurrentDictionary<string, byte[]> _buffer;
+        private CancellationTokenSource _bufferCancellationTokenSource;
         private IDisposable _bufferSubscription;
+        private bool _prefetchingInProgress;
         
         public IEnumerable<MediaInfo> Catalog => _catalog;
 
@@ -36,7 +38,7 @@ namespace MediaCenter.Repository
             _localStoreFilePath = localStoreFilePath;
             _localCachePath = localCachePath;
             _catalog = new List<MediaInfo>();
-            _buffer = new Dictionary<string, byte[]>();
+            _buffer = new ConcurrentDictionary<string, byte[]>();
         }
 
         public async Task Initialize()
@@ -126,10 +128,10 @@ namespace MediaCenter.Repository
             return await IOHelper.OpenBytes(thumbnailFilename);
         }
 
-        public async Task<byte[]> GetFullImage(string name, IEnumerable<string> bufferList)
+        public async Task<byte[]> GetFullImage(string name, IEnumerable<string> prefetch)
         {
             Task<byte[]> imageLoadingTask = null;
-            byte[] result;
+            byte[] result = null;
 
             if (_buffer.ContainsKey(name))
             {
@@ -140,15 +142,33 @@ namespace MediaCenter.Repository
                 var imagePath = ItemNameToImageFilename(name);
                 if (string.IsNullOrEmpty(imagePath))
                     result = null;
-
                 imageLoadingTask = IOHelper.OpenBytes(imagePath);
             }
 
+            // clean up buffer and decide which images need to be fetched
+            var prefetchList = prefetch.ToList();
+            var deleteFromBufferList = _buffer.Keys.Where(x => x != name && !prefetchList.Contains(x));
+            foreach (var deleteItem in deleteFromBufferList)
+            {
+                byte[] value;
+                _buffer.TryRemove(deleteItem, out value);
+            }
+            var itemsToBeFetched = prefetchList.Where(itemToBeBuffered => !_buffer.ContainsKey(itemToBeBuffered)).ToList();
 
-            var prefetchingSequence = Observable.Create<KeyValuePair<string, byte[]>>(
+            // start fetch sequence
+            if (itemsToBeFetched.Any())
+            {
+                // cancel any previous fetching action still in progress
+                if (_prefetchingInProgress && _bufferSubscription != null && _bufferCancellationTokenSource != null)
+                {
+                    _bufferCancellationTokenSource.Cancel();
+                    _bufferSubscription.Dispose();
+                }
+
+                var prefetchingSequence = Observable.Create<KeyValuePair<string, byte[]>>(
                 async (observer, token) =>
                 {
-                    foreach (var bufferItemName in bufferList)
+                    foreach (var bufferItemName in itemsToBeFetched)
                     {
                         token.ThrowIfCancellationRequested();
                         var file = ItemNameToImageFilename(bufferItemName);
@@ -160,13 +180,12 @@ namespace MediaCenter.Repository
                         observer.OnNext(new KeyValuePair<string, byte[]>(bufferItemName, bytes));
                     }
                 });
-
-            prefetchingSequence.Subscribe(
-                pair => { _buffer[pair.Key] = pair.Value; },
-                () => { },
-                _bufferCancellationTokenSource.Token);
-
-
+                _bufferCancellationTokenSource = new CancellationTokenSource();
+                prefetchingSequence.Subscribe(
+                    pair => { _buffer[pair.Key] = pair.Value; },
+                    () => { },
+                    _bufferCancellationTokenSource.Token);
+            }
 
             if (imageLoadingTask != null)
                 result = await imageLoadingTask;

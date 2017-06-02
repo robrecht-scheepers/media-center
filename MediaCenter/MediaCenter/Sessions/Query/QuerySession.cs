@@ -43,8 +43,16 @@ namespace MediaCenter.Sessions.Query
 
             // TODO: implement prefetching and error handling
 
-            CurrentFullImage = await Repository.GetFullImage(name);
+            // decide other prefetch items
+            int index = QueryResult.IndexOf(QueryResult.First(x => x.Name == name));
+            var prefetch = new List<string>();
+            for (int i = 1; i < 3 && i < QueryResult.Count; i++)
+            {
+                if(index+i < QueryResult.Count)
+                    prefetch.Add(QueryResult[index + i].Name);
+            }
 
+            CurrentFullImage = await Repository.GetFullImage(name, prefetch);
         }
 
         private string _currentImageName;
