@@ -12,35 +12,14 @@ namespace MediaCenter.Sessions.Staging
     {
         public StagingSessionViewModel(StagingSession session) : base(session)
         {
-            StagedItems = new ObservableCollection<StagedItemViewModel>(session.StagedItems.Select(x => new StagedItemViewModel(x)));
-            session.StagedItems.CollectionChanged += StagedItems_CollectionChanged;
-        }
-
-        private void StagedItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (e.OldItems != null)
-            {
-                foreach (var oldItem in e.OldItems)
-                {
-                    StagedItems.Remove(StagedItems.First(x => x.FilePath == ((StagedItem) oldItem).FilePath));
-                }
-            }
-            if (e.NewItems != null)
-            {
-                foreach (var newItem in e.NewItems)
-                {
-                    StagedItems.Add(new StagedItemViewModel((StagedItem) newItem));
-                }
-            }
+            
         }
 
         public StagingSession StagingSession => (StagingSession)Session;
-
-        public ObservableCollection<StagedItemViewModel> StagedItems { get; } 
         
+        #region Command: Add image files 
         private AsyncRelayCommand _addImagesCommand;
         public AsyncRelayCommand AddImagesCommand => _addImagesCommand ?? (_addImagesCommand = new AsyncRelayCommand(AddImages));
-
         private async Task AddImages()
         {
             var dialog = new OpenFileDialog
@@ -56,7 +35,9 @@ namespace MediaCenter.Sessions.Staging
                 return;
             await StagingSession.AddMediaItems(selectedImages);
         }
+        #endregion
 
+        #region Command: add image folder
         private AsyncRelayCommand _addDirectoryCommand;
         public AsyncRelayCommand AddDirectoryCommand => _addDirectoryCommand ?? (_addDirectoryCommand = new AsyncRelayCommand(AddDirectory));
         private async Task AddDirectory()
@@ -69,19 +50,20 @@ namespace MediaCenter.Sessions.Staging
                 return;
             await StagingSession.AddMediaItems(Directory.GetFiles(selectedFolder));
         }
+        #endregion
 
+        #region Command: save staged images to repository
         private AsyncRelayCommand _saveToRepositoryCommand;
         public AsyncRelayCommand SaveToRepositoryCommand => _saveToRepositoryCommand ?? (_saveToRepositoryCommand = new AsyncRelayCommand(SaveToRepository,CanExecuteSaveToRepository));
-
         private bool CanExecuteSaveToRepository()
         {
-            return StagedItems.Any();
+            return StagingSession.StagedItems.Any();
         }
-
         private async Task SaveToRepository()
         {
             await StagingSession.SaveToRepository();
         }
+        #endregion
 
         protected override string CreateNameForSession(SessionBase session)
         {
