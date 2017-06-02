@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Xml.XPath;
 using MediaCenter.Helpers;
 using MediaCenter.Sessions;
 using MediaCenter.Sessions.Staging;
@@ -20,7 +23,10 @@ namespace MediaCenter.Repository
         private readonly string _remoteStore;
         private readonly string _localCachePath;
         private DateTime _lastSyncFromRemote;
-        private List<MediaInfo> _catalog; 
+        private List<MediaInfo> _catalog;
+        private Dictionary<string, byte[]> _buffer;
+        private CancellationTokenSource _bufferCancellationTokenSource = new CancellationTokenSource();
+        private IDisposable _bufferSubscription;
         
         public IEnumerable<MediaInfo> Catalog => _catalog;
 
@@ -30,6 +36,7 @@ namespace MediaCenter.Repository
             _localStoreFilePath = localStoreFilePath;
             _localCachePath = localCachePath;
             _catalog = new List<MediaInfo>();
+            _buffer = new Dictionary<string, byte[]>();
         }
 
         public async Task Initialize()
@@ -119,21 +126,52 @@ namespace MediaCenter.Repository
             return await IOHelper.OpenBytes(thumbnailFilename);
         }
 
-        public async Task<byte[]> GetFullImage(string name, IEnumerable<string> bufferList = null)
+        public async Task<byte[]> GetFullImage(string name, IEnumerable<string> bufferList)
         {
-            var imagePath = Directory.GetFiles(_remoteStore, $"{name}.*").FirstOrDefault();
-            if (string.IsNullOrEmpty(imagePath))
-                return null;
-            
-            // TODO: implement prefetching
-            // check if image is present in cache, if not, copy to cache
-            var imageCachePath = Path.Combine(_localCachePath, Path.GetFileName(imagePath));
-            if(!File.Exists(imageCachePath))
-                await IOHelper.CopyFile(imagePath, imageCachePath);
-            // TODO: cache cleanup
+            Task<byte[]> imageLoadingTask = null;
+            byte[] result;
 
-            // open image from cache
-            return await IOHelper.OpenBytes(imageCachePath);
+            if (_buffer.ContainsKey(name))
+            {
+                result = _buffer[name];
+            }
+            else
+            {
+                var imagePath = ItemNameToImageFilename(name);
+                if (string.IsNullOrEmpty(imagePath))
+                    result = null;
+
+                imageLoadingTask = IOHelper.OpenBytes(imagePath);
+            }
+
+
+            var prefetchingSequence = Observable.Create<KeyValuePair<string, byte[]>>(
+                async (observer, token) =>
+                {
+                    foreach (var bufferItemName in bufferList)
+                    {
+                        token.ThrowIfCancellationRequested();
+                        var file = ItemNameToImageFilename(bufferItemName);
+                        if (string.IsNullOrEmpty(file))
+                            continue;
+
+                        var bytes = await IOHelper.OpenBytes(file);
+                        token.ThrowIfCancellationRequested();
+                        observer.OnNext(new KeyValuePair<string, byte[]>(bufferItemName, bytes));
+                    }
+                });
+
+            prefetchingSequence.Subscribe(
+                pair => { _buffer[pair.Key] = pair.Value; },
+                () => { },
+                _bufferCancellationTokenSource.Token);
+
+
+
+            if (imageLoadingTask != null)
+                result = await imageLoadingTask;
+
+            return result;
         }
 
         public async Task LoadImageToCache(string name)
@@ -148,5 +186,12 @@ namespace MediaCenter.Repository
                 await IOHelper.CopyFile(imagePath, imageCachePath);
             // TODO: cache cleanup
         }
+
+        private string ItemNameToImageFilename(string name)
+        {
+            return Directory.GetFiles(_remoteStore, $"{name}.*").FirstOrDefault();
+        }
+
+
     }
 }

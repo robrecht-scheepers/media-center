@@ -8,7 +8,7 @@
 
 //namespace MediaCenter.Sessions
 //{
-//    public class SessionItemViewModel : Observable
+//    public class SessionItemViewModel : PropertyChangedNotifier
 //    {
 //        protected readonly SessionItem SessionItem;
 //        private BitmapImage _thumbnail;
