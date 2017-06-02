@@ -2,7 +2,7 @@
 using MediaCenter.MVVM;
 using MediaCenter.Repository;
 
-namespace MediaCenter.Sessions.Query
+namespace MediaCenter.Sessions.Query.Filters
 {
     public abstract class Filter : Observable
     {

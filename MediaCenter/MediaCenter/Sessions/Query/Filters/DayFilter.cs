@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MediaCenter.Repository;
 
-namespace MediaCenter.Sessions.Query
+namespace MediaCenter.Sessions.Query.Filters
 {
     public class DayFilter : Filter
     {

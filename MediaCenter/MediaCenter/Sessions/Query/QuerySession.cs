@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.RightsManagement;
 using System.Threading.Tasks;
 using MediaCenter.Repository;
+using MediaCenter.Sessions.Query.Filters;
 
 namespace MediaCenter.Sessions.Query
 {

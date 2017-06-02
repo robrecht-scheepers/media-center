@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using MediaCenter.MVVM;
+using MediaCenter.Sessions.Query.Filters;
 using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter.Sessions.Query
