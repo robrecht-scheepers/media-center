@@ -35,6 +35,11 @@ namespace MediaCenter.Helpers
             });
         }
 
+        public static async Task<byte[]> OpenBytes(string filePath)
+        {
+            return await Task.Run(() => File.ReadAllBytes(filePath));
+        }
+
         public static async Task SaveText(string content, string filePath)
         {
             using (StreamWriter sw = File.CreateText(filePath))

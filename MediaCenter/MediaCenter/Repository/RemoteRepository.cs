@@ -113,18 +113,19 @@ namespace MediaCenter.Repository
             // so it's worth it, as media files are small enough
         }
 
-        public async Task<Image> GetThumbnail(string name)
+        public async Task<byte[]> GetThumbnailBytes(string name)
         {
             var thumbnailFilename = Path.Combine(_remoteStore, name + "_T.jpg");
-            return await IOHelper.OpenImage(thumbnailFilename);
+            return await IOHelper.OpenBytes(thumbnailFilename);
         }
 
-        public async Task<Image> GetImage(string name)
+        public async Task<byte[]> GetFullImage(string name, IEnumerable<string> bufferList = null)
         {
             var imagePath = Directory.GetFiles(_remoteStore, $"{name}.*").FirstOrDefault();
             if (string.IsNullOrEmpty(imagePath))
                 return null;
             
+            // TODO: implement prefetching
             // check if image is present in cache, if not, copy to cache
             var imageCachePath = Path.Combine(_localCachePath, Path.GetFileName(imagePath));
             if(!File.Exists(imageCachePath))
@@ -132,7 +133,7 @@ namespace MediaCenter.Repository
             // TODO: cache cleanup
 
             // open image from cache
-            return await IOHelper.OpenImage(imageCachePath);
+            return await IOHelper.OpenBytes(imageCachePath);
         }
 
         public async Task LoadImageToCache(string name)

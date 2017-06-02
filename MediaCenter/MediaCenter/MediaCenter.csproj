@@ -76,6 +76,7 @@
     <Compile Include="Sessions\Query\Filter.cs" />
     <Compile Include="Sessions\Query\DatePeriodFilter.cs" />
     <Compile Include="Sessions\Query\FilterMode.cs" />
+    <Compile Include="Sessions\Query\QueryResultItem.cs" />
     <Compile Include="Sessions\Query\QuerySessionView.xaml.cs">
       <DependentUpon>QuerySessionView.xaml</DependentUpon>
     </Compile>

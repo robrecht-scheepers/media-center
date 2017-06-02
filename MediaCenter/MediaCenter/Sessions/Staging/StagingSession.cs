@@ -32,39 +32,18 @@ namespace MediaCenter.Sessions.Staging
         }
         public async Task AddMediaItems(IEnumerable<string> newItems)
         {
-            var total = newItems.Count();
+            var newItemsList = newItems.ToList();
+            var total = newItemsList.Count();
             var cnt = 1;
 
-            foreach (var filePath in newItems)
+            foreach (var filePath in newItemsList)
             {
                 StatusMessage = $"Loading item {cnt++} of {total}.";
                 if ((string.IsNullOrEmpty(filePath))||(!_imageExtensions.Contains(Path.GetExtension(filePath).ToLower())))
                     continue;
-
-                //using (FileStream fileStream = File.OpenRead(filePath))
-                //{
-                //    byte[] buffer = new byte[fileStream.Length];
-                //    int numBytesToRead = buffer.Length;
-                //    int numBytesRead = 0;
-                //    while (numBytesToRead > 0)
-                //    {
-                //        int n = await fileStream.ReadAsync(buffer, numBytesRead, numBytesToRead);
-                //        if (n == 0)
-                //            break;
-                //        numBytesRead += n;
-                //        numBytesToRead -= n;
-                //    }
-
-                //    using (Stream destination = new MemoryStream(buffer))
-                //    {
-                //        var image = new Bitmap(destination);
-                //        var date = ReadImageDate(image);
-                //        var name = CreateItemName(date);
-                //        var thumbnail = await CreateThumbnail(image);
-                //        StagedItems.Add(new StagedItem { Info = new MediaInfo(name) {DateTaken = date}, FilePath = filePath, Thumbnail = thumbnail});
-                //    }
-                //}
+                
                 var image =  await IOHelper.OpenImage(filePath);
+
                 var date = ReadImageDate(image);
                 var name = CreateItemName(date);
                 var thumbnail = await CreateThumbnail(image);
@@ -74,7 +53,9 @@ namespace MediaCenter.Sessions.Staging
 
         public async Task SaveToRepository()
         {
+            StatusMessage = $"Saving {StagedItems.Count} items...";
             await Repository.SaveStagedItems(StagedItems);
+            StatusMessage = "All items saved";
         }
 
         public string StatusMessage

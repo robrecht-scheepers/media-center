@@ -12,12 +12,12 @@ namespace MediaCenter.Sessions.Query
         public QuerySession(RemoteRepository repository) : base(repository)
         {
             Filters = new ObservableCollection<Filter>();
-            QueryResult = new ObservableCollection<SessionItem>();
+            QueryResult = new ObservableCollection<QueryResultItem>();
         }
 
         public ObservableCollection<Filter> Filters { get; } 
 
-        public ObservableCollection<SessionItem> QueryResult { get; }
+        public ObservableCollection<QueryResultItem> QueryResult { get; }
 
         public async Task ExecuteQuery()
         {
@@ -26,23 +26,39 @@ namespace MediaCenter.Sessions.Query
             QueryResult.Clear();
             foreach (var mediaInfo in infos)
             {
-                QueryResult.Add(new SessionItem { Info = mediaInfo });
+                QueryResult.Add(new QueryResultItem{ Info = mediaInfo });
             }
 
-            foreach (var sessionItem in QueryResult)
+            foreach (var item in QueryResult)
             {
-                sessionItem.Thumbnail = await Repository.GetThumbnail(sessionItem.Name);
+                item.Thumbnail = await Repository.GetThumbnailBytes(item.Name);
             }
         }
 
-        public async Task LoadImageForSessionItem(string name)
+        public async Task FullImageRequested(string name)
         {
-            var sessionItem = QueryResult.FirstOrDefault(x => x.Name == name);
-            if (sessionItem == null)
-                return; // TODO: error handling
+            if (name == CurrentImageName)
+                return;
 
-            if(sessionItem.FullImage == null)
-                sessionItem.FullImage = await Repository.GetImage(name);
+            // TODO: implement prefetching and error handling
+
+            CurrentFullImage = await Repository.GetFullImage(name);
+
+        }
+
+        private string _currentImageName;
+
+        public string CurrentImageName
+        {
+            get { return _currentImageName; }
+            set { SetValue(ref _currentImageName, value); }
+        }
+
+        private byte[] _currentFullImage;
+        public byte[] CurrentFullImage  
+        {
+            get { return _currentFullImage; }
+            set { SetValue(ref _currentFullImage,value); }
         }
     }
 }

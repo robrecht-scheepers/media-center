@@ -41,7 +41,7 @@
 
         <Button Grid.Column="0" Grid.Row="2" Command="{Binding ExecuteQueryCommand}">Search</Button>
         
-        <ListBox Grid.Column="1" Grid.Row="0" ItemsSource="{Binding QueryResultItems}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
+        <ListBox Grid.Column="1" Grid.Row="0" ItemsSource="{Binding QuerySession.QueryResult}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
                  ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -55,7 +55,7 @@
             </ItemsControl.ItemTemplate>
         </ListBox>
         
-        <Image Grid.Column="1" Grid.Row="1" Source="{Binding SelectedItem.FullImage}" Stretch="Uniform" />
+        <Image Grid.Column="1" Grid.Row="1" Source="{Binding QuerySession.CurrentFullImage}" Stretch="Uniform" />
 
     </Grid>
 </UserControl>
