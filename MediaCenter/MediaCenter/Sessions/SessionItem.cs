@@ -10,7 +10,7 @@ using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions
 {
-    public abstract class SessionItem : Observable
+    public abstract class SessionItem : PropertyChangedNotifier
     {
         public string Name => Info.Name;
         public MediaInfo Info { get; set; }

@@ -7,7 +7,7 @@ using MediaCenter.MVVM;
 
 namespace MediaCenter.Sessions
 {
-    public abstract class SessionViewModelBase : Observable
+    public abstract class SessionViewModelBase : PropertyChangedNotifier
     {
         protected readonly SessionBase Session;
 

@@ -12,7 +12,7 @@ using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter
 {
-    public class MainWindowViewModel : Observable
+    public class MainWindowViewModel : PropertyChangedNotifier
     {
         
         public MainWindowViewModel(RemoteRepository repository)

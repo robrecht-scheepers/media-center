@@ -4,7 +4,7 @@ using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions.Query.Filters
 {
-    public abstract class Filter : Observable
+    public abstract class Filter : PropertyChangedNotifier
     {
         protected Filter()
         {
