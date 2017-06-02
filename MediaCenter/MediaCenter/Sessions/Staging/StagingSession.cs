@@ -43,10 +43,11 @@ namespace MediaCenter.Sessions.Staging
                     continue;
                 
                 var image =  await IOHelper.OpenImage(filePath);
-
                 var date = ReadImageDate(image);
                 var name = CreateItemName(date);
                 var thumbnail = await CreateThumbnail(image);
+                image.Dispose();
+                
                 StagedItems.Add(new StagedItem { Info = new MediaInfo(name) { DateTaken = date }, FilePath = filePath, Thumbnail = thumbnail });
             }
         }
@@ -99,13 +100,16 @@ namespace MediaCenter.Sessions.Staging
             return name;
         }
 
-        private async Task<Image> CreateThumbnail(Image source)
+        private async Task<byte[]> CreateThumbnail(Image source)
         {
             Image thumbnail = null;
             Image.GetThumbnailImageAbort myCallback =
                              new Image.GetThumbnailImageAbort(ThumbnailCallback);
             await Task.Run(() => { thumbnail = source.GetThumbnailImage(100, 100, myCallback, IntPtr.Zero); });
-            return thumbnail;
+
+            MemoryStream ms = new MemoryStream();
+            thumbnail.Save(ms,ImageFormat.Jpeg);
+            return ms.ToArray();
         }
         public bool ThumbnailCallback()
         {

@@ -101,16 +101,16 @@ namespace MediaCenter.Repository
                 await IOHelper.CopyFile(newItem.FilePath, mediaItemFilename);
 
                 var thumbnailFilename = Path.Combine(_remoteStore, newItem.Name + "_T.jpg");
-                await IOHelper.SaveImage(newItem.Thumbnail, thumbnailFilename, ImageFormat.Jpeg);
+                await IOHelper.SaveBytes(newItem.Thumbnail, thumbnailFilename);
 
                 var descriptorFilename = Path.Combine(_remoteStore, newItem.Name + MediaFileExtension);
                 await IOHelper.SaveObject(newItem.Info, descriptorFilename);
             }
 
             await SynchronizeFromRemoteStore();
-            // yes, this causes a retrieval of an object we already have in memory, 
-            // but it fixes the concurrent access issues by always having the remote as master
-            // so it's worth it, as media files are small enough
+            // yes, this causes a retrieval of objects we already have in memory, 
+            // but it fixes the concurrent access issues by always having the remote being the master
+            // over the local store, so it's worth it, as media files are quite small
         }
 
         public async Task<byte[]> GetThumbnailBytes(string name)

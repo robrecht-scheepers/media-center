@@ -8,12 +8,6 @@ namespace MediaCenter.Sessions.Query
 {
     public class QueryResultItem : SessionItem
     {
-        private byte[] _thumbnail;
-
-        public byte[] Thumbnail
-        {
-            get { return _thumbnail; }
-            set { SetValue(ref _thumbnail, value); }
-        }
+        
     }
 }

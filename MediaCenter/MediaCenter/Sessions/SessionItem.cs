@@ -15,6 +15,12 @@ namespace MediaCenter.Sessions
         public string Name => Info.Name;
         public MediaInfo Info { get; set; }
 
-     
+        private byte[] _thumbnail;
+        public byte[] Thumbnail
+        {
+            get { return _thumbnail; }
+            set { SetValue(ref _thumbnail, value); }
+        }
+
     }
 }
