@@ -29,8 +29,11 @@ namespace MediaCenter.Repository
         private CancellationTokenSource _bufferCancellationTokenSource;
         private IDisposable _bufferSubscription;
         private bool _prefetchingInProgress;
-        
+
         public IEnumerable<MediaInfo> Catalog => _catalog;
+
+        // TODO: naive straightforward approach, might need optimization
+        public IEnumerable<string> Tags => _catalog.SelectMany(x => x.Tags).Distinct();
 
         public RemoteRepository(string remoteStore, string localStoreFilePath, string localCachePath)
         {
@@ -204,6 +207,16 @@ namespace MediaCenter.Repository
             if (!File.Exists(imageCachePath))
                 await IOHelper.CopyFile(imagePath, imageCachePath);
             // TODO: cache cleanup
+        }
+
+        public async Task SaveItemInfo(MediaInfo info)
+        {
+            // add to remote store
+            var catalogInfo = _catalog.First(i => i.Name == info.Name);
+            catalogInfo.UpdateFrom(info);
+
+            var infoFilePath = Path.Combine(_remoteStore, info.Name + MediaFileExtension);
+            await IOHelper.SaveObject(info, infoFilePath);
         }
 
         private string ItemNameToImageFilename(string name)

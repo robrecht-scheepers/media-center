@@ -69,5 +69,10 @@ namespace MediaCenter.Sessions.Query
             get { return _currentFullImage; }
             set { SetValue(ref _currentFullImage,value); }
         }
+
+        public async Task SaveItem(MediaInfo info)
+        {
+            await Repository.SaveItemInfo(info);
+        }
     }
 }

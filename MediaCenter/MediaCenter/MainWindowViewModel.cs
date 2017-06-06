@@ -8,6 +8,7 @@ using MediaCenter.MVVM;
 using MediaCenter.Repository;
 using MediaCenter.Sessions;
 using MediaCenter.Sessions.Query;
+using MediaCenter.Sessions.Query.Filters;
 using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter
@@ -19,6 +20,11 @@ namespace MediaCenter
         {
             Sessions = new ObservableCollection<SessionViewModelBase>();
             Repository = repository;
+
+            // debug code
+            var debugSession = new QuerySessionViewModel(new QuerySession(Repository));
+            debugSession.Filters.Add(new DatePeriodFilter {From = DateTime.MinValue, Until = DateTime.MaxValue});
+            Sessions.Add(debugSession);
         }
 
         public RemoteRepository Repository { get; private set; }
