@@ -16,7 +16,6 @@ namespace MediaCenter.Sessions
             Session = session;
         }
 
-        public string Name => CreateNameForSession(Session);
-        protected abstract string CreateNameForSession(SessionBase session);
+        public abstract string Name { get; }
     }
 }

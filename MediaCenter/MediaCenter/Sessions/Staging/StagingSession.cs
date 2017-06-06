@@ -16,7 +16,7 @@ namespace MediaCenter.Sessions.Staging
     public class StagingSession : SessionBase
     {
         // TODO: share with view model for dialog filter
-        private string[] _imageExtensions = {".jpg", ".png", ".bmp"};
+        private readonly string[] _imageExtensions = {".jpg", ".png", ".bmp"};
         private string _statusMessage;
 
         public StagingSession(RemoteRepository repository) : base(repository)
@@ -94,15 +94,6 @@ namespace MediaCenter.Sessions.Staging
         {
             var name = date.ToString("yyyyMMddHHmmss");
             //TODO: guarantee name uniqueness
-            //if (_mediaItems.Any(i => i.Name == name))
-            //{
-            //    var originalName = name;
-            //    int cnt = 2;
-            //    while (_mediaItems.Any(i => i.Name == name))
-            //    {
-            //        name = originalName + "_" + cnt;
-            //    }
-            //}
             return name;
         }
 

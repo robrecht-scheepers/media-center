@@ -11,9 +11,9 @@ namespace MediaCenter.Sessions.Staging
     public class StagingSessionViewModel : SessionViewModelBase
     {
         public StagingSessionViewModel(StagingSession session) : base(session)
-        {
-            
-        }
+        { }
+
+        public override string Name => "Add images";
 
         public StagingSession StagingSession => (StagingSession)Session;
 
@@ -76,9 +76,6 @@ namespace MediaCenter.Sessions.Staging
         }
         #endregion
 
-        protected override string CreateNameForSession(SessionBase session)
-        {
-            return "Staging 1";
-        }
+        
     }
 }

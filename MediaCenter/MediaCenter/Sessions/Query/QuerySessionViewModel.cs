@@ -21,10 +21,7 @@ namespace MediaCenter.Sessions.Query
             FilterNames = new List<string> {DatePeriodFilter.Name, DayFilter.Name};
         }
 
-        protected override string CreateNameForSession(SessionBase session)
-        {
-            return "Query 1";
-        }
+        public override string Name => "Query";
 
         public QuerySession QuerySession => (QuerySession) Session;
         
