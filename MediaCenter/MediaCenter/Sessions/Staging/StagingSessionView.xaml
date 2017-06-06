@@ -7,6 +7,25 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:StagingSessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style x:Key="IconButton" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <ContentPresenter                  
+                            Margin="{TemplateBinding Padding}"                  
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"                  
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"                  
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"                  
+                            ContentTemplate="{TemplateBinding ContentTemplate}"                  
+                            RecognizesAccessKey="True" 
+                            Cursor="Hand"
+                            Content="{TemplateBinding Content}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -28,7 +47,14 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
-                        <Image Source="{Binding Thumbnail}" Height="100" Width="100" Margin="5"/>
+                        <Grid>
+                            <Image Stretch="UniformToFill" Source="{Binding Thumbnail}" HorizontalAlignment="Center" Height="100" Width="100" Margin="5"/>
+                            <Button HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource IconButton}" 
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveItemCommand}" 
+                                    CommandParameter="{Binding}">
+                                <Image Source="/Resources/Icons/cross-button.png" Width="16" Height="16"/>
+                            </Button>
+                        </Grid>
                         <TextBlock Text="{Binding Name}" Margin="5" />
                     </StackPanel>
                 </DataTemplate>

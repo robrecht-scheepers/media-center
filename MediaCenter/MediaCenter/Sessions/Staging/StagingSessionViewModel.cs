@@ -16,7 +16,7 @@ namespace MediaCenter.Sessions.Staging
         }
 
         public StagingSession StagingSession => (StagingSession)Session;
-        
+
         #region Command: Add image files 
         private AsyncRelayCommand _addImagesCommand;
         public AsyncRelayCommand AddImagesCommand => _addImagesCommand ?? (_addImagesCommand = new AsyncRelayCommand(AddImages));
@@ -31,7 +31,7 @@ namespace MediaCenter.Sessions.Staging
 
             dialog.ShowDialog();
             var selectedImages = dialog.FileNames;
-            if(!selectedImages.Any())
+            if (!selectedImages.Any())
                 return;
             await StagingSession.AddMediaItems(selectedImages);
         }
@@ -51,6 +51,17 @@ namespace MediaCenter.Sessions.Staging
             await StagingSession.AddMediaItems(Directory.GetFiles(selectedFolder));
         }
         #endregion
+        
+        #region Command: Remove staged item
+        private RelayCommand<StagedItem> _removeItemCommand;
+        public RelayCommand<StagedItem> RemoveItemCommand => _removeItemCommand ?? (_removeItemCommand = new RelayCommand<StagedItem> (RemoveItem));
+
+        private void RemoveItem(StagedItem item)
+        {
+            StagingSession.RemoveStagedItem(item);
+        }
+        #endregion
+
 
         #region Command: save staged images to repository
         private AsyncRelayCommand _saveToRepositoryCommand;

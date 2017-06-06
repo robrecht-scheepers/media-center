@@ -52,6 +52,12 @@ namespace MediaCenter.Sessions.Staging
             }
         }
 
+        public void RemoveStagedItem(StagedItem item)
+        {
+            if(StagedItems.Contains(item))
+                StagedItems.Remove(item);
+        }
+
         public async Task SaveToRepository()
         {
             StatusMessage = $"Saving {StagedItems.Count} items...";
@@ -115,5 +121,7 @@ namespace MediaCenter.Sessions.Staging
         {
             return false;
         }
+
+
     }
 }
