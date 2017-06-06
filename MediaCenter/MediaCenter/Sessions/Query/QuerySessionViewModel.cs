@@ -72,7 +72,7 @@ namespace MediaCenter.Sessions.Query
         }
         private async Task SaveCurrentItem()
         {
-            if (_currentItemDirty)
+            if(CurrentItemInfo != null)
                 await QuerySession.SaveItem(CurrentItemInfo.MediaInfo);
         }
         private void InitializeCurrentItem()
@@ -114,7 +114,6 @@ namespace MediaCenter.Sessions.Query
         {
             CurrentItemInfo.Tags.Remove(tag);
             AvailableTags.Add(tag);
-            // TODO: sorting
         }
 
         private RelayCommand _addNewTagCommand;

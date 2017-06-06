@@ -211,6 +211,8 @@ namespace MediaCenter.Repository
 
         public async Task SaveItemInfo(MediaInfo info)
         {
+            // TODO: validtae if dirty
+
             // add to remote store
             var catalogInfo = _catalog.First(i => i.Name == info.Name);
             catalogInfo.UpdateFrom(info);

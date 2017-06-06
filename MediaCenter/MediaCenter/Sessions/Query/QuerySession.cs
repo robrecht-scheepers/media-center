@@ -72,6 +72,9 @@ namespace MediaCenter.Sessions.Query
 
         public async Task SaveItem(MediaInfo info)
         {
+            //// TODO: why is this necessary? Items should be updated by repository, apprently is a copy and not a reference?
+            //var item = QueryResult.First(i => i.Name == info.Name);
+            //item.Info.UpdateFrom(info);
             await Repository.SaveItemInfo(info);
         }
     }
