@@ -11,6 +11,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Filters/FilterDataTemplates.xaml"/>
+                <ResourceDictionary Source="../../Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -67,17 +68,17 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-                <ListBox Grid.Row="0" ItemsSource="{Binding CurrentItemInfo.Tags}" Margin="5">
+                <ListBox Grid.Row="0" ItemsSource="{Binding CurrentItemInfo.Tags}" Margin="5" BorderThickness="0" Background="Transparent">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding}">
-                                <TextBlock.InputBindings>
-                                    <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}"
-                                              Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveTagCommand}"/>
-                                </TextBlock.InputBindings>
-                            </TextBlock>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/Resources/Icons/tag-label-green.png"></Image>
+                                <TextBlock Text="{Binding}"/>
+                                <Button Style="{StaticResource IconButton}" CommandParameter="{Binding}" 
+                                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveTagCommand}"><Image Source="/Resources/Icons/cross-button.png"/></Button>
+                            </StackPanel>
                         </DataTemplate>
-                    </ListBox.ItemTemplate>
+                    </ListBox.ItemTemplate> 
                 </ListBox>
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>

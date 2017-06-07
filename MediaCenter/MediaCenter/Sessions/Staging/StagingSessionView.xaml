@@ -8,23 +8,11 @@
              d:DataContext="{d:DesignInstance local:StagingSessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <Style x:Key="IconButton" TargetType="Button">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <ContentPresenter                  
-                            Margin="{TemplateBinding Padding}"                  
-                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"                  
-                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"                  
-                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"                  
-                            ContentTemplate="{TemplateBinding ContentTemplate}"                  
-                            RecognizesAccessKey="True" 
-                            Cursor="Hand"
-                            Content="{TemplateBinding Content}" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
