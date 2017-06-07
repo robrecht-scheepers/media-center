@@ -18,8 +18,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -28,8 +27,8 @@
         </Grid.RowDefinitions>
         
         <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
-            <ComboBox ItemsSource="{Binding FilterNames}" SelectedItem="{Binding SelectedFilterName}"/>
-            <Button Command="{Binding AddFilterCommand}">+</Button>
+            <ComboBox ItemsSource="{Binding FilterNames}" SelectedItem="{Binding SelectedFilterName}" VerticalAlignment="Top"/>
+            <Button Command="{Binding AddFilterCommand}" VerticalAlignment="Top">+</Button>
         </StackPanel>
         
         <ListView Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Filters}">
@@ -55,40 +54,57 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ListBox>
-        
-        <Image Grid.Column="1" Grid.Row="1" Source="{Binding QuerySession.CurrentFullImage}" Stretch="Uniform" />
 
-        <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Vertical">
-            <ListBox ItemsSource="{Binding CurrentItemInfo.Tags}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}">
-                            <TextBlock.InputBindings>
-                                <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}"
+        <Grid Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="0" Source="{Binding QuerySession.CurrentFullImage}" Stretch="Uniform" />
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <ListBox Grid.Row="0" ItemsSource="{Binding CurrentItemInfo.Tags}" Margin="5">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}">
+                                <TextBlock.InputBindings>
+                                    <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}"
                                               Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveTagCommand}"/>
-                            </TextBlock.InputBindings>
-                        </TextBlock>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            
-            <ListBox ItemsSource="{Binding AvailableTags}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}">
-                            <TextBlock.InputBindings>
-                                <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}" 
+                                </TextBlock.InputBindings>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Text="{Binding NewTag}" HorizontalAlignment="Stretch" MinWidth="100" Margin="5"/>
+                    <Button Grid.Column="1" Command="{Binding AddNewTagCommand}" Width="50" Margin="5">+</Button>
+                </Grid>
+                <ListBox Grid.Row="2" ItemsSource="{Binding AvailableTags}" Margin="5">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}">
+                                <TextBlock.InputBindings>
+                                    <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}" 
                                               Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.AddTagCommand}" />
-                            </TextBlock.InputBindings>
-                        </TextBlock>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <StackPanel Orientation="Horizontal">
-                <TextBox Text="{Binding NewTag}" HorizontalAlignment="Stretch"/>
-                <Button Command="{Binding AddNewTagCommand}">+</Button>
-            </StackPanel>
-        </StackPanel>
+                                </TextBlock.InputBindings>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Grid>
+        
+        
+
+        
         
     </Grid>
 </UserControl>

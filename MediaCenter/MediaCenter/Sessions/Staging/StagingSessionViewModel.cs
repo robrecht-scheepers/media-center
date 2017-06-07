@@ -48,7 +48,7 @@ namespace MediaCenter.Sessions.Staging
             var selectedFolder = dialog.SelectedPath;
             if (string.IsNullOrEmpty(selectedFolder))
                 return;
-            await StagingSession.AddMediaItems(Directory.GetFiles(selectedFolder));
+            await StagingSession.AddMediaItems(Directory.GetFiles(selectedFolder, "*.*", SearchOption.AllDirectories));
         }
         #endregion
         

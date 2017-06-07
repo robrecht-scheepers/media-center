@@ -26,10 +26,6 @@ namespace MediaCenter.Sessions.Staging
 
         public ObservableCollection<StagedItem> StagedItems { get; }
 
-        public async Task AddMediaItemsFolder(string folderPath)
-        {
-            await AddMediaItems(Directory.GetFiles(folderPath));
-        }
         public async Task AddMediaItems(IEnumerable<string> newItems)
         {
             var newItemsList = newItems.ToList();
