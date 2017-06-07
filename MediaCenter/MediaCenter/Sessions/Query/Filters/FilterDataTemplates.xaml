@@ -3,23 +3,23 @@
                     xmlns:local="clr-namespace:MediaCenter.Sessions.Query.Filters">
     <DataTemplate DataType="{x:Type local:DatePeriodFilter}">
         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="From "/>
-            <TextBox Text="{Binding From}"/>
-            <TextBlock Text="Until "/>
-            <TextBox Text="{Binding Until}"/>
+            <TextBlock Text="From" VerticalAlignment="Center"/>
+            <TextBox Text="{Binding Path=From, StringFormat='dd MM yyyy'}"/>
+            <TextBlock Text="Until" VerticalAlignment="Center"/>
+            <TextBox Text="{Binding Path=Until, StringFormat='dd MM yyyy'}"/>
         </StackPanel>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:DayFilter}">
         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Day "/>
-            <TextBox Text="{Binding Day}"/>
+            <TextBlock Text="Day" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding Path=Day, StringFormat='dd MM yyyy'}"/>
         </StackPanel>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:TagFilter}">
         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Tag "/>
+            <TextBlock Text="Tag" VerticalAlignment="Center"/>
             <TextBox Text="{Binding Tag}"/>
         </StackPanel>
     </DataTemplate>
