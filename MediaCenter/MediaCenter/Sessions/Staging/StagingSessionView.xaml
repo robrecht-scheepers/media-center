@@ -40,7 +40,7 @@
                             <Button HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource IconButton}" 
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveItemCommand}" 
                                     CommandParameter="{Binding}">
-                                <Image Source="/Resources/Icons/cross-button.png" Width="16" Height="16"/>
+                                <Image Source="/Resources/Icons/cross-button.png" Stretch="None"/>
                             </Button>
                         </Grid>
                         <TextBlock Text="{Binding Name}" Margin="5" />

@@ -64,11 +64,28 @@
             <Image Grid.Column="0" Source="{Binding QuerySession.CurrentFullImage}" Stretch="Uniform" />
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-                <ListBox Grid.Row="0" ItemsSource="{Binding CurrentItemInfo.Tags}" Margin="5" BorderThickness="0" Background="Transparent">
+                <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding CurrentItemInfo.Favorite, Mode=TwoWay}">
+                    <Image Stretch="None">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentItemInfo.Favorite}" Value="true">
+                                        <Setter Property="Source" Value="/Resources/Icons/star.png"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding CurrentItemInfo.Favorite}" Value="false">
+                                        <Setter Property="Source" Value="/Resources/Icons/star-empty.png"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                </ToggleButton>
+                <ListBox Grid.Row="1" ItemsSource="{Binding CurrentItemInfo.Tags}" Margin="5" BorderThickness="0" Background="Transparent">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -80,7 +97,7 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate> 
                 </ListBox>
-                <Grid Grid.Row="1">
+                <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -88,7 +105,7 @@
                     <TextBox Grid.Column="0" Text="{Binding NewTag}" HorizontalAlignment="Stretch" MinWidth="100" Margin="5"/>
                     <Button Grid.Column="1" Command="{Binding AddNewTagCommand}" Width="50" Margin="5">+</Button>
                 </Grid>
-                <ListBox Grid.Row="2" ItemsSource="{Binding AvailableTags}" Margin="5">
+                <ListBox Grid.Row="3" ItemsSource="{Binding AvailableTags}" Margin="5">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}">

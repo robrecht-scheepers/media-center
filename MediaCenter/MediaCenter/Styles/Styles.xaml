@@ -35,4 +35,22 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="IconToggleButton" TargetType="ToggleButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <ContentPresenter                  
+                            Margin="{TemplateBinding Padding}"                  
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"                  
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"                  
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"                  
+                            ContentTemplate="{TemplateBinding ContentTemplate}"                  
+                            RecognizesAccessKey="True" 
+                            Cursor="Hand"
+                            Content="{TemplateBinding Content}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
