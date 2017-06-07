@@ -17,4 +17,11 @@
         </StackPanel>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type local:TagFilter}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Tag "/>
+            <TextBox Text="{Binding Tag}"/>
+        </StackPanel>
+    </DataTemplate>
+
 </ResourceDictionary>

@@ -19,12 +19,15 @@ namespace MediaCenter
                 ConfigurationManager.AppSettings["LocalStore"],ConfigurationManager.AppSettings["LocalCache"]);
 
             var repositoryTask = _repository.Initialize();
-            
+
+            // TDO: move back to end, when debig logic is not needed anymore
+            await repositoryTask;
+
             var mainViewModel = new MainWindowViewModel(_repository);
             var mainView = new MainWindow {DataContext = mainViewModel};
             mainView.Show();
 
-            await repositoryTask;
+            
         }
 
         public void Exit()

@@ -18,8 +18,6 @@ namespace MediaCenter.Sessions.Query
             InitializeAllTags();
         }
 
-        
-
         public override string Name => "Query";
 
         public QuerySession QuerySession => (QuerySession) Session;
@@ -38,7 +36,7 @@ namespace MediaCenter.Sessions.Query
         }
         private void InitialzeFilterNames()
         {
-            FilterNames = new List<string> { DatePeriodFilter.Name, DayFilter.Name };
+            FilterNames = new List<string> { DatePeriodFilter.Name, DayFilter.Name, TagFilter.Name };
         }
         #endregion
 
@@ -137,6 +135,8 @@ namespace MediaCenter.Sessions.Query
                 Filters.Add(new DatePeriodFilter());
             else if(SelectedFilterName == DayFilter.Name)
                 Filters.Add(new DayFilter());
+            else if(SelectedFilterName == TagFilter.Name)
+                Filters.Add(new TagFilter());
 
         }
         #endregion
