@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace MediaCenter.Repository
@@ -32,6 +33,24 @@ namespace MediaCenter.Repository
             Favorite = item.Favorite;
             Tags.Clear();
             Tags.InsertRange(0,item.Tags);
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as MediaInfo;
+            if (other == null)
+                return false;
+
+            if (Name != other.Name ||  DateTaken != other.DateTaken || Favorite != other.Favorite)
+                return false;
+
+            if (other.Tags.Any(t => !this.Tags.Contains(t)))
+                return false;
+            
+            if (Tags.Any(t => !other.Tags.Contains(t)))
+                return false;
+
+            return true;
         }
     }
 }

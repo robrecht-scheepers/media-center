@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -27,7 +28,6 @@ namespace MediaCenter.Repository
         private List<MediaInfo> _catalog;
         private ConcurrentDictionary<string, byte[]> _buffer;
         private CancellationTokenSource _bufferCancellationTokenSource;
-        private IDisposable _bufferSubscription;
         private bool _prefetchingInProgress;
 
         public IEnumerable<MediaInfo> Catalog => _catalog;
@@ -138,6 +138,7 @@ namespace MediaCenter.Repository
 
             if (_buffer.ContainsKey(name))
             {
+                Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss tt ss.fff")} | Image {name} was in prefetch buffer");
                 result = _buffer[name];
             }
             else
@@ -158,19 +159,19 @@ namespace MediaCenter.Repository
             }
             var itemsToBeFetched = prefetchList.Where(itemToBeBuffered => !_buffer.ContainsKey(itemToBeBuffered)).ToList();
 
-            // start fetch sequence
+            // start prefetch sequence
             if (itemsToBeFetched.Any())
             {
-                // cancel any previous fetching action still in progress
-                if (_prefetchingInProgress && _bufferSubscription != null && _bufferCancellationTokenSource != null)
+                // cancel any previous prefetching action still in progress
+                if (_prefetchingInProgress && _bufferCancellationTokenSource != null)
                 {
                     _bufferCancellationTokenSource.Cancel();
-                    _bufferSubscription.Dispose();
                 }
 
                 var prefetchingSequence = Observable.Create<KeyValuePair<string, byte[]>>(
                 async (observer, token) =>
                 {
+                    _prefetchingInProgress = true;
                     foreach (var bufferItemName in itemsToBeFetched)
                     {
                         token.ThrowIfCancellationRequested();
@@ -185,9 +186,14 @@ namespace MediaCenter.Repository
                 });
                 _bufferCancellationTokenSource = new CancellationTokenSource();
                 prefetchingSequence.Subscribe(
-                    pair => { _buffer[pair.Key] = pair.Value; },
-                    () => { },
+                    pair =>
+                    {
+                        _buffer[pair.Key] = pair.Value;
+                        Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss tt ss.fff")} | Prefetched { pair.Key}");
+                    },
+                    () => { _prefetchingInProgress = false; },
                     _bufferCancellationTokenSource.Token);
+
             }
 
             if (imageLoadingTask != null)
@@ -211,12 +217,11 @@ namespace MediaCenter.Repository
 
         public async Task SaveItemInfo(MediaInfo info)
         {
-            // TODO: validtae if dirty
-
-            // add to remote store
             var catalogInfo = _catalog.First(i => i.Name == info.Name);
-            catalogInfo.UpdateFrom(info);
+            if (catalogInfo.Equals(info))
+                return;
 
+            catalogInfo.UpdateFrom(info);
             var infoFilePath = Path.Combine(_remoteStore, info.Name + MediaFileExtension);
             await IOHelper.SaveObject(info, infoFilePath);
         }

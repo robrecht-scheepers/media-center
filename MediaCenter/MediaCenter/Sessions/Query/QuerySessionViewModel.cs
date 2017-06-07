@@ -1,20 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using MediaCenter.MVVM;
-using MediaCenter.Repository;
 using MediaCenter.Sessions.Query.Filters;
-using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter.Sessions.Query
 {
     public class QuerySessionViewModel : SessionViewModelBase
     {
-        private bool _currentItemDirty;
         private MediaInfoViewModel _currentItemInfo;
         private ObservableCollection<string> _availableTags;
 

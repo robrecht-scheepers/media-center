@@ -10,6 +10,8 @@ namespace MediaCenter.Sessions.Query
 {
     public class QuerySession : SessionBase
     {
+        private readonly int _numberOfPrefetchItems = 3;
+
         public QuerySession(RemoteRepository repository) : base(repository)
         {
             Filters = new ObservableCollection<Filter>();
@@ -41,18 +43,18 @@ namespace MediaCenter.Sessions.Query
             if (name == CurrentImageName)
                 return;
 
-            // TODO: implement prefetching and error handling
-
             // decide other prefetch items
-            int index = QueryResult.IndexOf(QueryResult.First(x => x.Name == name));
-            var prefetch = new List<string>();
-            for (int i = 1; i < 3 && i < QueryResult.Count; i++)
+            var prefetchList = new List<string>();
+            var index = QueryResult.IndexOf(QueryResult.First(x => x.Name == name));
+            if (index < QueryResult.Count - 1)
             {
-                if(index+i < QueryResult.Count)
-                    prefetch.Add(QueryResult[index + i].Name);
+                for (int i = 1; i < _numberOfPrefetchItems && index + i < QueryResult.Count; i++)
+                {
+                    prefetchList.Add(QueryResult[index + i].Name);
+                }
             }
 
-            CurrentFullImage = await Repository.GetFullImage(name, prefetch);
+            CurrentFullImage = await Repository.GetFullImage(name, prefetchList);
         }
 
         private string _currentImageName;
@@ -72,9 +74,6 @@ namespace MediaCenter.Sessions.Query
 
         public async Task SaveItem(MediaInfo info)
         {
-            //// TODO: why is this necessary? Items should be updated by repository, apprently is a copy and not a reference?
-            //var item = QueryResult.First(i => i.Name == info.Name);
-            //item.Info.UpdateFrom(info);
             await Repository.SaveItemInfo(info);
         }
     }

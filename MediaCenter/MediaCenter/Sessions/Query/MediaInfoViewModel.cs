@@ -14,12 +14,14 @@ namespace MediaCenter.Sessions.Query
     public class MediaInfoViewModel : PropertyChangedNotifier
     {
         private bool _favorite;
+        private DateTime _dateTaken;
 
         public MediaInfoViewModel(MediaInfo info)
         {
             Name = info.Name;
             Tags = new ObservableCollection<string>(info.Tags);
             Favorite = info.Favorite;
+            _dateTaken = info.DateTaken;
         }
 
         public ObservableCollection<string> Tags { get; private set; }
@@ -35,7 +37,8 @@ namespace MediaCenter.Sessions.Query
         public MediaInfo MediaInfo => new MediaInfo(Name)
         {
             Tags = Tags.ToList(),
-            Favorite = Favorite
+            Favorite = Favorite,
+            DateTaken = _dateTaken
         };
     }
 }
