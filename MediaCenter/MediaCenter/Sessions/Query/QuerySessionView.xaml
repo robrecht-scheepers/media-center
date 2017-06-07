@@ -59,7 +59,19 @@
         <Image Grid.Column="1" Grid.Row="1" Source="{Binding QuerySession.CurrentFullImage}" Stretch="Uniform" />
 
         <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Vertical">
-            <ListBox ItemsSource="{Binding CurrentItemInfo.Tags}"/>
+            <ListBox ItemsSource="{Binding CurrentItemInfo.Tags}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}"
+                                              Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveTagCommand}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            
             <ListBox ItemsSource="{Binding AvailableTags}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>

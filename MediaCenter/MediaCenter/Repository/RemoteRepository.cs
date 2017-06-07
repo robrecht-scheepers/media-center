@@ -32,7 +32,7 @@ namespace MediaCenter.Repository
 
         public IEnumerable<MediaInfo> Catalog => _catalog;
 
-        // TODO: naive straightforward approach, might need optimization
+        // TODO: straightforward approach, might need optimization
         public IEnumerable<string> Tags => _catalog.SelectMany(x => x.Tags).Distinct();
 
         public RemoteRepository(string remoteStore, string localStoreFilePath, string localCachePath)
