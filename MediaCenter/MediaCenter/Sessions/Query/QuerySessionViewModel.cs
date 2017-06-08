@@ -105,7 +105,7 @@ namespace MediaCenter.Sessions.Query
         {
             if (SelectedItem == null)
                 return false;
-            return QueryResult.IndexOf(SelectedItem) < 0;
+            return QueryResult.IndexOf(SelectedItem) > 0;
         }
         #endregion
 
@@ -192,8 +192,6 @@ namespace MediaCenter.Sessions.Query
 
         #region Command: Execute query
         private AsyncRelayCommand _executeQueryCommand;
-        
-
         public AsyncRelayCommand ExecuteQueryCommand => _executeQueryCommand ?? (_executeQueryCommand = new AsyncRelayCommand(ExecuteQuery));
         private async Task ExecuteQuery()
         {
