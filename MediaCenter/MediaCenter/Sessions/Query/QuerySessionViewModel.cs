@@ -36,7 +36,7 @@ namespace MediaCenter.Sessions.Query
         }
         private void InitialzeFilterNames()
         {
-            FilterNames = new List<string> { DatePeriodFilter.Name, DayFilter.Name, TagFilter.Name, FavoriteFilter.Name };
+            FilterNames = new List<string> { DateTakenFilter.Name, TagFilter.Name, FavoriteFilter.Name, DateAddedFilter.Name };
         }
         #endregion
 
@@ -134,14 +134,14 @@ namespace MediaCenter.Sessions.Query
         public RelayCommand AddFilterCommand => _addFilterCommand ?? (_addFilterCommand = new RelayCommand(AddFilter));
         private void AddFilter()
         {
-            if(SelectedFilterName == DatePeriodFilter.Name)
-                Filters.Add(new DatePeriodFilter());
-            else if(SelectedFilterName == DayFilter.Name)
-                Filters.Add(new DayFilter());
+            if(SelectedFilterName == DateTakenFilter.Name)
+                Filters.Add(new DateTakenFilter());
             else if(SelectedFilterName == TagFilter.Name)
                 Filters.Add(new TagFilter());
             else if(SelectedFilterName == FavoriteFilter.Name)
                 Filters.Add(new FavoriteFilter());
+            else if(SelectedFilterName == DateTakenFilter.Name)
+                Filters.Add(new DateAddedFilter());
 
         }
         #endregion

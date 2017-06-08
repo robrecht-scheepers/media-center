@@ -95,10 +95,11 @@
     <Compile Include="MVVM\RelayCommandBase.cs" />
     <Compile Include="Repository\MediaType.cs" />
     <Compile Include="Repository\RemoteRepository.cs" />
-    <Compile Include="Sessions\Query\Filters\DayFilter.cs" />
+    <Compile Include="Sessions\Query\Filters\DateAddedFilter.cs" />
+    <Compile Include="Sessions\Query\Filters\DatePeriodFilter.cs" />
     <Compile Include="Sessions\Query\Filters\FavoriteFilter.cs" />
     <Compile Include="Sessions\Query\Filters\Filter.cs" />
-    <Compile Include="Sessions\Query\Filters\DatePeriodFilter.cs" />
+    <Compile Include="Sessions\Query\Filters\DateTakenFilter.cs" />
     <Compile Include="Sessions\Query\Filters\FilterMode.cs" />
     <Compile Include="Sessions\Query\Filters\TagFilter.cs" />
     <Compile Include="Sessions\Query\MediaInfoViewModel.cs" />

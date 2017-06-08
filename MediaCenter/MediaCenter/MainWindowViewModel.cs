@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MediaCenter.MVVM;
 using MediaCenter.Repository;
 using MediaCenter.Sessions;
@@ -23,7 +19,7 @@ namespace MediaCenter
 
             // debug code
             var debugSession = new QuerySessionViewModel(new QuerySession(Repository));
-            debugSession.Filters.Add(new DatePeriodFilter {From = DateTime.MinValue, Until = DateTime.MaxValue});
+            debugSession.Filters.Add(new DateTakenFilter());
             Sessions.Add(debugSession);
         }
 

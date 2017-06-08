@@ -6,19 +6,13 @@
         <ResourceDictionary Source="../../../Styles/Styles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     
-    <DataTemplate DataType="{x:Type local:DatePeriodFilter}">
+    <DataTemplate DataType="{x:Type local:DateTakenFilter}">
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="From" VerticalAlignment="Center"/>
-            <TextBox Text="{Binding Path=From, StringFormat='dd MM yyyy'}"/>
+            <!-- <TextBox Text="{Binding Path=From, StringFormat='dd MM yyyy'}"/>-->
+            <DatePicker SelectedDate="{Binding From}" SelectedDateFormat="Short" VerticalAlignment="Center" />
             <TextBlock Text="Until" VerticalAlignment="Center"/>
-            <TextBox Text="{Binding Path=Until, StringFormat='dd MM yyyy'}"/>
-        </StackPanel>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type local:DayFilter}">
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Day" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding Path=Day, StringFormat='dd MM yyyy'}"/>
+            <DatePicker SelectedDate="{Binding Until}" SelectedDateFormat="Short" VerticalAlignment="Center" />
         </StackPanel>
     </DataTemplate>
 
