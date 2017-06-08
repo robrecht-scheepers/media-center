@@ -6,10 +6,9 @@
         <ResourceDictionary Source="../../../Styles/Styles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     
-    <DataTemplate DataType="{x:Type local:DateTakenFilter}">
+    <DataTemplate DataType="{x:Type local:DatePeriodFilter}">
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="From" VerticalAlignment="Center"/>
-            <!-- <TextBox Text="{Binding Path=From, StringFormat='dd MM yyyy'}"/>-->
             <DatePicker SelectedDate="{Binding From}" SelectedDateFormat="Short" VerticalAlignment="Center" />
             <TextBlock Text="Until" VerticalAlignment="Center"/>
             <DatePicker SelectedDate="{Binding Until}" SelectedDateFormat="Short" VerticalAlignment="Center" />
@@ -17,10 +16,10 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:TagFilter}">
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Tag" VerticalAlignment="Center"/>
-            <TextBox Text="{Binding Tag}"/>
-        </StackPanel>
+        <DockPanel HorizontalAlignment="Stretch">
+            <TextBlock Text="Tag" DockPanel.Dock="Left" VerticalAlignment="Center" />
+            <TextBox Text="{Binding Tag}" HorizontalAlignment="Stretch" DockPanel.Dock="Right"/>
+        </DockPanel>
     </DataTemplate>
     
     <DataTemplate DataType="{x:Type local:FavoriteFilter}">

@@ -19,7 +19,7 @@ namespace MediaCenter
 
             // debug code
             var debugSession = new QuerySessionViewModel(new QuerySession(Repository));
-            debugSession.Filters.Add(new DateTakenFilter());
+            debugSession.Filters.Add(new TagFilter());
             Sessions.Add(debugSession);
         }
 

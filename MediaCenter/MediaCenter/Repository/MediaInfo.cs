@@ -36,6 +36,7 @@ namespace MediaCenter.Repository
         {
             Name = item.Name;
             DateTaken = item.DateTaken;
+            DateAdded = item.DateAdded;
             Favorite = item.Favorite;
             Tags.Clear();
             Tags.InsertRange(0,item.Tags);
@@ -57,6 +58,13 @@ namespace MediaCenter.Repository
                 return false;
 
             return true;
+        }
+
+        public MediaInfo Clone()
+        {
+            var info = new MediaInfo(Name);
+            info.UpdateFrom(this);
+            return info;
         }
     }
 }

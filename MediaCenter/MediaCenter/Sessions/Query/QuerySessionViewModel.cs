@@ -22,6 +22,7 @@ namespace MediaCenter.Sessions.Query
 
         public QuerySession QuerySession => (QuerySession) Session;
 
+        public ObservableCollection<QueryResultItem> QueryResult => QuerySession.QueryResult; 
 
         #region Filters
         public ObservableCollection<Filter> Filters => QuerySession.Filters;
@@ -75,6 +76,40 @@ namespace MediaCenter.Sessions.Query
             CurrentItemInfo = new MediaInfoViewModel(SelectedItem.Info);
             AvailableTags = new ObservableCollection<string>(AllTags.Where(t => !CurrentItemInfo.Tags.Contains(t)));
         }
+
+        #region Command: Select next image
+        private RelayCommand _selectNextImageCommand;
+        public RelayCommand SelectNextImageCommand
+            => _selectNextImageCommand ?? (_selectNextImageCommand = new RelayCommand(SelectNextImage, CanExecuteSelectNextImage));
+        private void SelectNextImage()
+        {
+            SelectedItem = QueryResult[QueryResult.IndexOf(SelectedItem) + 1];
+        }
+        private bool CanExecuteSelectNextImage()
+        {
+            if (SelectedItem == null)
+                return false;
+            return QueryResult.IndexOf(SelectedItem) < QueryResult.Count - 1;
+        }
+        #endregion
+
+        #region Command: Select previous image
+        private RelayCommand _selectPreviousImageCommand;
+        public RelayCommand SelectPreviousImageCommand
+            => _selectPreviousImageCommand ?? (_selectPreviousImageCommand = new RelayCommand(SelectPreviousImage, CanExecuteSelectPreviousImage));
+        private void SelectPreviousImage()
+        {
+            SelectedItem = QueryResult[QueryResult.IndexOf(SelectedItem) - 1];
+        }
+        private bool CanExecuteSelectPreviousImage()
+        {
+            if (SelectedItem == null)
+                return false;
+            return QueryResult.IndexOf(SelectedItem) < 0;
+        }
+        #endregion
+
+
         #endregion
 
         #region Tags
@@ -146,6 +181,15 @@ namespace MediaCenter.Sessions.Query
         }
         #endregion
 
+        #region Command: Remove filter
+        private RelayCommand<Filter> _removeFilterCommand;
+        public RelayCommand<Filter> RemoveFilterCommand => _removeFilterCommand ?? (_removeFilterCommand = new RelayCommand<Filter>(RemoveFilter));
+        private void RemoveFilter(Filter filter)
+        {
+            Filters.Remove(filter);
+        }
+        #endregion
+
         #region Command: Execute query
         private AsyncRelayCommand _executeQueryCommand;
         
@@ -154,6 +198,7 @@ namespace MediaCenter.Sessions.Query
         private async Task ExecuteQuery()
         {
             await QuerySession.ExecuteQuery();
+            SelectedItem = QueryResult.FirstOrDefault();
         }
         #endregion
     }
