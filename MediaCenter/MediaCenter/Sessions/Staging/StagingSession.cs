@@ -44,7 +44,7 @@ namespace MediaCenter.Sessions.Staging
                 var thumbnail = await CreateThumbnail(image);
                 image.Dispose();
                 
-                StagedItems.Add(new StagedItem { Info = new MediaInfo(name) { DateTaken = date }, FilePath = filePath, Thumbnail = thumbnail });
+                StagedItems.Add(new StagedItem { Info = new MediaInfo(name) { DateTaken = date, DateAdded = DateTime.Now, Type = MediaType.Image}, FilePath = filePath, Thumbnail = thumbnail });
             }
         }
 

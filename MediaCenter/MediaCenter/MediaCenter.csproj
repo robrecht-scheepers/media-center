@@ -93,6 +93,7 @@
     <Compile Include="MVVM\PropertyChangedNotifier.cs" />
     <Compile Include="MVVM\RelayCommand.cs" />
     <Compile Include="MVVM\RelayCommandBase.cs" />
+    <Compile Include="Repository\MediaType.cs" />
     <Compile Include="Repository\RemoteRepository.cs" />
     <Compile Include="Sessions\Query\Filters\DayFilter.cs" />
     <Compile Include="Sessions\Query\Filters\FavoriteFilter.cs" />

@@ -24,6 +24,12 @@ namespace MediaCenter.Repository
         public DateTime DateTaken { get; set; }
 
         [DataMember]
+        public DateTime DateAdded { get; set; }
+
+        [DataMember()]
+        public MediaType Type { get; set; }
+
+        [DataMember]
         public bool Favorite { get; set; }
 
         public void UpdateFrom(MediaInfo item)
