@@ -1,6 +1,11 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:MediaCenter.Sessions.Query.Filters">
+    
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../../../Styles/Styles.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
     <DataTemplate DataType="{x:Type local:DatePeriodFilter}">
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="From" VerticalAlignment="Center"/>
@@ -22,6 +27,27 @@
             <TextBlock Text="Tag" VerticalAlignment="Center"/>
             <TextBox Text="{Binding Tag}"/>
         </StackPanel>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type local:FavoriteFilter}">
+        <DockPanel>
+            <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding Path=Favorite, Mode=TwoWay}">
+                <Image Stretch="None">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Favorite}" Value="true">
+                                    <Setter Property="Source" Value="/Resources/Icons/star.png"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Favorite}" Value="false">
+                                    <Setter Property="Source" Value="/Resources/Icons/star-empty.png"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </ToggleButton>
+        </DockPanel>
     </DataTemplate>
 
 </ResourceDictionary>

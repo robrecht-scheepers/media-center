@@ -95,6 +95,7 @@
     <Compile Include="MVVM\RelayCommandBase.cs" />
     <Compile Include="Repository\RemoteRepository.cs" />
     <Compile Include="Sessions\Query\Filters\DayFilter.cs" />
+    <Compile Include="Sessions\Query\Filters\FavoriteFilter.cs" />
     <Compile Include="Sessions\Query\Filters\Filter.cs" />
     <Compile Include="Sessions\Query\Filters\DatePeriodFilter.cs" />
     <Compile Include="Sessions\Query\Filters\FilterMode.cs" />

@@ -36,7 +36,7 @@ namespace MediaCenter.Sessions.Query
         }
         private void InitialzeFilterNames()
         {
-            FilterNames = new List<string> { DatePeriodFilter.Name, DayFilter.Name, TagFilter.Name };
+            FilterNames = new List<string> { DatePeriodFilter.Name, DayFilter.Name, TagFilter.Name, FavoriteFilter.Name };
         }
         #endregion
 
@@ -57,10 +57,13 @@ namespace MediaCenter.Sessions.Query
         }
         private async Task SelectedItemChanged()
         {
-            var imageTask = QuerySession.FullImageRequested(SelectedItem.Name);
+            Task imageTask = null;
+            if(SelectedItem != null)
+                imageTask = QuerySession.FullImageRequested(SelectedItem.Name);
             await SaveCurrentItem();
             InitializeCurrentItem();
-            await imageTask;
+            if(imageTask != null)
+                await imageTask;
         }
         private async Task SaveCurrentItem()
         {
@@ -137,6 +140,8 @@ namespace MediaCenter.Sessions.Query
                 Filters.Add(new DayFilter());
             else if(SelectedFilterName == TagFilter.Name)
                 Filters.Add(new TagFilter());
+            else if(SelectedFilterName == FavoriteFilter.Name)
+                Filters.Add(new FavoriteFilter());
 
         }
         #endregion
