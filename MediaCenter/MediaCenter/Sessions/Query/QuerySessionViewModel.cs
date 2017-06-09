@@ -73,8 +73,16 @@ namespace MediaCenter.Sessions.Query
         }
         private void InitializeCurrentItem()
         {
-            CurrentItemInfo = new MediaInfoViewModel(SelectedItem.Info);
-            AvailableTags = new ObservableCollection<string>(AllTags.Where(t => !CurrentItemInfo.Tags.Contains(t)));
+            if (SelectedItem == null)
+            {
+                CurrentItemInfo = null;
+                AvailableTags = new ObservableCollection<string>();
+            }
+            else
+            {
+                CurrentItemInfo = new MediaInfoViewModel(SelectedItem.Info);
+                AvailableTags = new ObservableCollection<string>(AllTags.Where(t => !CurrentItemInfo.Tags.Contains(t)));
+            }
         }
 
         #region Command: Select next image
