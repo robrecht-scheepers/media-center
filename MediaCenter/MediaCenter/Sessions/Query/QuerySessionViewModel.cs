@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using MediaCenter.MVVM;
+using MediaCenter.Repository;
 using MediaCenter.Sessions.Query.Filters;
 
 namespace MediaCenter.Sessions.Query
@@ -11,6 +12,7 @@ namespace MediaCenter.Sessions.Query
     {
         private MediaInfoViewModel _currentItemInfo;
         private ObservableCollection<string> _availableTags;
+        private string _currentItemName; // tmp, until we get PropertyChanging
 
         public QuerySessionViewModel(SessionBase session) : base(session)
         {
@@ -22,7 +24,7 @@ namespace MediaCenter.Sessions.Query
 
         public QuerySession QuerySession => (QuerySession) Session;
 
-        public ObservableCollection<QueryResultItem> QueryResult => QuerySession.QueryResult; 
+        public ObservableCollection<MediaItem> QueryResult => QuerySession.QueryResult; 
 
         #region Filters
         public ObservableCollection<Filter> Filters => QuerySession.Filters;
@@ -42,8 +44,8 @@ namespace MediaCenter.Sessions.Query
         #endregion
 
         #region Result items
-        private QueryResultItem _selectedItem;
-        public QueryResultItem SelectedItem
+        private MediaItem _selectedItem;
+        public MediaItem SelectedItem
         {
             get { return _selectedItem; }
             set
@@ -68,8 +70,10 @@ namespace MediaCenter.Sessions.Query
         }
         private async Task SaveCurrentItem()
         {
-            if(CurrentItemInfo != null)
-                await QuerySession.SaveItem(CurrentItemInfo.MediaInfo);
+            if(!string.IsNullOrEmpty(_currentItemName))
+                await QuerySession.SaveItem(_currentItemName); // TODO: tmp logic until we have PropertyChanging
+            _currentItemName = SelectedItem.Name;
+
         }
         private void InitializeCurrentItem()
         {

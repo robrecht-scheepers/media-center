@@ -101,8 +101,8 @@
     <Compile Include="MVVM\PropertyChangedNotifier.cs" />
     <Compile Include="MVVM\RelayCommand.cs" />
     <Compile Include="MVVM\RelayCommandBase.cs" />
-    <Compile Include="Repository\MediaItem.cs" />
-    <Compile Include="Repository\MediaType.cs" />
+    <Compile Include="Sessions\MediaItem.cs" />
+    <Compile Include="Sessions\MediaType.cs" />
     <Compile Include="Repository\RemoteRepository.cs" />
     <Compile Include="Sessions\Query\Filters\DateAddedFilter.cs" />
     <Compile Include="Sessions\Query\Filters\DatePeriodFilter.cs" />
