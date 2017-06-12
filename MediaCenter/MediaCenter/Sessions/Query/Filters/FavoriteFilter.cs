@@ -19,7 +19,7 @@ namespace MediaCenter.Sessions.Query.Filters
             set { SetValue(ref _favorite, value); }
         }
 
-        public override IEnumerable<MediaInfo> Apply(IEnumerable<MediaInfo> source)
+        public override IEnumerable<MediaItem> Apply(IEnumerable<MediaItem> source)
         {
             switch (FilterMode)
             {

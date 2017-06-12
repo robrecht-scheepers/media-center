@@ -25,12 +25,12 @@ namespace MediaCenter.Repository
         private readonly string _remoteStore;
         private readonly string _localCachePath;
         private DateTime _lastSyncFromRemote;
-        private List<MediaInfo> _catalog;
+        private List<MediaItem> _catalog;
         private ConcurrentDictionary<string, byte[]> _buffer;
         private CancellationTokenSource _bufferCancellationTokenSource;
         private bool _prefetchingInProgress;
 
-        public IEnumerable<MediaInfo> Catalog => _catalog;
+        public IEnumerable<MediaItem> Catalog => _catalog;
 
         // TODO: straightforward approach, might need optimization
         public IEnumerable<string> Tags => _catalog.SelectMany(x => x.Tags).Distinct();
@@ -40,7 +40,7 @@ namespace MediaCenter.Repository
             _remoteStore = remoteStore;
             _localStoreFilePath = localStoreFilePath;
             _localCachePath = localCachePath;
-            _catalog = new List<MediaInfo>();
+            _catalog = new List<MediaItem>();
             _buffer = new ConcurrentDictionary<string, byte[]>();
         }
 
@@ -54,12 +54,12 @@ namespace MediaCenter.Repository
         {
             if (!File.Exists(_localStoreFilePath))
             {
-                _catalog = new List<MediaInfo>();
+                _catalog = new List<MediaItem>();
                 await UpdateLocalStore();
                 return;
             }
 
-            _catalog = await IOHelper.OpenObject<List<MediaInfo>>(_localStoreFilePath);
+            _catalog = await IOHelper.OpenObject<List<MediaItem>>(_localStoreFilePath);
         }
 
         private async Task UpdateLocalStore()
@@ -69,15 +69,23 @@ namespace MediaCenter.Repository
 
         public async Task SynchronizeFromRemoteStore()
         {
-            var newLastSyncedDate = DateTime.Now;
-
+            
             var remoteStoreDirectory = new DirectoryInfo(_remoteStore);
             var remoteStoreMediaFiles = remoteStoreDirectory.GetFiles("*" + MediaFileExtension);
 
+            // find and delete all items in the local store that are no longer in the remote store 
+            var deleteList = Catalog.Where(item =>
+                remoteStoreMediaFiles.All(f => f.Name.ToLower() != item.Name + MediaFileExtension)).ToList();
+            foreach (var mediaItem in deleteList)
+            {
+                _catalog.Remove(mediaItem);
+            }
+
             // read all remote media files that were created or updates since the last sync
+            var newLastSyncedDate = DateTime.Now;
             foreach (var file in remoteStoreMediaFiles.Where(f => f.LastWriteTime >= _lastSyncFromRemote))
             {
-                var item = await IOHelper.OpenObject<MediaInfo>(file.FullName);
+                var item = await IOHelper.OpenObject<MediaItem>(file.FullName);
                 var existingItem = Catalog.FirstOrDefault(x => x.Name == item.Name);
                 if (existingItem == null) // new item
                 {
@@ -87,13 +95,6 @@ namespace MediaCenter.Repository
                 {
                     existingItem.UpdateFrom(item);
                 }
-            }
-            // find and delete all items in the local store that are not in the remote store anymore
-            var deleteList = Catalog.Where(item => 
-                remoteStoreMediaFiles.All(f => f.Name.ToLower() != item.Name + MediaFileExtension)).ToList();
-            foreach (var mediaItem in deleteList)
-            {
-                _catalog.Remove(mediaItem);
             }
 
             await UpdateLocalStore();
@@ -105,27 +106,25 @@ namespace MediaCenter.Repository
             foreach (var newItem in newItems)
             {
                 if (string.IsNullOrEmpty(newItem.FilePath) || string.IsNullOrEmpty(newItem.Name))
-                    // TODO: error handling
                     continue;
+
+                // add to local store
+                _catalog.Add(newItem);
 
                 // add to remote store
                 var mediaItemFilename = Path.Combine(_remoteStore, newItem.Name + Path.GetExtension(newItem.FilePath));
                 await IOHelper.CopyFile(newItem.FilePath, mediaItemFilename);
 
-                var thumbnailFilename = Path.Combine(_remoteStore, newItem.Name + "_T.jpg");
-                await IOHelper.SaveBytes(newItem.Thumbnail, thumbnailFilename);
+                await IOHelper.SaveBytes(newItem.Thumbnail, ItemNameToThumbnailFilename(newItem.Name));
 
                 var descriptorFilename = Path.Combine(_remoteStore, newItem.Name + MediaFileExtension);
-                await IOHelper.SaveObject(newItem.Info, descriptorFilename);
+                await IOHelper.SaveObject(newItem, descriptorFilename);
             }
 
-            await SynchronizeFromRemoteStore();
-            // yes, this causes a retrieval of objects we already have in memory, 
-            // but it fixes the concurrent access issues by always having the remote being the master
-            // over the local store, so it's worth it, as media files are quite small
+            await UpdateLocalStore();
         }
 
-        public async Task<byte[]> GetThumbnailBytes(string name)
+        public async Task<byte[]> GetThumbnail(string name)
         {
             var thumbnailFilename = Path.Combine(_remoteStore, name + "_T.jpg");
             return await IOHelper.OpenBytes(thumbnailFilename);
@@ -144,9 +143,8 @@ namespace MediaCenter.Repository
             else
             {
                 var imagePath = ItemNameToImageFilename(name);
-                if (string.IsNullOrEmpty(imagePath))
-                    result = null;
-                imageLoadingTask = IOHelper.OpenBytes(imagePath);
+                if (!string.IsNullOrEmpty(imagePath))
+                    imageLoadingTask = IOHelper.OpenBytes(imagePath);
             }
 
             // clean up buffer and decide which images need to be fetched
@@ -215,20 +213,25 @@ namespace MediaCenter.Repository
             // TODO: cache cleanup
         }
 
-        public async Task SaveItemInfo(MediaInfo info)
+        public async Task SaveItem(string name)
         {
-            var catalogInfo = _catalog.First(i => i.Name == info.Name);
-            if (catalogInfo.Equals(info))
+            var item = _catalog.First(i => i.Name == name);
+            if (!item.IsDirty)
                 return;
 
-            catalogInfo.UpdateFrom(info);
-            var infoFilePath = Path.Combine(_remoteStore, info.Name + MediaFileExtension);
-            await IOHelper.SaveObject(info, infoFilePath);
+            var filePath = Path.Combine(_remoteStore, name + MediaFileExtension);
+            await IOHelper.SaveObject(item, filePath);
+            await UpdateLocalStore();
+            _lastSyncFromRemote = DateTime.Now; // TODO: solve concurrent access issue
         }
 
         private string ItemNameToImageFilename(string name)
         {
             return Directory.GetFiles(_remoteStore, $"{name}.*").FirstOrDefault();
+        }
+        private string ItemNameToThumbnailFilename(string name)
+        {
+            return Path.Combine(_remoteStore, name + "_T.jpg");
         }
 
 

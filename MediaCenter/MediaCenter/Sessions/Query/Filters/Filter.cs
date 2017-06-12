@@ -13,6 +13,6 @@ namespace MediaCenter.Sessions.Query.Filters
 
         public FilterMode FilterMode { get; set; }
 
-        public abstract IEnumerable<MediaInfo> Apply(IEnumerable<MediaInfo> source);
+        public abstract IEnumerable<MediaItem> Apply(IEnumerable<MediaItem> source);
     }
 }

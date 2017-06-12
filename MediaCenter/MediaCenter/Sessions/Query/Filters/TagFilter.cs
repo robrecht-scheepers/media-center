@@ -19,7 +19,7 @@ namespace MediaCenter.Sessions.Query.Filters
             set { SetValue(ref _tag, value); }
         }
 
-        public override IEnumerable<MediaInfo> Apply(IEnumerable<MediaInfo> source)
+        public override IEnumerable<MediaItem> Apply(IEnumerable<MediaItem> source)
         {
             if (string.IsNullOrEmpty(Tag))
                 return source;

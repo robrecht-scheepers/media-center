@@ -101,6 +101,7 @@
     <Compile Include="MVVM\PropertyChangedNotifier.cs" />
     <Compile Include="MVVM\RelayCommand.cs" />
     <Compile Include="MVVM\RelayCommandBase.cs" />
+    <Compile Include="Repository\MediaItem.cs" />
     <Compile Include="Repository\MediaType.cs" />
     <Compile Include="Repository\RemoteRepository.cs" />
     <Compile Include="Sessions\Query\Filters\DateAddedFilter.cs" />
@@ -117,7 +118,6 @@
     </Compile>
     <Compile Include="Sessions\Query\QuerySessionViewModel.cs" />
     <Compile Include="Sessions\SessionItem.cs" />
-    <Compile Include="Sessions\SessionItemViewModel.cs" />
     <Compile Include="Sessions\SessionViewModelBase.cs" />
     <Compile Include="Sessions\Staging\StagedItem.cs" />
     <Compile Include="Sessions\Staging\StagingSession.cs" />
@@ -175,6 +175,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Documentation\ClassDiagram.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

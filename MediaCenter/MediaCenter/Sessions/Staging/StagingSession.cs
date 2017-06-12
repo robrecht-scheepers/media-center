@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -37,14 +38,35 @@ namespace MediaCenter.Sessions.Staging
                 StatusMessage = $"Loading item {cnt++} of {total}.";
                 if ((string.IsNullOrEmpty(filePath))||(!_imageExtensions.Contains(Path.GetExtension(filePath).ToLower())))
                     continue;
-                
-                var image =  await IOHelper.OpenImage(filePath);
-                var date = ReadImageDate(image);
-                var name = CreateItemName(date);
-                var thumbnail = await CreateThumbnail(image);
-                image.Dispose();
-                
-                StagedItems.Add(new StagedItem { Info = new MediaInfo(name) { DateTaken = date, DateAdded = DateTime.Now, Type = MediaType.Image}, FilePath = filePath, Thumbnail = thumbnail });
+
+                Image image = null;
+                try
+                {
+                    image = await IOHelper.OpenImage(filePath);
+                    if(image==null)
+                        continue;
+
+                    var date = ReadImageDate(image);
+                    var name = CreateItemName(date);
+                    var thumbnail = await CreateThumbnail(image);
+                    image.Dispose();
+
+                    StagedItems.Add(new StagedItem
+                    {
+                        Info = new MediaInfo(name) {DateTaken = date, DateAdded = DateTime.Now, Type = MediaType.Image},
+                        FilePath = filePath,
+                        Thumbnail = thumbnail
+                    });
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.ToString());
+                    // TODO: create error list
+                }
+                finally
+                {
+                    image?.Dispose();
+                }
             }
         }
 

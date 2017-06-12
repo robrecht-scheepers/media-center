@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MediaCenter.Sessions.SessionBase" Collapsed="true">
+    <Position X="5.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sessions\SessionBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MediaCenter.Sessions.Query.QuerySession" Collapsed="true">
+    <Position X="7.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QABAAAAIAAAAAAAAAIAAAEAIACAAABAAAAAAAAAAAhA=</HashCode>
+      <FileName>Sessions\Query\QuerySession.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MediaCenter.Sessions.Staging.StagingSession" Collapsed="true">
+    <Position X="4.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAJAAAAAAAgAAAAAAAAAEAAABAKYAAAA=</HashCode>
+      <FileName>Sessions\Staging\StagingSession.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MediaCenter.Sessions.SessionItem" Collapsed="true">
+    <Position X="11.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAACAQAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Sessions\SessionItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MediaCenter.Sessions.Staging.StagedItem" Collapsed="true">
+    <Position X="10.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Sessions\Staging\StagedItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MediaCenter.Sessions.Query.QueryResultItem" Collapsed="true">
+    <Position X="12.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sessions\Query\QueryResultItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

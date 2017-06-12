@@ -8,7 +8,7 @@ namespace MediaCenter.Repository
 {
     public enum MediaType
     {
-        Image,
-        Video
+        Image = 0,
+        Video = 1
     }
 }

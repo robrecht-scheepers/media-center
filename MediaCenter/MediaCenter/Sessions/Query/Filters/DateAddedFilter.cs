@@ -9,7 +9,7 @@ namespace MediaCenter.Sessions.Query.Filters
     {
         public static string Name = "Date added";
 
-        public override IEnumerable<MediaInfo> Apply(IEnumerable<MediaInfo> source)
+        public override IEnumerable<MediaItem> Apply(IEnumerable<MediaItem> source)
         {
             switch (FilterMode)
             {

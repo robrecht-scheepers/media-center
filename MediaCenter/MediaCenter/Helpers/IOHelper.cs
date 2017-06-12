@@ -29,9 +29,17 @@ namespace MediaCenter.Helpers
         {
             return await Task.Run(() =>
             {
-                var bytes = File.ReadAllBytes(filePath);
-                var ms = new MemoryStream(bytes);
-                return new Bitmap(ms);
+                try
+                {
+                    var bytes = File.ReadAllBytes(filePath);
+                    var ms = new MemoryStream(bytes);
+                    return new Bitmap(ms);
+                }
+                catch (Exception e)
+                {
+                    // todo: better error handling
+                    return null;
+                }
             });
         }
 

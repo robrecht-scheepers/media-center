@@ -15,26 +15,26 @@ namespace MediaCenter.Sessions.Query
         public QuerySession(RemoteRepository repository) : base(repository)
         {
             Filters = new ObservableCollection<Filter>();
-            QueryResult = new ObservableCollection<QueryResultItem>();
+            QueryResult = new ObservableCollection<MediaItem>();
         }
 
         public ObservableCollection<Filter> Filters { get; } 
 
-        public ObservableCollection<QueryResultItem> QueryResult { get; }
+        public ObservableCollection<MediaItem> QueryResult { get; }
 
         public async Task ExecuteQuery()
         {
-            var infos = Filters.Aggregate(Repository.Catalog, (current, filter) => filter.Apply(current));
+            var items = Filters.Aggregate(Repository.Catalog, (current, filter) => filter.Apply(current));
 
             QueryResult.Clear();
-            foreach (var mediaInfo in infos)
+            foreach (var item in items)
             {
-                QueryResult.Add(new QueryResultItem{ Info = mediaInfo });
+                QueryResult.Add(item);
             }
 
             foreach (var item in QueryResult)
             {
-                item.Thumbnail = await Repository.GetThumbnailBytes(item.Name);
+                item.Thumbnail = await Repository.GetThumbnail(item.Name);
             }
         }
 
@@ -72,9 +72,9 @@ namespace MediaCenter.Sessions.Query
             set { SetValue(ref _currentFullImage,value); }
         }
 
-        public async Task SaveItem(MediaInfo info)
+        public async Task SaveItem(string name)
         {
-            await Repository.SaveItemInfo(info);
+            await Repository.SaveItem(name);
         }
     }
 }
