@@ -19,13 +19,14 @@ namespace MediaCenter.Sessions.Staging
         // TODO: share with view model for dialog filter
         private readonly string[] _imageExtensions = {".jpg", ".png", ".bmp"};
         private string _statusMessage;
+        private Dictionary<string, string> _filePaths = new Dictionary<string, string>(); 
 
         public StagingSession(RemoteRepository repository) : base(repository)
         {
-            StagedItems = new ObservableCollection<StagedItem>();
+            StagedItems = new ObservableCollection<MediaItem>();
         }
 
-        public ObservableCollection<StagedItem> StagedItems { get; }
+        public ObservableCollection<MediaItem> StagedItems { get; }
 
         public async Task AddMediaItems(IEnumerable<string> newItems)
         {
@@ -43,20 +44,24 @@ namespace MediaCenter.Sessions.Staging
                 try
                 {
                     image = await IOHelper.OpenImage(filePath);
-                    if(image==null)
+                    if (image == null)
+                    {
+                        // TODO: create error list
                         continue;
+                    }
 
                     var date = ReadImageDate(image);
                     var name = CreateItemName(date);
                     var thumbnail = await CreateThumbnail(image);
                     image.Dispose();
 
-                    StagedItems.Add(new StagedItem
+                    StagedItems.Add(new MediaItem(name, MediaType.Image)
                     {
-                        Info = new MediaInfo(name) {DateTaken = date, DateAdded = DateTime.Now, Type = MediaType.Image},
-                        FilePath = filePath,
+                        DateTaken = date,
+                        DateAdded = DateTime.Now,
                         Thumbnail = thumbnail
                     });
+                    _filePaths[name] = filePath;
                 }
                 catch (Exception e)
                 {
@@ -70,16 +75,20 @@ namespace MediaCenter.Sessions.Staging
             }
         }
 
-        public void RemoveStagedItem(StagedItem item)
+        public void RemoveStagedItem(MediaItem item)
         {
-            if(StagedItems.Contains(item))
+            if (StagedItems.Contains(item))
+            {
                 StagedItems.Remove(item);
+            }
+            if (_filePaths.ContainsKey(item.Name))
+                _filePaths.Remove(item.Name);
         }
 
         public async Task SaveToRepository()
         {
             StatusMessage = $"Saving {StagedItems.Count} items...";
-            await Repository.SaveStagedItems(StagedItems);
+            await Repository.SaveStagedItems(StagedItems.Select(s => new KeyValuePair<string, MediaItem>(_filePaths[s.Name], s)));
             StatusMessage = "All items saved";
         }
 

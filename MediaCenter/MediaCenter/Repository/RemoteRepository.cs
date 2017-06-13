@@ -101,19 +101,22 @@ namespace MediaCenter.Repository
             _lastSyncFromRemote = newLastSyncedDate;
         }
 
-        public async Task SaveStagedItems(IEnumerable<StagedItem> newItems )
+        public async Task SaveStagedItems(IEnumerable<KeyValuePair<string,MediaItem>> newItems) // list of (filePath, Item) pairs
         {
-            foreach (var newItem in newItems)
+            foreach (var newItemPair in newItems)
             {
-                if (string.IsNullOrEmpty(newItem.FilePath) || string.IsNullOrEmpty(newItem.Name))
+                var filePath = newItemPair.Key;
+                var newItem = newItemPair.Value;
+
+                if (string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(newItem.Name))
                     continue;
 
                 // add to local store
                 _catalog.Add(newItem);
 
                 // add to remote store
-                var mediaItemFilename = Path.Combine(_remoteStore, newItem.Name + Path.GetExtension(newItem.FilePath));
-                await IOHelper.CopyFile(newItem.FilePath, mediaItemFilename);
+                var mediaItemFilename = Path.Combine(_remoteStore, newItem.Name + Path.GetExtension(filePath));
+                await IOHelper.CopyFile(filePath, mediaItemFilename);
 
                 await IOHelper.SaveBytes(newItem.Thumbnail, ItemNameToThumbnailFilename(newItem.Name));
 

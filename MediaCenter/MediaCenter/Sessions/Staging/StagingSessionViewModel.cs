@@ -53,10 +53,10 @@ namespace MediaCenter.Sessions.Staging
         #endregion
         
         #region Command: Remove staged item
-        private RelayCommand<StagedItem> _removeItemCommand;
-        public RelayCommand<StagedItem> RemoveItemCommand => _removeItemCommand ?? (_removeItemCommand = new RelayCommand<StagedItem> (RemoveItem));
+        private RelayCommand<MediaItem> _removeItemCommand;
+        public RelayCommand<MediaItem> RemoveItemCommand => _removeItemCommand ?? (_removeItemCommand = new RelayCommand<MediaItem> (RemoveItem));
 
-        private void RemoveItem(StagedItem item)
+        private void RemoveItem(MediaItem item)
         {
             StagingSession.RemoveStagedItem(item);
         }

@@ -10,7 +10,6 @@ namespace MediaCenter.Sessions.Query
 {
     public class QuerySessionViewModel : SessionViewModelBase
     {
-        private MediaInfoViewModel _currentItemInfo;
         private ObservableCollection<string> _availableTags;
         private string _currentItemName; // tmp, until we get PropertyChanging
 
@@ -53,40 +52,24 @@ namespace MediaCenter.Sessions.Query
                 SetValue(ref _selectedItem, value, async () => await SelectedItemChanged());
             }
         }
-        public MediaInfoViewModel CurrentItemInfo
-        {
-            get { return _currentItemInfo; }
-            set { SetValue(ref _currentItemInfo, value); }
-        }
+       
         private async Task SelectedItemChanged()
         {
+            // start fetching the new image
             Task imageTask = null;
             if(SelectedItem != null)
                 imageTask = QuerySession.FullImageRequested(SelectedItem.Name);
-            await SaveCurrentItem();
-            InitializeCurrentItem();
+
+            // save the data for the previous image
+            if (!string.IsNullOrEmpty(_currentItemName))
+            {
+                await QuerySession.SaveItem(_currentItemName);
+            }
+            _currentItemName = SelectedItem?.Name;
+
+            // wait for the new image
             if(imageTask != null)
                 await imageTask;
-        }
-        private async Task SaveCurrentItem()
-        {
-            if(!string.IsNullOrEmpty(_currentItemName))
-                await QuerySession.SaveItem(_currentItemName); // TODO: tmp logic until we have PropertyChanging
-            _currentItemName = SelectedItem.Name;
-
-        }
-        private void InitializeCurrentItem()
-        {
-            if (SelectedItem == null)
-            {
-                CurrentItemInfo = null;
-                AvailableTags = new ObservableCollection<string>();
-            }
-            else
-            {
-                CurrentItemInfo = new MediaInfoViewModel(SelectedItem.Info);
-                AvailableTags = new ObservableCollection<string>(AllTags.Where(t => !CurrentItemInfo.Tags.Contains(t)));
-            }
         }
 
         #region Command: Select next image
@@ -121,7 +104,6 @@ namespace MediaCenter.Sessions.Query
         }
         #endregion
 
-
         #endregion
 
         #region Tags
@@ -146,7 +128,7 @@ namespace MediaCenter.Sessions.Query
         public RelayCommand<string> AddTagCommand => _addTagCommand ?? (_addTagCommand = new RelayCommand<string>(AddTag));
         private void AddTag(string newTag)
         {
-            CurrentItemInfo.Tags.Add(newTag);
+            SelectedItem.Tags.Add(newTag);
             AvailableTags.Remove(newTag);
         }
 
@@ -154,7 +136,7 @@ namespace MediaCenter.Sessions.Query
         public RelayCommand<string> RemoveTagCommand => _removeTagCommand ?? (_removeTagCommand = new RelayCommand<string>(RemoveTag));
         private void RemoveTag(string tag)
         {
-            CurrentItemInfo.Tags.Remove(tag);
+            SelectedItem.Tags.Remove(tag);
             AvailableTags.Add(tag);
         }
 
@@ -162,7 +144,7 @@ namespace MediaCenter.Sessions.Query
         public RelayCommand AddNewTagCommand => _addNewTagCommand ?? (_addNewTagCommand = new RelayCommand(AddNewTag));
         private void AddNewTag()
         {
-            CurrentItemInfo.Tags.Add(NewTag);
+            SelectedItem.Tags.Add(NewTag);
             AllTags.Add(NewTag);
             NewTag = "";
         }
