@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Runtime.Serialization;
 using MediaCenter.MVVM;
 
 namespace MediaCenter.Sessions
 {
-    [DataContract]
     public class MediaItem : PropertyChangedNotifier
     {
         public MediaItem(string name, MediaType type)
@@ -18,23 +16,17 @@ namespace MediaCenter.Sessions
 
         public bool IsDirty { get; set; }
 
-        [DataMember]
         public string Name { get; private set; }
 
-        [DataMember]
         public DateTime DateTaken { get; set; }
 
-        [DataMember]
         public DateTime DateAdded { get; set; }
 
-        [DataMember]
         public MediaType Type { get; set; }
 
-        [DataMember]
         public ObservableCollection<string> Tags { get; set; }
 
         private bool _favorite;
-        [DataMember]
         public bool Favorite
         {
             get { return _favorite; }
@@ -61,30 +53,5 @@ namespace MediaCenter.Sessions
             }
             Thumbnail = item.Thumbnail;
         }
-
-        //public override bool Equals(object obj)
-        //{
-        //    var other = obj as MediaInfo;
-        //    if (other == null)
-        //        return false;
-
-        //    if (Name != other.Name || DateTaken != other.DateTaken || Favorite != other.Favorite)
-        //        return false;
-
-        //    if (other.Tags.Any(t => !this.Tags.Contains(t)))
-        //        return false;
-
-        //    if (Tags.Any(t => !other.Tags.Contains(t)))
-        //        return false;
-
-        //    return true;
-        //}
-
-        //public MediaInfo Clone()
-        //{
-        //    var info = new MediaInfo(Name);
-        //    info.UpdateFrom(this);
-        //    return info;
-        //}
     }
 }

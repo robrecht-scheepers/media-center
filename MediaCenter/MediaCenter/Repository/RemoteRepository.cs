@@ -59,12 +59,13 @@ namespace MediaCenter.Repository
                 return;
             }
 
-            _catalog = await IOHelper.OpenObject<List<MediaItem>>(_localStoreFilePath);
+            var infoList = await IOHelper.OpenObject<List<MediaInfo>>(_localStoreFilePath);
+            _catalog = infoList.Select(i => i.ToMediaItem()).ToList();
         }
 
         private async Task UpdateLocalStore()
         {
-            await IOHelper.SaveObject(Catalog, _localStoreFilePath);
+            await IOHelper.SaveObject(Catalog.Select(i => new MediaInfo(i)).ToList(), _localStoreFilePath);
         }
 
         public async Task SynchronizeFromRemoteStore()
@@ -85,7 +86,8 @@ namespace MediaCenter.Repository
             var newLastSyncedDate = DateTime.Now;
             foreach (var file in remoteStoreMediaFiles.Where(f => f.LastWriteTime >= _lastSyncFromRemote))
             {
-                var item = await IOHelper.OpenObject<MediaItem>(file.FullName);
+                var info = await IOHelper.OpenObject<MediaInfo>(file.FullName);
+                var item = info.ToMediaItem();
                 var existingItem = Catalog.FirstOrDefault(x => x.Name == item.Name);
                 if (existingItem == null) // new item
                 {
@@ -120,8 +122,8 @@ namespace MediaCenter.Repository
 
                 await IOHelper.SaveBytes(newItem.Thumbnail, ItemNameToThumbnailFilename(newItem.Name));
 
-                var descriptorFilename = Path.Combine(_remoteStore, newItem.Name + MediaFileExtension);
-                await IOHelper.SaveObject(newItem, descriptorFilename);
+                var infoFileName = Path.Combine(_remoteStore, newItem.Name + MediaFileExtension);
+                await IOHelper.SaveObject(new MediaInfo(newItem), infoFileName);
             }
 
             await UpdateLocalStore();
@@ -223,7 +225,7 @@ namespace MediaCenter.Repository
                 return;
 
             var filePath = Path.Combine(_remoteStore, name + MediaFileExtension);
-            await IOHelper.SaveObject(item, filePath);
+            await IOHelper.SaveObject(new MediaInfo(item), filePath);
             await UpdateLocalStore();
             _lastSyncFromRemote = DateTime.Now; // TODO: solve concurrent access issue
         }

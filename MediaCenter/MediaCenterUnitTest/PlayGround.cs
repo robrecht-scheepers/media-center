@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using MediaCenter.Helpers;
@@ -37,7 +38,7 @@ namespace MediaCenterUnitTest
                 }
             };
 
-            var jsonText = SerializationHelper.Serialize(collection);
+            var jsonText = SerializationHelper.Serialize(collection.Select(i => new MediaInfo(i)));
 
         }
     }
