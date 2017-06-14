@@ -67,6 +67,11 @@ namespace MediaCenter.Sessions.Query
             }
             _currentItemName = SelectedItem?.Name;
 
+            // Setup tags
+            AvailableTags = SelectedItem != null 
+                ? new ObservableCollection<string>(AllTags.Where(x => !SelectedItem.Tags.Contains(x))) 
+                : new ObservableCollection<string>();
+
             // wait for the new image
             if(imageTask != null)
                 await imageTask;

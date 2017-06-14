@@ -89,15 +89,15 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-                <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding CurrentItemInfo.Favorite, Mode=TwoWay}">
+                <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding SelectedItem.Favorite, Mode=TwoWay}">
                     <Image Stretch="None">
                         <Image.Style>
                             <Style TargetType="Image">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding CurrentItemInfo.Favorite}" Value="true">
+                                    <DataTrigger Binding="{Binding SelectedItem.Favorite}" Value="true">
                                         <Setter Property="Source" Value="/Resources/Icons/star.png"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding CurrentItemInfo.Favorite}" Value="false">
+                                    <DataTrigger Binding="{Binding SelectedItem.Favorite}" Value="false">
                                         <Setter Property="Source" Value="/Resources/Icons/star-empty.png"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -105,7 +105,7 @@
                         </Image.Style>
                     </Image>
                 </ToggleButton>
-                <ListBox Grid.Row="1" ItemsSource="{Binding CurrentItemInfo.Tags}" Margin="5" BorderThickness="0" Background="Transparent">
+                <ListBox Grid.Row="1" ItemsSource="{Binding SelectedItem.Tags}" Margin="5" BorderThickness="0" Background="Transparent">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
