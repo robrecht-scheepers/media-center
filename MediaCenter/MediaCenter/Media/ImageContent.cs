@@ -26,5 +26,7 @@ namespace MediaCenter.Media
             Image = ImageHelper.Rotate(Image, direction);
             IsDirty = true;
         }
+
+        public override byte[] Content => Image;
     }
 }

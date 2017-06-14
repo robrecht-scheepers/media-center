@@ -64,9 +64,15 @@ namespace MediaCenter.Sessions.Query
             set { SetValue(ref _currentContent, value); }
         }
 
-        public async Task SaveItem(string name)
+        public async Task SaveItem(string name, MediaContent content = null)
         {
             await Repository.SaveItem(name);
+            if (content != null && content.IsDirty)
+            {
+                Repository.SaveContent(name, content.Content);
+                content.IsDirty = false;
+            }
+
         }
     }
 }

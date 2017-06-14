@@ -14,6 +14,6 @@ namespace MediaCenter.Media
             MediaContent = mediaContent;
         }
 
-        protected MediaContent MediaContent;
+        public MediaContent MediaContent { get; }
     }
 }

@@ -61,7 +61,8 @@ namespace MediaCenter.Sessions.Query
             // save the data for the previous selected item
             if (!string.IsNullOrEmpty(_currentItemName))
             {
-                await QuerySession.SaveItem(_currentItemName);
+                await QuerySession.SaveItem(_currentItemName, CurrentContentViewModel?.MediaContent);
+
             }
             _currentItemName = SelectedItem?.Name;
 

@@ -226,6 +226,11 @@ namespace MediaCenter.Repository
             _lastSyncFromRemote = DateTime.Now; // TODO: solve concurrent access issue
         }
 
+        public async Task SaveContent(string name, byte[] content)
+        {
+            await IOHelper.SaveBytes(content, ItemNameToImageFilename(name));
+        }
+
         private string ItemNameToImageFilename(string name)
         {
             return Directory.GetFiles(_remoteStore, $"{name}.*").FirstOrDefault();

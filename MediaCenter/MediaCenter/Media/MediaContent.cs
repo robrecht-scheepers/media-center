@@ -14,6 +14,8 @@ namespace MediaCenter.Media
             Name = name;
         }
 
+        public abstract byte[] Content { get; }
+
         public bool IsDirty { get; set; }
 
         public string Name { get; private set; }
