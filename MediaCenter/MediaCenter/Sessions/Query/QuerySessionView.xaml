@@ -12,8 +12,9 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Filters/FilterDataTemplates.xaml"/>
-                <ResourceDictionary Source="../../Styles/Styles.xaml"/>
+                <ResourceDictionary Source="/Sessions/Query/Filters/FilterDataTemplates.xaml"/>
+                <ResourceDictionary Source="/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="/Media/MediaContentDataTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -75,7 +76,7 @@
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Image Grid.Column="0" Source="{Binding QuerySession.CurrentFullImage}" Stretch="Uniform" />
+            <ContentControl Content="{Binding CurrentContentViewModel}" />
             <Button Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource IconButton}" Command="{Binding SelectPreviousImageCommand}">
                 <Image Source="/Resources/Icons/arrow-180.png" Stretch="None"/>
             </Button>

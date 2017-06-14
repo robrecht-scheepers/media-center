@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using MediaCenter.Media;
@@ -35,15 +37,28 @@ namespace MediaCenter.Sessions.Query
                 SetValue(ref _selectedItem, value, async () => await SelectedItemChanged());
             }
         }
-       
+
+        private MediaContentViewModel _currentContentViewModel;
+        public MediaContentViewModel CurrentContentViewModel
+        {
+            get { return _currentContentViewModel; }
+            set { SetValue(ref _currentContentViewModel, value); }
+        }
+
         private async Task SelectedItemChanged()
         {
-            // start fetching the new image
-            Task imageTask = null;
-            if(SelectedItem != null)
-                imageTask = QuerySession.FullImageRequested(SelectedItem.Name);
+            // start fetching the new content
+            Task contentTask = null;
+            if (SelectedItem != null)
+            {
+                contentTask = QuerySession.ContentRequested(SelectedItem.Name);
+            }
+            else
+            {
+                CurrentContentViewModel = null;
+            }
 
-            // save the data for the previous image
+            // save the data for the previous selected item
             if (!string.IsNullOrEmpty(_currentItemName))
             {
                 await QuerySession.SaveItem(_currentItemName);
@@ -55,9 +70,12 @@ namespace MediaCenter.Sessions.Query
                 ? new ObservableCollection<string>(AllTags.Where(x => !SelectedItem.Tags.Contains(x))) 
                 : new ObservableCollection<string>();
 
-            // wait for the new image
-            if(imageTask != null)
-                await imageTask;
+            // wait for the new content
+            if (contentTask != null)
+            {
+                await contentTask;
+                CurrentContentViewModel = new ImageContentViewModel((ImageContent)QuerySession.CurrentContent); // TODO: add media type distinxtion 
+            }
         }
 
         #region Command: Select next image
@@ -92,7 +110,6 @@ namespace MediaCenter.Sessions.Query
         }
         #endregion
 
-        // TODO: move to media item logic
         #region Command: RotateImageRight
 
         #endregion

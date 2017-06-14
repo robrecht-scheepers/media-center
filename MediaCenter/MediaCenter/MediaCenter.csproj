@@ -94,6 +94,10 @@
     <Compile Include="Helpers\IOHelper.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="Media\ImageContent.cs" />
+    <Compile Include="Media\ImageContentViewModel.cs" />
+    <Compile Include="Media\MediaContent.cs" />
+    <Compile Include="Media\MediaContentViewModel.cs" />
     <Compile Include="Media\RotationDirection.cs" />
     <Compile Include="Repository\MediaInfo.cs" />
     <Compile Include="MVVM\AsyncRelayCommand.cs" />
@@ -138,6 +142,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Media\MediaContentDataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Sessions\Query\Filters\FilterDataTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -202,6 +210,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\arrow-180.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\arrow-circle-315.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\arrow-circle-315-rev.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

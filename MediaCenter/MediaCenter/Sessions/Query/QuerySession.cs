@@ -38,9 +38,9 @@ namespace MediaCenter.Sessions.Query
             }
         }
 
-        public async Task FullImageRequested(string name)
+        public async Task ContentRequested(string name)
         {
-            if (name == CurrentImageName)
+            if (name == CurrentContent?.Name)
                 return;
 
             // decide other prefetch items
@@ -54,22 +54,14 @@ namespace MediaCenter.Sessions.Query
                 }
             }
 
-            CurrentFullImage = await Repository.GetFullImage(name, prefetchList);
+            CurrentContent = new ImageContent(name, await Repository.GetFullImage(name, prefetchList));
         }
 
-        private string _currentImageName;
-
-        public string CurrentImageName
+        private MediaContent _currentContent;
+        public MediaContent CurrentContent  
         {
-            get { return _currentImageName; }
-            set { SetValue(ref _currentImageName, value); }
-        }
-
-        private byte[] _currentFullImage;
-        public byte[] CurrentFullImage  
-        {
-            get { return _currentFullImage; }
-            set { SetValue(ref _currentFullImage,value); }
+            get { return _currentContent; }
+            set { SetValue(ref _currentContent, value); }
         }
 
         public async Task SaveItem(string name)
