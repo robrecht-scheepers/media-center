@@ -90,6 +90,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\IOHelper.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="MainWindowViewModel.cs" />
