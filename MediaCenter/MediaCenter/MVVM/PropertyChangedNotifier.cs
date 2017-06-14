@@ -25,15 +25,17 @@ namespace MediaCenter.MVVM
             }
         }
 
-        protected void SetValue<T>(ref T refValue, T newValue, Action action = null, [CallerMemberName] string propertyName = null)
+        protected void SetValue<T>(ref T refValue, T newValue, Action afterChangeAction = null, Action beforeChangeAction = null,[CallerMemberName] string propertyName = null)
         {
             if (Equals(refValue, newValue)) return;
             
+            beforeChangeAction?.Invoke();
+
             refValue = newValue;
 
             InternalRaisePropertyChanged(propertyName);
 
-            action?.Invoke();
+            afterChangeAction?.Invoke();
         }
 
         private static string GetName<T>(Expression<Func<T>> prop)

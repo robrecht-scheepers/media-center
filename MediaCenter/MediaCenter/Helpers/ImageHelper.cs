@@ -12,15 +12,22 @@ namespace MediaCenter.Helpers
 {
     public static class ImageHelper
     {
-        public static async Task<byte[]> CreateThumbnail(Image source)
+        public static byte[] CreateThumbnail(byte[] image)
         {
-            Image thumbnail = null;
+            Image thumbnail;
             Image.GetThumbnailImageAbort myCallback = ThumbnailCallback;
-            await Task.Run(() => { thumbnail = source.GetThumbnailImage(100, 100, myCallback, IntPtr.Zero); });
 
-            MemoryStream ms = new MemoryStream();
-            thumbnail.Save(ms, ImageFormat.Jpeg);
-            return ms.ToArray();
+            using (var imageStream = new MemoryStream(image))
+            {
+                var bitmap = Image.FromStream(imageStream);
+                thumbnail = bitmap.GetThumbnailImage(100, 100, myCallback, IntPtr.Zero);
+            }
+
+            using (var resultStream = new MemoryStream())
+            {
+                thumbnail.Save(resultStream, ImageFormat.Jpeg);
+                return resultStream.ToArray();
+            }
         }
         public static bool ThumbnailCallback()
         {

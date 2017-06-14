@@ -115,11 +115,8 @@ namespace MediaCenter.Repository
                 // add to remote store
                 var mediaItemFilename = Path.Combine(_remoteStore, newItem.Name + Path.GetExtension(filePath));
                 await IOHelper.CopyFile(filePath, mediaItemFilename);
-
                 await IOHelper.SaveBytes(newItem.Thumbnail, ItemNameToThumbnailFilename(newItem.Name));
-
-                var infoFileName = Path.Combine(_remoteStore, newItem.Name + MediaFileExtension);
-                await IOHelper.SaveObject(new MediaInfo(newItem), infoFileName);
+                await IOHelper.SaveObject(new MediaInfo(newItem), ItemNameToInfoFilename(newItem.Name));
             }
 
             await UpdateLocalStore();
@@ -143,7 +140,7 @@ namespace MediaCenter.Repository
             }
             else
             {
-                var imagePath = ItemNameToImageFilename(name);
+                var imagePath = ItemNameToContentFilename(name);
                 if (!string.IsNullOrEmpty(imagePath))
                     imageLoadingTask = IOHelper.OpenBytes(imagePath);
             }
@@ -174,7 +171,7 @@ namespace MediaCenter.Repository
                     foreach (var bufferItemName in itemsToBeFetched)
                     {
                         token.ThrowIfCancellationRequested();
-                        var file = ItemNameToImageFilename(bufferItemName);
+                        var file = ItemNameToContentFilename(bufferItemName);
                         if (string.IsNullOrEmpty(file))
                             continue;
 
@@ -214,30 +211,40 @@ namespace MediaCenter.Repository
             // TODO: cache cleanup
         }
 
-        public async Task SaveItem(string name)
+        public async Task SaveItemInfo(string name)
         {
             var item = _catalog.First(i => i.Name == name);
-            if (!item.IsDirty)
-                return;
-
-            var filePath = Path.Combine(_remoteStore, name + MediaFileExtension);
-            await IOHelper.SaveObject(new MediaInfo(item), filePath);
+            
+            await IOHelper.SaveObject(new MediaInfo(item), ItemNameToInfoFilename(name));
             await UpdateLocalStore();
             _lastSyncFromRemote = DateTime.Now; // TODO: solve concurrent access issue
         }
 
-        public async Task SaveContent(string name, byte[] content)
+        public async Task SaveItemContent(string name)
         {
-            await IOHelper.SaveBytes(content, ItemNameToImageFilename(name));
+            var content = Catalog.FirstOrDefault(x => x.Name == name)?.Content;
+            if(content != null)
+                await IOHelper.SaveBytes(content, ItemNameToContentFilename(name));
         }
 
-        private string ItemNameToImageFilename(string name)
+        public async Task SaveItemThumbnail(string name)
+        {
+            var thumbnail = Catalog.FirstOrDefault(x => x.Name == name)?.Thumbnail;
+            if (thumbnail != null)
+                await IOHelper.SaveBytes(thumbnail, ItemNameToThumbnailFilename(name));
+        }
+
+        private string ItemNameToContentFilename(string name)
         {
             return Directory.GetFiles(_remoteStore, $"{name}.*").FirstOrDefault();
         }
         private string ItemNameToThumbnailFilename(string name)
         {
             return Path.Combine(_remoteStore, name + "_T.jpg");
+        }
+        private string ItemNameToInfoFilename(string name)
+        {
+            return Path.Combine(_remoteStore, name + MediaFileExtension);
         }
 
 

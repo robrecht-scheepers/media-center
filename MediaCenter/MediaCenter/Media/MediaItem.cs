@@ -11,10 +11,12 @@ namespace MediaCenter.Media
             Name = name;
             Type = type;
             Tags = new ObservableCollection<string>();
-            Tags.CollectionChanged += (sender, args) => IsDirty = true;
+            Tags.CollectionChanged += (sender, args) => IsInfoDirty = true;
         }
 
-        public bool IsDirty { get; set; }
+        public bool IsInfoDirty { get; set; }
+        public bool IsContentDirty { get; set; }
+        public bool IsThumbnailDirty { get; set; }
 
         public string Name { get; private set; }
 
@@ -30,14 +32,22 @@ namespace MediaCenter.Media
         public bool Favorite
         {
             get { return _favorite; }
-            set { SetValue(ref _favorite, value, () => IsDirty = true); }
+            set { SetValue(ref _favorite, value, () => IsInfoDirty = true); }
         }
 
         private byte[] _thumbnail;
+
         public byte[] Thumbnail
         {
             get { return _thumbnail; }
             set { SetValue(ref _thumbnail, value); }
+        }
+
+        private byte[] _content;
+        public byte[] Content
+        {
+            get { return _content; }
+            set {SetValue(ref _content, value); }
         }
 
         public void UpdateFrom(MediaItem item)

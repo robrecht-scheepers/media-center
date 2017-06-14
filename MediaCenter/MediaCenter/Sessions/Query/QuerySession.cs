@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using MediaCenter.Media;
 using MediaCenter.Repository;
 using MediaCenter.Sessions.Query.Filters;
@@ -40,9 +41,6 @@ namespace MediaCenter.Sessions.Query
 
         public async Task ContentRequested(string name)
         {
-            if (name == CurrentContent?.Name)
-                return;
-
             // decide other prefetch items
             var prefetchList = new List<string>();
             var index = QueryResult.IndexOf(QueryResult.First(x => x.Name == name));
@@ -53,26 +51,34 @@ namespace MediaCenter.Sessions.Query
                     prefetchList.Add(QueryResult[index + i].Name);
                 }
             }
+            var item = QueryResult.First(x => x.Name == name);
 
-            CurrentContent = new ImageContent(name, await Repository.GetFullImage(name, prefetchList));
+            item.Content = await Repository.GetFullImage(name, prefetchList);
         }
+        
 
-        private MediaContent _currentContent;
-        public MediaContent CurrentContent  
+        public async Task SaveItem(MediaItem item)
         {
-            get { return _currentContent; }
-            set { SetValue(ref _currentContent, value); }
-        }
+            if (item == null)
+                return;
 
-        public async Task SaveItem(string name, MediaContent content = null)
-        {
-            await Repository.SaveItem(name);
-            if (content != null && content.IsDirty)
+            if (item.IsInfoDirty)
             {
-                Repository.SaveContent(name, content.Content);
-                content.IsDirty = false;
+                await Repository.SaveItemInfo(item.Name);
+                item.IsInfoDirty = false;
             }
 
+            if (item.IsContentDirty)
+            {
+                await Repository.SaveItemContent(item.Name);
+                item.IsContentDirty = false;
+            }
+
+            if(item.IsThumbnailDirty)
+            {
+                await Repository.SaveItemThumbnail(item.Name);
+                item.IsThumbnailDirty = false;
+            }
         }
     }
 }

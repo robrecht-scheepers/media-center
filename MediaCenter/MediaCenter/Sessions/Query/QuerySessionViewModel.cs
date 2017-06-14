@@ -13,8 +13,7 @@ namespace MediaCenter.Sessions.Query
     public class QuerySessionViewModel : SessionViewModelBase
     {
         private ObservableCollection<string> _availableTags;
-        private string _currentItemName; // tmp, until we get PropertyChanging
-
+        
         public QuerySessionViewModel(SessionBase session) : base(session)
         {
             InitialzeFilterNames();
@@ -34,7 +33,7 @@ namespace MediaCenter.Sessions.Query
             get { return _selectedItem; }
             set
             {
-                SetValue(ref _selectedItem, value, async () => await SelectedItemChanged());
+                SetValue(ref _selectedItem, value, async () => await SelectedItemChanged(), async () => await SelectedItemChanging());
             }
         }
 
@@ -45,6 +44,15 @@ namespace MediaCenter.Sessions.Query
             set { SetValue(ref _currentContentViewModel, value); }
         }
 
+        private async Task SelectedItemChanging()
+        {
+            if (SelectedItem != null)
+            {
+                await QuerySession.SaveItem(SelectedItem);
+                SelectedItem.Content = null;
+            }
+        }
+
         private async Task SelectedItemChanged()
         {
             // start fetching the new content
@@ -53,19 +61,7 @@ namespace MediaCenter.Sessions.Query
             {
                 contentTask = QuerySession.ContentRequested(SelectedItem.Name);
             }
-            else
-            {
-                CurrentContentViewModel = null;
-            }
-
-            // save the data for the previous selected item
-            if (!string.IsNullOrEmpty(_currentItemName))
-            {
-                await QuerySession.SaveItem(_currentItemName, CurrentContentViewModel?.MediaContent);
-
-            }
-            _currentItemName = SelectedItem?.Name;
-
+            
             // Setup tags
             AvailableTags = SelectedItem != null 
                 ? new ObservableCollection<string>(AllTags.Where(x => !SelectedItem.Tags.Contains(x))) 
@@ -75,7 +71,6 @@ namespace MediaCenter.Sessions.Query
             if (contentTask != null)
             {
                 await contentTask;
-                CurrentContentViewModel = new ImageContentViewModel((ImageContent)QuerySession.CurrentContent); // TODO: add media type distinxtion 
             }
         }
 
@@ -110,11 +105,7 @@ namespace MediaCenter.Sessions.Query
             return QueryResult.IndexOf(SelectedItem) > 0;
         }
         #endregion
-
-        #region Command: RotateImageRight
-
-        #endregion
-
+        
         #endregion
 
         #region Tags
