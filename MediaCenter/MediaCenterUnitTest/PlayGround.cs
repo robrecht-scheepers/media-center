@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization.Json;
 using MediaCenter.Helpers;
+using MediaCenter.Media;
 using MediaCenter.Repository;
 using MediaCenter.Sessions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

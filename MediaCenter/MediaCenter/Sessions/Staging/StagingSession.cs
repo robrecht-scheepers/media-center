@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MediaCenter.Helpers;
+using MediaCenter.Media;
 using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions.Staging
@@ -19,7 +20,7 @@ namespace MediaCenter.Sessions.Staging
         // TODO: share with view model for dialog filter
         private readonly string[] _imageExtensions = {".jpg", ".png", ".bmp"};
         private string _statusMessage;
-        private Dictionary<string, string> _filePaths = new Dictionary<string, string>(); 
+        private readonly Dictionary<string, string> _filePaths = new Dictionary<string, string>(); 
 
         public StagingSession(RemoteRepository repository) : base(repository)
         {

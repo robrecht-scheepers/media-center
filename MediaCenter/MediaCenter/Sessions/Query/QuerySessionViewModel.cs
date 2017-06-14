@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using MediaCenter.Media;
 using MediaCenter.MVVM;
 using MediaCenter.Sessions.Query.Filters;
 

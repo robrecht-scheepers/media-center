@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using MediaCenter.Media;
 using MediaCenter.Sessions;
 
 namespace MediaCenter.Repository

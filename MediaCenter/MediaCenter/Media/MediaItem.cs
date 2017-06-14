@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using MediaCenter.MVVM;
 
-namespace MediaCenter.Sessions
+namespace MediaCenter.Media
 {
     public class MediaItem : PropertyChangedNotifier
     {

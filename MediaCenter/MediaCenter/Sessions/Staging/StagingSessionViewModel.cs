@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MediaCenter.Media;
 using MediaCenter.MVVM;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 

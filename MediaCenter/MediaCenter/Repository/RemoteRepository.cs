@@ -8,6 +8,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediaCenter.Helpers;
+using MediaCenter.Media;
 using MediaCenter.Sessions;
 
 namespace MediaCenter.Repository

@@ -1,4 +1,4 @@
-﻿namespace MediaCenter.Sessions
+﻿namespace MediaCenter.Media
 {
     public enum MediaType
     {
