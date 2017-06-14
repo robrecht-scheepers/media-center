@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using MediaCenter.MVVM;
-using MediaCenter.Repository;
 using MediaCenter.Sessions.Query.Filters;
 
 namespace MediaCenter.Sessions.Query

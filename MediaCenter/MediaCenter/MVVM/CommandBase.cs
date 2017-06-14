@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -21,7 +17,7 @@ namespace MediaCenter.MVVM
             CommandManager.RequerySuggested += CommandManager_RequerySuggested;
         }
 
-        private void CommandManager_RequerySuggested(object sender, System.EventArgs e)
+        private void CommandManager_RequerySuggested(object sender, EventArgs e)
         {
             RaiseCanExecuteChanged();
         }
@@ -43,7 +39,7 @@ namespace MediaCenter.MVVM
             var handler = CanExecuteChanged;
             if (handler != null)
             {
-                handler.Invoke(this, System.EventArgs.Empty);
+                handler.Invoke(this, EventArgs.Empty);
             }
         }
     }

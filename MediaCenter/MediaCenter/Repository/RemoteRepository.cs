@@ -2,18 +2,13 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Xml.XPath;
 using MediaCenter.Helpers;
 using MediaCenter.Sessions;
-using MediaCenter.Sessions.Staging;
-using Image = System.Drawing.Image;
 
 namespace MediaCenter.Repository
 {

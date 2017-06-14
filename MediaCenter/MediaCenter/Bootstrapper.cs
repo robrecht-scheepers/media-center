@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
+﻿using System.Configuration;
 using System.Threading.Tasks;
 using MediaCenter.Repository;
 
@@ -15,7 +11,7 @@ namespace MediaCenter
         public async Task Run()
         {
             // dummy code until repositorx management logic is ready
-            _repository = new Repository.RemoteRepository(ConfigurationManager.AppSettings["RemoteStore"],
+            _repository = new RemoteRepository(ConfigurationManager.AppSettings["RemoteStore"],
                 ConfigurationManager.AppSettings["LocalStore"],ConfigurationManager.AppSettings["LocalCache"]);
 
             var repositoryTask = _repository.Initialize();

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using MediaCenter.MVVM;
-using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions.Query.Filters
 {
