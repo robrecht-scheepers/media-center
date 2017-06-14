@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -7,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MediaCenter.Media;
 
 namespace MediaCenter.Helpers
 {
@@ -45,5 +45,33 @@ namespace MediaCenter.Helpers
             var date = DateTime.ParseExact(dateString, "yyyy:MM:dd HH:mm:ss", new DateTimeFormatInfo());
             return date;
         }
+
+        public static byte[] Rotate(byte[] image, RotationDirection direction)
+        {
+            using (var sourceStream = new MemoryStream(image))
+            {
+                var bitmap = Image.FromStream(sourceStream);
+
+                RotateFlipType rotationtype = RotateFlipType.RotateNoneFlipNone;
+                switch (direction)
+                {
+                    case RotationDirection.Clockwise:
+                        rotationtype = RotateFlipType.Rotate90FlipNone;
+                        break;
+                    case RotationDirection.Counterclockwise:
+                        rotationtype = RotateFlipType.Rotate270FlipNone;
+                        break;
+                }
+                bitmap.RotateFlip(rotationtype);
+
+                using (var destinationStream = new MemoryStream())
+                {
+                    bitmap.Save(destinationStream,ImageFormat.Jpeg);
+                    return destinationStream.ToArray();
+                }
+            }
+        }
+
+        
     }
 }

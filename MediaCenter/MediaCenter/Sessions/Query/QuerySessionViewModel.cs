@@ -25,23 +25,6 @@ namespace MediaCenter.Sessions.Query
 
         public ObservableCollection<MediaItem> QueryResult => QuerySession.QueryResult; 
 
-        #region Filters
-        public ObservableCollection<Filter> Filters => QuerySession.Filters;
-        
-        public List<string> FilterNames { get; private set; }
-
-        private string _selectedFilterName;
-        public string SelectedFilterName
-        {
-            get { return _selectedFilterName; }
-            set { SetValue(ref _selectedFilterName, value);}
-        }
-        private void InitialzeFilterNames()
-        {
-            FilterNames = new List<string> { DateTakenFilter.Name, TagFilter.Name, FavoriteFilter.Name, DateAddedFilter.Name };
-        }
-        #endregion
-
         #region Result items
         private MediaItem _selectedItem;
         public MediaItem SelectedItem
@@ -109,6 +92,11 @@ namespace MediaCenter.Sessions.Query
         }
         #endregion
 
+        // TODO: move to media item logic
+        #region Command: RotateImageRight
+
+        #endregion
+
         #endregion
 
         #region Tags
@@ -163,6 +151,21 @@ namespace MediaCenter.Sessions.Query
 
         #endregion
 
+        #region Query
+        public ObservableCollection<Filter> Filters => QuerySession.Filters;
+        public List<string> FilterNames { get; private set; }
+
+        private string _selectedFilterName;
+        public string SelectedFilterName
+        {
+            get { return _selectedFilterName; }
+            set { SetValue(ref _selectedFilterName, value); }
+        }
+        private void InitialzeFilterNames()
+        {
+            FilterNames = new List<string> { DateTakenFilter.Name, TagFilter.Name, FavoriteFilter.Name, DateAddedFilter.Name };
+        }
+
         #region Command: Add filter
         private RelayCommand _addFilterCommand;
         public RelayCommand AddFilterCommand => _addFilterCommand ?? (_addFilterCommand = new RelayCommand(AddFilter));
@@ -197,6 +200,7 @@ namespace MediaCenter.Sessions.Query
             await QuerySession.ExecuteQuery();
             SelectedItem = QueryResult.FirstOrDefault();
         }
+        #endregion
         #endregion
     }
 }

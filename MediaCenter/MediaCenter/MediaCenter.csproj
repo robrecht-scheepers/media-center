@@ -94,6 +94,7 @@
     <Compile Include="Helpers\IOHelper.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="Media\RotationDirection.cs" />
     <Compile Include="Repository\MediaInfo.cs" />
     <Compile Include="MVVM\AsyncRelayCommand.cs" />
     <Compile Include="MVVM\CommandBase.cs" />
