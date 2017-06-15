@@ -4,14 +4,13 @@ using MediaCenter.MVVM;
 
 namespace MediaCenter.Media
 {
-    public class MediaItem : PropertyChangedNotifier
+    public abstract class MediaItem : PropertyChangedNotifier
     {
-        public MediaItem(string name, MediaType type)
+        protected MediaItem(string name, MediaType type)
         {
             Name = name;
             Type = type;
             Tags = new ObservableCollection<string>();
-            Tags.CollectionChanged += (sender, args) => IsInfoDirty = true;
         }
 
         public bool IsInfoDirty { get; set; }

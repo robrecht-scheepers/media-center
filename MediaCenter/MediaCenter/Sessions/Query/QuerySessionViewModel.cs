@@ -36,14 +36,7 @@ namespace MediaCenter.Sessions.Query
                 SetValue(ref _selectedItem, value, async () => await SelectedItemChanged(), async () => await SelectedItemChanging());
             }
         }
-
-        private MediaContentViewModel _currentContentViewModel;
-        public MediaContentViewModel CurrentContentViewModel
-        {
-            get { return _currentContentViewModel; }
-            set { SetValue(ref _currentContentViewModel, value); }
-        }
-
+        
         private async Task SelectedItemChanging()
         {
             if (SelectedItem != null)
@@ -132,6 +125,7 @@ namespace MediaCenter.Sessions.Query
         {
             SelectedItem.Tags.Add(newTag);
             AvailableTags.Remove(newTag);
+            SelectedItem.IsInfoDirty = true;
         }
 
         private RelayCommand<string> _removeTagCommand;
@@ -140,6 +134,7 @@ namespace MediaCenter.Sessions.Query
         {
             SelectedItem.Tags.Remove(tag);
             AvailableTags.Add(tag);
+            SelectedItem.IsInfoDirty = true;
         }
 
         private RelayCommand _addNewTagCommand;
@@ -149,6 +144,7 @@ namespace MediaCenter.Sessions.Query
             SelectedItem.Tags.Add(NewTag);
             AllTags.Add(NewTag);
             NewTag = "";
+            SelectedItem.IsInfoDirty = true;
         }
 
         private string _newTag;

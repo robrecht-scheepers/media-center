@@ -5,18 +5,16 @@
         <ResourceDictionary Source="../Styles/Styles.xaml"></ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
     
-    <DataTemplate DataType="{x:Type local:ImageContentViewModel}">
+    <DataTemplate DataType="{x:Type local:ImageItem}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Image Grid.Row="0" Source="{Binding ImageContent.Image}" />
+            <Image Grid.Row="0" Source="{Binding Content}" />
             <StackPanel Grid.Row="1" Orientation="Horizontal">
                 <Button Style="{StaticResource IconButton}" Command="{Binding RotateCounterclockwiseCommand}"><Image Source="/Resources/Icons/arrow-circle-315-rev.png" Stretch="None"/></Button>
-                <Button Style="{StaticResource IconButton}" Command="{Binding RotateClockwiseCommand}">
-                    <Image Source="/Resources/Icons/arrow-circle-315.png" Stretch="None"/>
-                </Button>
+                <Button Style="{StaticResource IconButton}" Command="{Binding RotateClockwiseCommand}"><Image Source="/Resources/Icons/arrow-circle-315.png" Stretch="None"/></Button>
             </StackPanel>
         </Grid>
         

@@ -34,23 +34,26 @@ namespace MediaCenter.Helpers
             return false;
         }
 
-        public static DateTime ReadImageDate(Image image)
+        public static DateTime ReadImageDate(byte[] image)
         {
             int datePropertyID = 36867;
             ASCIIEncoding encoding = new ASCIIEncoding();
-            string dateString = "";
-
-            PropertyItem[] propertyItems = image.PropertyItems;
-            var dateProperty = propertyItems.FirstOrDefault(p => p.Id == datePropertyID);
-            if (dateProperty == null)
+            
+            using (var imageStream = new MemoryStream(image))
             {
-                return DateTime.MinValue;
-            }
+                var bitmap = Image.FromStream(imageStream);
+                PropertyItem[] propertyItems = bitmap.PropertyItems;
+                var dateProperty = propertyItems.FirstOrDefault(p => p.Id == datePropertyID);
+                if (dateProperty == null)
+                {
+                    return DateTime.MinValue;
+                }
 
-            dateString = encoding.GetString(dateProperty.Value);
-            dateString = dateString.Substring(0, dateString.Length - 1); // drop zero character /0
-            var date = DateTime.ParseExact(dateString, "yyyy:MM:dd HH:mm:ss", new DateTimeFormatInfo());
-            return date;
+                var dateString = encoding.GetString(dateProperty.Value);
+                dateString = dateString.Substring(0, dateString.Length - 1); // drop zero character /0
+                var date = DateTime.ParseExact(dateString, "yyyy:MM:dd HH:mm:ss", new DateTimeFormatInfo());
+                return date;
+            }
         }
 
         public static byte[] Rotate(byte[] image, RotationDirection direction)

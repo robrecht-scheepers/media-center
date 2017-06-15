@@ -27,7 +27,7 @@ namespace MediaCenter.Repository
 
         public MediaItem ToMediaItem()
         {
-            var item = new MediaItem(Name, Type)
+            var item = new ImageItem(Name)
             {
                 DateTaken = this.DateTaken,
                 DateAdded = this.DateAdded,

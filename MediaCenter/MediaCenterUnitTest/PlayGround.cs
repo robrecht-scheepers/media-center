@@ -22,14 +22,14 @@ namespace MediaCenterUnitTest
 
             List<MediaItem> collection = new List<MediaItem>
             {
-                new MediaItem("Item 1", MediaType.Image)
+                new ImageItem("Item 1")
                 {
                     DateTaken = DateTime.Now,
                     DateAdded = DateTime.Now,
             
                     Tags = new ObservableCollection<string> {"Tag 1", "Tag 2"}
                 },
-                new MediaItem("Item 2", MediaType.Image)
+                new ImageItem("Item 2")
                 {
                     DateTaken = DateTime.Now,
                     DateAdded = DateTime.Now,

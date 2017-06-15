@@ -38,24 +38,17 @@ namespace MediaCenter.Sessions.Staging
                 if ((string.IsNullOrEmpty(filePath))||(!_imageExtensions.Contains(Path.GetExtension(filePath).ToLower())))
                     continue;
 
-                Image image = null;
                 try
                 {
-                    image = await IOHelper.OpenImage(filePath);
-                    if (image == null)
+                   var  image = await IOHelper.OpenBytes(filePath);
+                    
+                    var dateTaken = ImageHelper.ReadImageDate(image);
+                    var name = CreateItemName(dateTaken);
+                    var thumbnail = ImageHelper.CreateThumbnail(image);
+                    
+                    StagedItems.Add(new ImageItem(name)
                     {
-                        // TODO: create error list
-                        continue;
-                    }
-
-                    var date = ImageHelper.ReadImageDate(image);
-                    var name = CreateItemName(date);
-                    var thumbnail = await ImageHelper.CreateThumbnail(image);
-                    image.Dispose();
-
-                    StagedItems.Add(new MediaItem(name, MediaType.Image)
-                    {
-                        DateTaken = date,
+                        DateTaken = dateTaken,
                         DateAdded = DateTime.Now,
                         Thumbnail = thumbnail
                     });
@@ -65,10 +58,6 @@ namespace MediaCenter.Sessions.Staging
                 {
                     Debug.WriteLine(e.ToString());
                     // TODO: create error list
-                }
-                finally
-                {
-                    image?.Dispose();
                 }
             }
         }

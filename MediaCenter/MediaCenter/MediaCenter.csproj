@@ -96,6 +96,7 @@
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="Media\ImageContent.cs" />
     <Compile Include="Media\ImageContentViewModel.cs" />
+    <Compile Include="Media\ImageItem.cs" />
     <Compile Include="Media\MediaContent.cs" />
     <Compile Include="Media\MediaContentViewModel.cs" />
     <Compile Include="Media\RotationDirection.cs" />
@@ -142,7 +143,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Media\MediaContentDataTemplates.xaml">
+    <Page Include="Media\MediaItemDataTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
