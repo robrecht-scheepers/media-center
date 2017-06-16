@@ -60,11 +60,11 @@ namespace MediaCenterUnitTest
         {
             var bitmap = File.ReadAllBytes(@"c:\TEMP\Personal documents\MCTest\TestImages\20160924202350.JPG");
 
-            var thumbnail = ImageHelper.CreateThumbnail(bitmap,100, true);
+            var thumbnail = ImageHelper.CreateThumbnail(bitmap,100);
 
             File.WriteAllBytes(@"c:\TEMP\Personal documents\MCTest\TestImages\20160924202350_T.JPG", thumbnail);
 
-            thumbnail = ImageHelper.CreateThumbnail(bitmap, 100, false);
+            thumbnail = ImageHelper.CreateThumbnail(bitmap, 100);
 
             File.WriteAllBytes(@"c:\TEMP\Personal documents\MCTest\TestImages\20160924202350_F.JPG", thumbnail);
         }

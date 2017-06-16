@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,12 +44,13 @@ namespace MediaCenter.Sessions.Staging
                         if (image == null)
                         {
                             // TODO: error handling, create list of failed files
+                            Debug.WriteLine($"failed to load image {filePath}");
                             continue;
                         }
 
                         var dateTaken = ImageHelper.ReadImageDate(image);
                         var name = CreateItemName(dateTaken);
-                        var thumbnail = ImageHelper.CreateThumbnail(image, 100, true);
+                        var thumbnail = ImageHelper.CreateThumbnail(image, 100);
 
                         StagedItems.Add(new ImageItem(name)
                         {
@@ -64,7 +64,7 @@ namespace MediaCenter.Sessions.Staging
                 catch (Exception e)
                 {
                     Debug.WriteLine(e.ToString());
-                    // TODO: create error list
+                    // TODO: error handling, create list of failed files
                 }
             }
         }

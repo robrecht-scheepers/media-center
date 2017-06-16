@@ -12,41 +12,28 @@ namespace MediaCenter.Helpers
 {
     public static class ImageHelper
     {
-        public static byte[] CreateThumbnail(byte[] image, int size, bool useEmbeddedWhenAvailable)
+        public static byte[] CreateThumbnail(byte[] image, int size)
         {
             using (var imageStream = new MemoryStream(image))
             {
                 var bitmap = Image.FromStream(imageStream);
-                return CreateThumbnail(bitmap, size, useEmbeddedWhenAvailable);
+                return CreateThumbnail(bitmap, size);
             }
         }
-        public static byte[] CreateThumbnail(Image image, int size, bool useEmbeddedWhenAvailable)
+        public static byte[] CreateThumbnail(Image image, int size)
         {
-            Image thumbnail;
-            if (useEmbeddedWhenAvailable)
+            float scaleFactor = Math.Max((float)size / (float)image.Width, (float)size / (float)image.Height);
+            var scaledWidth = (int)(image.Width * scaleFactor);
+            var scaledHeight = (int)(image.Height * scaleFactor);
+            Image thumbnail = new Bitmap(size, size);
+            using (var graph = Graphics.FromImage(thumbnail))
             {
-                Image.GetThumbnailImageAbort myCallback = ThumbnailCallback;
-                thumbnail = image.GetThumbnailImage(size, size, myCallback, IntPtr.Zero);
-            }
-            else
-            {
-                float scaleFactor = Math.Min((float)size / (float)image.Width, (float)size / (float)image.Height);
-                var scaledWidth = (int)(image.Width * scaleFactor);
-                var scaledHeight = (int)(image.Height * scaleFactor);
-                thumbnail = new Bitmap(size, size);
-                using (var graph = Graphics.FromImage(thumbnail))
-                {
-                    graph.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    graph.CompositingQuality = CompositingQuality.HighQuality;
-                    graph.SmoothingMode = SmoothingMode.AntiAlias;
-                    graph.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                var scaledImage = new Bitmap(image, new Size(scaledWidth, scaledHeight));
+                var cropRect = new Rectangle((scaledWidth-size)/2,(scaledHeight-size)/2,size,size);
 
-                    graph.FillRectangle(new SolidBrush(Color.Black), new RectangleF(0, 0, size, size));
-                    graph.DrawImage(image,
-                        new Rectangle((size - scaledWidth) / 2, (size - scaledHeight) / 2, scaledWidth,
-                            scaledHeight));
-                }
+                graph.DrawImage(scaledImage,new Rectangle(0,0,size,size),cropRect,GraphicsUnit.Pixel);
             }
+            
             using (var resultStream = new MemoryStream())
             {
                 thumbnail.Save(resultStream, ImageFormat.Png);
