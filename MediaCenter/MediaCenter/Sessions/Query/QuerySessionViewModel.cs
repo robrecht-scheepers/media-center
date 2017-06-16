@@ -41,8 +41,9 @@ namespace MediaCenter.Sessions.Query
         {
             if (SelectedItem != null)
             {
-                await QuerySession.SaveItem(SelectedItem);
-                SelectedItem.Content = null;
+                var itemBeingSaved = SelectedItem; // save reference to current selected tem, as the Sleected Item will be updated n parallel (SetValue does not await)
+                await QuerySession.SaveItem(itemBeingSaved);
+                itemBeingSaved.Content = null;
             }
         }
 

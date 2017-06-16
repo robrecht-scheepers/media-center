@@ -19,7 +19,7 @@ namespace MediaCenter.Media
             Content = ImageHelper.Rotate(Content, direction);
             IsContentDirty = true;
 
-            Thumbnail = ImageHelper.CreateThumbnail(Content);
+            Thumbnail = ImageHelper.CreateThumbnail(Content,100, false);
             IsThumbnailDirty = true;
         }
 

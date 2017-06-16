@@ -40,19 +40,26 @@ namespace MediaCenter.Sessions.Staging
 
                 try
                 {
-                   var  image = await IOHelper.OpenBytes(filePath);
-                    
-                    var dateTaken = ImageHelper.ReadImageDate(image);
-                    var name = CreateItemName(dateTaken);
-                    var thumbnail = ImageHelper.CreateThumbnail(image);
-                    
-                    StagedItems.Add(new ImageItem(name)
+                    using (var image = await IOHelper.OpenImage(filePath))
                     {
-                        DateTaken = dateTaken,
-                        DateAdded = DateTime.Now,
-                        Thumbnail = thumbnail
-                    });
-                    _filePaths[name] = filePath;
+                        if (image == null)
+                        {
+                            // TODO: error handling, create list of failed files
+                            continue;
+                        }
+
+                        var dateTaken = ImageHelper.ReadImageDate(image);
+                        var name = CreateItemName(dateTaken);
+                        var thumbnail = ImageHelper.CreateThumbnail(image, 100, true);
+
+                        StagedItems.Add(new ImageItem(name)
+                        {
+                            DateTaken = dateTaken,
+                            DateAdded = DateTime.Now,
+                            Thumbnail = thumbnail
+                        });
+                        _filePaths[name] = filePath;
+                    }
                 }
                 catch (Exception e)
                 {

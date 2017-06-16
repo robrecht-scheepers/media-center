@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Json;
@@ -52,6 +53,20 @@ namespace MediaCenterUnitTest
 
             File.WriteAllBytes(@"c:\TEMP\Personal documents\MCTest\ImageTesting\DSC_0001_R.JPG", rotatedIMageR);
             File.WriteAllBytes(@"c:\TEMP\Personal documents\MCTest\ImageTesting\DSC_0001_L.JPG", rotatedIMageL);
+        }
+
+        [TestMethod]
+        public void TestThumbnail()
+        {
+            var bitmap = File.ReadAllBytes(@"c:\TEMP\Personal documents\MCTest\TestImages\20160924202350.JPG");
+
+            var thumbnail = ImageHelper.CreateThumbnail(bitmap,100, true);
+
+            File.WriteAllBytes(@"c:\TEMP\Personal documents\MCTest\TestImages\20160924202350_T.JPG", thumbnail);
+
+            thumbnail = ImageHelper.CreateThumbnail(bitmap, 100, false);
+
+            File.WriteAllBytes(@"c:\TEMP\Personal documents\MCTest\TestImages\20160924202350_F.JPG", thumbnail);
         }
     }
 }
