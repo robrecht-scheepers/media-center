@@ -208,5 +208,21 @@ namespace MediaCenter.Sessions.Query
         }
         #endregion
         #endregion
+
+        private RelayCommand _startSlideShowCommand;
+        
+        public RelayCommand StartSlideShowCommand
+            => _startSlideShowCommand ?? (_startSlideShowCommand = new RelayCommand(StartSlideShow));
+        public void StartSlideShow()
+        {
+            
+        }
+
+        private bool _slideShowActive;
+        public bool SlideShowActive
+        {
+            get { return _slideShowActive; }
+            set { SetValue(ref _slideShowActive, value); }
+        }
     }
 }
