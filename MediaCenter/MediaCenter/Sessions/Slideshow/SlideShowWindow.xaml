@@ -8,8 +8,8 @@
         mc:Ignorable="d"
         Title="SlideShowWindow" Height="300" Width="300"
         WindowState="Maximized" WindowStyle="None"
-        d:DataContext="{d:DesignInstance query:QuerySessionViewModel}">
+        d:DataContext="{d:DesignInstance local:SlideShowViewModel}">
     <Grid Background="Black">
-        <Image Source="{Binding SelectedItem.Content}" Stretch="Uniform"/>
+        <Image Source="{Binding Path=QuerySessionViewModel.SelectedItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     </Grid>
 </Window>

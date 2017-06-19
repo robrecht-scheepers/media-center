@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MediaCenter.Media;
 using MediaCenter.MVVM;
 using MediaCenter.Sessions.Query.Filters;
+using MediaCenter.Sessions.Slideshow;
 
 namespace MediaCenter.Sessions.Query
 {
@@ -210,12 +211,21 @@ namespace MediaCenter.Sessions.Query
         #endregion
 
         private RelayCommand _startSlideShowCommand;
-        
         public RelayCommand StartSlideShowCommand
             => _startSlideShowCommand ?? (_startSlideShowCommand = new RelayCommand(StartSlideShow));
         public void StartSlideShow()
         {
-            
+            if(SlideShowViewModel == null)
+                SlideShowViewModel = new SlideShowViewModel(this);
+            SlideShowActive = true;
+            SlideShowViewModel.Start();
+        }
+
+        private RelayCommand _closeSlideShowCommand;
+        public RelayCommand CloseSlideShowCommand => _closeSlideShowCommand ?? (_closeSlideShowCommand = new RelayCommand(CloseSlideShow));
+        private void CloseSlideShow()
+        {
+            SlideShowActive = false;
         }
 
         private bool _slideShowActive;
@@ -223,6 +233,13 @@ namespace MediaCenter.Sessions.Query
         {
             get { return _slideShowActive; }
             set { SetValue(ref _slideShowActive, value); }
+        }
+
+        private SlideShowViewModel _slideShowViewModel;
+        public SlideShowViewModel SlideShowViewModel
+        {
+            get { return _slideShowViewModel; }
+            set { SetValue(ref _slideShowViewModel, value); }
         }
     }
 }

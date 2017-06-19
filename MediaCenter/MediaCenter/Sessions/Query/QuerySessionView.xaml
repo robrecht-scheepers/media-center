@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:MediaCenter.Sessions.Query"
              xmlns:style="clr-namespace:MediaCenter.Styles"
              xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:slideshow="clr-namespace:MediaCenter.Sessions.Slideshow"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:QuerySessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -18,6 +19,10 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
+    
+    <interactivity:Interaction.Behaviors>
+        <slideshow:OpenCloseWindowBehavior WindowType="slideshow:SlideShowWindow" Trigger="{Binding SlideShowActive}" WindowDataContext="{Binding Path=SlideShowViewModel}" />
+    </interactivity:Interaction.Behaviors>
     
     <Grid>
         <Grid.ColumnDefinitions>
@@ -89,6 +94,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="2*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding SelectedItem.Favorite, Mode=TwoWay}">
                     <Image Stretch="None">
@@ -138,6 +144,7 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
+                <Button Grid.Row="4" Command="{Binding StartSlideShowCommand}">Start Slideshow</Button>
             </Grid>
         </Grid>
         

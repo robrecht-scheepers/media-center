@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
+using MediaCenter.MVVM;
 
 namespace MediaCenter.Sessions.Slideshow
 {
@@ -12,16 +13,16 @@ namespace MediaCenter.Sessions.Slideshow
         public Type WindowType { get { return (Type)GetValue(WindowTypeProperty); } set { SetValue(WindowTypeProperty, value); } }
         public static readonly DependencyProperty WindowTypeProperty = DependencyProperty.Register("WindowType", typeof(Type), typeof(OpenCloseWindowBehavior), new PropertyMetadata(null));
 
-        public object WindowDataContext { get { return GetValue(WindowDataContextProperty); } set { SetValue(WindowDataContextProperty, value); } }
+        public object WindowDataContext { get { return (object)GetValue(WindowDataContextProperty); } set { SetValue(WindowDataContextProperty, value); } }
         public static readonly DependencyProperty WindowDataContextProperty = DependencyProperty.Register("WindowDataContext", typeof(object), typeof(OpenCloseWindowBehavior), new PropertyMetadata(null));
 
-        public bool Open { get { return (bool)GetValue(OpenProperty); } set { SetValue(OpenProperty, value); } }
-        public static readonly DependencyProperty OpenProperty = DependencyProperty.Register("Open", typeof(bool), typeof(OpenCloseWindowBehavior), new PropertyMetadata(false, OnOpenChanged));
+        public bool Trigger { get { return (bool)GetValue(TriggerProperty); } set { SetValue(TriggerProperty, value); } }
+        public static readonly DependencyProperty TriggerProperty = DependencyProperty.Register("Trigger", typeof(bool), typeof(OpenCloseWindowBehavior), new PropertyMetadata(false, OnTriggerChanged));
 
         /// <summary>
         /// Opens or closes a window of type 'WindowType' and assigns the datacontext.
         /// </summary>
-        private static void OnOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnTriggerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var me = (OpenCloseWindowBehavior)d;
             if ((bool)e.NewValue)
@@ -32,10 +33,10 @@ namespace MediaCenter.Sessions.Slideshow
                 {
                     window.Closing += (s, ev) =>
                     {
-                        if (me.Open) // window closed directly by user
+                        if (me.Trigger) // window closed directly by user
                         {
                             me._windowInstance = null; // prevents repeated Close call
-                            me.Open = false; // set to false, so next time Open is set to true, OnOpenChanged is triggered again
+                            me.Trigger = false; // set to false, so next time Open is set to true, OnOpenChanged is triggered again
                         }
                     };
                     window.DataContext = me.WindowDataContext;
