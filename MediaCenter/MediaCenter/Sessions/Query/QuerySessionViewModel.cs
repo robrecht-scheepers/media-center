@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using MediaCenter.Media;
@@ -14,7 +15,9 @@ namespace MediaCenter.Sessions.Query
     public class QuerySessionViewModel : SessionViewModelBase
     {
         private ObservableCollection<string> _availableTags;
-        
+        private MediaItem _previousSelectedItem = null;
+
+
         public QuerySessionViewModel(SessionBase session) : base(session)
         {
             InitialzeFilterNames();
@@ -34,18 +37,14 @@ namespace MediaCenter.Sessions.Query
             get { return _selectedItem; }
             set
             {
-                SetValue(ref _selectedItem, value, async () => await SelectedItemChanged(), async () => await SelectedItemChanging());
+                SetValue(ref _selectedItem, value, async () => await SelectedItemChanged(), SelectedItemChanging);
             }
         }
         
-        private async Task SelectedItemChanging()
+        private void SelectedItemChanging()
         {
-            if (SelectedItem != null)
-            {
-                var itemBeingSaved = SelectedItem; // save reference to current selected tem, as the Sleected Item will be updated n parallel (SetValue does not await)
-                await QuerySession.SaveItem(itemBeingSaved);
-                itemBeingSaved.Content = null;
-            }
+            // stor current selected item, so that SelectedItemChanging can do the saving and cleanup
+            _previousSelectedItem = SelectedItem;
         }
 
         private async Task SelectedItemChanged()
@@ -54,7 +53,14 @@ namespace MediaCenter.Sessions.Query
             Task contentTask = null;
             if (SelectedItem != null)
             {
+                Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss tt ss.fff")} | SelectedItemChanged Requesting{SelectedItem.Name}");
                 contentTask = QuerySession.ContentRequested(SelectedItem.Name);
+            }
+
+            Task saveTask = null;
+            if (_previousSelectedItem != null)
+            {
+                saveTask = QuerySession.SaveItem(_previousSelectedItem);
             }
             
             // Setup tags
@@ -65,7 +71,18 @@ namespace MediaCenter.Sessions.Query
             // wait for the new content
             if (contentTask != null)
             {
+                Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss tt ss.fff")} | SelectedItemChanged Awaiting {SelectedItem.Name}");
                 await contentTask;
+                Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss tt ss.fff")} | SelectedItemChanged Received {SelectedItem.Name}");
+                await contentTask;
+            }
+
+            // wait for the saving task and then cleanup the content of the previous item
+            {
+                if (saveTask != null)
+                {
+                    _previousSelectedItem.Content = null;
+                }
             }
         }
 

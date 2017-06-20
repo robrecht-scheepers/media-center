@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,6 +42,7 @@ namespace MediaCenter.Sessions.Slideshow
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
+            Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss tt ss.fff")} | Timer tick");
             QuerySessionViewModel.SelectNextImageCommand.Execute(null);
             _timer.Start();
         }
