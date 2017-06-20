@@ -92,7 +92,8 @@ namespace MediaCenter.Sessions.Query
             => _selectNextImageCommand ?? (_selectNextImageCommand = new RelayCommand(SelectNextImage, CanExecuteSelectNextImage));
         private void SelectNextImage()
         {
-            SelectedItem = QueryResult[QueryResult.IndexOf(SelectedItem) + 1];
+            if(CanExecuteSelectNextImage())
+                SelectedItem = QueryResult[QueryResult.IndexOf(SelectedItem) + 1];
         }
         private bool CanExecuteSelectNextImage()
         {
