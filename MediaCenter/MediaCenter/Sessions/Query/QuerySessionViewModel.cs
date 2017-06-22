@@ -243,6 +243,7 @@ namespace MediaCenter.Sessions.Query
         public RelayCommand CloseSlideShowCommand => _closeSlideShowCommand ?? (_closeSlideShowCommand = new RelayCommand(CloseSlideShow));
         private void CloseSlideShow()
         {
+            SlideShowViewModel.Stop();
             SlideShowActive = false;
         }
 

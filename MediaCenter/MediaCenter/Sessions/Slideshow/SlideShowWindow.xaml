@@ -9,7 +9,25 @@
         Title="SlideShowWindow" Height="300" Width="300"
         WindowState="Maximized" WindowStyle="None"
         d:DataContext="{d:DesignInstance local:SlideShowViewModel}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid Background="Black">
-        <Image Source="{Binding Path=QuerySessionViewModel.SelectedItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Image Grid.Row="0" Grid.RowSpan="2" Source="{Binding Path=QuerySessionViewModel.SelectedItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Button Style="{StaticResource IconButton}" Command="{Binding PauseResumeCommand}"><Image Source="/Resources/Icons/film.png" /></Button>
+            <Button Style="{StaticResource IconButton}" Command="{Binding NextImageCommand}">
+                <Image Source="/Resources/Icons/navigation.png" />
+            </Button>
+        </StackPanel>
     </Grid>
 </Window>

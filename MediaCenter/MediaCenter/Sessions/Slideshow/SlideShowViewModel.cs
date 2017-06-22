@@ -10,6 +10,13 @@ using MediaCenter.Sessions.Query;
 
 namespace MediaCenter.Sessions.Slideshow
 {
+    public enum SlideshowStatus
+    {
+        Active,
+        Paused,
+        Stopped
+    }
+
     public class SlideShowViewModel : PropertyChangedNotifier
     {
         private Timer _timer;
@@ -21,6 +28,21 @@ namespace MediaCenter.Sessions.Slideshow
         {
             QuerySessionViewModel = querySessionViewModel;
             Interval = 1;
+            Status = SlideshowStatus.Stopped;
+        }
+            
+
+        ~SlideShowViewModel()
+        {
+            _timer.Dispose();
+        }
+
+        private SlideshowStatus _status;
+
+        public SlideshowStatus Status
+        {
+            get { return _status; }
+            set { SetValue(ref _status, value); }
         }
 
         private int _interval;
@@ -30,21 +52,109 @@ namespace MediaCenter.Sessions.Slideshow
             set { SetValue(ref _interval, value); }
         }
 
+        private void InitializeTimer()
+        {
+            if (_timer == null)
+            {
+                _timer = new Timer(1000*Interval)
+                {
+                    AutoReset = false
+                };
+                _timer.Elapsed += TimerOnElapsed;
+            }
+        }
+
         public void Start()
         {
-            _timer = new Timer(1000*Interval)
+            switch (Status)
             {
-                AutoReset = false
-            };
-            _timer.Elapsed += TimerOnElapsed;
-            _timer.Start();
+                case SlideshowStatus.Active:
+                    return;
+                case SlideshowStatus.Paused:
+                    Status = SlideshowStatus.Active;
+                    _timer.Start();
+                    break;
+                case SlideshowStatus.Stopped:
+                    InitializeTimer();
+                    Status = SlideshowStatus.Active;
+                    _timer.Start();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private RelayCommand _pauseResumeCommand;
+        public RelayCommand PauseResumeCommand => _pauseResumeCommand ?? (_pauseResumeCommand = new RelayCommand(PauseResume));
+        public void PauseResume()
+        {
+            switch (Status)
+            {
+                case SlideshowStatus.Active:
+                    _timer.Stop();
+                    Status = SlideshowStatus.Paused;
+                    break;
+                case SlideshowStatus.Paused:
+                    Start();
+                    break;
+                case SlideshowStatus.Stopped:
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public void Stop()
+        {
+            switch (Status)
+            {
+                case SlideshowStatus.Active:
+                case SlideshowStatus.Paused:
+                    _timer.Stop();
+                    _timer.Dispose();
+                    Status = SlideshowStatus.Stopped;
+                    break;
+                case SlideshowStatus.Stopped:
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
             Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss tt ss.fff")} | Timer tick");
+            if (!QuerySessionViewModel.SelectNextImageCommand.CanExecute(null))
+            {
+                Close();
+            }
             QuerySessionViewModel.SelectNextImageCommand.Execute(null);
             _timer.Start();
+        }
+
+        private RelayCommand _closeCommand;
+        public RelayCommand CloseCOmmand => _closeCommand ?? (_closeCommand = new RelayCommand(Close));
+        private void Close()
+        {
+            QuerySessionViewModel.CloseSlideShowCommand.Execute(null);
+        }
+
+        private RelayCommand _nextImageCommand;
+        public RelayCommand NextImageCommand => _nextImageCommand ?? (_nextImageCommand = new RelayCommand(NextImage, CanExecuteNextImage));
+        private void NextImage()
+        {
+
+            if(Status == SlideshowStatus.Active)
+                _timer.Stop();
+
+            QuerySessionViewModel.SelectNextImageCommand.Execute(null);
+
+            if (Status == SlideshowStatus.Active)
+                _timer.Start();
+        }
+        private bool CanExecuteNextImage()
+        {
+            return QuerySessionViewModel.SelectNextImageCommand.CanExecute(null);
         }
     }
 }
