@@ -34,13 +34,9 @@
             <Image Source="/Resources/Icons/cross-grey.png" Stretch="None"/>
         </Button>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Style="{StaticResource IconButton}" Command="{Binding PreviousImageCommand}"><Image Source="/Resources/Icons/navigation-180.png" Stretch="None" /></Button>
             <Button Style="{StaticResource IconButton}" Command="{Binding PauseResumeCommand}"><Image Source="/Resources/Icons/film.png" Stretch="None" /></Button>
-            <Button Style="{StaticResource IconButton}" Command="{Binding NextImageCommand}">
-                <Image Source="/Resources/Icons/navigation.png" Stretch="None" />
-            </Button>
-            <Button Style="{StaticResource IconButton}" Command="{Binding PreviousImageCommand}">
-            <Image Source="/Resources/Icons/navigation-180.png" Stretch="None" />
-            </Button>
+            <Button Style="{StaticResource IconButton}" Command="{Binding NextImageCommand}"><Image Source="/Resources/Icons/navigation.png" Stretch="None" /></Button>
         </StackPanel>
     </Grid>
 </Window>
