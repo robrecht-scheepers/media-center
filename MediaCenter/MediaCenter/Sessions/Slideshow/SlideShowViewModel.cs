@@ -147,5 +147,23 @@ namespace MediaCenter.Sessions.Slideshow
         {
             return QuerySessionViewModel.SelectNextImageCommand.CanExecute(null);
         }
+
+        private RelayCommand _previousImageCommand;
+        public RelayCommand PreviousImageCommand => _previousImageCommand ?? (_previousImageCommand = new RelayCommand(PreviousImage, CanExecutePreviousImage));
+        private void PreviousImage()
+        {
+
+            if (Status == SlideshowStatus.Active)
+                _timer.Stop();
+
+            QuerySessionViewModel.SelectPreviousImageCommand.Execute(null);
+
+            if (Status == SlideshowStatus.Active)
+                _timer.Start();
+        }
+        private bool CanExecutePreviousImage()
+        {
+            return QuerySessionViewModel.SelectPreviousImageCommand.CanExecute(null);
+        }
     }
 }

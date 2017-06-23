@@ -38,6 +38,9 @@
             <Button Style="{StaticResource IconButton}" Command="{Binding NextImageCommand}">
                 <Image Source="/Resources/Icons/navigation.png" Stretch="None" />
             </Button>
+            <Button Style="{StaticResource IconButton}" Command="{Binding PreviousImageCommand}">
+            <Image Source="/Resources/Icons/navigation-180.png" Stretch="None" />
+            </Button>
         </StackPanel>
     </Grid>
 </Window>
