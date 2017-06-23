@@ -123,6 +123,7 @@
     </Compile>
     <Compile Include="Sessions\Query\QuerySessionViewModel.cs" />
     <Compile Include="Sessions\SessionViewModelBase.cs" />
+    <Compile Include="Sessions\Slideshow\HideIdleMouseBehavior.cs" />
     <Compile Include="Sessions\Slideshow\OpenCloseWindowBehavior.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowViewModel.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowWindow.xaml.cs">
@@ -232,6 +233,9 @@
     <Resource Include="Resources\Icons\pause.png" />
     <Resource Include="Resources\Icons\navigation-180.png" />
     <Resource Include="Resources\Icons\navigation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\cross-grey.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

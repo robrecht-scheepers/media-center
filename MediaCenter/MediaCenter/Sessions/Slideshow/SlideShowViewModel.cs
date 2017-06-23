@@ -20,21 +20,14 @@ namespace MediaCenter.Sessions.Slideshow
     public class SlideShowViewModel : PropertyChangedNotifier
     {
         private Timer _timer;
-        
 
         public QuerySessionViewModel QuerySessionViewModel { get; }
 
         public SlideShowViewModel(QuerySessionViewModel querySessionViewModel)
         {
             QuerySessionViewModel = querySessionViewModel;
-            Interval = 1;
+            Interval = 4;
             Status = SlideshowStatus.Stopped;
-        }
-            
-
-        ~SlideShowViewModel()
-        {
-            _timer.Dispose();
         }
 
         private SlideshowStatus _status;
@@ -54,14 +47,11 @@ namespace MediaCenter.Sessions.Slideshow
 
         private void InitializeTimer()
         {
-            if (_timer == null)
+            _timer = new Timer(1000*Interval)
             {
-                _timer = new Timer(1000*Interval)
-                {
-                    AutoReset = false
-                };
-                _timer.Elapsed += TimerOnElapsed;
-            }
+                AutoReset = false
+            };
+            _timer.Elapsed += TimerOnElapsed;
         }
 
         public void Start()
@@ -110,9 +100,9 @@ namespace MediaCenter.Sessions.Slideshow
             {
                 case SlideshowStatus.Active:
                 case SlideshowStatus.Paused:
+                    Status = SlideshowStatus.Stopped;
                     _timer.Stop();
                     _timer.Dispose();
-                    Status = SlideshowStatus.Stopped;
                     break;
                 case SlideshowStatus.Stopped:
                     return;
@@ -129,7 +119,8 @@ namespace MediaCenter.Sessions.Slideshow
                 Close();
             }
             QuerySessionViewModel.SelectNextImageCommand.Execute(null);
-            _timer.Start();
+            if(Status == SlideshowStatus.Active)
+                _timer.Start();
         }
 
         private RelayCommand _closeCommand;

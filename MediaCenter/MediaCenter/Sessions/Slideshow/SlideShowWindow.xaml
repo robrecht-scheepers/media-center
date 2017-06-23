@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:MediaCenter.Sessions.Slideshow"
         xmlns:query="clr-namespace:MediaCenter.Sessions.Query"
         mc:Ignorable="d"
@@ -16,17 +17,26 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+
+    <interactivity:Interaction.Behaviors>
+        <local:HideIdleMouseBehavior Interval="00:00:04"/>
+    </interactivity:Interaction.Behaviors>
+
     <Grid Background="Black">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="4*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <Image Grid.Row="0" Grid.RowSpan="2" Source="{Binding Path=QuerySessionViewModel.SelectedItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Button Style="{StaticResource IconButton}" Command="{Binding PauseResumeCommand}"><Image Source="/Resources/Icons/film.png" /></Button>
+        <Image Grid.Row="0" Grid.RowSpan="3" Source="{Binding Path=QuerySessionViewModel.SelectedItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Button Grid.Row="0" Style="{StaticResource IconButton}" Command="{Binding CloseCOmmand}" HorizontalAlignment="Right">
+            <Image Source="/Resources/Icons/cross-grey.png" Stretch="None"/>
+        </Button>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Style="{StaticResource IconButton}" Command="{Binding PauseResumeCommand}"><Image Source="/Resources/Icons/film.png" Stretch="None" /></Button>
             <Button Style="{StaticResource IconButton}" Command="{Binding NextImageCommand}">
-                <Image Source="/Resources/Icons/navigation.png" />
+                <Image Source="/Resources/Icons/navigation.png" Stretch="None" />
             </Button>
         </StackPanel>
     </Grid>
