@@ -51,6 +51,8 @@ namespace MediaCenter.Sessions.Query
                     prefetchList.Add(QueryResult[index + i].Name);
                 }
             }
+            if (index > 0)
+                prefetchList.Add(QueryResult[index - 1].Name);
             var item = QueryResult.First(x => x.Name == name);
 
             item.Content = await Repository.GetFullImage(name, prefetchList);

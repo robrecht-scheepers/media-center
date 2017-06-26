@@ -174,6 +174,21 @@ namespace MediaCenter.Sessions.Query
             set { SetValue(ref _newTag,value); }
         }
 
+        private RelayCommand _copyTagsFromPreviousCommand;
+        public RelayCommand CopyTagsFromPreviousCommand => _copyTagsFromPreviousCommand ?? (_copyTagsFromPreviousCommand = new RelayCommand(CopyTagsFromPrevious));
+
+        public void CopyTagsFromPrevious()
+        {
+            if(SelectedItem == null)
+                return;
+            var index = QueryResult.IndexOf(SelectedItem);
+            if (index <= 0)
+                return;
+            foreach (var tag in QueryResult[index - 1].Tags)
+            {
+                SelectedItem.Tags.Add(tag);
+            }
+        }
         #endregion
 
         #region Query
@@ -228,6 +243,7 @@ namespace MediaCenter.Sessions.Query
         #endregion
         #endregion
 
+        #region Slideshow
         private RelayCommand _startSlideShowCommand;
         public RelayCommand StartSlideShowCommand
             => _startSlideShowCommand ?? (_startSlideShowCommand = new RelayCommand(StartSlideShow));
@@ -260,5 +276,6 @@ namespace MediaCenter.Sessions.Query
             get { return _slideShowViewModel; }
             set { SetValue(ref _slideShowViewModel, value); }
         }
+        #endregion
     }
 }

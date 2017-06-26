@@ -126,11 +126,13 @@
                 </ListBox>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Text="{Binding NewTag}" HorizontalAlignment="Stretch" MinWidth="100" Margin="5"/>
-                    <Button Grid.Column="1" Command="{Binding AddNewTagCommand}" Width="50" Margin="5">+</Button>
+                    <Button Style="{StaticResource IconButton}" Command="{Binding CopyTagsFromPreviousCommand}"><Image Source="/Resources/Icons/arrow-repeat.png" Stretch="None"/></Button>
+                    <TextBox Grid.Column="1" Text="{Binding NewTag}" HorizontalAlignment="Stretch" MinWidth="100" Margin="5"/>
+                    <Button Grid.Column="2" Command="{Binding AddNewTagCommand}" Width="50" Margin="5">+</Button>
                 </Grid>
                 <ListBox Grid.Row="3" ItemsSource="{Binding AvailableTags}" Margin="5">
                     <ListBox.ItemTemplate>
