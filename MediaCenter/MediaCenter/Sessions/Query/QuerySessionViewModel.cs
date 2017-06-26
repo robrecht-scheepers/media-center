@@ -186,8 +186,17 @@ namespace MediaCenter.Sessions.Query
                 return;
             foreach (var tag in QueryResult[index - 1].Tags)
             {
-                SelectedItem.Tags.Add(tag);
+                if(!SelectedItem.Tags.Contains(tag))
+                    SelectedItem.Tags.Add(tag);
             }
+        }
+
+        public bool CanExecuteCopyTagFromPrevious()
+        {
+            if (SelectedItem == null)
+                return false;
+            var index = QueryResult.IndexOf(SelectedItem);
+            return index > 0;
         }
         #endregion
 
