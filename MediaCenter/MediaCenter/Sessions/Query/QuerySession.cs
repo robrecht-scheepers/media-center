@@ -13,7 +13,7 @@ namespace MediaCenter.Sessions.Query
     {
         private readonly int _numberOfPrefetchItems = 3;
 
-        public QuerySession(RemoteRepository repository) : base(repository)
+        public QuerySession(IRepository repository) : base(repository)
         {
             Filters = new ObservableCollection<Filter>();
             QueryResult = new ObservableCollection<MediaItem>();

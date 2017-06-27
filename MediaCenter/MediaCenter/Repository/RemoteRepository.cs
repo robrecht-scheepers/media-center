@@ -13,7 +13,7 @@ using MediaCenter.Sessions;
 
 namespace MediaCenter.Repository
 {
-    public class RemoteRepository
+    public class RemoteRepository : IRepository
     {
         private const string MediaFileExtension = ".mcd";
 
@@ -225,6 +225,8 @@ namespace MediaCenter.Repository
             var content = Catalog.FirstOrDefault(x => x.Name == name)?.Content;
             if(content != null)
                 await IOHelper.SaveBytes(content, ItemNameToContentFilename(name));
+            if (_buffer.ContainsKey(name))
+                _buffer[name] = content;
         }
 
         public async Task SaveItemThumbnail(string name)

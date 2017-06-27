@@ -5,8 +5,8 @@ namespace MediaCenter.Sessions
 {
     public abstract class SessionBase : PropertyChangedNotifier
     {
-        public RemoteRepository Repository;
-        protected SessionBase(RemoteRepository repository)
+        public IRepository Repository;
+        protected SessionBase(IRepository repository)
         {
             Repository = repository;
         }

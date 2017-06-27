@@ -11,7 +11,7 @@ namespace MediaCenter
     public class MainWindowViewModel : PropertyChangedNotifier
     {
         
-        public MainWindowViewModel(RemoteRepository repository)
+        public MainWindowViewModel(IRepository repository)
         {
             Sessions = new ObservableCollection<SessionViewModelBase>();
             Repository = repository;
@@ -22,7 +22,7 @@ namespace MediaCenter
             Sessions.Add(debugSession);
         }
 
-        public RemoteRepository Repository { get; private set; }
+        public IRepository Repository { get; }
         public ObservableCollection<SessionViewModelBase> Sessions { get; private set; }
 
         // Start new staging session

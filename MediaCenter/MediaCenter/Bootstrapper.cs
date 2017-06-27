@@ -6,7 +6,7 @@ namespace MediaCenter
 {
     public class Bootstrapper
     {
-        private RemoteRepository _repository;
+        private IRepository _repository;
 
         public async Task Run()
         {

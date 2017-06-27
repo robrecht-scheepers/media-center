@@ -18,7 +18,7 @@ namespace MediaCenter.Sessions.Staging
         private string _statusMessage;
         private readonly Dictionary<string, string> _filePaths = new Dictionary<string, string>(); 
 
-        public StagingSession(RemoteRepository repository) : base(repository)
+        public StagingSession(IRepository repository) : base(repository)
         {
             StagedItems = new ObservableCollection<MediaItem>();
         }
