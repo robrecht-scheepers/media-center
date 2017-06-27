@@ -131,7 +131,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Button Style="{StaticResource IconButton}" Command="{Binding CopyTagsFromPreviousCommand}"><Image Source="/Resources/Icons/arrow-repeat.png" Stretch="None"/></Button>
-                    <TextBox Grid.Column="1" Text="{Binding NewTag}" HorizontalAlignment="Stretch" MinWidth="100" Margin="5">
+                    <TextBox Grid.Column="1" Text="{Binding NewTag, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" MinWidth="100" Margin="5">
                         <TextBox.InputBindings>
                             <KeyBinding Key="Enter" Command="{Binding AddNewTagCommand}"/>
                         </TextBox.InputBindings>
