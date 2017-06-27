@@ -24,6 +24,11 @@
         <slideshow:OpenCloseWindowBehavior WindowType="slideshow:SlideShowWindow" Trigger="{Binding SlideShowActive}" WindowDataContext="{Binding Path=SlideShowViewModel}" />
     </interactivity:Interaction.Behaviors>
     
+    <UserControl.InputBindings>
+        <KeyBinding Key="Right" Modifiers="Control" Command="{Binding SelectNextImageCommand}"/>
+        <KeyBinding Key="Left" Modifiers="Control" Command="{Binding SelectPreviousImageCommand}"/>
+    </UserControl.InputBindings>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
