@@ -54,6 +54,7 @@ namespace MediaCenter.Sessions.Staging
 
                         StagedItems.Add(new ImageItem(name)
                         {
+                            Status = MediaItemStatus.Staged,
                             DateTaken = dateTaken,
                             DateAdded = DateTime.Now,
                             Thumbnail = thumbnail
@@ -84,6 +85,7 @@ namespace MediaCenter.Sessions.Staging
             StatusMessage = $"Saving {StagedItems.Count} items...";
             await Repository.SaveStagedItems(StagedItems.Select(s => new KeyValuePair<string, MediaItem>(_filePaths[s.Name], s)));
             StatusMessage = "All items saved";
+            ClearSavedItems();
         }
 
         public string StatusMessage
@@ -97,6 +99,15 @@ namespace MediaCenter.Sessions.Staging
             var name = date.ToString("yyyyMMddHHmmss");
             //TODO: guarantee name uniqueness
             return name;
+        }
+
+        private void ClearSavedItems()
+        {
+            var savedList = StagedItems.Where(x => x.Status == MediaItemStatus.Saved).ToList();
+            foreach (var mediaItem in savedList)
+            {
+                StagedItems.Remove(mediaItem);
+            }
         }
 
     }
