@@ -41,6 +41,13 @@ namespace MediaCenter.Media
             set { SetValue(ref _favorite, value, () => IsInfoDirty = true); }
         }
 
+        private bool _private;
+        public bool Private
+        {
+            get { return _private; }
+            set { SetValue(ref _private, value, () => IsInfoDirty = true); }
+        }
+
         private byte[] _thumbnail;
 
         public byte[] Thumbnail
