@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using MediaCenter.Media;
-using MediaCenter.Sessions;
 
 namespace MediaCenter.Repository
 {
@@ -22,6 +21,7 @@ namespace MediaCenter.Repository
             DateTaken = item.DateTaken;
             DateAdded = item.DateAdded;
             Favorite = item.Favorite;
+            Private = item.Private;
             Tags = item.Tags.ToList();
         }
 
@@ -31,7 +31,8 @@ namespace MediaCenter.Repository
             {
                 DateTaken = this.DateTaken,
                 DateAdded = this.DateAdded,
-                Favorite = this.Favorite
+                Favorite = this.Favorite,
+                Private = this.Private
             };
             foreach (var tag in this.Tags)
             {
@@ -58,6 +59,9 @@ namespace MediaCenter.Repository
         [DataMember]
         public bool Favorite { get; set; }
 
-        
+        [DataMember]
+        public bool Private { get; set; }
+
+
     }
 }
