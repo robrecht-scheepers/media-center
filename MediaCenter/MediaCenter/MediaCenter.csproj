@@ -94,11 +94,9 @@
     <Compile Include="Helpers\IOHelper.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="Media\ImageContent.cs" />
     <Compile Include="Media\ImageContentViewModel.cs" />
     <Compile Include="Media\ImageItem.cs" />
-    <Compile Include="Media\MediaContent.cs" />
-    <Compile Include="Media\MediaContentViewModel.cs" />
+    <Compile Include="Media\MediaItemStatus.cs" />
     <Compile Include="Media\RotationDirection.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\MediaInfo.cs" />

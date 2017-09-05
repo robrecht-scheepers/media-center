@@ -19,6 +19,13 @@ namespace MediaCenter.Media
 
         public string Name { get; private set; }
 
+        private MediaItemStatus _status;
+        public MediaItemStatus Status
+        {
+            get { return _status; }
+            set { SetValue(ref _status,  value); }
+        }
+
         public DateTime DateTaken { get; set; }
 
         public DateTime DateAdded { get; set; }
@@ -43,6 +50,7 @@ namespace MediaCenter.Media
         }
 
         private byte[] _content;
+        
         public byte[] Content
         {
             get { return _content; }

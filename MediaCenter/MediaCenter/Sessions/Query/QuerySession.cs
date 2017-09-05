@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,7 +26,8 @@ namespace MediaCenter.Sessions.Query
 
         public async Task ExecuteQuery()
         {
-            var items = Filters.Aggregate(Repository.Catalog, (current, filter) => filter.Apply(current));
+            var items = Filters.Aggregate(Repository.Catalog, (current, filter) => filter.Apply(current)).ToList();
+            items.Sort((x,y) => DateTime.Compare(x.DateTaken,y.DateTaken));
 
             QueryResult.Clear();
             foreach (var item in items)
