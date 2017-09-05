@@ -25,7 +25,7 @@
     <DataTemplate DataType="{x:Type local:PrivateFilter}">
         <DockPanel HorizontalAlignment="Stretch">
             <TextBlock Text="Tag" DockPanel.Dock="Left" VerticalAlignment="Center" />
-            <ComboBox ItemsSource="{Binding Option}" SelectedItem="{Binding Path=PrivateString, Mode=TwoWay}" HorizontalAlignment="Stretch" DockPanel.Dock="Right"/>
+            <ComboBox ItemsSource="{Binding Options}" SelectedItem="{Binding Path=PrivateString, Mode=TwoWay}" HorizontalAlignment="Stretch" DockPanel.Dock="Right"/>
         </DockPanel>
     </DataTemplate>
 
