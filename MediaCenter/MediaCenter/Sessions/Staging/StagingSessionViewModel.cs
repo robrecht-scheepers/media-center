@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using MediaCenter.Media;
 using MediaCenter.MVVM;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using System.Configuration;
 
 namespace MediaCenter.Sessions.Staging
 {
@@ -48,7 +49,13 @@ namespace MediaCenter.Sessions.Staging
             var selectedFolder = dialog.SelectedPath;
             if (string.IsNullOrEmpty(selectedFolder))
                 return;
-            await StagingSession.AddMediaItems(Directory.GetFiles(selectedFolder, "*.*", SearchOption.AllDirectories));
+
+            // TODO: make this configurable in the dialog, now global via config file
+            SearchOption searchOption = SearchOption.AllDirectories;
+            if (ConfigurationManager.AppSettings["LoadSubDirs"].ToLower() == "false")
+                searchOption = SearchOption.TopDirectoryOnly;
+
+            await StagingSession.AddMediaItems(Directory.GetFiles(selectedFolder, "*.*", searchOption));
         }
         #endregion
         
