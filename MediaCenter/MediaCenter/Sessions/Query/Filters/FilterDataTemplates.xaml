@@ -21,7 +21,14 @@
             <TextBox Text="{Binding Tag}" HorizontalAlignment="Stretch" DockPanel.Dock="Right"/>
         </DockPanel>
     </DataTemplate>
-    
+
+    <DataTemplate DataType="{x:Type local:PrivateFilter}">
+        <DockPanel HorizontalAlignment="Stretch">
+            <TextBlock Text="Tag" DockPanel.Dock="Left" VerticalAlignment="Center" />
+            <ComboBox ItemsSource="{Binding Option}" SelectedItem="{Binding Path=PrivateString, Mode=TwoWay}" HorizontalAlignment="Stretch" DockPanel.Dock="Right"/>
+        </DockPanel>
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type local:FavoriteFilter}">
         <DockPanel>
             <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding Path=Favorite, Mode=TwoWay}">

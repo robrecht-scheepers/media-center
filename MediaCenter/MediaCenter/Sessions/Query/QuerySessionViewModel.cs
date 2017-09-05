@@ -212,7 +212,7 @@ namespace MediaCenter.Sessions.Query
         }
         private void InitialzeFilterNames()
         {
-            FilterNames = new List<string> { DateTakenFilter.Name, TagFilter.Name, FavoriteFilter.Name, DateAddedFilter.Name };
+            FilterNames = new List<string> { DateTakenFilter.Name, TagFilter.Name, FavoriteFilter.Name, DateAddedFilter.Name, PrivateFilter.Name };
         }
 
         #region Command: Add filter
@@ -220,14 +220,16 @@ namespace MediaCenter.Sessions.Query
         public RelayCommand AddFilterCommand => _addFilterCommand ?? (_addFilterCommand = new RelayCommand(AddFilter));
         private void AddFilter()
         {
-            if(SelectedFilterName == DateTakenFilter.Name)
+            if (SelectedFilterName == DateTakenFilter.Name)
                 Filters.Add(new DateTakenFilter());
-            else if(SelectedFilterName == TagFilter.Name)
+            else if (SelectedFilterName == TagFilter.Name)
                 Filters.Add(new TagFilter());
-            else if(SelectedFilterName == FavoriteFilter.Name)
+            else if (SelectedFilterName == FavoriteFilter.Name)
                 Filters.Add(new FavoriteFilter());
-            else if(SelectedFilterName == DateTakenFilter.Name)
+            else if (SelectedFilterName == DateTakenFilter.Name)
                 Filters.Add(new DateAddedFilter());
+            else if (SelectedFilterName == PrivateFilter.Name)
+                Filters.Add(new PrivateFilter());
 
         }
         #endregion

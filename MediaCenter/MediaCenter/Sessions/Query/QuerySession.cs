@@ -27,6 +27,14 @@ namespace MediaCenter.Sessions.Query
         public async Task ExecuteQuery()
         {
             var items = Filters.Aggregate(Repository.Catalog, (current, filter) => filter.Apply(current)).ToList();
+
+            // if there is no private filter set by the user, filter all private items by default
+            if(!Filters.Any(x => x is PrivateFilter))
+            {
+                var privateFilter = new PrivateFilter { PrivateSetting = PrivateFilter.PrivateOption.NoPrivate };
+                items = privateFilter.Apply(items).ToList();
+            }
+
             items.Sort((x,y) => DateTime.Compare(x.DateTaken,y.DateTaken));
 
             QueryResult.Clear();
