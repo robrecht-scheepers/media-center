@@ -99,19 +99,28 @@ namespace MediaCenter.Repository
             _lastSyncFromRemote = newLastSyncedDate;
         }
 
-        public async Task SaveStagedItems(IEnumerable<KeyValuePair<string,MediaItem>> newItems) // list of (filePath, Item) pairs
+        public async Task SaveNewItems(IEnumerable<KeyValuePair<string,MediaItem>> newItems) // list of (filePath, Item) pairs
         {
             foreach (var newItemPair in newItems.Where(x => x.Value.Status == MediaItemStatus.Staged))
             {
                 var filePath = newItemPair.Key;
                 var newItem = newItemPair.Value;
-
+                var originalName = newItem.Name;
+                bool wasRenamed = false;
+                
                 try
                 {
                     if (string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(newItem.Name))
                     {
                         newItem.Status = MediaItemStatus.Error;
                         continue;
+                    }
+
+                    int i = 1;
+                    while (_catalog.Any(x => x.Name == newItem.Name))
+                    {
+                        wasRenamed = true;
+                        newItem.Name = originalName + "_" + i++;
                     }
 
                     // add to local store
@@ -127,7 +136,12 @@ namespace MediaCenter.Repository
                 }
                 catch (Exception e)
                 {
-                   newItem.Status = MediaItemStatus.Error;
+                    if (_catalog.Contains(newItem))
+                        _catalog.Remove(newItem); // remove from local catalog to avoid discrepancy between catalog and store
+                    if (wasRenamed)
+                        newItem.Name = originalName; // reset name change because the item was not saved to the store
+                    newItem.Status = MediaItemStatus.Error;
+                    continue;
                 }
             }
 

@@ -17,7 +17,7 @@ namespace MediaCenter.Media
         public bool IsContentDirty { get; set; }
         public bool IsThumbnailDirty { get; set; }
 
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         private MediaItemStatus _status;
         public MediaItemStatus Status

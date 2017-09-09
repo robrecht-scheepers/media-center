@@ -83,7 +83,7 @@ namespace MediaCenter.Sessions.Staging
         public async Task SaveToRepository()
         {
             StatusMessage = $"Saving {StagedItems.Count} items...";
-            await Repository.SaveStagedItems(StagedItems.Select(s => new KeyValuePair<string, MediaItem>(_filePaths[s.Name], s)));
+            await Repository.SaveNewItems(StagedItems.Select(s => new KeyValuePair<string, MediaItem>(_filePaths[s.Name], s)));
             StatusMessage = "All items saved";
             ClearSavedItems();
         }

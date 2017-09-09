@@ -12,7 +12,7 @@ namespace MediaCenter.Repository
         IEnumerable<MediaItem> Catalog { get; }
         IEnumerable<string> Tags { get; }
         Task Initialize();
-        Task SaveStagedItems(IEnumerable<KeyValuePair<string, MediaItem>> newItems); // list of (filePath, Item) pairs
+        Task SaveNewItems(IEnumerable<KeyValuePair<string, MediaItem>> newItems); // list of (filePath, Item) pairs
         Task<byte[]> GetThumbnail(string name);
         Task<byte[]> GetFullImage(string name, IEnumerable<string> prefetch);
         Task SaveItemInfo(string name);
