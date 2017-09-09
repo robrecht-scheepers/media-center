@@ -13,6 +13,7 @@ namespace MediaCenter.Repository
         IEnumerable<string> Tags { get; }
         Task Initialize();
         Task SaveNewItems(IEnumerable<KeyValuePair<string, MediaItem>> newItems); // list of (filePath, Item) pairs
+        Task DeleteItem(string name);
         Task<byte[]> GetThumbnail(string name);
         Task<byte[]> GetFullImage(string name, IEnumerable<string> prefetch);
         Task SaveItemInfo(string name);

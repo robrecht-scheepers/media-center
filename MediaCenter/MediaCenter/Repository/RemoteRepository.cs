@@ -148,6 +148,23 @@ namespace MediaCenter.Repository
             await UpdateLocalStore();
         }
 
+        public async Task DeleteItem(string name)
+        {
+            var item = _catalog.First(x => x.Name == name);
+            try
+            {
+                _catalog.Remove(item);
+                await IOHelper.DeleteFile(ItemNameToContentFilename(name));
+                await IOHelper.DeleteFile(ItemNameToThumbnailFilename(name));
+                await IOHelper.DeleteFile(ItemNameToInfoFilename(name));
+                await UpdateLocalStore();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<byte[]> GetThumbnail(string name)
         {
             var thumbnailFilename = Path.Combine(_remoteStore, name + "_T.jpg");

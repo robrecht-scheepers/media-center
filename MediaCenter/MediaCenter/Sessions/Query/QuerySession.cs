@@ -92,5 +92,15 @@ namespace MediaCenter.Sessions.Query
                 item.IsThumbnailDirty = false;
             }
         }
+
+        public async Task DeleteItem(MediaItem item)
+        {
+            if (item == null)
+                return;
+
+            if (QueryResult.Contains(item))
+                QueryResult.Remove(item);
+            await Repository.DeleteItem(item.Name);
+        }
     }
 }

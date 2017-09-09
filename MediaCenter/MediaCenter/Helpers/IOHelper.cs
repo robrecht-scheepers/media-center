@@ -78,5 +78,10 @@ namespace MediaCenter.Helpers
             T result = SerializationHelper.Deserialize<T>(serialized);
             return result;
         }
+
+        public static Task DeleteFile(string filePath)
+        {
+            return Task.Factory.StartNew(() => File.Delete(filePath));
+        }
     }
 }
