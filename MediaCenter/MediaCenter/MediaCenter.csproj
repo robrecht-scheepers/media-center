@@ -136,6 +136,7 @@
       <DependentUpon>StagingSessionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Staging\StagingSessionViewModel.cs" />
+    <Compile Include="Sessions\TagsViewModel.cs" />
     <Compile Include="Styles\ScrollIntoViewBehavior.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
