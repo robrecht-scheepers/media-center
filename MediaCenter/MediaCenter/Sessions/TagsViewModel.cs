@@ -1,52 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MediaCenter.MVVM;
 using MediaCenter.Repository;
+using System.Linq;
 
 namespace MediaCenter.Sessions
 {
     public class TagsViewModel : PropertyChangedNotifier
     {
         private ObservableCollection<string> _availableTags;
-        private IRepository _repository;
         private List<string> _originalTags;
 
-        public TagsViewModel(IRepository repository, List<string> currentTags = null)
+        public TagsViewModel(IEnumerable<string> allTags, IEnumerable<string> currentTags = null)
         {
-            _repository = repository;
-            _originalTags = currentTags ?? new List<string>();
+            _originalTags = currentTags?.ToList() ?? new List<string>();
 
-            SelectedTags = new ObservableCollection<string>(_originalTags);
-        }
-
-        public bool IsDirty
-        {
-            get
+            AvailableTags = new ObservableCollection<string>(allTags.OrderBy(x => x));
+            SelectedTags = new ObservableCollection<string>();
+            foreach(string tag in _originalTags)
             {
-                return false;// TODO: compare two lists
-            }
+                AvailableTags.Add(tag);
+                AvailableTags.Remove(tag);
+            }            
         }
 
-        public ObservableCollection<string> AllTags { get; private set; }
-        private void InitializeAllTags()
-        {
-            AllTags = new ObservableCollection<string>(_repository.Tags.OrderBy(s => s));
-        }
+        public bool IsDirty => _originalTags.OrderBy(x => x).SequenceEqual(SelectedTags.OrderBy(x => x));
+        
         public ObservableCollection<string> SelectedTags { get; private set; }
 
-        public ObservableCollection<string> AvailableTags
-        {
-            get { return _availableTags; }
-            set { SetValue(ref _availableTags, value); }
-        }
+        public ObservableCollection<string> AvailableTags { get; private set; }
 
-        private RelayCommand<string> _addTagCommand;
-        public RelayCommand<string> AddTagCommand => _addTagCommand ?? (_addTagCommand = new RelayCommand<string>(AddTag));
-        private void AddTag(string newTag)
+        private RelayCommand<string> _addExistingTagCommand;
+        public RelayCommand<string> AddExistingTagCommand => _addExistingTagCommand ?? (_addExistingTagCommand = new RelayCommand<string>(AddExistingTag));
+        private void AddExistingTag(string newTag)
         {
             SelectedTags.Add(newTag);
             AvailableTags.Remove(newTag);
@@ -65,7 +51,6 @@ namespace MediaCenter.Sessions
         private void AddNewTag()
         {
             SelectedTags.Add(NewTag);
-            AllTags.Add(NewTag);
             NewTag = "";
         }
 

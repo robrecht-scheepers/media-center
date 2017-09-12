@@ -43,7 +43,7 @@ namespace MediaCenter.Sessions.Query
         
         private void SelectedItemChanging()
         {
-            // stor current selected item, so that SelectedItemChanging can do the saving and cleanup
+            // stor current selected item, so that SelectedItemChanged can do the saving and cleanup
             _previousSelectedItem = SelectedItem;
         }
 
@@ -60,13 +60,16 @@ namespace MediaCenter.Sessions.Query
             Task saveTask = null;
             if (_previousSelectedItem != null)
             {
+                if (TagsViewModel.IsDirty)
+                {
+                    _previousSelectedItem.Tags = TagsViewModel.SelectedTags;
+                    _previousSelectedItem.IsInfoDirty = true;
+                }
                 saveTask = QuerySession.SaveItem(_previousSelectedItem);
             }
-            
+
             // Setup tags
-            AvailableTags = SelectedItem != null 
-                ? new ObservableCollection<string>(AllTags.Where(x => !SelectedItem.Tags.Contains(x))) 
-                : new ObservableCollection<string>();
+            InitializeTagsViewModel();
 
             // wait for the new content
             if (contentTask != null)
@@ -77,10 +80,11 @@ namespace MediaCenter.Sessions.Query
                 await contentTask;
             }
 
-            // wait for the saving task and then cleanup the content of the previous item
+            // wait for the saving task and then clean up the content of the previous item
             {
                 if (saveTask != null)
                 {
+                    await saveTask;
                     _previousSelectedItem.Content = null;
                 }
             }
@@ -143,56 +147,16 @@ namespace MediaCenter.Sessions.Query
         #endregion
 
         #region Tags
-
-        public ObservableCollection<string> AllTags { get; private set; }
-        private void InitializeAllTags()
+        private TagsViewModel _tagsViewModel;
+        public TagsViewModel TagsViewModel
         {
-            AllTags = new ObservableCollection<string>();
-            foreach (var tag in QuerySession.Repository.Tags.OrderBy(s => s))
-            {
-                AllTags.Add(tag);
-            }
+            get { return _tagsViewModel; }
+            set { SetValue(ref _tagsViewModel, value); }
         }
 
-        public ObservableCollection<string> AvailableTags
+        private void InitializeTagsViewModel()
         {
-            get { return _availableTags; }
-            set { SetValue(ref _availableTags, value); }
-        }
-
-        private RelayCommand<string> _addTagCommand;
-        public RelayCommand<string> AddTagCommand => _addTagCommand ?? (_addTagCommand = new RelayCommand<string>(AddTag));
-        private void AddTag(string newTag)
-        {
-            SelectedItem.Tags.Add(newTag);
-            AvailableTags.Remove(newTag);
-            SelectedItem.IsInfoDirty = true;
-        }
-
-        private RelayCommand<string> _removeTagCommand;
-        public RelayCommand<string> RemoveTagCommand => _removeTagCommand ?? (_removeTagCommand = new RelayCommand<string>(RemoveTag));
-        private void RemoveTag(string tag)
-        {
-            SelectedItem.Tags.Remove(tag);
-            AvailableTags.Add(tag);
-            SelectedItem.IsInfoDirty = true;
-        }
-
-        private RelayCommand _addNewTagCommand;
-        public RelayCommand AddNewTagCommand => _addNewTagCommand ?? (_addNewTagCommand = new RelayCommand(AddNewTag));
-        private void AddNewTag()
-        {
-            SelectedItem.Tags.Add(NewTag);
-            AllTags.Add(NewTag);
-            NewTag = "";
-            SelectedItem.IsInfoDirty = true;
-        }
-
-        private string _newTag;
-        public string NewTag
-        {
-            get { return _newTag; }
-            set { SetValue(ref _newTag,value); }
+            TagsViewModel = new TagsViewModel(QuerySession.Repository.Tags, SelectedItem?.Tags);            
         }
 
         private RelayCommand _copyTagsFromPreviousCommand;
