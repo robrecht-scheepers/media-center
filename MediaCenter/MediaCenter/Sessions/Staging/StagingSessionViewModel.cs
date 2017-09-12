@@ -12,11 +12,26 @@ namespace MediaCenter.Sessions.Staging
     public class StagingSessionViewModel : SessionViewModelBase
     {
         public StagingSessionViewModel(StagingSession session) : base(session)
-        { }
+        {
+            InitializeTagsViewModel();
+
+        }
 
         public override string Name => "Add images";
 
         public StagingSession StagingSession => (StagingSession)Session;
+
+        private TagsViewModel _tagsViewModel;
+        public TagsViewModel TagsViewModel
+        {
+            get { return _tagsViewModel; }
+            set { SetValue(ref _tagsViewModel, value); }
+        }
+
+        private void InitializeTagsViewModel()
+        {
+            TagsViewModel = new TagsViewModel(Session.Repository.Tags);
+        }
 
         #region Command: Add image files 
         private AsyncRelayCommand _addImagesCommand;
@@ -79,7 +94,11 @@ namespace MediaCenter.Sessions.Staging
         }
         private async Task SaveToRepository()
         {
-            await StagingSession.SaveToRepository();
+            if(TagsViewModel.SelectedTags.Any())
+                await StagingSession.SaveToRepository(TagsViewModel.SelectedTags);
+            else
+                await StagingSession.SaveToRepository();
+            InitializeTagsViewModel();
         }
         #endregion
 

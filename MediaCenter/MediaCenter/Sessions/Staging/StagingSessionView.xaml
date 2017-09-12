@@ -4,13 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MediaCenter.Sessions.Staging"
+             xmlns:sessions="clr-namespace:MediaCenter.Sessions"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:StagingSessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../../Styles/Styles.xaml"/>
+                <ResourceDictionary Source="/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -19,13 +20,17 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal"> 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal"> 
               <Button Command="{Binding AddImagesCommand}" Width="100" Margin="5">Select images files</Button>
               <Button Command="{Binding AddDirectoryCommand}" Width="100" Margin="5">Select folder</Button>
               <Button Command="{Binding SaveToRepositoryCommand}" Width="100" Margin="5">Save</Button>
               <TextBlock Text="{Binding StagingSession.StatusMessage}" Margin="5"/>
         </StackPanel>
-        <ListBox Grid.Row="1" ItemsSource="{Binding StagingSession.StagedItems}"
+        <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding StagingSession.StagedItems}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -48,6 +53,6 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ListBox>
-
+        <sessions:TagsView Grid.Row="1" Grid.Column="1" DataContext="{Binding TagsViewModel}"/>
     </Grid>
 </UserControl>

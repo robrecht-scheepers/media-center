@@ -80,6 +80,14 @@ namespace MediaCenter.Sessions.Staging
                 _filePaths.Remove(item.Name);
         }
 
+        public async Task SaveToRepository(IEnumerable<string> tags)
+        {
+            foreach(var item in StagedItems)
+            {
+                item.Tags = new ObservableCollection<string>(tags.ToList());
+            }
+            await SaveToRepository();
+        }
         public async Task SaveToRepository()
         {
             StatusMessage = $"Saving {StagedItems.Count} items...";
