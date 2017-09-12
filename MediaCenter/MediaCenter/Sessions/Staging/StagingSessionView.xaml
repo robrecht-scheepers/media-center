@@ -24,11 +24,11 @@
             <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal"> 
-              <Button Command="{Binding AddImagesCommand}" Width="100" Margin="5">Select images files</Button>
-              <Button Command="{Binding AddDirectoryCommand}" Width="100" Margin="5">Select folder</Button>
-              <Button Command="{Binding SaveToRepositoryCommand}" Width="100" Margin="5">Save</Button>
-              <TextBlock Text="{Binding StagingSession.StatusMessage}" Margin="5"/>
+        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <Button Command="{Binding AddMediaCommand}" Width="100" Margin="5">Select media files</Button>
+            <Button Command="{Binding AddDirectoryCommand}" Width="100" Margin="5">Select folder</Button>
+            <Button Command="{Binding SaveToRepositoryCommand}" Width="100" Margin="5">Save</Button>
+            <TextBlock Text="{Binding StagingSession.StatusMessage}" Margin="5"/>
         </StackPanel>
         <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding StagingSession.StagedItems}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">

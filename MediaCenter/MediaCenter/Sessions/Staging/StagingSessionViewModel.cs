@@ -34,15 +34,15 @@ namespace MediaCenter.Sessions.Staging
         }
 
         #region Command: Add image files 
-        private AsyncRelayCommand _addImagesCommand;
-        public AsyncRelayCommand AddImagesCommand => _addImagesCommand ?? (_addImagesCommand = new AsyncRelayCommand(AddImages));
-        private async Task AddImages()
+        private AsyncRelayCommand _addMediaCommand;
+        public AsyncRelayCommand AddMediaCommand => _addMediaCommand ?? (_addMediaCommand = new AsyncRelayCommand(AddMedia));
+        private async Task AddMedia()
         {
             var dialog = new OpenFileDialog
             {
                 Multiselect = true,
-                Title = "Select the image files to be added",
-                Filter = "Image Files(*.BMP;*.JPG;*.PNG)|*.BMP;*.JPG;*.PNG"
+                Title = "Select the media files to be added",
+                Filter = "Media Files(*.BMP;*.JPG;*.PNG;*.MP4;*.AVI;*.MTS)|*.BMP;*.JPG;*.PNG;*.MP4;*.AVI;*.MTS"
             };
 
             dialog.ShowDialog();

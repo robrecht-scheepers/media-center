@@ -17,9 +17,9 @@ namespace MediaCenter
             Repository = repository;
 
             // debug code
-            var debugSession = new QuerySessionViewModel(new QuerySession(Repository));
-            debugSession.Filters.Add(new TagFilter());
+            var debugSession = new StagingSessionViewModel(new StagingSession(Repository));
             Sessions.Add(debugSession);
+            
         }
 
         public IRepository Repository { get; }

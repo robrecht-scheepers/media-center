@@ -39,22 +39,18 @@ namespace MediaCenter.Helpers
                 thumbnail.Save(resultStream, ImageFormat.Png);
                 return resultStream.ToArray();
             }
-        }
-        public static bool ThumbnailCallback()
-        {
-            return false;
-        }
+        }        
 
-        public static DateTime ReadImageDate(byte[] image)
+        public static DateTime ReadCreationDate(byte[] image)
         {
             using (var imageStream = new MemoryStream(image))
             {
                 var bitmap = Image.FromStream(imageStream);
-                return ReadImageDate(bitmap);
+                return ReadCreationDate(bitmap);
             }
         }
 
-        public static DateTime ReadImageDate(Image image)
+        public static DateTime ReadCreationDate(Image image)
         {
             int datePropertyID = 36867;
             ASCIIEncoding encoding = new ASCIIEncoding();
@@ -67,7 +63,7 @@ namespace MediaCenter.Helpers
             }
 
             var dateString = encoding.GetString(dateProperty.Value);
-            dateString = dateString.Substring(0, dateString.Length - 1); // drop zero character /0
+            dateString = dateString.Substring(0, dateString.Length - 1); // drop last zero character /0
             var date = DateTime.ParseExact(dateString, "yyyy:MM:dd HH:mm:ss", new DateTimeFormatInfo());
             return date;
         }

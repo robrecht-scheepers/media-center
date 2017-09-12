@@ -14,7 +14,8 @@ namespace MediaCenter.Sessions.Staging
     public class StagingSession : SessionBase
     {
         // TODO: share with view model for dialog filter
-        private readonly string[] _imageExtensions = {".jpg", ".png", ".bmp"};
+        private readonly string[] _supportedImageExtensions = {".jpg", ".png", ".bmp"};
+        private readonly string[] _supportedVideoExtensions = { ".mp4", ".avi", ".mts"};
         private string _statusMessage;
         private readonly Dictionary<string, string> _filePaths = new Dictionary<string, string>(); 
 
@@ -34,32 +35,53 @@ namespace MediaCenter.Sessions.Staging
             foreach (var filePath in newItemsList)
             {
                 StatusMessage = $"Loading item {cnt++} of {total}.";
-                if ((string.IsNullOrEmpty(filePath))||(!_imageExtensions.Contains(Path.GetExtension(filePath).ToLower())))
+                if (string.IsNullOrEmpty(filePath))
+                    continue;
+                var extension = Path.GetExtension(filePath).ToLower();
+                if (!_supportedImageExtensions.Contains(extension) && !_supportedVideoExtensions.Contains(extension))
                     continue;
 
                 try
                 {
-                    using (var image = await IOHelper.OpenImage(filePath))
+                    if (_supportedImageExtensions.Contains(extension))
                     {
-                        if (image == null)
+                        using (var image = await IOHelper.OpenImage(filePath))
                         {
-                            // TODO: error handling, create list of failed files
-                            Debug.WriteLine($"failed to load image {filePath}");
-                            continue;
+                            if (image == null)
+                            {
+                                // TODO: error handling, create list of failed files
+                                Debug.WriteLine($"failed to load image {filePath}");
+                                continue;
+                            }
+
+                            var dateTaken = ImageHelper.ReadCreationDate(image);
+                            var name = CreateItemName(dateTaken);
+                            var thumbnail = ImageHelper.CreateThumbnail(image, 100);
+
+                            StagedItems.Add(new ImageItem(name)
+                            {
+                                Status = MediaItemStatus.Staged,
+                                DateTaken = dateTaken,
+                                DateAdded = DateTime.Now,
+                                Thumbnail = thumbnail
+                            });
+                            _filePaths[name] = filePath;
                         }
-
-                        var dateTaken = ImageHelper.ReadImageDate(image);
+                    }
+                    else if(_supportedVideoExtensions.Contains(extension))
+                    {
+                        var dateTaken = VideoHelper.ReadCreationDate(filePath);
                         var name = CreateItemName(dateTaken);
-                        var thumbnail = ImageHelper.CreateThumbnail(image, 100);
+                        var thumbnail = VideoHelper.CreateThumbnail(filePath, 100);
 
-                        StagedItems.Add(new ImageItem(name)
+                        StagedItems.Add(new VideoItem(name)
                         {
                             Status = MediaItemStatus.Staged,
                             DateTaken = dateTaken,
                             DateAdded = DateTime.Now,
                             Thumbnail = thumbnail
                         });
-                        _filePaths[name] = filePath;
+                        _filePaths[name] = filePath;                        
                     }
                 }
                 catch (Exception e)
