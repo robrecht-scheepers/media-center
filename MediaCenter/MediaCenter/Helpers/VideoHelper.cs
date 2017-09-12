@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.WindowsAPICodePack.Shell;
-using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace MediaCenter.Helpers
 {
@@ -12,6 +10,9 @@ namespace MediaCenter.Helpers
     {
         public static async Task<byte[]> CreateThumbnail(string filePath, int size)
         {
+            // run ffmpeg.exe from command line in a separate process to
+            // extract the first fram into a temp file.
+            // Then read the temp file and create the thumbnail from it
             var firstFrameFile = @"C:\TEMP\thumbnail.jpg";
 
             var ffmpeg = new Process
