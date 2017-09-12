@@ -1,50 +1,45 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
-using System.Windows.Forms.VisualStyles;
-using System.Windows.Media.Animation;
-using Shell32;
+using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace MediaCenter.Helpers
 {
     public static class VideoHelper
     {
-        public static byte[] CreateThumbnail(string filePath, int size)
+        public static async Task<byte[]> CreateThumbnail(string filePath, int size)
         {
-            throw new NotImplementedException();
+            var firstFrameFile = @"C:\TEMP\thumbnail.jpg";
+
+            var ffmpeg = new Process
+            {
+                StartInfo =
+                {
+                    Arguments = $" -i \"{filePath}\" \"{firstFrameFile}\"",
+                    FileName = "Dependencies/ffmpeg.exe",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                }
+            };
+
+            ffmpeg.Start();
+            await ffmpeg.WaitForExitAsync();
+            ffmpeg.Close();
+
+            var firstFrame = await IOHelper.OpenBytes(firstFrameFile);
+            File.Delete(firstFrameFile);
+            return ImageHelper.CreateThumbnail(firstFrame, size);
         }
 
         public static DateTime ReadCreationDate(string filePath)
         {
-            Dictionary<int,string> headers = new Dictionary<int, string>();
-            Dictionary<string, string> values = new Dictionary<string, string>();
-
-            var shell = new Shell32.Shell();
-            var folder = shell.NameSpace(Path.GetDirectoryName(filePath));
-            var file = folder.Items().Cast<FolderItem2>().FirstOrDefault(folderItem => folderItem.Path == filePath);
-
-            for (int i = 0; i < short.MaxValue; i++)
-            {
-                var header = folder.GetDetailsOf(null, i);
-                if (string.IsNullOrEmpty(header))
-                    break;
-                headers[i] = header;
-            }
-
-            for (int i = 0; i < short.MaxValue; i++)
-            {
-                var value = folder.GetDetailsOf(file, i);
-                if (string.IsNullOrEmpty(value))
-                    break;
-                values[headers[i]] = value;
-            }
-
-            var dateString = folder.GetDetailsOf(file, 3);
-            return DateTime.Parse(dateString);
+            var file = ShellFile.FromFilePath(filePath);
+            return file.Properties.System.DateModified.Value ?? DateTime.MinValue;
         }
     }
 }

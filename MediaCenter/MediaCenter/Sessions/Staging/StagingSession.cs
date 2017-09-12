@@ -72,7 +72,7 @@ namespace MediaCenter.Sessions.Staging
                     {
                         var dateTaken = VideoHelper.ReadCreationDate(filePath);
                         var name = CreateItemName(dateTaken);
-                        var thumbnail = VideoHelper.CreateThumbnail(filePath, 100);
+                        var thumbnail = await VideoHelper.CreateThumbnail(filePath, 100);
 
                         StagedItems.Add(new VideoItem(name)
                         {
