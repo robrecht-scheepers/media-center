@@ -21,7 +21,6 @@ namespace MediaCenter.Sessions.Query
         public QuerySessionViewModel(SessionBase session) : base(session)
         {
             InitialzeFilterNames();
-            InitializeAllTags();
         }
 
         public override string Name => "Query";
@@ -174,6 +173,7 @@ namespace MediaCenter.Sessions.Query
                 if(!SelectedItem.Tags.Contains(tag))
                     SelectedItem.Tags.Add(tag);
             }
+            InitializeTagsViewModel();
         }
 
         public bool CanExecuteCopyTagFromPrevious()

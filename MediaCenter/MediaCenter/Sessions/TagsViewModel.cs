@@ -19,12 +19,12 @@ namespace MediaCenter.Sessions
             SelectedTags = new ObservableCollection<string>();
             foreach(string tag in _originalTags)
             {
-                AvailableTags.Add(tag);
+                SelectedTags.Add(tag);
                 AvailableTags.Remove(tag);
             }            
         }
 
-        public bool IsDirty => _originalTags.OrderBy(x => x).SequenceEqual(SelectedTags.OrderBy(x => x));
+        public bool IsDirty => !_originalTags.OrderBy(x => x).SequenceEqual(SelectedTags.OrderBy(x => x));
         
         public ObservableCollection<string> SelectedTags { get; private set; }
 

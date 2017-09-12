@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MediaCenter.Sessions.Query"
+             xmlns:sessions="clr-namespace:MediaCenter.Sessions"
              xmlns:style="clr-namespace:MediaCenter.Styles"
              xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:slideshow="clr-namespace:MediaCenter.Sessions.Slideshow"
@@ -98,8 +99,6 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
                     <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding SelectedItem.Favorite, Mode=TwoWay}">
@@ -137,46 +136,12 @@
                     <Button Style="{StaticResource IconButton}" Command="{Binding DeleteCurrentImageCommand}">
                         <Image Source="/Resources/Icons/cross-button.png" Stretch="None"/>
                     </Button>
+                    <Button Style="{StaticResource IconButton}" Command="{Binding CopyTagsFromPreviousCommand}">
+                        <Image Source="/Resources/Icons/arrow-repeat.png" Stretch="None"/>
+                    </Button>
                 </StackPanel>
-                <ListBox Grid.Row="1" ItemsSource="{Binding SelectedItem.Tags}" Margin="5" BorderThickness="0" Background="Transparent">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="/Resources/Icons/tag-label-green.png"></Image>
-                                <TextBlock Text="{Binding}"/>
-                                <Button Style="{StaticResource IconButton}" CommandParameter="{Binding}" 
-                                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveTagCommand}"><Image Source="/Resources/Icons/cross-button.png"/></Button>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate> 
-                </ListBox>
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Style="{StaticResource IconButton}" Command="{Binding CopyTagsFromPreviousCommand}"><Image Source="/Resources/Icons/arrow-repeat.png" Stretch="None"/></Button>
-                    <TextBox Grid.Column="1" Text="{Binding NewTag, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" MinWidth="100" Margin="5">
-                        <TextBox.InputBindings>
-                            <KeyBinding Key="Enter" Command="{Binding AddNewTagCommand}"/>
-                        </TextBox.InputBindings>
-                    </TextBox>
-                    <Button Grid.Column="2" Command="{Binding AddNewTagCommand}" Width="50" Margin="5">+</Button>
-                </Grid>
-                <ListBox Grid.Row="3" ItemsSource="{Binding AvailableTags}" Margin="5">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}">
-                                <TextBlock.InputBindings>
-                                    <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}" 
-                                              Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.AddTagCommand}" />
-                                </TextBlock.InputBindings>
-                            </TextBlock>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <Button Grid.Row="4" Command="{Binding StartSlideShowCommand}">Start Slideshow</Button>
+                <sessions:TagsView Grid.Row="1" DataContext="{Binding TagsViewModel}"/>
+                <Button Grid.Row="2" Command="{Binding StartSlideShowCommand}">Start Slideshow</Button>
             </Grid>
         </Grid>
         
