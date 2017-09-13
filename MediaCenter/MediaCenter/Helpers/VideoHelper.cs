@@ -10,9 +10,15 @@ namespace MediaCenter.Helpers
     {
         public static async Task<byte[]> CreateThumbnail(string filePath, int size)
         {
+            var firstFrame = await GetFirstFrameImage(filePath);
+            return ImageHelper.CreateThumbnail(firstFrame, size);
+        }
+
+        public static async Task<byte[]> GetFirstFrameImage(string filePath)
+        {
             // run ffmpeg.exe from command line in a separate process to
-            // extract the first fram into a temp file.
-            // Then read the temp file and create the thumbnail from it
+            // extract the first fram into a temp file. Then read the temp 
+            // file and delete it afterwards
             var firstFrameFile = @"C:\TEMP\thumbnail.jpg";
 
             var ffmpeg = new Process
@@ -32,9 +38,9 @@ namespace MediaCenter.Helpers
             await ffmpeg.WaitForExitAsync();
             ffmpeg.Close();
 
-            var firstFrame = await IOHelper.OpenBytes(firstFrameFile);
-            File.Delete(firstFrameFile);
-            return ImageHelper.CreateThumbnail(firstFrame, size);
+            var result = await IOHelper.OpenBytes(firstFrameFile);
+            await IOHelper.DeleteFile(firstFrameFile);
+            return result;
         }
 
         public static DateTime ReadCreationDate(string filePath)
