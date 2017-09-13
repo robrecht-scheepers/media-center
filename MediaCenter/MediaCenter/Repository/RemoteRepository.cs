@@ -116,6 +116,8 @@ namespace MediaCenter.Repository
                         continue;
                     }
 
+                    newItem.Name = CreateUniqueName(originalName);
+
                     int i = 1;
                     while (_catalog.Any(x => x.Name == newItem.Name))
                     {
@@ -146,6 +148,27 @@ namespace MediaCenter.Repository
             }
 
             await UpdateLocalStore();
+        }
+
+        private string CreateUniqueName(string originalName)
+        {
+            var name = originalName;
+            
+            // if the name was already altered for uniqueness during staging, to avid getting ..._1_1 situations
+            // we strip down the previous changes and start again from teh base name to create uniqueness in the catalog
+            if (name.Contains("_"))
+            {
+                name = name.Substring(0, name.IndexOf("_", StringComparison.InvariantCulture));
+            }
+
+            var newName = name;
+            var i = 1;
+            while (_catalog.Any(x => x.Name == newName))
+            {
+                newName = name + "_" + i++;
+            }
+
+            return newName;
         }
 
         public async Task DeleteItem(string name)

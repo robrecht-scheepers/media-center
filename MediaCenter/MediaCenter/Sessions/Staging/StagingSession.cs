@@ -55,7 +55,7 @@ namespace MediaCenter.Sessions.Staging
                             }
 
                             var dateTaken = ImageHelper.ReadCreationDate(image);
-                            var name = CreateItemName(dateTaken);
+                            var name = CreateUniqueItemName(dateTaken);
                             var thumbnail = ImageHelper.CreateThumbnail(image, 100);
 
                             StagedItems.Add(new ImageItem(name)
@@ -71,7 +71,7 @@ namespace MediaCenter.Sessions.Staging
                     else if(_supportedVideoExtensions.Contains(extension))
                     {
                         var dateTaken = VideoHelper.ReadCreationDate(filePath);
-                        var name = CreateItemName(dateTaken);
+                        var name = CreateUniqueItemName(dateTaken);
                         var thumbnail = await VideoHelper.CreateThumbnail(filePath, 100);
 
                         StagedItems.Add(new VideoItem(name)
@@ -124,10 +124,17 @@ namespace MediaCenter.Sessions.Staging
             set { SetValue(ref _statusMessage, value); }
         }
 
-        private string CreateItemName(DateTime date)
+        private string CreateUniqueItemName(DateTime date)
         {
-            var name = date.ToString("yyyyMMddHHmmss");
-            //TODO: guarantee name uniqueness
+            var baseName = date.ToString("yyyyMMddHHmmss");
+
+            var name = baseName;
+            var i = 1;
+            while (StagedItems.Any(x => x.Name == name))
+            {
+                name = $"{baseName}_{i++}";
+            }
+
             return name;
         }
 
