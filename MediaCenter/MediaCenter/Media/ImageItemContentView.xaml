@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="MediaCenter.Media.ImageItemContentView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MediaCenter.Media"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance Type=local:ImageItem}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Styles/Styles.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Image Grid.Row="0" Grid.RowSpan="2" Source="{Binding Content}" />
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Button Style="{StaticResource IconButton}" Command="{Binding RotateCounterclockwiseCommand}">
+                <Image Source="/Resources/Icons/arrow-circle-315-rev.png" Stretch="None"/>
+            </Button>
+            <Button Style="{StaticResource IconButton}" Command="{Binding RotateClockwiseCommand}">
+                <Image Source="/Resources/Icons/arrow-circle-315.png" Stretch="None"/>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>
