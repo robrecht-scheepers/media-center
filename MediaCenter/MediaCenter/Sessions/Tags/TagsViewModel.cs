@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using MediaCenter.MVVM;
-using MediaCenter.Repository;
 using System.Linq;
+using MediaCenter.MVVM;
 
-namespace MediaCenter.Sessions
+namespace MediaCenter.Sessions.Tags
 {
     public class TagsViewModel : PropertyChangedNotifier
     {

@@ -6,6 +6,7 @@ using MediaCenter.Media;
 using MediaCenter.MVVM;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using System.Configuration;
+using MediaCenter.Sessions.Tags;
 
 namespace MediaCenter.Sessions.Staging
 {

@@ -9,6 +9,7 @@ using MediaCenter.Media;
 using MediaCenter.MVVM;
 using MediaCenter.Sessions.Query.Filters;
 using MediaCenter.Sessions.Slideshow;
+using MediaCenter.Sessions.Tags;
 
 namespace MediaCenter.Sessions.Query
 {

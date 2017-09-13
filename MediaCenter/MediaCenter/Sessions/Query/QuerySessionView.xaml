@@ -4,10 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MediaCenter.Sessions.Query"
-             xmlns:sessions="clr-namespace:MediaCenter.Sessions"
              xmlns:style="clr-namespace:MediaCenter.Styles"
              xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:slideshow="clr-namespace:MediaCenter.Sessions.Slideshow"
+             xmlns:tags="clr-namespace:MediaCenter.Sessions.Tags"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:QuerySessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -140,7 +140,7 @@
                         <Image Source="/Resources/Icons/arrow-repeat.png" Stretch="None"/>
                     </Button>
                 </StackPanel>
-                <sessions:TagsView Grid.Row="1" DataContext="{Binding TagsViewModel}"/>
+                <tags:TagsView Grid.Row="1" DataContext="{Binding TagsViewModel}"/>
                 <Button Grid.Row="2" Command="{Binding StartSlideShowCommand}">Start Slideshow</Button>
             </Grid>
         </Grid>

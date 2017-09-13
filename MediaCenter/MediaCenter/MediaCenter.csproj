@@ -153,10 +153,10 @@
       <DependentUpon>StagingSessionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Staging\StagingSessionViewModel.cs" />
-    <Compile Include="Sessions\TagsView.xaml.cs">
+    <Compile Include="Sessions\Tags\TagsView.xaml.cs">
       <DependentUpon>TagsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sessions\TagsViewModel.cs" />
+    <Compile Include="Sessions\Tags\TagsViewModel.cs" />
     <Compile Include="Styles\ScrollIntoViewBehavior.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -202,7 +202,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Sessions\TagsView.xaml">
+    <Page Include="Sessions\Tags\TagsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
