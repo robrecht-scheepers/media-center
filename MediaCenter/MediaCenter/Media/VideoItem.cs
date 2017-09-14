@@ -20,5 +20,7 @@ namespace MediaCenter.Media
             get => _firstFrameImage;
             set => SetValue(ref _firstFrameImage, value);
         }
+
+        public string VideoFilePath { get; set; }
     }
 }
