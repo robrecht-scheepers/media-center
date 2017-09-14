@@ -9,5 +9,11 @@ namespace VideoPlayerPOC
 {
     public class MainViewModel : PropertyChangedNotifier 
     {
+        public VideoPLayerViewModel VideoPLayerViewModel { get; }
+
+        public MainViewModel()
+        {
+            VideoPLayerViewModel = new VideoPLayerViewModel(@"c:\Users\scheepers\Desktop\test\MOV_0967.mp4");
+        }
     }
 }
