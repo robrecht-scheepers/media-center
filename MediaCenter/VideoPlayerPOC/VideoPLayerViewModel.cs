@@ -9,11 +9,11 @@ namespace VideoPlayerPOC
 {
     public class VideoPLayerViewModel : PropertyChangedNotifier
     {
-        private string _filePath;
-
+        
         public VideoPLayerViewModel(string filePath)
         {
             _filePath = filePath;
+            PlayState = PlayState.Stopped;
         }
 
         public PlayState PlayState
@@ -22,12 +22,27 @@ namespace VideoPlayerPOC
             set { SetValue(ref _playState, value); }
         }
 
+        private string _filePath;
         private RelayCommand _playCommand;
+        private RelayCommand _loadCommand;
         private PlayState _playState;
+        private string _videoFilePath;
+
+
+        public RelayCommand LoadCommand
+        {
+            get { return _loadCommand ?? (_loadCommand = new RelayCommand(() => VideoFilePath = _filePath)); }
+        }
 
         public RelayCommand PlayCommand
         {
             get { return _playCommand ?? (_playCommand = new RelayCommand(() => PlayState = PlayState.Play)); }
+        }
+
+        public string VideoFilePath
+        {
+            get { return _videoFilePath; }
+            set { SetValue(ref _videoFilePath, value); }
         }
     }
 }

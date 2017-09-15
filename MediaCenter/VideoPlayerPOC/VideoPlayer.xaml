@@ -11,7 +11,7 @@
              d:DataContext="{d:DesignInstance d:Type=local:VideoPLayerViewModel}">
 
     <i:Interaction.Behaviors>
-        <local:VideoControlBehavior RequestedPlayerState="{Binding PlayState}" />
+        <local:VideoControlBehavior RequestedPlayerState="{Binding Path=PlayState}" VideoFilePath="{Binding VideoFilePath}" />
     </i:Interaction.Behaviors>
 
     <Grid Name="Grid1">
@@ -19,9 +19,11 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <MediaElement Grid.Row="0"  Name="MediaElement"/>
+        <MediaElement Grid.Row="0"  Name="MediaElement" LoadedBehavior="Manual"/>
         <StackPanel Grid.Row="1"  Orientation="Horizontal">
+            <Button Command="{Binding LoadCommand}">Load</Button>
             <Button Command="{Binding PlayCommand}">Play</Button>
+            <TextBlock Text="{Binding PlayState}"/>
         </StackPanel>
     </Grid>
 </UserControl>
