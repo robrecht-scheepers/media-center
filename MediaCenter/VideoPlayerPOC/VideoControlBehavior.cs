@@ -57,17 +57,19 @@ namespace VideoPlayerPOC
         {
             var me = d as VideoControlBehavior;
             var mediaElement =me?.AssociatedObject.MediaElement;
-
+            if(mediaElement == null)
+                return;
+            
             switch ((PlayState)e.NewValue)
             {
                 case PlayState.Play:
-                    mediaElement?.Play();
+                    mediaElement.Play();
                     break;
                 case PlayState.Paused:
-                    mediaElement?.Pause();
+                    mediaElement.Pause();
                     break;
                 case PlayState.Stopped:
-                    mediaElement?.Stop();
+                    mediaElement.Stop();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

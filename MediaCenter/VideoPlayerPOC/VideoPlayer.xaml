@@ -21,8 +21,10 @@
         </Grid.RowDefinitions>
         <MediaElement Grid.Row="0"  Name="MediaElement" LoadedBehavior="Manual"/>
         <StackPanel Grid.Row="1"  Orientation="Horizontal">
-            <Button Command="{Binding LoadCommand}">Load</Button>
-            <Button Command="{Binding PlayCommand}">Play</Button>
+            <Button Command="{Binding LoadCommand}" Margin="5">Load</Button>
+            <Button Command="{Binding PlayCommand}" Margin="5">Play</Button>
+            <Button Command="{Binding PauseCommand}" Margin="5">Pause</Button>
+            <Button Command="{Binding StopCommand}" Margin="5">Stop</Button>
             <TextBlock Text="{Binding PlayState}"/>
         </StackPanel>
     </Grid>

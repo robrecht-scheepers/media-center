@@ -25,6 +25,8 @@ namespace VideoPlayerPOC
         private string _filePath;
         private RelayCommand _playCommand;
         private RelayCommand _loadCommand;
+        private RelayCommand _pauseCommand;
+        private RelayCommand _stopCommand;
         private PlayState _playState;
         private string _videoFilePath;
 
@@ -38,7 +40,15 @@ namespace VideoPlayerPOC
         {
             get { return _playCommand ?? (_playCommand = new RelayCommand(() => PlayState = PlayState.Play)); }
         }
-
+        public RelayCommand StopCommand
+        {
+            get { return _stopCommand ?? (_stopCommand = new RelayCommand(() => PlayState = PlayState.Stopped)); }
+        }
+        public RelayCommand PauseCommand
+        {
+            get { return _pauseCommand ?? (_pauseCommand = new RelayCommand(() => PlayState = PlayState.Paused)); }
+        }
+        
         public string VideoFilePath
         {
             get { return _videoFilePath; }

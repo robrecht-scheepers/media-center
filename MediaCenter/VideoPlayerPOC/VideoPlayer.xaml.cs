@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace VideoPlayerPOC
 {
@@ -20,9 +21,20 @@ namespace VideoPlayerPOC
     /// </summary>
     public partial class VideoPlayer : UserControl
     {
+        private DispatcherTimer _timer;
+        private bool _isDragging = false;
+
         public VideoPlayer()
         {
             InitializeComponent();
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromMilliseconds(200);
+            _timer.Tick += new EventHandler(TimerTick);
+        }
+
+        private void TimerTick(object sender, EventArgs eventArgs)
+        {
+            throw new NotImplementedException();
         }
     }
 }
