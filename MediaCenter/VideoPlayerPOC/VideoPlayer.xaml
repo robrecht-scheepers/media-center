@@ -18,9 +18,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <MediaElement Grid.Row="0"  Name="MediaElement" LoadedBehavior="Manual"/>
-        <StackPanel Grid.Row="1"  Orientation="Horizontal">
+        <MediaElement Grid.Row="0"  Name="MediaElement" LoadedBehavior="Manual" MediaOpened="MediaElement_OnMediaOpened" />
+        <Slider Grid.Row="1" Name="SeekSlider" Margin="5" Thumb.DragStarted="SeekSlider_OnDragStarted" Thumb.DragCompleted="SeekSlider_OnDragCompleted"/>
+        <StackPanel Grid.Row="2"  Orientation="Horizontal">
             <Button Command="{Binding LoadCommand}" Margin="5">Load</Button>
             <Button Command="{Binding PlayCommand}" Margin="5">Play</Button>
             <Button Command="{Binding PauseCommand}" Margin="5">Pause</Button>
