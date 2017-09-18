@@ -97,10 +97,12 @@
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <TextBlock Grid.Row="0" Text="{Binding SelectedItem.Name}"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding SelectedItem.Favorite, Mode=TwoWay}">
                         <Image Stretch="None">
                             <Image.Style>
@@ -140,8 +142,8 @@
                         <Image Source="/Resources/Icons/arrow-repeat.png" Stretch="None"/>
                     </Button>
                 </StackPanel>
-                <tags:TagsView Grid.Row="1" DataContext="{Binding TagsViewModel}"/>
-                <Button Grid.Row="2" Command="{Binding StartSlideShowCommand}">Start Slideshow</Button>
+                <tags:TagsView Grid.Row="2" DataContext="{Binding TagsViewModel}"/>
+                <Button Grid.Row="3" Command="{Binding StartSlideShowCommand}">Start Slideshow</Button>
             </Grid>
         </Grid>
         
