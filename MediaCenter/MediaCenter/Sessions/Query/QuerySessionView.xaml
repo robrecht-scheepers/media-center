@@ -35,117 +35,126 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-        </Grid.RowDefinitions>
         
-        <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
-            <ComboBox ItemsSource="{Binding FilterNames}" SelectedItem="{Binding SelectedFilterName}" VerticalAlignment="Top"/>
-            <Button Command="{Binding AddFilterCommand}" VerticalAlignment="Top">+</Button>
-        </StackPanel>
         
-        <ListView Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Filters}" HorizontalContentAlignment="Stretch">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <ContentPresenter Grid.Column="0" Content="{Binding}"/>
-                        <Button Grid.Column="1" Style="{StaticResource CrossIconButton}" 
-                                CommandParameter="{Binding}" 
-                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveFilterCommand}"/>
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <Grid Grid.Column ="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <ComboBox ItemsSource="{Binding FilterNames}" SelectedItem="{Binding SelectedFilterName}" VerticalAlignment="Top"/>
+                <Button Command="{Binding AddFilterCommand}" VerticalAlignment="Top">+</Button>
+            </StackPanel>
 
-        <Button Grid.Column="0" Grid.Row="2" Command="{Binding ExecuteQueryCommand}">Search</Button>
-        
-        <ListBox Grid.Column="1" Grid.Row="0" ItemsSource="{Binding QuerySession.QueryResult}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
-                 ScrollViewer.HorizontalScrollBarVisibility="Auto">
-            <interactivity:Interaction.Behaviors>
-                <style:ScrollIntoViewBehavior/>
-            </interactivity:Interaction.Behaviors>
-                <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Image Source="{Binding Thumbnail}" Height="100" Width="100" Margin="5"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ListBox>
+            <ListView Grid.Row="1" ItemsSource="{Binding Filters}" HorizontalContentAlignment="Stretch">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <ContentPresenter Grid.Column="0" Content="{Binding}"/>
+                            <Button Grid.Column="1" Style="{StaticResource CrossIconButton}" 
+                                    CommandParameter="{Binding}" 
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveFilterCommand}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
 
-        <Grid Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <ContentControl Content="{Binding SelectedItem}" />
-            <Button Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource IconButton}" Command="{Binding SelectPreviousImageCommand}">
-                <Image Source="/Resources/Icons/arrow-180.png" Stretch="None"/>
-            </Button>
-            <Button Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource IconButton}" Command="{Binding SelectNextImageCommand}">
-                <Image Source="/Resources/Icons/arrow.png" Stretch="None"/>
-            </Button>
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="{Binding SelectedItem.Name}"/>
-                <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding SelectedItem.Favorite, Mode=TwoWay}">
-                        <Image Stretch="None">
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding SelectedItem.Favorite}" Value="true">
-                                            <Setter Property="Source" Value="/Resources/Icons/star.png"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding SelectedItem.Favorite}" Value="false">
-                                            <Setter Property="Source" Value="/Resources/Icons/star-empty.png"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                    </ToggleButton>
-                    <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding SelectedItem.Private, Mode=TwoWay}">
-                        <Image Stretch="None">
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding SelectedItem.Private}" Value="true">
-                                            <Setter Property="Source" Value="/Resources/Icons/lock.png"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding SelectedItem.Private}" Value="false">
-                                            <Setter Property="Source" Value="/Resources/Icons/lock_grey.png"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                    </ToggleButton>
-                    <Button Style="{StaticResource IconButton}" Command="{Binding DeleteCurrentImageCommand}">
-                        <Image Source="/Resources/Icons/cross-button.png" Stretch="None"/>
-                    </Button>
-                    <Button Style="{StaticResource IconButton}" Command="{Binding CopyTagsFromPreviousCommand}">
-                        <Image Source="/Resources/Icons/arrow-repeat.png" Stretch="None"/>
-                    </Button>
-                </StackPanel>
-                <tags:TagsView Grid.Row="2" DataContext="{Binding TagsViewModel}"/>
-                <Button Grid.Row="3" Command="{Binding StartSlideShowCommand}">Start Slideshow</Button>
-            </Grid>
+            <Button Grid.Row="2" Command="{Binding ExecuteQueryCommand}">Search</Button>
         </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <ListBox Grid.Row="0" ItemsSource="{Binding QuerySession.QueryResult}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                <interactivity:Interaction.Behaviors>
+                    <style:ScrollIntoViewBehavior/>
+                </interactivity:Interaction.Behaviors>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Image Source="{Binding Thumbnail}" Height="100" Width="100" Margin="5"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ListBox>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <ContentControl Content="{Binding SelectedItem}" />
+                <Button Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource IconButton}" Command="{Binding SelectPreviousImageCommand}">
+                    <Image Source="/Resources/Icons/arrow-180.png" Stretch="None"/>
+                </Button>
+                <Button Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource IconButton}" Command="{Binding SelectNextImageCommand}">
+                    <Image Source="/Resources/Icons/arrow.png" Stretch="None"/>
+                </Button>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="{Binding SelectedItem.Name}"/>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding SelectedItem.Favorite, Mode=TwoWay}">
+                            <Image Stretch="None">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding SelectedItem.Favorite}" Value="true">
+                                                <Setter Property="Source" Value="/Resources/Icons/star.png"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding SelectedItem.Favorite}" Value="false">
+                                                <Setter Property="Source" Value="/Resources/Icons/star-empty.png"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </ToggleButton>
+                        <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding SelectedItem.Private, Mode=TwoWay}">
+                            <Image Stretch="None">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding SelectedItem.Private}" Value="true">
+                                                <Setter Property="Source" Value="/Resources/Icons/lock.png"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding SelectedItem.Private}" Value="false">
+                                                <Setter Property="Source" Value="/Resources/Icons/lock_grey.png"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </ToggleButton>
+                        <Button Style="{StaticResource IconButton}" Command="{Binding DeleteCurrentImageCommand}">
+                            <Image Source="/Resources/Icons/cross-button.png" Stretch="None"/>
+                        </Button>
+                        <Button Style="{StaticResource IconButton}" Command="{Binding CopyTagsFromPreviousCommand}">
+                            <Image Source="/Resources/Icons/arrow-repeat.png" Stretch="None"/>
+                        </Button>
+                    </StackPanel>
+                    <tags:TagsView Grid.Row="2" DataContext="{Binding TagsViewModel}"/>
+                    <Button Grid.Row="3" Command="{Binding StartSlideShowCommand}">Start Slideshow</Button>
+                </Grid>
+        </Grid>
+    </Grid>
         
         
 
