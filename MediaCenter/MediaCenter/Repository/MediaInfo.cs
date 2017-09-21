@@ -17,7 +17,7 @@ namespace MediaCenter.Repository
         public MediaInfo(MediaItem item)
         {
             Name = item.Name;
-            Type = item.Type;
+            Type = item is VideoItem ? MediaType.Video : MediaType.Image;
             DateTaken = item.DateTaken;
             DateAdded = item.DateAdded;
             Favorite = item.Favorite;
@@ -27,13 +27,22 @@ namespace MediaCenter.Repository
 
         public MediaItem ToMediaItem()
         {
-            var item = new ImageItem(Name)
+            MediaItem item = null;
+            switch (Type)
             {
-                DateTaken = this.DateTaken,
-                DateAdded = this.DateAdded,
-                Favorite = this.Favorite,
-                Private = this.Private
-            };
+                case MediaType.Video:
+                    item = new VideoItem(Name);
+                    break;
+                default:
+                    item = new ImageItem(Name);
+                    break;
+            }
+
+            item.DateTaken = this.DateTaken;
+            item.DateAdded = this.DateAdded;
+            item.Favorite = this.Favorite;
+            item.Private = this.Private;
+            
             foreach (var tag in this.Tags)
             {
                 item.Tags.Add(tag);

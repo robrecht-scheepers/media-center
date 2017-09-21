@@ -10,7 +10,7 @@ namespace MediaCenter.Media
 {
     public class ImageItem : MediaItem
     {
-        public ImageItem(string name) : base(name, MediaType.Image)
+        public ImageItem(string name) : base(name)
         {
         }
 

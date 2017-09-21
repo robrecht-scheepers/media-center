@@ -10,7 +10,7 @@ namespace MediaCenter.Media
     {
         private byte[] _firstFrameImage;
 
-        public VideoItem(string name) : base(name, MediaType.Video)
+        public VideoItem(string name) : base(name)
         {
 
         }
@@ -22,5 +22,13 @@ namespace MediaCenter.Media
         }
 
         public string VideoFilePath { get; set; }
+
+        public override void UpdateFrom(MediaItem item)
+        {
+            base.UpdateFrom(item);
+
+            if (item is VideoItem)
+                VideoFilePath = ((VideoItem) item).VideoFilePath;
+        }
     }
 }

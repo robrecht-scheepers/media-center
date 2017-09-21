@@ -56,7 +56,7 @@ namespace MediaCenter.Repository
             }
 
             var infoList = await IOHelper.OpenObject<List<MediaInfo>>(_localStoreFilePath);
-            _catalog = infoList.Select(i => i.ToMediaItem()).ToList();
+            _catalog = infoList.Select(i => CreateMediaItem(i)).ToList();
         }
 
         private async Task UpdateLocalStore()
@@ -83,7 +83,7 @@ namespace MediaCenter.Repository
             foreach (var file in remoteStoreMediaFiles.Where(f => f.LastWriteTime >= _lastSyncFromRemote))
             {
                 var info = await IOHelper.OpenObject<MediaInfo>(file.FullName);
-                var item = info.ToMediaItem();
+                var item = CreateMediaItem(info);
                 var existingItem = Catalog.FirstOrDefault(x => x.Name == item.Name);
                 if (existingItem == null) // new item
                 {
@@ -313,6 +313,16 @@ namespace MediaCenter.Repository
         private string ItemNameToInfoFilename(string name)
         {
             return Path.Combine(_remoteStore, name + MediaFileExtension);
+        }
+
+        private MediaItem CreateMediaItem(MediaInfo mediaInfo)
+        {
+            var mediaItem = mediaInfo.ToMediaItem();
+            if (mediaItem is VideoItem)
+            {
+                ((VideoItem) mediaItem).VideoFilePath = ItemNameToContentFilename(mediaItem.Name);
+            }
+            return mediaItem;
         }
 
 

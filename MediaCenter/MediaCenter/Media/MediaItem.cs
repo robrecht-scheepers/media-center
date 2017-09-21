@@ -6,10 +6,9 @@ namespace MediaCenter.Media
 {
     public abstract class MediaItem : PropertyChangedNotifier
     {
-        protected MediaItem(string name, MediaType type)
+        protected MediaItem(string name)
         {
             Name = name;
-            Type = type;
             Tags = new ObservableCollection<string>();
         }
 
@@ -29,9 +28,7 @@ namespace MediaCenter.Media
         public DateTime DateTaken { get; set; }
 
         public DateTime DateAdded { get; set; }
-
-        public MediaType Type { get; set; }
-
+        
         public ObservableCollection<string> Tags { get; set; }
 
         private bool _favorite;
@@ -64,7 +61,7 @@ namespace MediaCenter.Media
             set {SetValue(ref _content, value); }
         }
 
-        public void UpdateFrom(MediaItem item)
+        public virtual void UpdateFrom(MediaItem item)
         {
             Name = item.Name;
             DateTaken = item.DateTaken;
