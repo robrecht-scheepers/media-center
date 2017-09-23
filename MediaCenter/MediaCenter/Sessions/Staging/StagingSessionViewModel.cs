@@ -43,7 +43,7 @@ namespace MediaCenter.Sessions.Staging
             {
                 Multiselect = true,
                 Title = "Select the media files to be added",
-                Filter = "Media Files(*.BMP;*.JPG;*.PNG;*.MP4;*.AVI;*.MTS)|*.BMP;*.JPG;*.PNG;*.MP4;*.AVI;*.MTS"
+                Filter = "Media Files(*.BMP;*.JPG;*.JPEG;*.PNG;*.MP4;*.AVI;*.MTS)|*.BMP;*.JPG;*.JPEG;*.PNG;*.MP4;*.AVI;*.MTS"
             };
 
             dialog.ShowDialog();
