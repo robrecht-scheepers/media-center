@@ -146,6 +146,10 @@
     <Compile Include="Sessions\Slideshow\SlideShowWindow.xaml.cs">
       <DependentUpon>SlideShowWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Sessions\Staging\StagedItembehavior.cs" />
+    <Compile Include="Sessions\Staging\StagedItemView.xaml.cs">
+      <DependentUpon>StagedItemView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Sessions\Staging\StagingSession.cs" />
     <Compile Include="Sessions\Query\QuerySession.cs" />
     <Compile Include="Sessions\SessionBase.cs" />
@@ -195,6 +199,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Sessions\Slideshow\SlideShowWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sessions\Staging\StagedItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
