@@ -1,0 +1,36 @@
+﻿<Window x:Class="MediaCenter.Sessions.Staging.EditStagedItemView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MediaCenter.Sessions.Staging"
+        mc:Ignorable="d"
+        Title="EditStagedItemView" Height="120" Width="400"
+        WindowState="Normal"
+        d:DataContext="{d:DesignInstance Type=local:EditStagedItemViewModel}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Image Grid.Column="0" Source="{Binding MediaItem.Thumbnail}" Stretch="UniformToFill" VerticalAlignment="Center"/>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="{Binding MediaItem.Name, StringFormat='Editing media item {0}'}"/>
+            <TextBlock Grid.Row="1" Text="{Binding MediaItem.DateTaken, StringFormat='Original date: {0:dd.MM.YYYY HH:mm:ss}'}"/>
+            <DatePicker Grid.Row="2" SelectedDate="{Binding NewDateTaken}" SelectedDateFormat="Short" VerticalAlignment="Center" />
+            <StackPanel Grid.Row="4" Orientation="Horizontal">
+                <Button Command="{Binding SaveCommand}">Save</Button>
+                <Button Command="{Binding AbortCommand}">Cancel</Button>
+            </StackPanel>
+        </Grid>
+        
+    </Grid>
+</Window>

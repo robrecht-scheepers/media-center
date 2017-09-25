@@ -34,6 +34,11 @@
                         CommandParameter="{Binding}">
                 <Image Source="/Resources/Icons/cross-button.png" Stretch="None"/>
             </Button>
+            <Button Style="{StaticResource IconButton}"
+                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:StagingSessionView}}, Path=DataContext.BeginEditItemCommand}" 
+                    CommandParameter="{Binding}">
+                <Image Source="/Resources/Icons/pencil.png" Stretch="None"/>
+            </Button>
         </StackPanel>
         <TextBlock Grid.Row="1" Text="{Binding Name}" Margin="5" />
     </Grid>

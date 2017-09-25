@@ -141,11 +141,15 @@
     <Compile Include="Sessions\Query\QuerySessionViewModel.cs" />
     <Compile Include="Sessions\SessionViewModelBase.cs" />
     <Compile Include="Sessions\Slideshow\HideIdleMouseBehavior.cs" />
-    <Compile Include="Sessions\Slideshow\OpenCloseWindowBehavior.cs" />
+    <Compile Include="Sessions\Staging\EditStagedItemView.xaml.cs">
+      <DependentUpon>EditStagedItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Styles\OpenCloseWindowBehavior.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowViewModel.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowWindow.xaml.cs">
       <DependentUpon>SlideShowWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Sessions\Staging\EditStagedItemViewModel.cs" />
     <Compile Include="Sessions\Staging\StagedItembehavior.cs" />
     <Compile Include="Sessions\Staging\StagedItemView.xaml.cs">
       <DependentUpon>StagedItemView.xaml</DependentUpon>
@@ -199,6 +203,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Sessions\Slideshow\SlideShowWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sessions\Staging\EditStagedItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -293,6 +301,7 @@
     <Content Include="Dependencies\ffmpeg.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\pencil.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

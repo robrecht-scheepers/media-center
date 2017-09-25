@@ -29,10 +29,51 @@ namespace MediaCenter.Sessions.Staging
             set { SetValue(ref _tagsViewModel, value); }
         }
 
+        
+
         private void InitializeTagsViewModel()
         {
             TagsViewModel = new TagsViewModel(Session.Repository.Tags);
         }
+
+        #region Edit item
+        private EditStagedItemViewModel _editViewModel;
+        public EditStagedItemViewModel EditViewModel
+        {
+            get { return _editViewModel; }
+            set { SetValue(ref _editViewModel, value); }
+        }
+
+        private bool _showEditViewModel;
+        public bool ShowEditViewModel
+        {
+            get { return _showEditViewModel; }
+            set { SetValue(ref _showEditViewModel, value); }
+        }
+
+        private RelayCommand<MediaItem> _beginEditItemCommand;
+        public RelayCommand<MediaItem> BeginEditItemCommand
+        {
+            get { return _beginEditItemCommand ?? (_beginEditItemCommand = new RelayCommand<MediaItem>(BeginEditStagedItem)); }
+        }
+        public void BeginEditStagedItem(MediaItem item)
+        {
+            EditViewModel = new EditStagedItemViewModel(item);
+            EditViewModel.CloseRequested += EditViewModelOnCloseRequested;
+            ShowEditViewModel = true;
+        }
+        private void EditViewModelOnCloseRequested(object sender, CloseEditViewModelEventArgs args)
+        {
+            if (args.CloseType == EditViewModelCloseType.Save)
+            {
+                var editViewModel = (EditStagedItemViewModel)sender;
+                StagingSession.EditStagedItemDate(editViewModel.MediaItem, editViewModel.NewDateTaken);
+            }
+            EditViewModel.CloseRequested -= EditViewModelOnCloseRequested;
+            EditViewModel = null;
+            ShowEditViewModel = false;
+        }
+        #endregion
 
         #region Command: Add image files 
         private AsyncRelayCommand _addMediaCommand;
@@ -84,8 +125,7 @@ namespace MediaCenter.Sessions.Staging
             StagingSession.RemoveStagedItem(item);
         }
         #endregion
-
-
+        
         #region Command: save staged images to repository
         private AsyncRelayCommand _saveToRepositoryCommand;
         public AsyncRelayCommand SaveToRepositoryCommand => _saveToRepositoryCommand ?? (_saveToRepositoryCommand = new AsyncRelayCommand(SaveToRepository,CanExecuteSaveToRepository));

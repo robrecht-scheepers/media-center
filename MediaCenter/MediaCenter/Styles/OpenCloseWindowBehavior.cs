@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
 
-namespace MediaCenter.Sessions.Slideshow
+namespace MediaCenter.Styles
 {
     public class OpenCloseWindowBehavior : Behavior<UserControl>
     {

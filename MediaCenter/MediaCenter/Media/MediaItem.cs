@@ -16,7 +16,12 @@ namespace MediaCenter.Media
         public bool IsContentDirty { get; set; }
         public bool IsThumbnailDirty { get; set; }
 
-        public string Name { get; set; }
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set { SetValue(ref _name, value); }
+        }
 
         private MediaItemStatus _status;
         public MediaItemStatus Status
@@ -25,7 +30,12 @@ namespace MediaCenter.Media
             set { SetValue(ref _status,  value); }
         }
 
-        public DateTime DateTaken { get; set; }
+        private DateTime _dateTaken;
+        public DateTime DateTaken
+        {
+            get { return _dateTaken; }
+            set { SetValue(ref _dateTaken, value); }
+        }
 
         public DateTime DateAdded { get; set; }
         
@@ -54,7 +64,6 @@ namespace MediaCenter.Media
         }
 
         private byte[] _content;
-        
         public byte[] Content
         {
             get { return _content; }

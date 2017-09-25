@@ -22,7 +22,7 @@
     </UserControl.Resources>
     
     <interactivity:Interaction.Behaviors>
-        <slideshow:OpenCloseWindowBehavior WindowType="slideshow:SlideShowWindow" Trigger="{Binding SlideShowActive}" WindowDataContext="{Binding Path=SlideShowViewModel}" />
+        <style:OpenCloseWindowBehavior WindowType="slideshow:SlideShowWindow" Trigger="{Binding SlideShowActive}" WindowDataContext="{Binding Path=SlideShowViewModel}" />
     </interactivity:Interaction.Behaviors>
     
     <UserControl.InputBindings>

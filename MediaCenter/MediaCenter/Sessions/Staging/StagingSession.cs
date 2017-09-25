@@ -17,7 +17,8 @@ namespace MediaCenter.Sessions.Staging
         private readonly string[] _supportedImageExtensions = {".jpg", ".png", ".bmp"};
         private readonly string[] _supportedVideoExtensions = { ".mp4", ".avi", ".mts"};
         private string _statusMessage;
-        private readonly Dictionary<string, string> _filePaths = new Dictionary<string, string>(); 
+        private readonly Dictionary<string, string> _filePaths = new Dictionary<string, string>();
+        
 
         public StagingSession(IRepository repository) : base(repository)
         {
@@ -25,6 +26,8 @@ namespace MediaCenter.Sessions.Staging
         }
 
         public ObservableCollection<MediaItem> StagedItems { get; }
+
+        
 
         public async Task AddMediaItems(IEnumerable<string> newItems)
         {
@@ -101,6 +104,21 @@ namespace MediaCenter.Sessions.Staging
             if (_filePaths.ContainsKey(item.Name))
                 _filePaths.Remove(item.Name);
         }
+
+        public void EditStagedItemDate(MediaItem item, DateTime newDate)
+        {
+            if(item.DateTaken.Equals(newDate))
+                return;
+
+            var oldName = item.Name;
+            item.Name = CreateUniqueItemName(newDate);
+            item.DateTaken = newDate;
+            
+            var filePath = _filePaths[oldName];
+            _filePaths.Remove(oldName);
+            _filePaths[item.Name] = filePath;
+        }
+        
 
         public async Task SaveToRepository(IEnumerable<string> tags)
         {
