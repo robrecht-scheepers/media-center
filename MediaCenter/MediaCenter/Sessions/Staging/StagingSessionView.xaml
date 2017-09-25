@@ -19,7 +19,8 @@
     </UserControl.Resources>
 
     <i:Interaction.Behaviors>
-        <styles:OpenCloseWindowBehavior Trigger="{Binding ShowEditViewModel}" WindowType="local:EditStagedItemView" WindowDataContext="{Binding EditViewModel}"/>
+        <styles:OpenCloseWindowBehavior Trigger="{Binding ShowEditViewModel}" WindowType="local:EditStagedItemView" WindowDataContext="{Binding EditViewModel}" 
+                                        OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
     </i:Interaction.Behaviors>
     
     <Grid>

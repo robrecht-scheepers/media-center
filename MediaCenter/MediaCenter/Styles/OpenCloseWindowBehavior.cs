@@ -12,6 +12,9 @@ namespace MediaCenter.Styles
         public Type WindowType { get { return (Type)GetValue(WindowTypeProperty); } set { SetValue(WindowTypeProperty, value); } }
         public static readonly DependencyProperty WindowTypeProperty = DependencyProperty.Register("WindowType", typeof(Type), typeof(OpenCloseWindowBehavior), new PropertyMetadata(null));
 
+        public Window OwnerWindow { get { return (Window)GetValue(OwnerWindowProperty); } set { SetValue(OwnerWindowProperty, value); } }
+        public static readonly DependencyProperty OwnerWindowProperty = DependencyProperty.Register("OwnerWindow", typeof(Window), typeof(OpenCloseWindowBehavior), new PropertyMetadata(null));
+
         public object WindowDataContext { get { return (object)GetValue(WindowDataContextProperty); } set { SetValue(WindowDataContextProperty, value); } }
         public static readonly DependencyProperty WindowDataContextProperty = DependencyProperty.Register("WindowDataContext", typeof(object), typeof(OpenCloseWindowBehavior), new PropertyMetadata(null));
 
@@ -39,6 +42,7 @@ namespace MediaCenter.Styles
                         }
                     };
                     window.DataContext = me.WindowDataContext;
+                    window.Owner = me.OwnerWindow;
                     window.Show();
                     me._windowInstance = window;
                 }

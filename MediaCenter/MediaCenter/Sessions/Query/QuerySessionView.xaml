@@ -22,7 +22,8 @@
     </UserControl.Resources>
     
     <interactivity:Interaction.Behaviors>
-        <style:OpenCloseWindowBehavior WindowType="slideshow:SlideShowWindow" Trigger="{Binding SlideShowActive}" WindowDataContext="{Binding Path=SlideShowViewModel}" />
+        <style:OpenCloseWindowBehavior WindowType="slideshow:SlideShowWindow" Trigger="{Binding SlideShowActive}" WindowDataContext="{Binding Path=SlideShowViewModel}" 
+                                       OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" />
     </interactivity:Interaction.Behaviors>
     
     <UserControl.InputBindings>
