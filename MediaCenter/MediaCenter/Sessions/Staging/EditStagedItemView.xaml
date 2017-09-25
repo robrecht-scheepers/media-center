@@ -6,15 +6,24 @@
         xmlns:local="clr-namespace:MediaCenter.Sessions.Staging"
         mc:Ignorable="d"
         Title="EditStagedItemView" Height="120" Width="400"
+        ResizeMode="NoResize"
         WindowState="Normal"
+        WindowStyle="None"
         d:DataContext="{d:DesignInstance Type=local:EditStagedItemViewModel}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         
-        <Image Grid.Column="0" Source="{Binding MediaItem.Thumbnail}" Stretch="UniformToFill" VerticalAlignment="Center"/>
+        <Image Grid.Column="0" Height="100" Width="100" Source="{Binding MediaItem.Thumbnail}" Stretch="UniformToFill" VerticalAlignment="Center" Margin="10"/>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

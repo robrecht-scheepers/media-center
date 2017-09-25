@@ -42,7 +42,8 @@ namespace MediaCenter.Styles
                         }
                     };
                     window.DataContext = me.WindowDataContext;
-                    window.Owner = me.OwnerWindow;
+                    if(me.OwnerWindow != null)
+                        window.Owner = me.OwnerWindow;
                     window.Show();
                     me._windowInstance = window;
                 }

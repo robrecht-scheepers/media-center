@@ -17,6 +17,9 @@
     <Style TargetType="ComboBox">
         <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
     </Style>
+    <Style TargetType="DatePicker">
+        <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
+    </Style>
     
     <Style x:Key="IconButton" TargetType="Button">
         <Setter Property="Template">
