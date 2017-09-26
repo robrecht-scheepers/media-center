@@ -8,19 +8,24 @@ using MediaCenter.MVVM;
 
 namespace MediaCenter.Media
 {
-    public class ImageItem : MediaItem
+    public class ImageItemViewModel : PropertyChangedNotifier
     {
-        public ImageItem(string name) : base(name)
+        public ImageItemViewModel(MediaItem item) 
         {
+            if(item.MediaType != MediaType.Image)
+                throw new ArgumentException($"Cannot create image view model for non-image item. Item type is {item.MediaType}.");
+            MediaItem = item;
         }
+
+        public MediaItem MediaItem { get; }
 
         public void RotateImage(RotationDirection direction)
         {
-            Content = ImageHelper.Rotate(Content, direction);
-            IsContentDirty = true;
+            MediaItem.Content = ImageHelper.Rotate(MediaItem.Content, direction);
+            MediaItem.IsContentDirty = true;
 
-            Thumbnail = ImageHelper.CreateThumbnail(Content,100);
-            IsThumbnailDirty = true;
+            MediaItem.Thumbnail = ImageHelper.CreateThumbnail(MediaItem.Content, 100);
+            MediaItem.IsThumbnailDirty = true;
         }
 
         private RelayCommand _rotateClockwiseCommand;

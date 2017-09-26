@@ -102,16 +102,16 @@
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Helpers\VideoHelper.cs" />
     <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="Media\ImageItem.cs" />
+    <Compile Include="Media\ImageItemViewModel.cs" />
     <Compile Include="Media\ImageItemContentView.xaml.cs">
       <DependentUpon>ImageItemContentView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Media\MediaItemStatus.cs" />
     <Compile Include="Media\RotationDirection.cs" />
-    <Compile Include="Media\VideoItem.cs" />
     <Compile Include="Media\VideoItemContentView.xaml.cs">
       <DependentUpon>VideoItemContentView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Media\VideoItemViewModel.cs" />
     <Compile Include="Media\VideoPlayer.xaml.cs">
       <DependentUpon>VideoPlayer.xaml</DependentUpon>
     </Compile>
@@ -144,6 +144,7 @@
     <Compile Include="Sessions\Staging\EditStagedItemView.xaml.cs">
       <DependentUpon>EditStagedItemView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Sessions\Staging\StagedItem.cs" />
     <Compile Include="Styles\OpenCloseWindowBehavior.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowViewModel.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowWindow.xaml.cs">

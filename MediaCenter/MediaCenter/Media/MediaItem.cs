@@ -4,9 +4,9 @@ using MediaCenter.MVVM;
 
 namespace MediaCenter.Media
 {
-    public abstract class MediaItem : PropertyChangedNotifier
+    public class MediaItem : PropertyChangedNotifier
     {
-        protected MediaItem(string name)
+        public MediaItem(string name, MediaType type)
         {
             Name = name;
             Tags = new ObservableCollection<string>();
@@ -22,6 +22,8 @@ namespace MediaCenter.Media
             get { return _name; }
             set { SetValue(ref _name, value); }
         }
+
+        public MediaType MediaType { get; set; }
 
         private MediaItemStatus _status;
         public MediaItemStatus Status
@@ -64,15 +66,24 @@ namespace MediaCenter.Media
         }
 
         private byte[] _content;
+        
         public byte[] Content
         {
             get { return _content; }
             set {SetValue(ref _content, value); }
         }
 
+        private Uri _contentUri;
+        public Uri ContentUri
+        {
+            get { return _contentUri; }
+            set { _contentUri = value; }
+        }
+
         public virtual void UpdateFrom(MediaItem item)
         {
             Name = item.Name;
+            MediaType = item.MediaType;
             DateTaken = item.DateTaken;
             DateAdded = item.DateAdded;
             Favorite = item.Favorite;

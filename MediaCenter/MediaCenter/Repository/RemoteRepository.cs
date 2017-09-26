@@ -177,7 +177,7 @@ namespace MediaCenter.Repository
             try
             {
                 _catalog.Remove(item);
-                await IOHelper.DeleteFile(ItemNameToContentFilename(name));
+                await IOHelper.DeleteFile(ItemNameToContentFilePath(name));
                 await IOHelper.DeleteFile(ItemNameToThumbnailFilename(name));
                 await IOHelper.DeleteFile(ItemNameToInfoFilename(name));
                 await UpdateLocalStore();
@@ -206,7 +206,7 @@ namespace MediaCenter.Repository
             }
             else
             {
-                var imagePath = ItemNameToContentFilename(name);
+                var imagePath = ItemNameToContentFilePath(name);
                 if (!string.IsNullOrEmpty(imagePath))
                     imageLoadingTask = IOHelper.OpenBytes(imagePath);
             }
@@ -237,7 +237,7 @@ namespace MediaCenter.Repository
                     foreach (var bufferItemName in itemsToBeFetched)
                     {
                         token.ThrowIfCancellationRequested();
-                        var file = ItemNameToContentFilename(bufferItemName);
+                        var file = ItemNameToContentFilePath(bufferItemName);
                         if (string.IsNullOrEmpty(file))
                             continue;
 
@@ -290,7 +290,7 @@ namespace MediaCenter.Repository
         {
             var content = Catalog.FirstOrDefault(x => x.Name == name)?.Content;
             if(content != null)
-                await IOHelper.SaveBytes(content, ItemNameToContentFilename(name));
+                await IOHelper.SaveBytes(content, ItemNameToContentFilePath(name));
             if (_buffer.ContainsKey(name))
                 _buffer[name] = content;
         }
@@ -302,7 +302,7 @@ namespace MediaCenter.Repository
                 await IOHelper.SaveBytes(thumbnail, ItemNameToThumbnailFilename(name));
         }
 
-        private string ItemNameToContentFilename(string name)
+        private string ItemNameToContentFilePath(string name)
         {
             return Directory.GetFiles(_remoteStore, $"{name}.*").FirstOrDefault();
         }
@@ -318,9 +318,9 @@ namespace MediaCenter.Repository
         private MediaItem CreateMediaItem(MediaInfo mediaInfo)
         {
             var mediaItem = mediaInfo.ToMediaItem();
-            if (mediaItem is VideoItem)
+            if (mediaItem.MediaType == MediaType.Video)
             {
-                ((VideoItem) mediaItem).VideoFilePath = ItemNameToContentFilename(mediaItem.Name);
+                mediaItem.ContentUri = new Uri(ItemNameToContentFilePath(mediaItem.Name));
             }
             return mediaItem;
         }

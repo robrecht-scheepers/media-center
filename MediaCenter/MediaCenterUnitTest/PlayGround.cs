@@ -19,27 +19,7 @@ namespace MediaCenterUnitTest
         [TestMethod]
         public void TestMethod1()
         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<MediaItem>));
-
-            List<MediaItem> collection = new List<MediaItem>
-            {
-                new ImageItem("Item 1")
-                {
-                    DateTaken = DateTime.Now,
-                    DateAdded = DateTime.Now,
             
-                    Tags = new ObservableCollection<string> {"Tag 1", "Tag 2"}
-                },
-                new ImageItem("Item 2")
-                {
-                    DateTaken = DateTime.Now,
-                    DateAdded = DateTime.Now,
-
-                    Tags = new ObservableCollection<string> {"Tag 3", "Tag 4"}
-                }
-            };
-
-            var jsonText = SerializationHelper.Serialize(collection.Select(i => new MediaInfo(i)));
 
         }
 

@@ -5,10 +5,10 @@
         <ResourceDictionary Source="../Styles/Styles.xaml"></ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
     
-    <DataTemplate DataType="{x:Type local:ImageItem}">
+    <DataTemplate DataType="{x:Type local:ImageItemViewModel}">
         <local:ImageItemContentView/>
     </DataTemplate>
-    <DataTemplate DataType="{x:Type local:VideoItem}">
+    <DataTemplate DataType="{x:Type local:VideoItemViewModel}">
         <local:VideoItemContentView/>
     </DataTemplate>
     

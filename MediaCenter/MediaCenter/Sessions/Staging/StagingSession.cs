@@ -61,14 +61,14 @@ namespace MediaCenter.Sessions.Staging
                             var name = CreateUniqueItemName(dateTaken);
                             var thumbnail = ImageHelper.CreateThumbnail(image, 100);
 
-                            StagedItems.Add(new ImageItem(name)
+                            StagedItems.Add(new StagedItem(name, MediaType.Image)
                             {
+                                FilePath = filePath,
                                 Status = MediaItemStatus.Staged,
                                 DateTaken = dateTaken,
                                 DateAdded = DateTime.Now,
                                 Thumbnail = thumbnail
                             });
-                            _filePaths[name] = filePath;
                         }
                     }
                     else if(_supportedVideoExtensions.Contains(extension))
@@ -77,7 +77,7 @@ namespace MediaCenter.Sessions.Staging
                         var name = CreateUniqueItemName(dateTaken);
                         var thumbnail = await VideoHelper.CreateThumbnail(filePath, 100);
 
-                        StagedItems.Add(new VideoItem(name)
+                        StagedItems.Add(new MediaItem(name, MediaType.Video)
                         {
                             Status = MediaItemStatus.Staged,
                             DateTaken = dateTaken,
@@ -105,7 +105,7 @@ namespace MediaCenter.Sessions.Staging
                 _filePaths.Remove(item.Name);
         }
 
-        public void EditStagedItemDate(MediaItem item, DateTime newDate)
+        public void EditStagedItemDate(StagedItem item, DateTime newDate)
         {
             if(item.DateTaken.Equals(newDate))
                 return;
@@ -113,10 +113,6 @@ namespace MediaCenter.Sessions.Staging
             var oldName = item.Name;
             item.Name = CreateUniqueItemName(newDate);
             item.DateTaken = newDate;
-            
-            var filePath = _filePaths[oldName];
-            _filePaths.Remove(oldName);
-            _filePaths[item.Name] = filePath;
         }
         
 
