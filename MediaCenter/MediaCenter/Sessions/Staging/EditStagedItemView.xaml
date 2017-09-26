@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MediaCenter.Sessions.Staging"
         mc:Ignorable="d"
-        Title="EditStagedItemView" Height="120" Width="400"
+        Title="EditStagedItemView" Height="120" Width="600"
         ResizeMode="NoResize"
         WindowState="Normal"
         WindowStyle="None"
@@ -32,9 +32,12 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="{Binding MediaItem.Name, StringFormat='Editing media item {0}'}"/>
-            <TextBlock Grid.Row="1" Text="{Binding MediaItem.DateTaken, StringFormat='Original date: {0:dd.MM.YYYY HH:mm:ss}'}"/>
-            <DatePicker Grid.Row="2" SelectedDate="{Binding NewDateTaken}" SelectedDateFormat="Short" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="0" Text="{Binding MediaItem.FilePath}"/>
+            <TextBlock Grid.Row="1" Text="{Binding MediaItem.DateTaken, StringFormat='Extracted date: {0:dd.MM.YYYY HH:mm:ss}'}"/>
+            <StackPanel Grid.Row="2"  Orientation="Horizontal">
+                <TextBlock Text="New date: "/>
+                <DatePicker SelectedDate="{Binding NewDateTaken}" SelectedDateFormat="Short" VerticalAlignment="Center" />
+            </StackPanel>
             <StackPanel Grid.Row="4" Orientation="Horizontal">
                 <Button Command="{Binding SaveCommand}">Save</Button>
                 <Button Command="{Binding AbortCommand}">Cancel</Button>
