@@ -33,7 +33,6 @@ namespace MediaCenter.Sessions.Staging
 
         private void AssociatedObject_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            Debug.WriteLine("Enter");
             var view = sender as StagedItemView;
             if (view == null || view.ButtonList == null)
                 return;
@@ -41,7 +40,6 @@ namespace MediaCenter.Sessions.Staging
         }
         private void AssociatedObjectOnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
         {
-            Debug.WriteLine("Leave");
             var view = sender as StagedItemView;
             if (view == null || view.ButtonList == null)
                 return;

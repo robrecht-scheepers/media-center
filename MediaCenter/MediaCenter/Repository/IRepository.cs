@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MediaCenter.Media;
+using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter.Repository
 {
@@ -12,7 +13,7 @@ namespace MediaCenter.Repository
         IEnumerable<MediaItem> Catalog { get; }
         IEnumerable<string> Tags { get; }
         Task Initialize();
-        Task SaveNewItems(IEnumerable<KeyValuePair<string, MediaItem>> newItems); // list of (filePath, Item) pairs
+        Task SaveNewItems(IEnumerable<StagedItem> newItems); 
         Task DeleteItem(string name);
         Task<byte[]> GetThumbnail(string name);
         Task<byte[]> GetFullImage(string name, IEnumerable<string> prefetch);

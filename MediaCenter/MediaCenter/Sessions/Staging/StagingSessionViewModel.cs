@@ -51,12 +51,12 @@ namespace MediaCenter.Sessions.Staging
             set { SetValue(ref _showEditViewModel, value); }
         }
 
-        private RelayCommand<MediaItem> _beginEditItemCommand;
-        public RelayCommand<MediaItem> BeginEditItemCommand
+        private RelayCommand<StagedItem> _beginEditItemCommand;
+        public RelayCommand<StagedItem> BeginEditItemCommand
         {
-            get { return _beginEditItemCommand ?? (_beginEditItemCommand = new RelayCommand<MediaItem>(BeginEditStagedItem)); }
+            get { return _beginEditItemCommand ?? (_beginEditItemCommand = new RelayCommand<StagedItem>(BeginEditStagedItem)); }
         }
-        public void BeginEditStagedItem(MediaItem item)
+        public void BeginEditStagedItem(StagedItem item)
         {
             EditViewModel = new EditStagedItemViewModel(item);
             EditViewModel.CloseRequested += EditViewModelOnCloseRequested;
@@ -117,10 +117,10 @@ namespace MediaCenter.Sessions.Staging
         #endregion
         
         #region Command: Remove staged item
-        private RelayCommand<MediaItem> _removeItemCommand;
-        public RelayCommand<MediaItem> RemoveItemCommand => _removeItemCommand ?? (_removeItemCommand = new RelayCommand<MediaItem> (RemoveItem));
+        private RelayCommand<StagedItem> _removeItemCommand;
+        public RelayCommand<StagedItem> RemoveItemCommand => _removeItemCommand ?? (_removeItemCommand = new RelayCommand<StagedItem> (RemoveItem));
 
-        private void RemoveItem(MediaItem item)
+        private void RemoveItem(StagedItem item)
         {
             StagingSession.RemoveStagedItem(item);
         }

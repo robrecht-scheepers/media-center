@@ -7,7 +7,7 @@ using MediaCenter.MVVM;
 
 namespace MediaCenter.Media
 {
-    public class VideoItemViewModel : PropertyChangedNotifier
+    public class VideoItemViewModel : MediaItemViewModel
     {
         public VideoItemViewModel(MediaItem item)
         {

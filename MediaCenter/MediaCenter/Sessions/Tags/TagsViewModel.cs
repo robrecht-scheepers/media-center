@@ -7,7 +7,6 @@ namespace MediaCenter.Sessions.Tags
 {
     public class TagsViewModel : PropertyChangedNotifier
     {
-        private ObservableCollection<string> _availableTags;
         private List<string> _originalTags;
 
         public TagsViewModel(IEnumerable<string> allTags, IEnumerable<string> currentTags = null)

@@ -23,13 +23,13 @@ namespace MediaCenter.Sessions.Staging
         private RelayCommand _saveCommand;
         private RelayCommand _abortCommand;
 
-        public EditStagedItemViewModel(MediaItem mediaItem)
+        public EditStagedItemViewModel(StagedItem mediaItem)
         {
             MediaItem = mediaItem;
             NewDateTaken = MediaItem.DateTaken;
         }
 
-        public MediaItem MediaItem { get; }
+        public StagedItem MediaItem { get; }
 
         public DateTime NewDateTaken
         {

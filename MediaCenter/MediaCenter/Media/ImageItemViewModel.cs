@@ -8,7 +8,7 @@ using MediaCenter.MVVM;
 
 namespace MediaCenter.Media
 {
-    public class ImageItemViewModel : PropertyChangedNotifier
+    public class ImageItemViewModel : MediaItemViewModel
     {
         public ImageItemViewModel(MediaItem item) 
         {

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using MediaCenter.Helpers;
 using MediaCenter.Media;
 using MediaCenter.Sessions;
+using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter.Repository
 {
@@ -99,18 +100,15 @@ namespace MediaCenter.Repository
             _lastSyncFromRemote = newLastSyncedDate;
         }
 
-        public async Task SaveNewItems(IEnumerable<KeyValuePair<string,MediaItem>> newItems) // list of (filePath, Item) pairs
+        public async Task SaveNewItems(IEnumerable<StagedItem> newItems) 
         {
-            foreach (var newItemPair in newItems.Where(x => x.Value.Status == MediaItemStatus.Staged))
+            foreach (var newItem in newItems.Where(x => x.Status == MediaItemStatus.Staged))
             {
-                var filePath = newItemPair.Key;
-                var newItem = newItemPair.Value;
                 var originalName = newItem.Name;
-                bool wasRenamed = false;
                 
                 try
                 {
-                    if (string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(newItem.Name))
+                    if (string.IsNullOrEmpty(newItem.FilePath) || string.IsNullOrEmpty(newItem.Name))
                     {
                         newItem.Status = MediaItemStatus.Error;
                         continue;
@@ -118,19 +116,12 @@ namespace MediaCenter.Repository
 
                     newItem.Name = CreateUniqueName(originalName);
 
-                    int i = 1;
-                    while (_catalog.Any(x => x.Name == newItem.Name))
-                    {
-                        wasRenamed = true;
-                        newItem.Name = originalName + "_" + i++;
-                    }
-
                     // add to local store
                     _catalog.Add(newItem);
 
                     // add to remote store
-                    var mediaItemFilename = Path.Combine(_remoteStore, newItem.Name + Path.GetExtension(filePath));
-                    await IOHelper.CopyFile(filePath, mediaItemFilename);
+                    var mediaItemFilename = Path.Combine(_remoteStore, newItem.Name + Path.GetExtension(newItem.FilePath));
+                    await IOHelper.CopyFile(newItem.FilePath, mediaItemFilename);
                     await IOHelper.SaveBytes(newItem.Thumbnail, ItemNameToThumbnailFilename(newItem.Name));
                     await IOHelper.SaveObject(new MediaInfo(newItem), ItemNameToInfoFilename(newItem.Name));
 
@@ -140,8 +131,7 @@ namespace MediaCenter.Repository
                 {
                     if (_catalog.Contains(newItem))
                         _catalog.Remove(newItem); // remove from local catalog to avoid discrepancy between catalog and store
-                    if (wasRenamed)
-                        newItem.Name = originalName; // reset name change because the item was not saved to the store
+                    newItem.Name = originalName; // reset name change because the item was not saved to the store
                     newItem.Status = MediaItemStatus.Error;
                     continue;
                 }
@@ -216,8 +206,7 @@ namespace MediaCenter.Repository
             var deleteFromBufferList = _buffer.Keys.Where(x => x != name && !prefetchList.Contains(x));
             foreach (var deleteItem in deleteFromBufferList)
             {
-                byte[] value;
-                _buffer.TryRemove(deleteItem, out value);
+                _buffer.TryRemove(deleteItem, out var value);
             }
             var itemsToBeFetched = prefetchList.Where(itemToBeBuffered => !_buffer.ContainsKey(itemToBeBuffered)).ToList();
 

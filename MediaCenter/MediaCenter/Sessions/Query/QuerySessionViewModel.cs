@@ -15,10 +15,8 @@ namespace MediaCenter.Sessions.Query
 {
     public class QuerySessionViewModel : SessionViewModelBase
     {
-        private ObservableCollection<string> _availableTags;
         private MediaItem _previousSelectedItem = null;
-
-
+        
         public QuerySessionViewModel(SessionBase session) : base(session)
         {
             InitialzeFilterNames();
@@ -40,7 +38,14 @@ namespace MediaCenter.Sessions.Query
                 SetValue(ref _selectedItem, value, async () => await SelectedItemChanged(), SelectedItemChanging);
             }
         }
-        
+
+        private MediaItemViewModel _selectedItemViewModel;
+        public MediaItemViewModel SelectedItemViewModel
+        {
+            get { return _selectedItemViewModel; }
+            set { SetValue(ref _selectedItemViewModel, value); }
+        }
+
         private void SelectedItemChanging()
         {
             // stor current selected item, so that SelectedItemChanged can do the saving and cleanup
@@ -49,6 +54,8 @@ namespace MediaCenter.Sessions.Query
 
         private async Task SelectedItemChanged()
         {
+            SelectedItemViewModel = CreateItemViewModel(SelectedItem);
+
             // start fetching the new content
             Task contentTask = null;
             if (SelectedItem != null)
@@ -77,7 +84,6 @@ namespace MediaCenter.Sessions.Query
                 Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss tt ss.fff")} | SelectedItemChanged Awaiting {SelectedItem.Name}");
                 await contentTask;
                 Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss tt ss.fff")} | SelectedItemChanged Received {SelectedItem.Name}");
-                await contentTask;
             }
 
             // wait for the saving task and then clean up the content of the previous item
@@ -87,6 +93,21 @@ namespace MediaCenter.Sessions.Query
                     await saveTask;
                     _previousSelectedItem.Content = null;
                 }
+            }
+        }
+
+        private MediaItemViewModel CreateItemViewModel(MediaItem selectedItem)
+        {
+            if (selectedItem == null)
+                return null;
+            switch (selectedItem.MediaType)
+            {
+                case MediaType.Image:
+                    return new ImageItemViewModel(selectedItem);
+                case MediaType.Video:
+                    return new VideoItemViewModel(selectedItem);
+                default:
+                    return null;
             }
         }
 

@@ -17,8 +17,7 @@ namespace MediaCenter.Sessions.Slideshow
         public static readonly DependencyProperty IntervalProperty = DependencyProperty.Register("Interval", typeof(TimeSpan), typeof(HideIdleMouseBehavior), new PropertyMetadata(null));
 
         private DispatcherTimer _activityTimer;
-        private Cursor _previousCursor;
-
+        
         protected override void OnAttached()
         {
             base.OnAttached();

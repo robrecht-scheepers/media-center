@@ -107,6 +107,7 @@
       <DependentUpon>ImageItemContentView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Media\MediaItemStatus.cs" />
+    <Compile Include="Media\MediaItemViewModel.cs" />
     <Compile Include="Media\RotationDirection.cs" />
     <Compile Include="Media\VideoItemContentView.xaml.cs">
       <DependentUpon>VideoItemContentView.xaml</DependentUpon>

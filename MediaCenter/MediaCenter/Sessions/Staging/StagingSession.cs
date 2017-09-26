@@ -14,7 +14,7 @@ namespace MediaCenter.Sessions.Staging
     public class StagingSession : SessionBase
     {
         // TODO: share with view model for dialog filter
-        private readonly string[] _supportedImageExtensions = {".jpg", ".png", ".bmp"};
+        private readonly string[] _supportedImageExtensions = {".jpg", ".jpeg", ".png", ".bmp"};
         private readonly string[] _supportedVideoExtensions = { ".mp4", ".avi", ".mts"};
         private string _statusMessage;
         private readonly Dictionary<string, string> _filePaths = new Dictionary<string, string>();
@@ -22,10 +22,10 @@ namespace MediaCenter.Sessions.Staging
 
         public StagingSession(IRepository repository) : base(repository)
         {
-            StagedItems = new ObservableCollection<MediaItem>();
+            StagedItems = new ObservableCollection<StagedItem>();
         }
 
-        public ObservableCollection<MediaItem> StagedItems { get; }
+        public ObservableCollection<StagedItem> StagedItems { get; }
 
         
 
@@ -77,7 +77,7 @@ namespace MediaCenter.Sessions.Staging
                         var name = CreateUniqueItemName(dateTaken);
                         var thumbnail = await VideoHelper.CreateThumbnail(filePath, 100);
 
-                        StagedItems.Add(new MediaItem(name, MediaType.Video)
+                        StagedItems.Add(new StagedItem(name, MediaType.Video)
                         {
                             Status = MediaItemStatus.Staged,
                             DateTaken = dateTaken,
@@ -95,7 +95,7 @@ namespace MediaCenter.Sessions.Staging
             }
         }
 
-        public void RemoveStagedItem(MediaItem item)
+        public void RemoveStagedItem(StagedItem item)
         {
             if (StagedItems.Contains(item))
             {
@@ -127,7 +127,7 @@ namespace MediaCenter.Sessions.Staging
         public async Task SaveToRepository()
         {
             StatusMessage = $"Saving {StagedItems.Count} items...";
-            await Repository.SaveNewItems(StagedItems.Select(s => new KeyValuePair<string, MediaItem>(_filePaths[s.Name], s)));
+            await Repository.SaveNewItems(StagedItems);
             StatusMessage = "All items saved";
             ClearSavedItems();
         }
