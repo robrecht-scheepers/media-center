@@ -167,6 +167,7 @@
       <DependentUpon>TagsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Tags\TagsViewModel.cs" />
+    <Compile Include="Styles\PublishSelectedItemsBehavior.cs" />
     <Compile Include="Styles\ScrollIntoViewBehavior.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

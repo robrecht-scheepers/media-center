@@ -38,7 +38,7 @@
             <Button Command="{Binding SaveToRepositoryCommand}" Width="100" Margin="5">Save</Button>
             <TextBlock Text="{Binding StagingSession.StatusMessage}" Margin="5"/>
         </StackPanel>
-        <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding StagingSession.StagedItems}"
+        <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding StagingSession.StagedItems}" SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -50,6 +50,9 @@
                     <local:StagedItemView DataContext="{Binding}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
+            <i:Interaction.Behaviors>
+                <styles:PublishSelectedItemsBehavior Selections="{Binding SelectedItems, Mode=OneWayToSource}"/>    
+            </i:Interaction.Behaviors>
         </ListBox>
         <tags:TagsView Grid.Row="1" Grid.Column="1" DataContext="{Binding TagsViewModel}"/>
     </Grid>

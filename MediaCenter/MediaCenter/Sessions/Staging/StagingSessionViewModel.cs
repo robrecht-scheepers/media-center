@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -34,6 +35,14 @@ namespace MediaCenter.Sessions.Staging
         private void InitializeTagsViewModel()
         {
             TagsViewModel = new TagsViewModel(Session.Repository.Tags);
+        }
+
+        private IList<StagedItem> _selectedItems;
+
+        public IList<StagedItem> SelectedItems
+        {
+            get { return _selectedItems; }
+            set { SetValue(ref _selectedItems, value); }
         }
 
         #region Edit item
