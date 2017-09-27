@@ -133,8 +133,22 @@ namespace MediaCenter.Sessions.Staging
         {
             StagingSession.RemoveStagedItem(item);
         }
+
+        private RelayCommand<object> _removeItemsCommand;
+        public RelayCommand<object> RemoveItemsCommand => _removeItemsCommand ?? (_removeItemsCommand = new RelayCommand<object>(RemoveItems));
+
+        private void RemoveItems(object items)
+        {
+            var list = (System.Collections.IList) items;
+
+            foreach (var item in list.Cast<StagedItem>().ToList())
+            {
+                StagingSession.RemoveStagedItem(item);
+            }
+            
+        }
         #endregion
-        
+
         #region Command: save staged images to repository
         private AsyncRelayCommand _saveToRepositoryCommand;
         public AsyncRelayCommand SaveToRepositoryCommand => _saveToRepositoryCommand ?? (_saveToRepositoryCommand = new AsyncRelayCommand(SaveToRepository,CanExecuteSaveToRepository));

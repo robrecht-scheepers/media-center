@@ -30,8 +30,8 @@
         <Image Grid.Row="0" Stretch="UniformToFill" Source="{Binding Thumbnail}" HorizontalAlignment="Center" Height="100" Width="100" Margin="5"/>
         <StackPanel Name="ButtonList" Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="Collapsed" >
             <Button Style="{StaticResource IconButton}"
-                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:StagingSessionView}}, Path=DataContext.RemoveItemCommand}" 
-                        CommandParameter="{Binding}">
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}, Path=SelectedItems}"
+                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:StagingSessionView}}, Path=DataContext.RemoveItemsCommand}">
                 <Image Source="/Resources/Icons/cross-button.png" Stretch="None"/>
             </Button>
             <Button Style="{StaticResource IconButton}"

@@ -30,7 +30,7 @@ namespace MediaCenter.Styles
         protected override void OnAttached()
         {
             base.OnAttached();
-
+            Selections = new List<object>();
             this.AssociatedObject.SelectionChanged += this.OnSelectedItemsChanged;
         }
 

@@ -50,9 +50,11 @@
                     <local:StagedItemView DataContext="{Binding}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
+            <!--
             <i:Interaction.Behaviors>
-                <styles:PublishSelectedItemsBehavior Selections="{Binding SelectedItems, Mode=OneWayToSource}"/>    
+                <styles:PublishSelectedItemsBehavior Selections="{Binding SelectedItems, Mode=TwoWay}"/>    
             </i:Interaction.Behaviors>
+            -->
         </ListBox>
         <tags:TagsView Grid.Row="1" Grid.Column="1" DataContext="{Binding TagsViewModel}"/>
     </Grid>
