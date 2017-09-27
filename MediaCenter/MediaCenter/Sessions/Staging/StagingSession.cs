@@ -79,6 +79,7 @@ namespace MediaCenter.Sessions.Staging
 
                         StagedItems.Add(new StagedItem(name, MediaType.Video)
                         {
+                            FilePath = filePath,
                             Status = MediaItemStatus.Staged,
                             DateTaken = dateTaken,
                             DateAdded = DateTime.Now,
