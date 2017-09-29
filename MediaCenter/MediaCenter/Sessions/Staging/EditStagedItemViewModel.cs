@@ -23,13 +23,28 @@ namespace MediaCenter.Sessions.Staging
         private RelayCommand _saveCommand;
         private RelayCommand _abortCommand;
 
-        public EditStagedItemViewModel(StagedItem mediaItem)
+        public EditStagedItemViewModel(List<StagedItem> items)
         {
-            MediaItem = mediaItem;
-            NewDateTaken = MediaItem.DateTaken;
+            Items = items;
+            DisplayItem = items.FirstOrDefault();
+            if (items.Count == 1)
+            {
+                Title = DisplayItem.FilePath;
+                OriginalDate = $"Extracted date: {DisplayItem.DateTaken:dd.MM.yyyy HH:mm:ss}";
+            }
+            else
+            {
+                Title = $"Editing {items.Count} items.";
+                OriginalDate = "Extracted date: -";
+            }
+
+            NewDateTaken = DisplayItem.DateTaken;
         }
 
-        public StagedItem MediaItem { get; }
+        public StagedItem DisplayItem { get; }
+        public List<StagedItem> Items { get; }
+        public string Title { get; }
+        public string OriginalDate { get; }
 
         public DateTime NewDateTaken
         {

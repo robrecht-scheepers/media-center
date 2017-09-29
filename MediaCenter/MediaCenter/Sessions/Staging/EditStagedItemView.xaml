@@ -23,7 +23,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         
-        <Image Grid.Column="0" Height="100" Width="100" Source="{Binding MediaItem.Thumbnail}" Stretch="UniformToFill" VerticalAlignment="Center" Margin="10"/>
+        <Image Grid.Column="0" Height="100" Width="100" Source="{Binding DisplayItem.Thumbnail}" Stretch="UniformToFill" VerticalAlignment="Center" Margin="10"/>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -32,8 +32,8 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="{Binding MediaItem.FilePath}"/>
-            <TextBlock Grid.Row="1" Text="{Binding MediaItem.DateTaken, StringFormat='Extracted date: {0:dd.MM.YYYY HH:mm:ss}'}"/>
+            <TextBlock Grid.Row="0" Text="{Binding Title}"/>
+            <TextBlock Grid.Row="1" Text="{Binding OriginalDate}"/>
             <StackPanel Grid.Row="2"  Orientation="Horizontal">
                 <TextBlock Text="New date: "/>
                 <DatePicker SelectedDate="{Binding NewDateTaken}" SelectedDateFormat="Short" VerticalAlignment="Center" />

@@ -37,14 +37,6 @@ namespace MediaCenter.Sessions.Staging
             TagsViewModel = new TagsViewModel(Session.Repository.Tags);
         }
 
-        private IList<StagedItem> _selectedItems;
-
-        public IList<StagedItem> SelectedItems
-        {
-            get { return _selectedItems; }
-            set { SetValue(ref _selectedItems, value); }
-        }
-
         #region Edit item
         private EditStagedItemViewModel _editViewModel;
         public EditStagedItemViewModel EditViewModel
@@ -60,14 +52,19 @@ namespace MediaCenter.Sessions.Staging
             set { SetValue(ref _showEditViewModel, value); }
         }
 
-        private RelayCommand<StagedItem> _beginEditItemCommand;
-        public RelayCommand<StagedItem> BeginEditItemCommand
+        private RelayCommand<object> _beginEditItemCommand;
+        public RelayCommand<object> BeginEditItemCommand
         {
-            get { return _beginEditItemCommand ?? (_beginEditItemCommand = new RelayCommand<StagedItem>(BeginEditStagedItem)); }
+            get { return _beginEditItemCommand ?? (_beginEditItemCommand = new RelayCommand<object>(BeginEditStagedItem)); }
         }
-        public void BeginEditStagedItem(StagedItem item)
+        public void BeginEditStagedItem(object items)
         {
-            EditViewModel = new EditStagedItemViewModel(item);
+            var list = ((System.Collections.IList)items).Cast<StagedItem>().ToList();
+
+            if(list.Count == 0)
+                return;
+
+            EditViewModel = new EditStagedItemViewModel(list);
             EditViewModel.CloseRequested += EditViewModelOnCloseRequested;
             ShowEditViewModel = true;
         }
@@ -76,7 +73,10 @@ namespace MediaCenter.Sessions.Staging
             if (args.CloseType == EditViewModelCloseType.Save)
             {
                 var editViewModel = (EditStagedItemViewModel)sender;
-                StagingSession.EditStagedItemDate(editViewModel.MediaItem, editViewModel.NewDateTaken);
+                foreach (var item in editViewModel.Items)
+                {
+                    StagingSession.EditStagedItemDate(item, editViewModel.NewDateTaken);
+                }
             }
             EditViewModel.CloseRequested -= EditViewModelOnCloseRequested;
             EditViewModel = null;
@@ -125,15 +125,8 @@ namespace MediaCenter.Sessions.Staging
         }
         #endregion
         
-        #region Command: Remove staged item
-        private RelayCommand<StagedItem> _removeItemCommand;
-        public RelayCommand<StagedItem> RemoveItemCommand => _removeItemCommand ?? (_removeItemCommand = new RelayCommand<StagedItem> (RemoveItem));
-
-        private void RemoveItem(StagedItem item)
-        {
-            StagingSession.RemoveStagedItem(item);
-        }
-
+        #region Command: Remove staged items
+        
         private RelayCommand<object> _removeItemsCommand;
         public RelayCommand<object> RemoveItemsCommand => _removeItemsCommand ?? (_removeItemsCommand = new RelayCommand<object>(RemoveItems));
 
