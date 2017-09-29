@@ -19,6 +19,7 @@ namespace MediaCenter.Repository
         private const string MediaFileExtension = ".mcd";
 
         private readonly string _localStoreFilePath;
+        private readonly string _lastSyncFilePath;
         private readonly string _remoteStore;
         private readonly string _localCachePath;
         private DateTime _lastSyncFromRemote;
@@ -36,6 +37,7 @@ namespace MediaCenter.Repository
         {
             _remoteStore = remoteStore;
             _localStoreFilePath = localStoreFilePath;
+            _lastSyncFilePath = Path.ChangeExtension(_localStoreFilePath, ".mct");
             _localCachePath = localCachePath;
             _catalog = new List<MediaItem>();
             _buffer = new ConcurrentDictionary<string, byte[]>();
@@ -53,16 +55,32 @@ namespace MediaCenter.Repository
             {
                 _catalog = new List<MediaItem>();
                 await UpdateLocalStore();
+                await UpdateLastSyncDate(DateTime.MinValue.AddDays(1));
                 return;
             }
 
             var infoList = await IOHelper.OpenObject<List<MediaInfo>>(_localStoreFilePath);
             _catalog = infoList.Select(i => CreateMediaItem(i)).ToList();
+
+            if (!File.Exists(_lastSyncFilePath))
+            {
+                await UpdateLastSyncDate(DateTime.MinValue.AddDays(1));
+            }
+            else
+            {
+                _lastSyncFromRemote = await IOHelper.OpenObject<DateTime>(_lastSyncFilePath);
+            }
         }
 
         private async Task UpdateLocalStore()
         {
             await IOHelper.SaveObject(Catalog.Select(i => new MediaInfo(i)).ToList(), _localStoreFilePath);
+        }
+
+        private async Task UpdateLastSyncDate(DateTime date)
+        {
+            _lastSyncFromRemote = date;
+            await IOHelper.SaveObject(_lastSyncFromRemote, _lastSyncFilePath);
         }
 
         public async Task SynchronizeFromRemoteStore()
@@ -72,8 +90,12 @@ namespace MediaCenter.Repository
             var remoteStoreMediaFiles = remoteStoreDirectory.GetFiles("*" + MediaFileExtension);
 
             // find and delete all items in the local store that are no longer in the remote store 
+            //var deleteList = Catalog.Where(item =>
+            //    remoteStoreMediaFiles.All(f => f.Name.ToLower() != item.Name + MediaFileExtension)).ToList();
+
+
             var deleteList = Catalog.Where(item =>
-                remoteStoreMediaFiles.All(f => f.Name.ToLower() != item.Name + MediaFileExtension)).ToList();
+                !IOHelper.FileExists(Path.Combine(_remoteStore, item.Name + MediaFileExtension))).ToList();
             foreach (var mediaItem in deleteList)
             {
                 _catalog.Remove(mediaItem);
@@ -97,7 +119,7 @@ namespace MediaCenter.Repository
             }
 
             await UpdateLocalStore();
-            _lastSyncFromRemote = newLastSyncedDate;
+            await UpdateLastSyncDate(newLastSyncedDate);
         }
 
         public async Task SaveNewItems(IEnumerable<StagedItem> newItems) 
@@ -121,18 +143,19 @@ namespace MediaCenter.Repository
 
                     // add to remote store
                     var mediaItemFilename = Path.Combine(_remoteStore, newItem.Name + Path.GetExtension(newItem.FilePath));
+                    await IOHelper.SaveObject(new MediaInfo(newItem), ItemNameToInfoFilename(newItem.Name));
                     await IOHelper.CopyFile(newItem.FilePath, mediaItemFilename);
                     await IOHelper.SaveBytes(newItem.Thumbnail, ItemNameToThumbnailFilename(newItem.Name));
-                    await IOHelper.SaveObject(new MediaInfo(newItem), ItemNameToInfoFilename(newItem.Name));
-
+                    
                     newItem.Status = MediaItemStatus.Saved;
                 }
                 catch (Exception e)
                 {
                     if (_catalog.Contains(newItem))
                         _catalog.Remove(newItem); // remove from local catalog to avoid discrepancy between catalog and store
+                    // TODO: cleanup files that were already saved
                     newItem.Name = originalName; // reset name change because the item was not saved to the store
-                    newItem.Status = MediaItemStatus.Error;
+                    newItem.Status = MediaItemStatus.Staged;
                     continue;
                 }
             }
@@ -272,7 +295,7 @@ namespace MediaCenter.Repository
             
             await IOHelper.SaveObject(new MediaInfo(item), ItemNameToInfoFilename(name));
             await UpdateLocalStore();
-            _lastSyncFromRemote = DateTime.Now; // TODO: solve concurrent access issue
+            await UpdateLastSyncDate(DateTime.Now); // TODO: solve concurrent access issue
         }
 
         public async Task SaveItemContent(string name)

@@ -83,5 +83,10 @@ namespace MediaCenter.Helpers
         {
             return Task.Factory.StartNew(() => File.Delete(filePath));
         }
+
+        public static bool FileExists(string filePath)
+        {
+            return File.Exists(filePath);
+        }
     }
 }

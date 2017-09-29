@@ -73,9 +73,11 @@ namespace MediaCenter.Sessions.Staging
             if (args.CloseType == EditViewModelCloseType.Save)
             {
                 var editViewModel = (EditStagedItemViewModel)sender;
+                var i = 0;
                 foreach (var item in editViewModel.Items)
                 {
-                    StagingSession.EditStagedItemDate(item, editViewModel.NewDateTaken);
+                    var newDate = editViewModel.NewDateTaken.AddSeconds(i++);
+                    StagingSession.EditStagedItemDate(item, newDate);
                 }
             }
             EditViewModel.CloseRequested -= EditViewModelOnCloseRequested;
@@ -93,7 +95,7 @@ namespace MediaCenter.Sessions.Staging
             {
                 Multiselect = true,
                 Title = "Select the media files to be added",
-                Filter = "Media Files(*.BMP;*.JPG;*.JPEG;*.PNG;*.MP4;*.AVI;*.MTS)|*.BMP;*.JPG;*.JPEG;*.PNG;*.MP4;*.AVI;*.MTS"
+                Filter = "Media Files(*.BMP;*.JPG;*.JPEG;*.PNG;*.MP4;*.AVI;*.MTS;*.M4V)|*.BMP;*.JPG;*.JPEG;*.PNG;*.MP4;*.AVI;*.MTS;*.M4V"
             };
 
             dialog.ShowDialog();

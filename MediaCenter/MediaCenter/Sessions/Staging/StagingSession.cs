@@ -15,7 +15,7 @@ namespace MediaCenter.Sessions.Staging
     {
         // TODO: share with view model for dialog filter
         private readonly string[] _supportedImageExtensions = {".jpg", ".jpeg", ".png", ".bmp"};
-        private readonly string[] _supportedVideoExtensions = { ".mp4", ".avi", ".mts"};
+        private readonly string[] _supportedVideoExtensions = { ".mp4", ".avi", ".mts", ".m4v"};
         private string _statusMessage;
         private readonly Dictionary<string, string> _filePaths = new Dictionary<string, string>();
         
