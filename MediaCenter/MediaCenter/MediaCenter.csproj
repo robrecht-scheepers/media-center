@@ -146,13 +146,13 @@
       <DependentUpon>EditStagedItemView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Staging\StagedItem.cs" />
+    <Compile Include="Sessions\Staging\StagedItemListBehavior.cs" />
     <Compile Include="Styles\OpenCloseWindowBehavior.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowViewModel.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowWindow.xaml.cs">
       <DependentUpon>SlideShowWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Staging\EditStagedItemViewModel.cs" />
-    <Compile Include="Sessions\Staging\StagedItembehavior.cs" />
     <Compile Include="Sessions\Staging\StagedItemView.xaml.cs">
       <DependentUpon>StagedItemView.xaml</DependentUpon>
     </Compile>

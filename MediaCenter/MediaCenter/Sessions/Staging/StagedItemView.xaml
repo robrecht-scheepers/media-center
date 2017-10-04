@@ -17,9 +17,6 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <i:Interaction.Behaviors>
-        <local:StagedItembehavior/>
-    </i:Interaction.Behaviors>
     
     <Grid>
         <Grid.RowDefinitions>
