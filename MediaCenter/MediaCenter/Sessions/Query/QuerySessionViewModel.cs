@@ -233,7 +233,7 @@ namespace MediaCenter.Sessions.Query
                 Filters.Add(new TagFilter());
             else if (SelectedFilterName == FavoriteFilter.Name)
                 Filters.Add(new FavoriteFilter());
-            else if (SelectedFilterName == DateTakenFilter.Name)
+            else if (SelectedFilterName == DateAddedFilter.Name)
                 Filters.Add(new DateAddedFilter());
             else if (SelectedFilterName == PrivateFilter.Name)
                 Filters.Add(new PrivateFilter());
