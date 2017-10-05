@@ -22,6 +22,7 @@ namespace MediaCenter.Sessions.Query.Filters
         public PrivateFilter()
         {
             PrivateSetting = PrivateOption.NoPrivate;
+            PrivateString = NoPrivate;
         }
 
         public static string Name = "Private";
@@ -50,7 +51,7 @@ namespace MediaCenter.Sessions.Query.Filters
         public PrivateOption PrivateSetting
         {
             get { return _privateSetting; }
-            set { SetValue(ref _privateSetting, value); }
+            set { SetValue(ref _privateSetting, value, () => SetStringFromSetting()); }
         }
 
         public List<string> Options => new List<string> { NoPrivate, PrivateOnly, All};
