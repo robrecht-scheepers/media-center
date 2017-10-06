@@ -10,6 +10,7 @@ namespace MediaCenter.Media
         {
             Name = name;
             Tags = new ObservableCollection<string>();
+            MediaType = type;
         }
 
         public bool IsInfoDirty { get; set; }
