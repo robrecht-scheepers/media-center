@@ -128,6 +128,10 @@
     <Compile Include="Media\MediaItem.cs" />
     <Compile Include="Media\MediaType.cs" />
     <Compile Include="Repository\RemoteRepository.cs" />
+    <Compile Include="Repository\RepositoryStatusView.xaml.cs">
+      <DependentUpon>RepositoryStatusView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\RepositoryViewModel.cs" />
     <Compile Include="Sessions\Query\Filters\DateAddedFilter.cs" />
     <Compile Include="Sessions\Query\Filters\DatePeriodFilter.cs" />
     <Compile Include="Sessions\Query\Filters\FavoriteFilter.cs" />
@@ -193,6 +197,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Media\VideoPlayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Repository\RepositoryStatusView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

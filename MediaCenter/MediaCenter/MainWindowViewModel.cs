@@ -15,6 +15,7 @@ namespace MediaCenter
         {
             Sessions = new ObservableCollection<SessionViewModelBase>();
             Repository = repository;
+            RepositoryViewModel = new RepositoryViewModel(Repository);
 
             // debug code
             var debugSession = new StagingSessionViewModel(new StagingSession(Repository));
@@ -23,6 +24,8 @@ namespace MediaCenter
         }
 
         public IRepository Repository { get; }
+        public RepositoryViewModel RepositoryViewModel { get; }
+        
         public ObservableCollection<SessionViewModelBase> Sessions { get; private set; }
 
         // Start new staging session

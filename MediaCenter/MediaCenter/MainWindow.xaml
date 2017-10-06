@@ -7,6 +7,7 @@
         xmlns:sessions="clr-namespace:MediaCenter.Sessions"
         xmlns:staging="clr-namespace:MediaCenter.Sessions.Staging"
         xmlns:query="clr-namespace:MediaCenter.Sessions.Query"
+        xmlns:repository="clr-namespace:MediaCenter.Repository"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel}"
         Title="MainWindow" Height="350" Width="525" WindowState="Maximized" Background="DarkSeaGreen">
@@ -23,15 +24,18 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Command="{Binding NewStagingSessionCommand}" Margin="20">Add new media</Button>
             <Button Grid.Column="1" Command="{Binding NewQuerySessionCommand}" Margin="20">View media</Button>
+            <repository:RepositoryStatusView Grid.Column="3" DataContext="{Binding RepositoryViewModel}"/>
         </Grid>
         
         <TabControl Grid.Row="1" ItemsSource="{Binding Sessions}">

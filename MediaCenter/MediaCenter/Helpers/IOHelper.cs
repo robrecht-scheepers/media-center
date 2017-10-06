@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MediaCenter.Helpers
@@ -87,6 +88,11 @@ namespace MediaCenter.Helpers
         public static bool FileExists(string filePath)
         {
             return File.Exists(filePath);
+        }
+
+        public static long DirectorySize(string dirPath)
+        {
+            return new DirectoryInfo(dirPath).EnumerateFiles("*.*",SearchOption.AllDirectories).Sum(x => x.Length);
         }
     }
 }

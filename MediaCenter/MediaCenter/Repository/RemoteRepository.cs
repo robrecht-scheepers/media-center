@@ -28,10 +28,14 @@ namespace MediaCenter.Repository
         private CancellationTokenSource _bufferCancellationTokenSource;
         private bool _prefetchingInProgress;
 
+        public event EventHandler Changed;
+
         public IEnumerable<MediaItem> Catalog => _catalog;
 
         // TODO: straightforward approach, might need optimization
         public IEnumerable<string> Tags => _catalog.SelectMany(x => x.Tags).Distinct();
+
+        public Uri Location => new System.Uri(_remoteStore);
 
         public RemoteRepository(string remoteStore, string localStoreFilePath, string localCachePath)
         {
@@ -47,6 +51,7 @@ namespace MediaCenter.Repository
         {
             await ReadLocalStore();
             await SynchronizeFromRemoteStore();
+            RaiseChangedEvent();
         }
 
         private async Task ReadLocalStore()
@@ -161,6 +166,7 @@ namespace MediaCenter.Repository
             }
 
             await UpdateLocalStore();
+            RaiseChangedEvent();
         }
 
         private string CreateUniqueName(string originalName)
@@ -194,6 +200,7 @@ namespace MediaCenter.Repository
                 await IOHelper.DeleteFile(ItemNameToThumbnailFilename(name));
                 await IOHelper.DeleteFile(ItemNameToInfoFilename(name));
                 await UpdateLocalStore();
+                RaiseChangedEvent();
             }
             catch (Exception)
             {
@@ -316,7 +323,7 @@ namespace MediaCenter.Repository
 
         private string ItemNameToContentFilePath(string name)
         {
-            return Directory.GetFiles(_remoteStore, $"{name}.*").FirstOrDefault();
+            return Directory.GetFiles(_remoteStore, $"{name}.*").FirstOrDefault(x => !x.EndsWith(MediaFileExtension));
         }
         private string ItemNameToThumbnailFilename(string name)
         {
@@ -337,6 +344,9 @@ namespace MediaCenter.Repository
             return mediaItem;
         }
 
-
+        private void RaiseChangedEvent()
+        {
+            Changed?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

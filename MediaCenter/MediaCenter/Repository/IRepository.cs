@@ -20,5 +20,7 @@ namespace MediaCenter.Repository
         Task SaveItemInfo(string name);
         Task SaveItemContent(string name);
         Task SaveItemThumbnail(string name);
+        event EventHandler Changed;
+        System.Uri Location { get; }
     }
 }
