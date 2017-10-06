@@ -22,7 +22,7 @@ namespace MediaCenter.Sessions.Query
             InitialzeFilterNames();
         }
 
-        public override string Name => "Query";
+        public override string Name => "View media";
 
         public QuerySession QuerySession => (QuerySession) Session;
 

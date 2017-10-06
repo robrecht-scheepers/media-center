@@ -19,7 +19,7 @@ namespace MediaCenter.Sessions.Staging
 
         }
 
-        public override string Name => "Add images";
+        public override string Name => "Add media";
 
         public StagingSession StagingSession => (StagingSession)Session;
 

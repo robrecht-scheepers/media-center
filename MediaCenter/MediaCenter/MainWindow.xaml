@@ -10,6 +10,14 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel}"
         Title="MainWindow" Height="350" Width="525" WindowState="Maximized" Background="DarkSeaGreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -22,14 +30,21 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Command="{Binding NewStagingSessionCommand}" Margin="20">Add new images</Button>
-            <Button Grid.Column="1" Command="{Binding NewQuerySessionCommand}" Margin="20">View images</Button>
+            <Button Grid.Column="0" Command="{Binding NewStagingSessionCommand}" Margin="20">Add new media</Button>
+            <Button Grid.Column="1" Command="{Binding NewQuerySessionCommand}" Margin="20">View media</Button>
         </Grid>
         
         <TabControl Grid.Row="1" ItemsSource="{Binding Sessions}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                        <Button Style="{StaticResource IconButton}" VerticalAlignment="Center" Margin="5"
+                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.CloseSessionCommand}" 
+                                CommandParameter="{Binding}">
+                            <Image Source="Resources/Icons/cross-grey.png" Width="10" Height="10" Stretch="Fill"/>
+                        </Button>
+                    </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>

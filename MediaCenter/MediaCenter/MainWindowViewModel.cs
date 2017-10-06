@@ -43,5 +43,14 @@ namespace MediaCenter
             Sessions.Add(new QuerySessionViewModel(new QuerySession(Repository)));
         }
 
+        private RelayCommand<SessionViewModelBase> _closeSessionCommand;
+
+        public RelayCommand<SessionViewModelBase> CloseSessionCommand =>
+            _closeSessionCommand ?? (_closeSessionCommand = new RelayCommand<SessionViewModelBase>(CloseSession));
+
+        public void CloseSession(SessionViewModelBase session)
+        {
+            Sessions.Remove(session);
+        }
     }
 }
