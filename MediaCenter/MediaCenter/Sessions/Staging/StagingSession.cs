@@ -76,6 +76,7 @@ namespace MediaCenter.Sessions.Staging
                         var dateTaken = VideoHelper.ReadCreationDate(filePath);
                         var name = CreateUniqueItemName(dateTaken);
                         var thumbnail = await VideoHelper.CreateThumbnail(filePath, 100);
+                        var rotation = VideoHelper.ReadRotation(filePath);
 
                         StagedItems.Add(new StagedItem(name, MediaType.Video)
                         {
@@ -83,7 +84,8 @@ namespace MediaCenter.Sessions.Staging
                             Status = MediaItemStatus.Staged,
                             DateTaken = dateTaken,
                             DateAdded = DateTime.Now,
-                            Thumbnail = thumbnail
+                            Thumbnail = thumbnail,
+                            Rotation = rotation
                         });
                         _filePaths[name] = filePath;                        
                     }

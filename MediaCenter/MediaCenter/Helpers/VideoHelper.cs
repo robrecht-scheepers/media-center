@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.WindowsAPICodePack.Shell;
+using System.Text;
 
 namespace MediaCenter.Helpers
 {
@@ -47,6 +48,39 @@ namespace MediaCenter.Helpers
         {
             var file = ShellFile.FromFilePath(filePath);
             return file.Properties.System.DateModified.Value ?? DateTime.MinValue;
+        }
+
+        public static int ReadRotation(string filePath)
+        {
+            var ffprobe = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "Dependencies/ffprobe.exe",
+                    Arguments =
+                        $"-v error -show_entries stream_tags=rotate -of default=noprint_wrappers=1:nokey=1 \"{filePath}\"",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                }
+            };
+            
+            if (!ffprobe.Start())
+            {
+                return 0;
+            }
+            string output = ffprobe.StandardOutput.ReadToEnd().Replace("\r\n","");
+            string error = ffprobe.StandardError.ReadToEnd();
+            ffprobe.WaitForExit();
+            ffprobe.Close();
+
+            int result = 0;
+            if (!string.IsNullOrEmpty(output.ToString()))
+            {
+                int.TryParse(output.ToString(), out result);
+            }
+            return result;
         }
     }
 }
