@@ -61,7 +61,7 @@ namespace MediaCenter.Sessions.Query
             if (SelectedItem != null)
             {
                 Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss tt ss.fff")} | SelectedItemChanged Requesting{SelectedItem.Name}");
-                contentTask = QuerySession.ContentRequested(SelectedItem.Name);
+                contentTask = QuerySession.LoadFullImage(SelectedItem.Name);
             }
 
             Task saveTask = null;
