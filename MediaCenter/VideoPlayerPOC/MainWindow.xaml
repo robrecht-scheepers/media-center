@@ -8,7 +8,7 @@
         Title="MainWindow" Height="350" Width="525"
         d:DataContext="{d:DesignInstance d:Type=local:MainViewModel}">
     <Grid>
-        <local:VideoPlayer DataContext="{Binding VideoPLayerViewModel}"></local:VideoPlayer>
+        <local:VideoPlayer VideoUri="{Binding VideoPLayerViewModel.VideoFilePath}"/>
         
     </Grid>
 </Window>
