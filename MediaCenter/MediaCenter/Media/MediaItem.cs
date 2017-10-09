@@ -81,6 +81,13 @@ namespace MediaCenter.Media
             set { _contentUri = value; }
         }
 
+        private int _rotation;
+        public int Rotation
+        {
+            get { return _rotation; }
+            set { SetValue(ref _rotation, value); }
+        }
+
         public virtual void UpdateFrom(MediaItem item)
         {
             Name = item.Name;

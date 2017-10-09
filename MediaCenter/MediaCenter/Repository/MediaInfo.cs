@@ -22,6 +22,7 @@ namespace MediaCenter.Repository
             DateAdded = item.DateAdded;
             Favorite = item.Favorite;
             Private = item.Private;
+            Rotation = item.Rotation;
             Tags = item.Tags.ToList();
         }
 
@@ -32,7 +33,8 @@ namespace MediaCenter.Repository
                 DateTaken = this.DateTaken,
                 DateAdded = this.DateAdded,
                 Favorite = this.Favorite,
-                Private = this.Private
+                Private = this.Private,
+                Rotation = this.Rotation
             };
             foreach (var tag in this.Tags)
             {
@@ -61,6 +63,9 @@ namespace MediaCenter.Repository
 
         [DataMember]
         public bool Private { get; set; }
+
+        [DataMember]
+        public int Rotation { get; set; }
 
 
     }
