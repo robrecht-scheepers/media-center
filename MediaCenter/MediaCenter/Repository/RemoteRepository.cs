@@ -152,6 +152,7 @@ namespace MediaCenter.Repository
                     await IOHelper.CopyFile(newItem.FilePath, mediaItemFilename);
                     await IOHelper.SaveBytes(newItem.Thumbnail, ItemNameToThumbnailFilename(newItem.Name));
                     
+                    newItem.ContentUri = new Uri(mediaItemFilename);
                     newItem.Status = MediaItemStatus.Saved;
                 }
                 catch (Exception e)
