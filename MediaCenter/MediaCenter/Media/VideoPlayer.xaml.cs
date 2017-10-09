@@ -24,7 +24,7 @@ namespace MediaCenter.Media
     {
         private enum PlayState { Playing, Paused, Stopped }
 
-        private int _milisecondPerSliderTick = 100;
+        private int _milisecondPerSliderTick = 200;
         private DispatcherTimer _timer;
         private bool _isDragging = false;
         private bool _sliderlengthSet = false;
@@ -65,12 +65,14 @@ namespace MediaCenter.Media
             if (!_sliderlengthSet && MediaElement.NaturalDuration.HasTimeSpan)
             {
                 SeekSlider.Maximum = MediaElement.NaturalDuration.TimeSpan.TotalMilliseconds / _milisecondPerSliderTick;
+                TotalTime.Text = MediaElement.NaturalDuration.TimeSpan.ToString("mm\\:ss");
                 _sliderlengthSet = true;
             }
             if (!_isDragging)
             {
                 SeekSlider.Value = MediaElement.Position.TotalMilliseconds / _milisecondPerSliderTick;
             }
+            CurrentTime.Text = MediaElement.Position.ToString("mm\\:ss");
         }
 
         private void MediaElement_OnMediaOpened(object sender, RoutedEventArgs e)
@@ -81,6 +83,8 @@ namespace MediaCenter.Media
             if (MediaElement.NaturalDuration.HasTimeSpan)
             {
                 SeekSlider.Maximum = MediaElement.NaturalDuration.TimeSpan.TotalMilliseconds / _milisecondPerSliderTick;
+                CurrentTime.Text = "00:00";
+                TotalTime.Text = MediaElement.NaturalDuration.TimeSpan.ToString("mm\\:ss");
                 _sliderlengthSet = true;
             }
             else
