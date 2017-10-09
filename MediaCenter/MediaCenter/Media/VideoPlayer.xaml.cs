@@ -31,6 +31,7 @@ namespace MediaCenter.Media
         public VideoPlayer()
         {
             InitializeComponent();
+            _playState = PlayState.Stopped;
             _timer = new DispatcherTimer()
             {
                 Interval = TimeSpan.FromMilliseconds(100)
@@ -44,6 +45,17 @@ namespace MediaCenter.Media
         public Uri VideoUri { get { return (Uri)GetValue(VideoUriProperty); } set { SetValue(VideoUriProperty, value); } }
         public static readonly DependencyProperty VideoUriProperty = DependencyProperty.Register("VideoUri", typeof(System.Uri), typeof(VideoPlayer), new PropertyMetadata(default(Uri), VideoUriChanged));
 
+        public int Rotation { get { return (int) GetValue(RotationProperty); } set { SetValue(RotationProperty,value);} }
+        public static readonly DependencyProperty RotationProperty = DependencyProperty.Register("Rotation",typeof(int), typeof(VideoPlayer), new PropertyMetadata(0,RotationChanged));
+
+        private static void RotationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var me = d as VideoPlayer;
+            if (me == null) return;
+
+            me.Rotate((int)e.NewValue);
+        }
+
         private static void VideoUriChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var me = d as VideoPlayer;
@@ -56,6 +68,23 @@ namespace MediaCenter.Media
         {
             MediaElement.Stop();
             MediaElement.Source = videoUri;
+
+            if (Rotation > 0)
+            {
+                MediaElement.LayoutTransform = new RotateTransform(Rotation);
+            }
+        }
+
+        public void Rotate(int angle)
+        {
+            if (angle == 0)
+            {
+                MediaElement.LayoutTransform = null;
+            }
+            else
+            {
+                MediaElement.LayoutTransform = new RotateTransform(angle);
+            }
         }
 
 
