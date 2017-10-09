@@ -94,6 +94,7 @@ namespace MediaCenter.Media
                 Tags.Add(tag);
             }
             Thumbnail = item.Thumbnail;
+            ContentUri = item.ContentUri;
         }
     }
 }

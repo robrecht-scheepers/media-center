@@ -6,7 +6,18 @@
              xmlns:local="clr-namespace:MediaCenter.Media"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
+    <Grid Name="Grid1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <MediaElement Grid.Row="0"  Name="MediaElement" LoadedBehavior="Manual" MediaOpened="MediaElement_OnMediaOpened" MediaEnded="MediaElement_OnMediaEnded" />
+        <Slider Grid.Row="1" Name="SeekSlider" Margin="5" HorizontalAlignment="Stretch" Thumb.DragStarted="SeekSlider_OnDragStarted" Thumb.DragCompleted="SeekSlider_OnDragCompleted"/>
+        <StackPanel Grid.Row="2"  Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Name="PlayPauseBtn" Click="PlayPause_OnClick" Margin="5">Play/Pause</Button>
+            <Button Name="StopBtn" Click="Stop_OnClick" Margin="5">Stop</Button>
+            <TextBlock Text="{Binding PlayState}"/>
+        </StackPanel>
     </Grid>
 </UserControl>
