@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace MediaCenter.Media
@@ -38,29 +28,26 @@ namespace MediaCenter.Media
                 Interval = TimeSpan.FromMilliseconds(100)
             };
             _timer.Tick += new EventHandler(TimerTick);
-
-            if(VideoUri != default(Uri))
-                LoadVideo(VideoUri);
-
-            if (StartOnLoad)
-                MediaElement.LoadedBehavior = MediaState.Play;
-            else
-                MediaElement.LoadedBehavior = MediaState.Manual;
         }
+
+        public bool StartOnLoad { get { return (bool)GetValue(StartOnLoadProperty); } set { SetValue(StartOnLoadProperty, value); } }
+        public static readonly DependencyProperty StartOnLoadProperty = DependencyProperty.Register("StartOnLoad", typeof(bool), typeof(VideoPlayer), new PropertyMetadata(false, StartOnLoadChanged));
 
         public Uri VideoUri { get { return (Uri)GetValue(VideoUriProperty); } set { SetValue(VideoUriProperty, value); } }
         public static readonly DependencyProperty VideoUriProperty = DependencyProperty.Register("VideoUri", typeof(System.Uri), typeof(VideoPlayer), new PropertyMetadata(default(Uri), VideoUriChanged));
 
         public int Rotation { get { return (int)GetValue(RotationProperty); } set { SetValue(RotationProperty, value); } }
         public static readonly DependencyProperty RotationProperty = DependencyProperty.Register("Rotation", typeof(int), typeof(VideoPlayer), new PropertyMetadata(0, RotationChanged));
-        public bool StartOnLoad { get { return (bool)GetValue(StartOnLoadProperty); } set { SetValue(StartOnLoadProperty, value); } }
-        public static readonly DependencyProperty StartOnLoadProperty = DependencyProperty.Register("StartOnLoad", typeof(bool), typeof(VideoPlayer), new PropertyMetadata(false, StartOnLoadChanged));
-
+        
         private static void StartOnLoadChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var me = d as VideoPlayer;
             if(me == null) return;
-            
+
+            if (me.StartOnLoad)
+                me.MediaElement.LoadedBehavior = MediaState.Play;
+            else
+                me.MediaElement.LoadedBehavior = MediaState.Manual;
         }
 
         private static void RotationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

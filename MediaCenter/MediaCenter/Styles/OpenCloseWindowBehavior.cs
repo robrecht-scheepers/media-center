@@ -55,6 +55,7 @@ namespace MediaCenter.Styles
             else
             {
                 me._windowInstance?.Close(); // closed by viewmodel
+                me._windowInstance = null;
             }
         }
 
