@@ -28,6 +28,7 @@ namespace MediaCenter.Media
         private DispatcherTimer _timer;
         private bool _isDragging = false;
         private bool _sliderlengthSet = false;
+        private bool _StartOnLoad = false;
         public VideoPlayer()
         {
             InitializeComponent();
@@ -40,13 +41,27 @@ namespace MediaCenter.Media
 
             if(VideoUri != default(Uri))
                 LoadVideo(VideoUri);
+
+            if (StartOnLoad)
+                MediaElement.LoadedBehavior = MediaState.Play;
+            else
+                MediaElement.LoadedBehavior = MediaState.Manual;
         }
 
         public Uri VideoUri { get { return (Uri)GetValue(VideoUriProperty); } set { SetValue(VideoUriProperty, value); } }
         public static readonly DependencyProperty VideoUriProperty = DependencyProperty.Register("VideoUri", typeof(System.Uri), typeof(VideoPlayer), new PropertyMetadata(default(Uri), VideoUriChanged));
 
-        public int Rotation { get { return (int) GetValue(RotationProperty); } set { SetValue(RotationProperty,value);} }
-        public static readonly DependencyProperty RotationProperty = DependencyProperty.Register("Rotation",typeof(int), typeof(VideoPlayer), new PropertyMetadata(0,RotationChanged));
+        public int Rotation { get { return (int)GetValue(RotationProperty); } set { SetValue(RotationProperty, value); } }
+        public static readonly DependencyProperty RotationProperty = DependencyProperty.Register("Rotation", typeof(int), typeof(VideoPlayer), new PropertyMetadata(0, RotationChanged));
+        public bool StartOnLoad { get { return (bool)GetValue(StartOnLoadProperty); } set { SetValue(StartOnLoadProperty, value); } }
+        public static readonly DependencyProperty StartOnLoadProperty = DependencyProperty.Register("StartOnLoad", typeof(bool), typeof(VideoPlayer), new PropertyMetadata(false, StartOnLoadChanged));
+
+        private static void StartOnLoadChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var me = d as VideoPlayer;
+            if(me == null) return;
+            
+        }
 
         private static void RotationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -66,13 +81,11 @@ namespace MediaCenter.Media
 
         public void LoadVideo(Uri videoUri)
         {
-            MediaElement.Stop();
-            MediaElement.Source = videoUri;
+            if(MediaElement.Source == videoUri)
+                return;
 
-            if (Rotation > 0)
-            {
-                MediaElement.LayoutTransform = new RotateTransform(Rotation);
-            }
+            Stop();
+            MediaElement.Source = videoUri;
         }
 
         public void Rotate(int angle)
@@ -86,7 +99,6 @@ namespace MediaCenter.Media
                 MediaElement.LayoutTransform = new RotateTransform(angle);
             }
         }
-
 
         #region SeekBar
         private void TimerTick(object sender, EventArgs eventArgs)

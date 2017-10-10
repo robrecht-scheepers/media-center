@@ -20,7 +20,7 @@
                 <Image Source="{Binding Path=MediaItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type media:VideoItemViewModel}">
-                <media:VideoPlayer VideoUri="{Binding Path=MediaItem.ContentUri}" />
+                <media:VideoPlayer VideoUri="{Binding Path=MediaItem.ContentUri}" Rotation="{Binding MediaItem.Rotation}" StartOnLoad="True" />
             </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
@@ -39,9 +39,8 @@
         </Grid.RowDefinitions>
 
         <ContentControl Grid.Row="0" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{Binding QuerySessionViewModel.SelectedItemViewModel}"/>
-        <!--<Image Source="{Binding Path=QuerySessionViewModel.SelectedItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>-->
         <Button Grid.Row="0" Style="{StaticResource IconButton}" Command="{Binding CloseCOmmand}" HorizontalAlignment="Right">
-            <Image Source="/Resources/Icons/cross-grey.png" Width="16" Height="16" Stretch="None"/>
+            <Image Source="/Resources/Icons/cross-grey.png" Width="16" Height="16" Stretch="UniformToFill"/>
         </Button>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Button Style="{StaticResource IconButton}" Command="{Binding PreviousImageCommand}"><Image Source="/Resources/Icons/navigation-180.png" Stretch="None" /></Button>
