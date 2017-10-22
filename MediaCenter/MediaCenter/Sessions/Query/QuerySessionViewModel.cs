@@ -219,7 +219,7 @@ namespace MediaCenter.Sessions.Query
         }
         private void InitialzeFilterNames()
         {
-            FilterNames = new List<string> { DateTakenFilter.Name, TagFilter.Name, FavoriteFilter.Name, DateAddedFilter.Name, PrivateFilter.Name };
+            FilterNames = new List<string> { DateTakenFilter.Name, TagFilter.Name, FavoriteFilter.Name, DateAddedFilter.Name, PrivateFilter.Name, MediaTypeFilter.Name };
         }
 
         #region Command: Add filter
@@ -237,6 +237,8 @@ namespace MediaCenter.Sessions.Query
                 Filters.Add(new DateAddedFilter());
             else if (SelectedFilterName == PrivateFilter.Name)
                 Filters.Add(new PrivateFilter());
+            else if (SelectedFilterName == MediaTypeFilter.Name)
+                Filters.Add(new MediaTypeFilter());
 
         }
         #endregion

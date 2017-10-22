@@ -138,6 +138,7 @@
     <Compile Include="Sessions\Query\Filters\Filter.cs" />
     <Compile Include="Sessions\Query\Filters\DateTakenFilter.cs" />
     <Compile Include="Sessions\Query\Filters\FilterMode.cs" />
+    <Compile Include="Sessions\Query\Filters\MediaTypeFilter.cs" />
     <Compile Include="Sessions\Query\Filters\PrivateFilter.cs" />
     <Compile Include="Sessions\Query\Filters\TagFilter.cs" />
     <Compile Include="Sessions\Query\QuerySessionView.xaml.cs">
