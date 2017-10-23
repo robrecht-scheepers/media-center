@@ -149,6 +149,9 @@
                 <Button DockPanel.Dock="Right" Style="{StaticResource IconButton}" Command="{Binding DeleteCurrentImageCommand}">
                     <Image Source="/Resources/Icons/cross-button.png" Stretch="None"/>
                 </Button>
+                <Button DockPanel.Dock="Right" Style="{StaticResource IconButton}" Command="{Binding SaveCurrentItemToFileCommand}">
+                    <Image Source="/Resources/Icons/disk--arrow.png" Stretch="None"/>
+                </Button>
             </DockPanel>
             <Button Grid.Row="2" HorizontalAlignment="Left" Style="{StaticResource IconButton}" Command="{Binding CopyTagsFromPreviousCommand}">
                 <Image Source="/Resources/Icons/arrow-repeat.png" Stretch="None"/>

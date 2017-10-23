@@ -364,5 +364,21 @@ namespace MediaCenter.Repository
         {
             Changed?.Invoke(this, EventArgs.Empty);
         }
+
+        public async Task SaveContentToFile(string itemName, string filePath)
+        {
+            var contentFilePath = ItemNameToContentFilePath(itemName);
+            await IOHelper.CopyFile(contentFilePath, filePath);
+        }
+
+        public string ItemNameToContentFileName(string itemName)
+        {
+            var fullPath = Directory.GetFiles(_remoteStore, $"{itemName}.*").FirstOrDefault(x => !x.EndsWith(MediaFileExtension));
+            if (string.IsNullOrEmpty(fullPath))
+                return "";
+            return Path.GetFileName(fullPath);
+        }
+
+
     }
 }

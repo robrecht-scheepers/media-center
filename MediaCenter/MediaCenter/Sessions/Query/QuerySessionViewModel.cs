@@ -10,6 +10,7 @@ using MediaCenter.MVVM;
 using MediaCenter.Sessions.Query.Filters;
 using MediaCenter.Sessions.Slideshow;
 using MediaCenter.Sessions.Tags;
+using Microsoft.Win32;
 
 namespace MediaCenter.Sessions.Query
 {
@@ -160,6 +161,30 @@ namespace MediaCenter.Sessions.Query
                 SelectedItem = null; // the list is empty now as we deleted the only element, show nothing
         }
         private bool CanExecuteDeleteCurrentImage()
+        {
+            return (SelectedItem != null);
+        }
+        #endregion
+
+        #region Command: save current item to file
+        private AsyncRelayCommand _saveCurrentItemToFileCommand;
+        public AsyncRelayCommand SaveCurrentItemToFileCommand
+            => _saveCurrentItemToFileCommand ?? (_saveCurrentItemToFileCommand = new AsyncRelayCommand(SaveCurrentItemToFile, CanExecuteSaveCurrentItemToFile));
+        private async Task SaveCurrentItemToFile()
+        {
+            if (SelectedItem == null)
+                return;
+
+            var dialog = new SaveFileDialog() {
+                FileName = QuerySession.Repository.ItemNameToContentFileName(SelectedItem.Name)
+            };
+            dialog.ShowDialog();
+            if(!string.IsNullOrEmpty(dialog.FileName))
+            {
+                await QuerySession.Repository.SaveContentToFile(SelectedItem.Name, dialog.FileName);
+            }                        
+        }
+        private bool CanExecuteSaveCurrentItemToFile()
         {
             return (SelectedItem != null);
         }
