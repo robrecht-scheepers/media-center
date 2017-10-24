@@ -33,8 +33,7 @@ namespace MediaCenter.Repository
         {
             ImageItemCount = _repository.Catalog.Count(x => x.MediaType == MediaType.Image);
             VideoItemCount = _repository.Catalog.Count(x => x.MediaType == MediaType.Video);
-            ItemCount = ImageItemCount + VideoItemCount;
-            Size = (int) (IOHelper.DirectorySize(_repository.Location.LocalPath) / (long)Math.Pow(2,20));
+            ItemCount = ImageItemCount + VideoItemCount;            
         }
 
         public int ItemCount
@@ -54,12 +53,7 @@ namespace MediaCenter.Repository
             set { SetValue(ref _videoItemCount, value); }
         }
 
-        public int Size
-        {
-            get { return _size; }
-            set { SetValue(ref _size, value); }
-        }
-
+        
         public string Location => _repository.Location.LocalPath;
     }
 }

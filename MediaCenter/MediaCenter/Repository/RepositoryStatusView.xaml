@@ -10,22 +10,16 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>                      
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <TextBlock Grid.Row="0" Text="{Binding Path=Location, StringFormat=Repository location: {0}}"/>
+        <TextBlock Grid.Row="0" Text="{Binding Path=Location, StringFormat=Repository location: {0}}" Margin="0,10,10,10"/>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal">
-           <TextBlock Text="{Binding Path=ItemCount, StringFormat={}{0} items: }"/>
-           <TextBlock Text="{Binding Path=ImageItemCount, StringFormat={}{0} images and}"/>
-           <TextBlock Text="{Binding Path=VideoItemCount, StringFormat={}{0} videos}"/>
+            <TextBlock Text="{Binding Path=ItemCount, StringFormat={}{0} items: }" Margin="0,10"/>
+            <TextBlock Text="{Binding Path=ImageItemCount, StringFormat={} {0} images and}" Margin="0,10"/>
+            <TextBlock Text="{Binding Path=VideoItemCount, StringFormat={} {0} videos}" Margin="0,10,10,10"/>
         </StackPanel>
-
-        <TextBlock Grid.Row="2" Text="{Binding Path=Size, StringFormat=Size: {0}MB}"/>
-
-
     </Grid>
 </UserControl>
