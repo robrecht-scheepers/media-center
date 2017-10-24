@@ -52,23 +52,8 @@ namespace MediaCenter.Repository
             await ReadLocalStore();
             await SynchronizeFromRemoteStore();
             RaiseChangedEvent();
-
-            await FixVideoIssue();
         }
-
-        private async Task FixVideoIssue()
-        {
-            foreach (var videoItem in Catalog.Where(x => x.MediaType == MediaType.Video && x.Rotation == 0))
-            {
-                var rotation = VideoHelper.ReadRotation(ItemNameToContentFilePath(videoItem.Name));
-                if(rotation > 0)
-                {
-                    videoItem.Rotation = rotation;
-                    await SaveItemInfo(videoItem.Name);
-                }
-            }
-        }
-
+                
         private async Task ReadLocalStore()
         {
             if (!File.Exists(_localStoreFilePath))
