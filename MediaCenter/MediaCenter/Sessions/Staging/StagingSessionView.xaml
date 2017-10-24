@@ -38,6 +38,7 @@
             <Button Command="{Binding SaveToRepositoryCommand}" Width="100" Margin="5">Save</Button>
             <TextBlock Text="{Binding StagingSession.StatusMessage}" Margin="5"/>
         </StackPanel>
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=StagingSession.StagedItems.Count, StringFormat={}Staged {0} items}" Margin="5"/>
         <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding StagingSession.StagedItems}" SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ItemsControl.ItemsPanel>
