@@ -54,18 +54,19 @@ namespace MediaCenter.Helpers
         {
             int datePropertyID = 36867;
             ASCIIEncoding encoding = new ASCIIEncoding();
+            DateTime creationDate = DateTime.MinValue.AddDays(1);
 
             PropertyItem[] propertyItems = image.PropertyItems;
             var dateProperty = propertyItems.FirstOrDefault(p => p.Id == datePropertyID);
             if (dateProperty == null)
             {
-                return DateTime.MinValue;
+                return creationDate;
             }
 
             var dateString = encoding.GetString(dateProperty.Value);
             dateString = dateString.Substring(0, dateString.Length - 1); // drop last zero character /0
-            var date = DateTime.ParseExact(dateString, "yyyy:MM:dd HH:mm:ss", new DateTimeFormatInfo());
-            return date;
+            DateTime.TryParseExact(dateString, "yyyy:MM:dd HH:mm:ss", new DateTimeFormatInfo(), DateTimeStyles.None, out creationDate);
+            return creationDate;
         }
 
         public static byte[] Rotate(byte[] image, RotationDirection direction)
