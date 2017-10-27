@@ -96,6 +96,7 @@ namespace MediaCenter.Sessions.Staging
                     // TODO: error handling, create list of failed files
                 }
             }
+            StatusMessage = "";
         }
 
         public void RemoveStagedItem(StagedItem item)
@@ -131,8 +132,8 @@ namespace MediaCenter.Sessions.Staging
         {
             StatusMessage = $"Saving {StagedItems.Count} items...";
             await Repository.SaveNewItems(StagedItems);
-            StatusMessage = "All items saved";
             ClearSavedItems();
+            StatusMessage = "";
         }
 
         public string StatusMessage
