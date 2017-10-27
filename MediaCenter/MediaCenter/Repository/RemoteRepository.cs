@@ -93,17 +93,12 @@ namespace MediaCenter.Repository
             
             var remoteStoreDirectory = new DirectoryInfo(_remoteStore);
             var remoteStoreMediaFiles = remoteStoreDirectory.GetFiles("*" + MediaFileExtension);
-
-            // find and delete all items in the local store that are no longer in the remote store 
-            //var deleteList = Catalog.Where(item =>
-            //    remoteStoreMediaFiles.All(f => f.Name.ToLower() != item.Name + MediaFileExtension)).ToList();
-
-
-            var deleteList = Catalog.Where(item =>
-                !IOHelper.FileExists(Path.Combine(_remoteStore, item.Name + MediaFileExtension))).ToList();
-            foreach (var mediaItem in deleteList)
+            
+            // dele all items from the catalog that are not in teh remote list anymore (have been deleted since the last sync)
+            var deleteList = Catalog.Select(x => x.Name).Except(remoteStoreMediaFiles.Select(x => Path.GetFileNameWithoutExtension(x.Name))).ToList();
+            foreach (var name in deleteList)
             {
-                _catalog.Remove(mediaItem);
+                _catalog.Remove(GetItem(name));
             }
 
             // read all remote media files that were created or updates since the last sync
