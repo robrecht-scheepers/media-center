@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using MediaCenter.Media;
 using MediaCenter.Repository;
 using MediaCenter.Sessions.Query.Filters;

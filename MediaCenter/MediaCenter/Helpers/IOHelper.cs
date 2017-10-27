@@ -80,9 +80,9 @@ namespace MediaCenter.Helpers
             return result;
         }
 
-        public static Task DeleteFile(string filePath)
+        public static async Task DeleteFile(string filePath)
         {
-            return Task.Factory.StartNew(() => File.Delete(filePath));
+            await Task.Run(() => File.Delete(filePath));
         }
 
         public static bool FileExists(string filePath)
@@ -90,9 +90,10 @@ namespace MediaCenter.Helpers
             return File.Exists(filePath);
         }
 
-        public static long DirectorySize(string dirPath)
+        public static async Task<FileInfo[]> GetFiles(string directoryPath, string searchPattern)
         {
-            return new DirectoryInfo(dirPath).EnumerateFiles("*.*",SearchOption.AllDirectories).Sum(x => x.Length);
+            return await Task.Run(() => new DirectoryInfo(directoryPath).GetFiles(searchPattern));
         }
+
     }
 }

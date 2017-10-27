@@ -90,9 +90,8 @@ namespace MediaCenter.Repository
 
         public async Task SynchronizeFromRemoteStore()
         {
-            
-            var remoteStoreDirectory = new DirectoryInfo(_remoteStore);
-            var remoteStoreMediaFiles = remoteStoreDirectory.GetFiles("*" + MediaFileExtension);
+            var newLastSyncedDate = DateTime.Now;
+            var remoteStoreMediaFiles = await IOHelper.GetFiles(_remoteStore, "*" + MediaFileExtension);
             
             // dele all items from the catalog that are not in teh remote list anymore (have been deleted since the last sync)
             var deleteList = Catalog.Select(x => x.Name).Except(remoteStoreMediaFiles.Select(x => Path.GetFileNameWithoutExtension(x.Name))).ToList();
@@ -102,7 +101,6 @@ namespace MediaCenter.Repository
             }
 
             // read all remote media files that were created or updates since the last sync
-            var newLastSyncedDate = DateTime.Now;
             foreach (var file in remoteStoreMediaFiles.Where(f => f.LastWriteTime >= _lastSyncFromRemote))
             {
                 var info = await IOHelper.OpenObject<MediaInfo>(file.FullName);
