@@ -37,6 +37,7 @@ namespace MediaCenter.Helpers
 
             ffmpeg.Start();
             await ffmpeg.WaitForExitAsync();
+            var error = ffmpeg.StandardError.ReadToEnd();
             ffmpeg.Close();
 
             var result = await IOHelper.OpenBytes(firstFrameFile);
