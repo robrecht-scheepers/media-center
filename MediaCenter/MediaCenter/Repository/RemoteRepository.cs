@@ -147,6 +147,7 @@ namespace MediaCenter.Repository
                     
                     newItem.ContentUri = new Uri(mediaItemFilePath);
                     newItem.Status = MediaItemStatus.Saved;
+                    RaiseChangedEvent();
                 }
                 catch (Exception e)
                 {
@@ -159,8 +160,7 @@ namespace MediaCenter.Repository
                 }
             }
 
-            await UpdateLocalStore();
-            RaiseChangedEvent();
+            await UpdateLocalStore();            
         }
 
         private string CreateUniqueName(string originalName)
