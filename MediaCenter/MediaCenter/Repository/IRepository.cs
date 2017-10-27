@@ -22,7 +22,6 @@ namespace MediaCenter.Repository
         Task SaveItemThumbnail(string name);
         event EventHandler Changed;
         System.Uri Location { get; }
-        Task SaveContentToFile(string itemName, string filePath);
-        string ItemNameToContentFileName(string itemName);
+        Task SaveContentToFile(string itemName, string filePath);        
     }
 }

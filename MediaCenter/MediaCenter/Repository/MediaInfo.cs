@@ -18,6 +18,7 @@ namespace MediaCenter.Repository
         {
             Name = item.Name;
             Type = item.MediaType;
+            ContentFileName = item.ContentFileName;
             DateTaken = item.DateTaken;
             DateAdded = item.DateAdded;
             Favorite = item.Favorite;
@@ -30,6 +31,7 @@ namespace MediaCenter.Repository
         {
             var item = new MediaItem(Name, Type)
             {
+                ContentFileName = this.ContentFileName,
                 DateTaken = this.DateTaken,
                 DateAdded = this.DateAdded,
                 Favorite = this.Favorite,
@@ -45,6 +47,9 @@ namespace MediaCenter.Repository
 
         [DataMember]
         public string Name { get; set; }
+
+        [DataMember]
+        public string ContentFileName { get; set; }
 
         [DataMember]
         public List<string> Tags { get; set; }

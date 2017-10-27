@@ -176,7 +176,7 @@ namespace MediaCenter.Sessions.Query
                 return;
 
             var dialog = new SaveFileDialog() {
-                FileName = QuerySession.Repository.ItemNameToContentFileName(SelectedItem.Name)
+                FileName = SelectedItem.ContentFileName
             };
             dialog.ShowDialog();
             if(!string.IsNullOrEmpty(dialog.FileName))

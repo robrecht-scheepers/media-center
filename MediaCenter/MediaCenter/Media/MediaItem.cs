@@ -81,6 +81,13 @@ namespace MediaCenter.Media
             set { _contentUri = value; }
         }
 
+        private string _contentFileName;
+        public string ContentFileName
+        {
+            get { return _contentFileName; }
+            set { SetValue(ref _contentFileName, value); }
+        }
+
         private int _rotation;
         public int Rotation
         {
