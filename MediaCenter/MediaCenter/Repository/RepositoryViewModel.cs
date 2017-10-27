@@ -15,7 +15,7 @@ namespace MediaCenter.Repository
         private IRepository _repository;
         private int _imageItemCount;
         private int _videoItemCount;
-        private int _size;
+        private int _itemCount;
 
         public RepositoryViewModel(IRepository repository)
         {
@@ -38,8 +38,8 @@ namespace MediaCenter.Repository
 
         public int ItemCount
         {
-            get { return _imageItemCount; }
-            set { SetValue(ref _imageItemCount, value); }
+            get { return _itemCount; }
+            set { SetValue(ref _itemCount, value); }
         }
         public int ImageItemCount
         {
