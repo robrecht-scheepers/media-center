@@ -32,13 +32,17 @@
             <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-            <Button Command="{Binding AddMediaCommand}" Width="100" Margin="5">Select media files</Button>
-            <Button Command="{Binding AddDirectoryCommand}" Width="100" Margin="5">Select folder</Button>
-            <Button Command="{Binding SaveToRepositoryCommand}" Width="100" Margin="5">Save</Button>
-            <TextBlock Text="{Binding StagingSession.StatusMessage}" Margin="5"/>
-        </StackPanel>
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=StagingSession.StagedItems.Count, StringFormat={}Staged {0} items}" Margin="5"/>
+        <DockPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch">
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button Command="{Binding AddMediaCommand}" Width="100" Margin="5">Select media files</Button>
+                <Button Command="{Binding AddDirectoryCommand}" Width="100" Margin="5">Select folder</Button>
+                <TextBlock Text="{Binding StagingSession.StatusMessage}" Margin="5"/>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Text="{Binding StagingSession.StagedItems.Count, StringFormat={}{0} items staged}" Margin="5"/>
+                <Button Command="{Binding SaveToRepositoryCommand}" Width="100" Margin="5">Save</Button>                
+            </StackPanel>
+        </DockPanel>
         <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding StagingSession.StagedItems}" SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ItemsControl.ItemsPanel>
