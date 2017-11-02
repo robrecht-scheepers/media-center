@@ -11,6 +11,7 @@ using MediaCenter.Sessions.Query.Filters;
 using MediaCenter.Sessions.Slideshow;
 using MediaCenter.Sessions.Tags;
 using Microsoft.Win32;
+using System.Windows;
 
 namespace MediaCenter.Sessions.Query
 {
@@ -151,14 +152,18 @@ namespace MediaCenter.Sessions.Query
             => _deleteCurrentImageCommand ?? (_deleteCurrentImageCommand = new AsyncRelayCommand(DeleteCurrentImage, CanExecuteDeleteCurrentImage));
         private async Task DeleteCurrentImage()
         {
-            var index = QueryResult.IndexOf(SelectedItem);
-            await QuerySession.DeleteItem(SelectedItem);
-            if (QueryResult.Count > index)
-                SelectedItem = QueryResult[index]; // show next item, now at the same index of deleted item
-            else if (QueryResult.Any())
-                SelectedItem = QueryResult.Last(); // we deleted the last item, show the current last item
-            else
-                SelectedItem = null; // the list is empty now as we deleted the only element, show nothing
+            var confirmationResult = MessageBox.Show("Are you sure you want to delete this item from the repository? This action cannot be undone.", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Hand);
+            if (confirmationResult == MessageBoxResult.Yes)
+            {
+                var index = QueryResult.IndexOf(SelectedItem);
+                await QuerySession.DeleteItem(SelectedItem);
+                if (QueryResult.Count > index)
+                    SelectedItem = QueryResult[index]; // show next item, now at the same index of deleted item
+                else if (QueryResult.Any())
+                    SelectedItem = QueryResult.Last(); // we deleted the last item, show the current last item
+                else
+                    SelectedItem = null; // the list is empty now as we deleted the only element, show nothing
+            }
         }
         private bool CanExecuteDeleteCurrentImage()
         {

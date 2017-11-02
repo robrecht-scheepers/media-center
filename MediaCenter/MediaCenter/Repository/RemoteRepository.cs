@@ -207,20 +207,31 @@ namespace MediaCenter.Repository
 
         public async Task DeleteItem(string name)
         {
-            var item = _catalog.First(x => x.Name == name);
+            StatusMessage = "Deleting item";            
             try
             {
+                var item = _catalog.First(x => x.Name == name);
+                var contentFilePath = FileNameToRemoteFilePath(item.ContentFileName);
+                var thumbnailFilePath = ItemNameToThumbnailFilename(name);
+                var infoFileName = ItemNameToInfoFilename(name);
+
                 _catalog.Remove(item);
-                await IOHelper.DeleteFile(ItemNameToRemoteFilePath(item.ContentFileName));
-                await IOHelper.DeleteFile(ItemNameToThumbnailFilename(name));
-                await IOHelper.DeleteFile(ItemNameToInfoFilename(name));
+                await IOHelper.DeleteFile(contentFilePath);
+                await IOHelper.DeleteFile(thumbnailFilePath);
+                await IOHelper.DeleteFile(infoFileName);
                 await UpdateLocalStore();
+
                 RaiseCollectionChangedEvent();
             }
             catch (Exception)
             {
                 throw;
             }
+            finally
+            {
+                StatusMessage = "";
+            }
+            
         }
 
         public async Task<byte[]> GetThumbnail(string name)
