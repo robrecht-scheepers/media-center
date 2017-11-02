@@ -9,6 +9,7 @@
              xmlns:slideshow="clr-namespace:MediaCenter.Sessions.Slideshow"
              xmlns:tags="clr-namespace:MediaCenter.Sessions.Tags"
              xmlns:filters="clr-namespace:MediaCenter.Sessions.Query.Filters"
+             xmlns:media="clr-namespace:MediaCenter.Media"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:QuerySessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -66,7 +67,29 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Image Source="{Binding Thumbnail}" Height="100" Width="100" Margin="5"/>
+                    <Grid>
+                        <Image Source="{Binding Thumbnail}" Height="100" Width="100" Margin="5"/>
+                        <Image Grid.Row="0" Stretch="UniformToFill" Source="/Resources/Images/film-strip.png" Height="100" Width="100" Margin="5">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding MediaType}">
+                                            <DataTrigger.Value>
+                                                <media:MediaType>Video</media:MediaType>
+                                            </DataTrigger.Value>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding MediaType}">
+                                            <DataTrigger.Value>
+                                                <media:MediaType>Image</media:MediaType>
+                                            </DataTrigger.Value>
+                                            <Setter Property="Visibility" Value="Hidden"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                    </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ListBox>
