@@ -8,6 +8,7 @@
              xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:slideshow="clr-namespace:MediaCenter.Sessions.Slideshow"
              xmlns:tags="clr-namespace:MediaCenter.Sessions.Tags"
+             xmlns:filters="clr-namespace:MediaCenter.Sessions.Query.Filters"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:QuerySessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -45,33 +46,12 @@
         
         <Grid Grid.Column ="0" Grid.Row="0" Grid.RowSpan="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Orientation="Horizontal">
-                <ComboBox ItemsSource="{Binding FilterNames}" SelectedItem="{Binding SelectedFilterName}" VerticalAlignment="Top"/>
-                <Button Command="{Binding AddFilterCommand}" VerticalAlignment="Top">+</Button>
-            </StackPanel>
 
-            <ListView Grid.Row="1" ItemsSource="{Binding Filters}" HorizontalContentAlignment="Stretch">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <ContentPresenter Grid.Column="0" Content="{Binding}"/>
-                            <Button Grid.Column="1" Style="{StaticResource CrossIconButton}" 
-                                    CommandParameter="{Binding}" 
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveFilterCommand}"/>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-
-            <Button Grid.Row="2" Command="{Binding ExecuteQueryCommand}">Search</Button>
+            <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollectionViewModel}"/>
+            <Button Grid.Row="1" Command="{Binding ExecuteQueryCommand}">Search</Button>
         </Grid>
 
         <ListBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding QuerySession.QueryResult}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"

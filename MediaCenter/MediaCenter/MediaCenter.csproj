@@ -137,6 +137,10 @@
     <Compile Include="Sessions\Query\Filters\FavoriteFilter.cs" />
     <Compile Include="Sessions\Query\Filters\Filter.cs" />
     <Compile Include="Sessions\Query\Filters\DateTakenFilter.cs" />
+    <Compile Include="Sessions\Query\Filters\FilterCollectionView.xaml.cs">
+      <DependentUpon>FilterCollectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sessions\Query\Filters\FilterCollectionViewModel.cs" />
     <Compile Include="Sessions\Query\Filters\FilterMode.cs" />
     <Compile Include="Sessions\Query\Filters\MediaTypeFilter.cs" />
     <Compile Include="Sessions\Query\Filters\PrivateFilter.cs" />
@@ -205,6 +209,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Sessions\Query\Filters\FilterCollectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Sessions\Query\Filters\FilterDataTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -264,7 +272,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\cross-button.png" />
