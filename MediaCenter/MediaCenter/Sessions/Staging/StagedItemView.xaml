@@ -25,6 +25,26 @@
         </Grid.RowDefinitions>
 
         <Image Grid.Row="0" Stretch="UniformToFill" Source="{Binding Thumbnail}" HorizontalAlignment="Center" Height="100" Width="100" Margin="5"/>
+        <Image Grid.Row="0" Stretch="UniformToFill" Source="/Resources/Images/film-strip.png" Height="100" Width="100" Margin="5">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding MediaType}">
+                            <DataTrigger.Value>
+                                <media:MediaType>Video</media:MediaType>
+                            </DataTrigger.Value>
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding MediaType}">
+                            <DataTrigger.Value>
+                                <media:MediaType>Image</media:MediaType>
+                            </DataTrigger.Value>
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
         <StackPanel Name="ButtonList" Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="Collapsed" >
             <Button Style="{StaticResource IconButton}"
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}, Path=SelectedItems}"
