@@ -84,14 +84,17 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <DockPanel Grid.Row="0">
-                <TextBlock DockPanel.Dock="Left" Text="{Binding SelectedItem.DateTaken, StringFormat='dd.MM.yyyy, HH:mm:ss'}"/>
-                <TextBlock DockPanel.Dock="Right" Text="{Binding SelectedItem.Name, StringFormat='({0})'}"/>
-            </DockPanel>
-            <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" >
+            
+            <TextBlock Grid.Row="0" Text="{Binding SelectedItem.Name, StringFormat='{}Name: {0}'}"/>
+            <TextBlock Grid.Row="1" Text="{Binding SelectedItem.DateTaken, StringFormat='{}Date taken: {0:dd.MM.yyyy, HH:mm:ss}'}"/>
+            <TextBlock Grid.Row="2" Text="{Binding SelectedItem.DateAdded, StringFormat='{}Date added: {0:dd.MM.yyyy, HH:mm:ss}'}"/>
+            
+            <DockPanel Grid.Row="3" HorizontalAlignment="Stretch" >
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
                     <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding SelectedItem.Favorite, Mode=TwoWay}">
                         <Image Stretch="None">
@@ -133,11 +136,11 @@
                     <Image Source="/Resources/Icons/disk--arrow.png" Stretch="None"/>
                 </Button>
             </DockPanel>
-            <Button Grid.Row="2" HorizontalAlignment="Left" Style="{StaticResource IconButton}" Command="{Binding CopyTagsFromPreviousCommand}">
+            <Button Grid.Row="4" HorizontalAlignment="Left" Style="{StaticResource IconButton}" Command="{Binding CopyTagsFromPreviousCommand}">
                 <Image Source="/Resources/Icons/arrow-repeat.png" Stretch="None"/>
             </Button>
-            <tags:TagsView Grid.Row="3" DataContext="{Binding TagsViewModel}"/>
-            <Button Grid.Row="4" Command="{Binding StartSlideShowCommand}">Start Slideshow</Button>
+            <tags:TagsView Grid.Row="5" DataContext="{Binding TagsViewModel}"/>
+            <Button Grid.Row="6" Command="{Binding StartSlideShowCommand}">Start Slideshow</Button>
         </Grid>
     </Grid>
         
