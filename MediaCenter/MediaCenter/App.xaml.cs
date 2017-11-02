@@ -13,10 +13,7 @@ namespace MediaCenter
         public App() : this(new Bootstrapper()) { }
         public App(Bootstrapper bootstrapper)
         {
-            if (bootstrapper == null)
-                throw new ArgumentNullException(nameof(bootstrapper));
-
-            _bootstrapper = bootstrapper;
+            _bootstrapper = bootstrapper ?? throw new ArgumentNullException(nameof(bootstrapper));
         }
 
         private async void ApplicationStartup(object sender, StartupEventArgs e)

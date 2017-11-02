@@ -1,10 +1,5 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MediaCenter.Helpers;
 using MediaCenter.Media;
 using MediaCenter.MVVM;
 
@@ -16,12 +11,20 @@ namespace MediaCenter.Repository
         private int _imageItemCount;
         private int _videoItemCount;
         private int _itemCount;
+        private string _statusMessage;
 
         public RepositoryViewModel(IRepository repository)
         {
             _repository = repository;
-            _repository.Changed += RepositoryOnChanged;
+            _repository.CollectionChanged += RepositoryOnChanged;
+            _repository.StatusChanged += RepositoryOnStatusChanged;
+            StatusMessage = _repository.StatusMessage;
             UpdateRepositoryValues();
+        }
+
+        private void RepositoryOnStatusChanged(object sender, EventArgs e)
+        {
+            StatusMessage = _repository.StatusMessage;
         }
 
         private void RepositoryOnChanged(object sender, EventArgs eventArgs)
@@ -53,6 +56,11 @@ namespace MediaCenter.Repository
             set { SetValue(ref _videoItemCount, value); }
         }
 
+        public string StatusMessage
+        {
+            get { return _statusMessage; }
+            set { SetValue(ref _statusMessage, value); }
+        }
         
         public string Location => _repository.Location.LocalPath;
     }

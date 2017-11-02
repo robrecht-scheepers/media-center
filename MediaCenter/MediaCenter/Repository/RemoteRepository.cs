@@ -28,7 +28,8 @@ namespace MediaCenter.Repository
         private CancellationTokenSource _bufferCancellationTokenSource;
         private bool _prefetchingInProgress;
 
-        public event EventHandler Changed;
+        public event EventHandler CollectionChanged;
+        public event EventHandler StatusChanged;
 
         public IEnumerable<MediaItem> Catalog => _catalog;
 
@@ -36,6 +37,17 @@ namespace MediaCenter.Repository
         public IEnumerable<string> Tags => _catalog.SelectMany(x => x.Tags).Distinct();
 
         public Uri Location => new System.Uri(_remoteStore);
+
+        private string _statusMessage;
+        public string StatusMessage
+        {
+            get { return _statusMessage; }
+            private set
+            {
+                _statusMessage = value;
+                RaiseStatusChanged();
+            }
+        }
 
         public RemoteRepository(string remoteStore, string localStoreFilePath, string localCachePath)
         {
@@ -49,9 +61,12 @@ namespace MediaCenter.Repository
 
         public async Task Initialize()
         {
+            StatusMessage = "Reading the local store";
             await ReadLocalStore();
+            StatusMessage = "Synchronizing with the remote store";
             await SynchronizeFromRemoteStore();
-            RaiseChangedEvent();            
+            RaiseCollectionChangedEvent();
+            StatusMessage = "";
         }        
 
         private async Task ReadLocalStore()
@@ -122,8 +137,13 @@ namespace MediaCenter.Repository
 
         public async Task SaveNewItems(IEnumerable<StagedItem> newItems) 
         {
-            foreach (var newItem in newItems.Where(x => x.Status == MediaItemStatus.Staged))
+            var itemsToSave = newItems.Where(x => x.Status == MediaItemStatus.Staged).ToList();
+            var count = itemsToSave.Count;
+            var i = 1;
+
+            foreach (var newItem in itemsToSave)
             {
+                StatusMessage = $"Saving item {i} of {count}";
                 var originalName = newItem.Name;
                 
                 try
@@ -146,8 +166,7 @@ namespace MediaCenter.Repository
                     await IOHelper.SaveBytes(newItem.Thumbnail, ItemNameToThumbnailFilename(newItem.Name));
                     
                     newItem.ContentUri = new Uri(mediaItemFilePath);
-                    newItem.Status = MediaItemStatus.Saved;
-                    RaiseChangedEvent();
+                    newItem.Status = MediaItemStatus.Saved;                    
                 }
                 catch (Exception e)
                 {
@@ -159,8 +178,10 @@ namespace MediaCenter.Repository
                     continue;
                 }
             }
-
-            await UpdateLocalStore();            
+            StatusMessage = "Updating the local store";
+            await UpdateLocalStore();
+            StatusMessage = "";
+            RaiseCollectionChangedEvent();
         }
 
         private string CreateUniqueName(string originalName)
@@ -194,7 +215,7 @@ namespace MediaCenter.Repository
                 await IOHelper.DeleteFile(ItemNameToThumbnailFilename(name));
                 await IOHelper.DeleteFile(ItemNameToInfoFilename(name));
                 await UpdateLocalStore();
-                RaiseChangedEvent();
+                RaiseCollectionChangedEvent();
             }
             catch (Exception)
             {
@@ -356,9 +377,14 @@ namespace MediaCenter.Repository
             return mediaItem;
         }
 
-        private void RaiseChangedEvent()
+        private void RaiseCollectionChangedEvent()
         {
-            Changed?.Invoke(this, EventArgs.Empty);
+            CollectionChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void RaiseStatusChanged()
+        {
+            StatusChanged?.Invoke(this, EventArgs.Empty);     
         }
 
         public async Task SaveContentToFile(string itemName, string filePath)

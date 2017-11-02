@@ -10,6 +10,9 @@ namespace MediaCenter.Repository
 {
     public interface IRepository
     {
+        event EventHandler CollectionChanged;
+        event EventHandler StatusChanged;
+
         IEnumerable<MediaItem> Catalog { get; }
         IEnumerable<string> Tags { get; }
         Task Initialize();
@@ -20,8 +23,9 @@ namespace MediaCenter.Repository
         Task SaveItemInfo(string name);
         Task SaveItemContent(string name);
         Task SaveItemThumbnail(string name);
-        event EventHandler Changed;
+        
         System.Uri Location { get; }
-        Task SaveContentToFile(string itemName, string filePath);        
+        Task SaveContentToFile(string itemName, string filePath); 
+        string StatusMessage { get; }
     }
 }
