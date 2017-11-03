@@ -325,6 +325,8 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\status-error.png" />
+    <Resource Include="Resources\Icons\status-ok.png" />
     <Resource Include="Resources\Images\film-strip.png" />
     <Resource Include="Resources\Icons\disk--arrow.png" />
     <Resource Include="Resources\Icons\pencil.png" />

@@ -45,6 +45,27 @@
                 </Style>
             </Image.Style>
         </Image>
+        <Image Grid.Row="0" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Status}">
+                            <DataTrigger.Value>
+                                <media:MediaItemStatus>Saved</media:MediaItemStatus>
+                            </DataTrigger.Value>
+                            <Setter Property="Source" Value="/resources/Icons/status-ok.png"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Status}">
+                            <DataTrigger.Value>
+                                <media:MediaItemStatus>Error</media:MediaItemStatus>
+                            </DataTrigger.Value>
+                            <Setter Property="Source" Value="/resources/Icons/status-error.png"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+        
         <StackPanel Name="ButtonList" Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="Collapsed" >
             <Button Style="{StaticResource IconButton}"
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}, Path=SelectedItems}"

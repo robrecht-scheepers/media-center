@@ -143,11 +143,15 @@ namespace MediaCenter.Repository
 
             foreach (var newItem in itemsToSave)
             {
-                StatusMessage = $"Saving item {i} of {count}";
+                StatusMessage = $"Saving item {i++} of {count}";
                 var originalName = newItem.Name;
                 
                 try
                 {
+                    // debug code
+                    if (i == 3)
+                        throw new Exception("test");
+
                     if (string.IsNullOrEmpty(newItem.FilePath) || string.IsNullOrEmpty(newItem.Name))
                     {
                         newItem.Status = MediaItemStatus.Error;
@@ -174,7 +178,7 @@ namespace MediaCenter.Repository
                         _catalog.Remove(newItem); // remove from local catalog to avoid discrepancy between catalog and store
                     // TODO: cleanup files that were already saved
                     newItem.Name = originalName; // reset name change because the item was not saved to the store
-                    newItem.Status = MediaItemStatus.Staged;
+                    newItem.Status = MediaItemStatus.Error;
                     continue;
                 }
             }
