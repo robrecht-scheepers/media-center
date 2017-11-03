@@ -147,11 +147,7 @@ namespace MediaCenter.Repository
                 var originalName = newItem.Name;
                 
                 try
-                {
-                    // debug code
-                    if (i == 3)
-                        throw new Exception("test");
-
+                {                    
                     if (string.IsNullOrEmpty(newItem.FilePath) || string.IsNullOrEmpty(newItem.Name))
                     {
                         newItem.Status = MediaItemStatus.Error;

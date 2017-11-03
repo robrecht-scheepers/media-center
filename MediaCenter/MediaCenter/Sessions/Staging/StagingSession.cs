@@ -132,7 +132,7 @@ namespace MediaCenter.Sessions.Staging
         {
             StatusMessage = $"Saving {StagedItems.Count} items...";
             await Repository.SaveNewItems(StagedItems);
-            //ClearSavedItems();
+            ClearSavedItems();
             StatusMessage = "";
         }
 
