@@ -242,7 +242,7 @@ namespace MediaCenter.Sessions.Query
         
         private void InitializeFilterCollectionViewModel()
         {
-            FilterCollectionViewModel = new FilterCollectionViewModel(QuerySession.Filters);
+            FilterCollectionViewModel = new FilterCollectionViewModel(QuerySession.Filters, QuerySession.Repository.Tags);
         }
 
         #region Command: Execute query

@@ -10,8 +10,11 @@ namespace MediaCenter.Sessions.Query.Filters
 {
     public class FilterCollectionViewModel : PropertyChangedNotifier
     {
-        public FilterCollectionViewModel(ObservableCollection<Filter> filters)
+        private IEnumerable<string> _tags;
+
+        public FilterCollectionViewModel(ObservableCollection<Filter> filters, IEnumerable<string> tags)
         {
+            _tags = tags;
             Filters = filters;
             InitialzeFilterNames();
         }
@@ -39,7 +42,7 @@ namespace MediaCenter.Sessions.Query.Filters
             if (SelectedFilterName == DateTakenFilter.Name)
                 Filters.Add(new DateTakenFilter());
             else if (SelectedFilterName == TagFilter.Name)
-                Filters.Add(new TagFilter());
+                Filters.Add(new TagFilter(_tags));
             else if (SelectedFilterName == FavoriteFilter.Name)
                 Filters.Add(new FavoriteFilter());
             else if (SelectedFilterName == DateAddedFilter.Name)

@@ -11,11 +11,18 @@ namespace MediaCenter.Sessions.Query.Filters
 
         private string _tag;
 
+        public TagFilter(IEnumerable<string> tags)
+        {
+            Tags = tags.ToList();
+        }
+
         public string Tag
         {
             get { return _tag; }
             set { SetValue(ref _tag, value); }
         }
+
+        public List<string> Tags { get; }
 
         public override IEnumerable<MediaItem> Apply(IEnumerable<MediaItem> source)
         {

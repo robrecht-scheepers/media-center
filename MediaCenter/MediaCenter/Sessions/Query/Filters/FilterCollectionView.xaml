@@ -25,7 +25,7 @@
             <DataTemplate DataType="{x:Type local:TagFilter}">
                 <DockPanel HorizontalAlignment="Stretch">
                     <TextBlock Text="Tag" DockPanel.Dock="Left" VerticalAlignment="Center" />
-                    <TextBox Text="{Binding Tag}" HorizontalAlignment="Stretch" DockPanel.Dock="Right"/>
+                    <ComboBox ItemsSource="{Binding Tags}" SelectedItem="{Binding Tag}" HorizontalAlignment="Stretch" DockPanel.Dock="Right"/>
                 </DockPanel>
             </DataTemplate>
 
