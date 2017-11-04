@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using MediaCenter.Media;
 using MediaCenter.MVVM;
 using MediaCenter.Sessions.Query.Filters;
 using MediaCenter.Sessions.Slideshow;
-using MediaCenter.Sessions.Tags;
 using System.Windows;
 using System.Windows.Forms;
 using MediaCenter.Repository;
@@ -20,8 +13,6 @@ namespace MediaCenter.Sessions.Query
 {
     public class QuerySessionViewModel : SessionViewModelBase
     {
-        private MediaItem _previousSelectedItem = null;
-        
         public QuerySessionViewModel(SessionBase session) : base(session)
         {
             InitializeFilterCollectionViewModel();
@@ -44,7 +35,6 @@ namespace MediaCenter.Sessions.Query
             get { return _queryResultViewModel; }
             set { SetValue(ref _queryResultViewModel, value); }
         }
-
         private void InitializeQueryResultViewModel()
         {
             if(QueryResultViewModel != null)
@@ -53,7 +43,6 @@ namespace MediaCenter.Sessions.Query
             QueryResultViewModel = new QueryResultDetailViewModel(QuerySession.QueryResult, Repository);
             QueryResultViewModel.SelectionChanged += QueryResultViewModelOnSelectionChanged;
         }
-
         private async void QueryResultViewModelOnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             EditInfoViewModel.PublishToItems();
@@ -132,11 +121,7 @@ namespace MediaCenter.Sessions.Query
             return (QueryResultViewModel != null && QueryResultViewModel.SelectedItems.Count > 0);
         }
         #endregion
-
         
-
-        
-
         //private RelayCommand _copyTagsFromPreviousCommand;
         //public RelayCommand CopyTagsFromPreviousCommand => _copyTagsFromPreviousCommand ?? (_copyTagsFromPreviousCommand = new RelayCommand(CopyTagsFromPrevious));
 
@@ -162,11 +147,7 @@ namespace MediaCenter.Sessions.Query
         //    var index = QueryResult.IndexOf(SelectedItem);
         //    return index > 0;
         //}
-
         
-
-        
-
         private AsyncRelayCommand _executeQueryCommand;
         public AsyncRelayCommand ExecuteQueryCommand => _executeQueryCommand ?? (_executeQueryCommand = new AsyncRelayCommand(ExecuteQuery));
         private async Task ExecuteQuery()
