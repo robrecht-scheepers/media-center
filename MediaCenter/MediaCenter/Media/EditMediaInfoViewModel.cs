@@ -1,15 +1,12 @@
-﻿using MediaCenter.Media;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using MediaCenter.MVVM;
-using MediaCenter.Repository;
 using MediaCenter.Sessions.Tags;
-using System.Threading.Tasks;
 
-namespace MediaCenter.Sessions.Query
+namespace MediaCenter.Media
 {
-    public class EditInfoViewModel : PropertyChangedNotifier
+    public class EditMediaInfoViewModel : PropertyChangedNotifier
     {
         private List<MediaItem> _items;
         
@@ -21,7 +18,7 @@ namespace MediaCenter.Sessions.Query
         private TagsViewModel _tagsViewModel;
         private List<string> _originalTagsIntersect;
 
-        public EditInfoViewModel(List<MediaItem> items, List<string> allTags)
+        public EditMediaInfoViewModel(List<MediaItem> items, List<string> allTags)
         {
             _items = items;
             

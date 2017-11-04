@@ -5,6 +5,7 @@ using MediaCenter.Sessions.Query.Filters;
 using MediaCenter.Sessions.Slideshow;
 using System.Windows;
 using System.Windows.Forms;
+using MediaCenter.Media;
 using MediaCenter.Repository;
 using MessageBox = System.Windows.MessageBox;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
@@ -45,18 +46,18 @@ namespace MediaCenter.Sessions.Query
         }
         private async void QueryResultViewModelOnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
-            EditInfoViewModel.PublishToItems();
-            EditInfoViewModel = new EditInfoViewModel(args.NewSelection, Repository.Tags.ToList());
+            EditMediaInfoViewModel.PublishToItems();
+            EditMediaInfoViewModel = new EditMediaInfoViewModel(args.NewSelection, Repository.Tags.ToList());
             foreach (var dirtyItem in args.OldSelection.Where(x => x.IsDirty))
             {
                 await Repository.SaveItem(dirtyItem.Name);
             }
         }
 
-        public EditInfoViewModel EditInfoViewModel
+        public EditMediaInfoViewModel EditMediaInfoViewModel
         {
-            get { return _editInfoViewModel; }
-            set { SetValue(ref _editInfoViewModel, value); }
+            get { return _editMediaInfoViewModel; }
+            set { SetValue(ref _editMediaInfoViewModel, value); }
         }
 
         #region Command: delete current selection
@@ -186,7 +187,7 @@ namespace MediaCenter.Sessions.Query
 
         private SlideShowViewModel _slideShowViewModel;
         private QueryResultViewModel _queryResultViewModel;
-        private EditInfoViewModel _editInfoViewModel;
+        private EditMediaInfoViewModel _editMediaInfoViewModel;
 
         public SlideShowViewModel SlideShowViewModel
         {

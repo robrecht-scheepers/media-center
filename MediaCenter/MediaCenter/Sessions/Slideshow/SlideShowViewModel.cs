@@ -113,14 +113,14 @@ namespace MediaCenter.Sessions.Slideshow
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
-            Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss tt ss.fff")} | Timer tick");
-            if (!QuerySessionViewModel.SelectNextImageCommand.CanExecute(null))
-            {
-                Close();
-            }
-            QuerySessionViewModel.SelectNextImageCommand.Execute(null);
-            if(Status == SlideshowStatus.Active)
-                _timer.Start();
+            //Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss tt ss.fff")} | Timer tick");
+            //if (!QuerySessionViewModel.SelectNextImageCommand.CanExecute(null))
+            //{
+            //    Close();
+            //}
+            //QuerySessionViewModel.SelectNextImageCommand.Execute(null);
+            //if(Status == SlideshowStatus.Active)
+            //    _timer.Start();
         }
 
         private RelayCommand _closeCommand;
@@ -138,14 +138,15 @@ namespace MediaCenter.Sessions.Slideshow
             if(Status == SlideshowStatus.Active)
                 _timer.Stop();
 
-            QuerySessionViewModel.SelectNextImageCommand.Execute(null);
+            //QuerySessionViewModel.SelectNextImageCommand.Execute(null);
 
             if (Status == SlideshowStatus.Active)
                 _timer.Start();
         }
         private bool CanExecuteNextImage()
         {
-            return QuerySessionViewModel.SelectNextImageCommand.CanExecute(null);
+            return true;
+            //return QuerySessionViewModel.SelectNextImageCommand.CanExecute(null);
         }
 
         private RelayCommand _previousImageCommand;
@@ -156,14 +157,15 @@ namespace MediaCenter.Sessions.Slideshow
             if (Status == SlideshowStatus.Active)
                 _timer.Stop();
 
-            QuerySessionViewModel.SelectPreviousImageCommand.Execute(null);
+            //QuerySessionViewModel.SelectPreviousImageCommand.Execute(null);
 
             if (Status == SlideshowStatus.Active)
                 _timer.Start();
         }
         private bool CanExecutePreviousImage()
         {
-            return QuerySessionViewModel.SelectPreviousImageCommand.CanExecute(null);
+            return true;
+            //return QuerySessionViewModel.SelectPreviousImageCommand.CanExecute(null);
         }
     }
 }

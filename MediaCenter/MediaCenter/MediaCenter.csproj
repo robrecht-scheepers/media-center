@@ -145,7 +145,7 @@
     <Compile Include="Sessions\Query\Filters\MediaTypeFilter.cs" />
     <Compile Include="Sessions\Query\Filters\PrivateFilter.cs" />
     <Compile Include="Sessions\Query\Filters\TagFilter.cs" />
-    <Compile Include="Sessions\Query\EditInfoViewModel.cs" />
+    <Compile Include="Media\EditMediaInfoViewModel.cs" />
     <Compile Include="Sessions\Query\QueryResultDetailView.xaml.cs">
       <DependentUpon>QueryResultDetailView.xaml</DependentUpon>
     </Compile>
