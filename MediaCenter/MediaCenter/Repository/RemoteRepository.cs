@@ -161,9 +161,9 @@ namespace MediaCenter.Repository
                     // save in remote store
                     var mediaItemFilePath = Path.Combine(_remoteStore, newItem.ContentFileName);
                      
-                    await IOHelper.SaveObject(new MediaInfo(newItem), ItemNameToInfoFilename(newItem.Name));
+                    await IOHelper.SaveObject(new MediaInfo(newItem), ItemNameToInfoFilePath(newItem.Name));
                     await IOHelper.CopyFile(newItem.FilePath, mediaItemFilePath);
-                    await IOHelper.SaveBytes(newItem.Thumbnail, ItemNameToThumbnailFilename(newItem.Name));
+                    await IOHelper.SaveBytes(newItem.Thumbnail, ItemNameToThumbnailFilePath(newItem.Name));
                     
                     newItem.ContentUri = new Uri(mediaItemFilePath);
                     newItem.Status = MediaItemStatus.Saved;                    
@@ -212,8 +212,8 @@ namespace MediaCenter.Repository
             {
                 var item = _catalog.First(x => x.Name == name);
                 var contentFilePath = FileNameToRemoteFilePath(item.ContentFileName);
-                var thumbnailFilePath = ItemNameToThumbnailFilename(name);
-                var infoFileName = ItemNameToInfoFilename(name);
+                var thumbnailFilePath = ItemNameToThumbnailFilePath(name);
+                var infoFileName = ItemNameToInfoFilePath(name);
 
                 _catalog.Remove(item);
                 await IOHelper.DeleteFile(contentFilePath);
@@ -328,32 +328,51 @@ namespace MediaCenter.Repository
             // TODO: cache cleanup
         }
 
-        public async Task SaveItemInfo(string name)
-        {
-            var item = _catalog.First(i => i.Name == name);
-            
-            await IOHelper.SaveObject(new MediaInfo(item), ItemNameToInfoFilename(name));
-            await UpdateLocalStore();
-            await UpdateLastSyncDate(DateTime.Now); // TODO: solve concurrent access issue
-        }
-
-        public async Task SaveItemContent(string name)
+        public async Task SaveItem(string name)
         {
             var item = GetItem(name);
             if (item == null)
                 return;
-            
-            await IOHelper.SaveBytes(item.Content, FileNameToRemoteFilePath(item.ContentFileName));
-            // make sure that any buffered version of the content in memory is also updated 
-            if (_buffer.ContainsKey(name))
-                _buffer[name] = item.Content;
+
+            if (item.IsInfoDirty)
+            {
+                await SaveItemInfo(item);
+                item.IsInfoDirty = false;
+            }
+
+            if (item.IsContentDirty)
+            {
+                await SaveItemContent(item);
+                item.IsContentDirty = false;
+            }
+
+            if (item.IsThumbnailDirty)
+            {
+                await SaveItemThumbnail(item);
+                item.IsThumbnailDirty = false;
+            }
         }
 
-        public async Task SaveItemThumbnail(string name)
+        public async Task SaveItemInfo(MediaItem item)
         {
-            var thumbnail = GetItem(name)?.Thumbnail;
+            await IOHelper.SaveObject(new MediaInfo(item), ItemNameToInfoFilePath(item.Name));
+            await UpdateLocalStore();
+            await UpdateLastSyncDate(DateTime.Now); // TODO: this approach does not allow concurrent access
+        }
+
+        public async Task SaveItemContent(MediaItem item)
+        {   
+            await IOHelper.SaveBytes(item.Content, FileNameToRemoteFilePath(item.ContentFileName));
+            // make sure that any buffered version of the content is also updated 
+            if (_buffer.ContainsKey(item.Name))
+                _buffer[item.Name] = item.Content;
+        }
+
+        public async Task SaveItemThumbnail(MediaItem item)
+        {
+            var thumbnail = item.Thumbnail;
             if (thumbnail != null)
-                await IOHelper.SaveBytes(thumbnail, ItemNameToThumbnailFilename(name));
+                await IOHelper.SaveBytes(thumbnail, ItemNameToThumbnailFilePath(item.Name));
         }
 
         private string FileNameToRemoteFilePath(string fileName)
@@ -364,11 +383,11 @@ namespace MediaCenter.Repository
         {
             return FileNameToRemoteFilePath(GetItem(itemName)?.ContentFileName);
         }
-        private string ItemNameToThumbnailFilename(string itemName)
+        private string ItemNameToThumbnailFilePath(string itemName)
         {
             return Path.Combine(_remoteStore, itemName + "_T.jpg");
         }
-        private string ItemNameToInfoFilename(string itemName)
+        private string ItemNameToInfoFilePath(string itemName)
         {
             return Path.Combine(_remoteStore, itemName + MediaFileExtension);
         }
@@ -398,15 +417,19 @@ namespace MediaCenter.Repository
             StatusChanged?.Invoke(this, EventArgs.Empty);     
         }
 
-        public async Task SaveContentToFile(string itemName, string filePath)
+        public async Task SaveContentToFile(MediaItem item, string filePath)
         {
-            await IOHelper.CopyFile(ItemNameToRemoteFilePath(itemName), filePath);
+            await IOHelper.CopyFile(FileNameToRemoteFilePath(item.ContentFileName), filePath);
         }
 
-        private string TempFixGetFileNameFromFileSystem(string itemName)
+        public async Task SaveContentToFolder(List<MediaItem> items, string folderPath)
         {
-            return Directory.GetFiles(_remoteStore, $"{itemName}.*").FirstOrDefault(x => !x.EndsWith(MediaFileExtension));
+            foreach (var item in items)
+            {
+                await IOHelper.CopyFile(FileNameToRemoteFilePath(item.ContentFileName),
+                    Path.Combine(folderPath, item.ContentFileName));
+            }
         }
-                
+
     }
 }

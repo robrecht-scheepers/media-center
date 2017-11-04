@@ -26,15 +26,13 @@ namespace MediaCenter.Sessions.Query
 
         public async Task ExecuteQuery()
         {
-            var items = Filters.Aggregate(Repository.Catalog, (current, filter) => filter.Apply(current)).ToList();
-
-            // if there is no private filter set by the user, filter all private items by default
-            if(!Filters.Any(x => x is PrivateFilter))
+            var tmpFiltersList = Filters.ToList();
+            if (!tmpFiltersList.Any(x => x is PrivateFilter))
             {
-                var privateFilter = new PrivateFilter { PrivateSetting = PrivateFilter.PrivateOption.NoPrivate };
-                items = privateFilter.Apply(items).ToList();
+                tmpFiltersList.Add(new PrivateFilter { PrivateSetting = PrivateFilter.PrivateOption.NoPrivate });
             }
 
+            var items = tmpFiltersList.Aggregate(Repository.Catalog, (current, filter) => filter.Apply(current)).ToList();   
             items.Sort((x,y) => DateTime.Compare(x.DateTaken,y.DateTaken));
 
             QueryResult.Clear();
@@ -42,59 +40,21 @@ namespace MediaCenter.Sessions.Query
             {
                 QueryResult.Add(item);
             }
-
             foreach (var item in QueryResult)
             {
                 item.Thumbnail = await Repository.GetThumbnail(item.Name);
             }
         }
 
-        public async Task LoadFullImage(string name)
+        public int CalculatMatchCount()
         {
-            // decide other prefetch items
-            var prefetchList = new List<string>();
-            var index = QueryResult.IndexOf(QueryResult.First(x => x.Name == name));
-            if (index < QueryResult.Count - 1)
+            var tmpFiltersList = Filters.ToList();
+            if (!tmpFiltersList.Any(x => x is PrivateFilter))
             {
-                for (int i = 1; i < PrefetchBufferSize && index + i < QueryResult.Count; i++)
-                {
-                    if(QueryResult[index + i].MediaType == MediaType.Image)
-                        prefetchList.Add(QueryResult[index + i].Name);
-                }
+                tmpFiltersList.Add(new PrivateFilter { PrivateSetting = PrivateFilter.PrivateOption.NoPrivate });
             }
-            if (index > 0 && QueryResult[index - 1].MediaType == MediaType.Image)
-            {
-                prefetchList.Add(QueryResult[index - 1].Name);
-            }
-            var item = QueryResult.First(x => x.Name == name);
-            if(item.MediaType == MediaType.Image)
-                item.Content = await Repository.GetFullImage(name, prefetchList);
-        }
-        
-
-        public async Task SaveItem(MediaItem item)
-        {
-            if (item == null)
-                return;
-
-            if (item.IsInfoDirty)
-            {
-                await Repository.SaveItemInfo(item.Name);
-                item.IsInfoDirty = false;
-            }
-
-            if (item.IsContentDirty)
-            {
-                await Repository.SaveItemContent(item.Name);
-                item.IsContentDirty = false;
-            }
-
-            if(item.IsThumbnailDirty)
-            {
-                await Repository.SaveItemThumbnail(item.Name);
-                item.IsThumbnailDirty = false;
-            }
-        }
+            return tmpFiltersList.Aggregate(Repository.Catalog, (current, filter) => filter.Apply(current)).Count();
+        }        
 
         public async Task DeleteItem(MediaItem item)
         {

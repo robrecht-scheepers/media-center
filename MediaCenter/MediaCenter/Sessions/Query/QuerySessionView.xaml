@@ -152,10 +152,10 @@
                         </Image>
                     </ToggleButton>
                 </StackPanel>
-                <Button DockPanel.Dock="Right" Style="{StaticResource IconButton}" Command="{Binding DeleteCurrentImageCommand}">
+                <Button DockPanel.Dock="Right" Style="{StaticResource IconButton}" Command="{Binding DeleteCurrentSelectionCommand}">
                     <Image Source="/Resources/Icons/cross-button.png" Stretch="None"/>
                 </Button>
-                <Button DockPanel.Dock="Right" Style="{StaticResource IconButton}" Command="{Binding SaveCurrentItemToFileCommand}">
+                <Button DockPanel.Dock="Right" Style="{StaticResource IconButton}" Command="{Binding SaveCurrentSelectionToFileCommand}">
                     <Image Source="/Resources/Icons/disk--arrow.png" Stretch="None"/>
                 </Button>
             </DockPanel>

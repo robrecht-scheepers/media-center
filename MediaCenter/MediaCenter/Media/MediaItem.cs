@@ -17,6 +17,8 @@ namespace MediaCenter.Media
         public bool IsContentDirty { get; set; }
         public bool IsThumbnailDirty { get; set; }
 
+        public bool IsDirty => IsInfoDirty || IsContentDirty || IsThumbnailDirty;
+
         private string _name;
         public string Name
         {

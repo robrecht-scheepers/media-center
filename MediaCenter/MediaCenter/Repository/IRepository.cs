@@ -20,12 +20,10 @@ namespace MediaCenter.Repository
         Task DeleteItem(string name);
         Task<byte[]> GetThumbnail(string name);
         Task<byte[]> GetFullImage(string name, IEnumerable<string> prefetch);
-        Task SaveItemInfo(string name);
-        Task SaveItemContent(string name);
-        Task SaveItemThumbnail(string name);
-        
+        Task SaveItem(string name);
         System.Uri Location { get; }
-        Task SaveContentToFile(string itemName, string filePath); 
+        Task SaveContentToFile(MediaItem item, string filePath);
+        Task SaveContentToFolder(List<MediaItem> items, string folderPath);
         string StatusMessage { get; }
     }
 }
