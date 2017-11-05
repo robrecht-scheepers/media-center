@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MediaCenter.Sessions.Query
@@ -20,6 +21,8 @@ namespace MediaCenter.Sessions.Query
         public QueryResultDetailViewModel(ObservableCollection<MediaItem> queryResultItems, IRepository repository) : base(queryResultItems)
         {
             _repository = repository;
+            if (QueryResultItems.Any())
+                SelectedItem = QueryResultItems.First();
         }
 
         private MediaItem _selectedItem;
@@ -48,8 +51,12 @@ namespace MediaCenter.Sessions.Query
         private async Task SelectedItemChanged()
         {
             SelectedItems.Clear();
-            SelectedItems.Add(SelectedItem);
-            RaiseSelectionChanged(new List<MediaItem>{_previousSelectedItem}, new List<MediaItem>{SelectedItem});
+            if(SelectedItem != null)
+                SelectedItems.Add(SelectedItem);
+
+            RaiseSelectionChanged(
+                _previousSelectedItem == null ? new List<MediaItem>() : new List<MediaItem>{_previousSelectedItem}, 
+                SelectedItem == null ? new List<MediaItem>() : new List<MediaItem>{SelectedItem});
 
             SelectedItemViewModel = CreateItemViewModel(SelectedItem);
 

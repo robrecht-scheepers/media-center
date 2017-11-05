@@ -7,7 +7,6 @@
              xmlns:style="clr-namespace:MediaCenter.Styles"
              xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:slideshow="clr-namespace:MediaCenter.Sessions.Slideshow"
-             xmlns:tags="clr-namespace:MediaCenter.Sessions.Tags"
              xmlns:filters="clr-namespace:MediaCenter.Sessions.Query.Filters"
              xmlns:media="clr-namespace:MediaCenter.Media"
              mc:Ignorable="d" 
@@ -20,6 +19,12 @@
                 <ResourceDictionary Source="/Styles/Styles.xaml"/>
                 <ResourceDictionary Source="/Media/MediaItemDataTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <DataTemplate DataType="{x:Type local:QueryResultDetailViewModel}">
+                <local:QueryResultDetailView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type local:QueryResultListViewModel}">
+                <local:QueryResultListView/>
+            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
     
@@ -39,13 +44,8 @@
             <ColumnDefinition Width="6*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
         
-        
-        <Grid Grid.Column ="0" Grid.Row="0" Grid.RowSpan="2">
+        <Grid Grid.Column ="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
@@ -55,115 +55,16 @@
             <Button Grid.Row="1" Command="{Binding ExecuteQueryCommand}">Search</Button>
         </Grid>
 
-        <ListBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding QuerySession.QueryResult}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
-                 ScrollViewer.HorizontalScrollBarVisibility="Auto">
-            <interactivity:Interaction.Behaviors>
-                <style:ScrollIntoViewBehavior/>
-            </interactivity:Interaction.Behaviors>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Image Source="{Binding Thumbnail}" Height="100" Width="100" Margin="5"/>
-                        <Image Grid.Row="0" Stretch="UniformToFill" Source="/Resources/Images/film-strip.png" Height="100" Width="100" Margin="5">
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding MediaType}">
-                                            <DataTrigger.Value>
-                                                <media:MediaType>Video</media:MediaType>
-                                            </DataTrigger.Value>
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding MediaType}">
-                                            <DataTrigger.Value>
-                                                <media:MediaType>Image</media:MediaType>
-                                            </DataTrigger.Value>
-                                            <Setter Property="Visibility" Value="Hidden"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ListBox>
-
-        <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding SelectedItemViewModel}" />
-        <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource IconButton}" Command="{Binding SelectPreviousImageCommand}">
-            <Image Source="/Resources/Icons/arrow-180.png" Stretch="None"/>
-        </Button>
-        <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource IconButton}" Command="{Binding SelectNextImageCommand}">
-            <Image Source="/Resources/Icons/arrow.png" Stretch="None"/>
-        </Button>
+        <ContentControl Grid.Column="1" Content="{Binding QueryResultViewModel}"/>
         
-        <Grid Grid.Row="1" Grid.Column="2">
+        <Grid Grid.Column="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            
-            <TextBlock Grid.Row="0" Text="{Binding SelectedItem.Name, StringFormat='{}Name: {0}'}"/>
-            <TextBlock Grid.Row="1" Text="{Binding SelectedItem.DateTaken, StringFormat='{}Date taken: {0:dd.MM.yyyy, HH:mm:ss}'}"/>
-            <TextBlock Grid.Row="2" Text="{Binding SelectedItem.DateAdded, StringFormat='{}Date added: {0:dd.MM.yyyy, HH:mm:ss}'}"/>
-            
-            <DockPanel Grid.Row="3" HorizontalAlignment="Stretch" >
-                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                    <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding SelectedItem.Favorite, Mode=TwoWay}">
-                        <Image Stretch="None">
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding SelectedItem.Favorite}" Value="true">
-                                            <Setter Property="Source" Value="/Resources/Icons/star.png"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding SelectedItem.Favorite}" Value="false">
-                                            <Setter Property="Source" Value="/Resources/Icons/star-empty.png"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                    </ToggleButton>
-                    <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding SelectedItem.Private, Mode=TwoWay}">
-                        <Image Stretch="None">
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding SelectedItem.Private}" Value="true">
-                                            <Setter Property="Source" Value="/Resources/Icons/lock.png"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding SelectedItem.Private}" Value="false">
-                                            <Setter Property="Source" Value="/Resources/Icons/lock_grey.png"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                    </ToggleButton>
-                </StackPanel>
-                <Button DockPanel.Dock="Right" Style="{StaticResource IconButton}" Command="{Binding DeleteCurrentSelectionCommand}">
-                    <Image Source="/Resources/Icons/cross-button.png" Stretch="None"/>
-                </Button>
-                <Button DockPanel.Dock="Right" Style="{StaticResource IconButton}" Command="{Binding SaveCurrentSelectionToFileCommand}">
-                    <Image Source="/Resources/Icons/disk--arrow.png" Stretch="None"/>
-                </Button>
-            </DockPanel>
-            <Button Grid.Row="4" HorizontalAlignment="Left" Style="{StaticResource IconButton}" Command="{Binding CopyTagsFromPreviousCommand}">
-                <Image Source="/Resources/Icons/arrow-repeat.png" Stretch="None"/>
-            </Button>
-            <tags:TagsView Grid.Row="5" DataContext="{Binding TagsViewModel}"/>
-            <Button Grid.Row="6" Command="{Binding StartSlideShowCommand}">Start Slideshow</Button>
+
+            <media:EditMediaInfoView Grid.Row="0" DataContext="{Binding EditMediaInfoViewModel}"/>
+            <Button Grid.Row="1" Command="{Binding StartSlideShowCommand}">Start Slideshow</Button>
         </Grid>
     </Grid>
         

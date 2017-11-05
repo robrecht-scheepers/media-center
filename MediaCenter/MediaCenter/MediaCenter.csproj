@@ -102,6 +102,9 @@
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Helpers\VideoHelper.cs" />
     <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="Media\EditMediaInfoView.xaml.cs">
+      <DependentUpon>EditMediaInfoView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Media\ImageItemViewModel.cs" />
     <Compile Include="Media\ImageItemContentView.xaml.cs">
       <DependentUpon>ImageItemContentView.xaml</DependentUpon>
@@ -200,6 +203,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Media\EditMediaInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Media\ImageItemContentView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

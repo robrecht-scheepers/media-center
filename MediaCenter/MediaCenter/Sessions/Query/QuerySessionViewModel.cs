@@ -46,7 +46,7 @@ namespace MediaCenter.Sessions.Query
         }
         private async void QueryResultViewModelOnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
-            EditMediaInfoViewModel.PublishToItems();
+            EditMediaInfoViewModel?.PublishToItems();
             EditMediaInfoViewModel = new EditMediaInfoViewModel(args.NewSelection, Repository.Tags.ToList());
             foreach (var dirtyItem in args.OldSelection.Where(x => x.IsDirty))
             {
@@ -155,7 +155,6 @@ namespace MediaCenter.Sessions.Query
         {
             await QuerySession.ExecuteQuery();
             InitializeQueryResultViewModel();
-
         }
         
         #region Slideshow
