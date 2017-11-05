@@ -32,31 +32,47 @@
 
         <DockPanel Grid.Row="3" HorizontalAlignment="Stretch" >
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding SelectedItem.Favorite, Mode=TwoWay}">
+                <ToggleButton IsChecked="{Binding Favorite, Mode=TwoWay}">
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource IconToggleButton}">
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Content">
+                                        
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                    
+                    
                     <Image Stretch="None">
                         <Image.Style>
                             <Style TargetType="Image">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding SelectedItem.Favorite}" Value="true">
+                                    
+                                    
+                                    <DataTrigger Binding="{Binding Favorite}" Value="true">
                                         <Setter Property="Source" Value="/Resources/Icons/star.png"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding SelectedItem.Favorite}" Value="false">
+                                    <DataTrigger Binding="{Binding Favorite}" Value="false">
                                         <Setter Property="Source" Value="/Resources/Icons/star-empty.png"/>
-                                    </DataTrigger>
+                                    </DataTrigger> 
+                                    
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
                     </Image>
                 </ToggleButton>
-                <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding SelectedItem.Private, Mode=TwoWay}">
+                <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding Private, Mode=TwoWay}">
                     <Image Stretch="None">
                         <Image.Style>
                             <Style TargetType="Image">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding SelectedItem.Private}" Value="true">
+                                    <DataTrigger Binding="{Binding Private}" Value="true">
                                         <Setter Property="Source" Value="/Resources/Icons/lock.png"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding SelectedItem.Private}" Value="false">
+                                    <DataTrigger Binding="{Binding Private}" Value="false">
                                         <Setter Property="Source" Value="/Resources/Icons/lock_grey.png"/>
                                     </DataTrigger>
                                 </Style.Triggers>

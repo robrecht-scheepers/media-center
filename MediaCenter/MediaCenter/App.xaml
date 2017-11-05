@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:MediaCenter"
              Startup="ApplicationStartup" Exit="ApplicationExit">
     <Application.Resources>
-         
+         <ResourceDictionary>
+             <ResourceDictionary.MergedDictionaries>
+                 <ResourceDictionary Source="Controls/Controls.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+         </ResourceDictionary>
     </Application.Resources>
 </Application>
