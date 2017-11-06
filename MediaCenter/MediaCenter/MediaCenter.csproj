@@ -356,7 +356,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\lock.png" />
-    <Resource Include="Resources\Icons\lock_grey.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Dependencies\ffmpeg.exe">
@@ -365,6 +364,11 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\lock-grey.png" />
+    <Resource Include="Resources\Icons\lock-half.png" />
+    <Resource Include="Resources\Icons\emblem-favorite.png" />
+    <Resource Include="Resources\Icons\emblem-favorite-half.png" />
+    <Resource Include="Resources\Icons\emblem-favorite-grey.png" />
     <Resource Include="Resources\Icons\status-error.png" />
     <Resource Include="Resources\Icons\status-ok.png" />
     <Resource Include="Resources\Images\film-strip.png" />

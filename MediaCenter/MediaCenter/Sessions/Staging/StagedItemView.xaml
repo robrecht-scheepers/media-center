@@ -11,14 +11,6 @@
              d:DesignHeight="300" d:DesignWidth="300"
              Background="Transparent"
              d:DataContext="{d:DesignInstance Type=media:MediaItem}">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/Styles.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
-    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

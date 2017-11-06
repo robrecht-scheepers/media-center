@@ -14,9 +14,6 @@
         d:DataContext="{d:DesignInstance local:SlideShowViewModel}">
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/Styles.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
             <DataTemplate DataType="{x:Type media:ImageItemViewModel}">
                 <Image Source="{Binding Path=MediaItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </DataTemplate>

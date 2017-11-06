@@ -16,7 +16,6 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Sessions/Query/Filters/FilterDataTemplates.xaml"/>
-                <ResourceDictionary Source="/Styles/Styles.xaml"/>
                 <ResourceDictionary Source="/Media/MediaItemDataTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <DataTemplate DataType="{x:Type local:QueryResultDetailViewModel}">

@@ -9,17 +9,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:EditMediaInfoViewModel}">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/Styles.xaml"></ResourceDictionary>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
-    
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -33,58 +24,12 @@
 
         <DockPanel Grid.Row="3" HorizontalAlignment="Stretch" >
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                <ToggleButton IsChecked="{Binding Favorite, Mode=TwoWay}">
-                    <ToggleButton.Style>
-                        <Style TargetType="ToggleButton" BasedOn="{StaticResource IconToggleButton}">
-                            <Style.Triggers>
-                                <Trigger Property="IsChecked" Value="True">
-                                    <Setter Property="Content">
-                                        
-                                    </Setter>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ToggleButton.Style>
-                    
-                    
-                    <Image Stretch="None">
-                        <Image.Style>
-                            <Style TargetType="Image">
-                                <Style.Triggers>
-                                    
-                                    
-                                    <DataTrigger Binding="{Binding Favorite}" Value="true">
-                                        <Setter Property="Source" Value="/Resources/Icons/star.png"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Favorite}" Value="false">
-                                        <Setter Property="Source" Value="/Resources/Icons/star-empty.png"/>
-                                    </DataTrigger> 
-                                    
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
-                </ToggleButton>
-                <ToggleButton Style="{StaticResource IconToggleButton}" IsChecked="{Binding Private, Mode=TwoWay}">
-                    <Image Stretch="None">
-                        <Image.Style>
-                            <Style TargetType="Image">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Private}" Value="true">
-                                        <Setter Property="Source" Value="/Resources/Icons/lock.png"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Private}" Value="false">
-                                        <Setter Property="Source" Value="/Resources/Icons/lock_grey.png"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
-                </ToggleButton>
+                <controls:ImageToggleButton IsChecked="{Binding Favorite, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}" Height="32" Width="32"
+                    CheckedImage="/Resources/Icons/emblem-favorite.png" UncheckedImage="/Resources/Icons/emblem-favorite-grey.png" NullImage="/Resources/Icons/emblem-favorite-half.png" />
+                <controls:ImageToggleButton IsChecked="{Binding Private, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}"  Height="32" Width="32"
+                    CheckedImage="/Resources/Icons/lock.png" UncheckedImage="/Resources/Icons/lock-grey.png" NullImage="/Resources/Icons/lock-half.png"/>
             </StackPanel>
-            
         </DockPanel>
-        <controls:ImageButton Grid.Row="4" HorizontalAlignment="Left" ImageSource="/Resources/Icons/arrow-repeat.png" Command="{Binding CopyTagsFromPreviousCommand}" Height="24" Width="24"/>
-        <tags:TagsView Grid.Row="5" DataContext="{Binding TagsViewModel}"/>
+        <tags:TagsView Grid.Row="4" DataContext="{Binding TagsViewModel}"/>
     </Grid>
 </UserControl>

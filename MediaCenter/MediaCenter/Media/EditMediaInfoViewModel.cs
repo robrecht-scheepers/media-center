@@ -56,15 +56,7 @@ namespace MediaCenter.Media
 
                 if (TagsViewModel.IsDirty)
                 {
-                    if (SingleItem)
-                    {
-                        item.Tags.Clear();
-                        foreach (var selectedTag in TagsViewModel.SelectedTags)
-                        {
-                            item.Tags.Add(selectedTag);
-                        }
-                    }
-                    else
+                    if (MultipleItems)
                     {
                         // add all tags that are new
                         foreach (var newTag in TagsViewModel.SelectedTags.Where(x => !item.Tags.Contains(x)))
@@ -77,12 +69,20 @@ namespace MediaCenter.Media
                             item.Tags.Remove(deletedTag);
                         }
                     }
+                    else
+                    {
+                        item.Tags.Clear();
+                        foreach (var selectedTag in TagsViewModel.SelectedTags)
+                        {
+                            item.Tags.Add(selectedTag);
+                        }
+                    }
                     item.IsInfoDirty = true;
                 }
             }
         }
 
-        public bool SingleItem => _items.Count == 1;
+        public bool MultipleItems => _items.Count > 1;
 
         public bool? Favorite
         {
@@ -121,7 +121,7 @@ namespace MediaCenter.Media
         }
         private void InitializeDateTaken()
         {
-            DateTaken = SingleItem ? (DateTime?)_items.First().DateTaken : null;
+            DateTaken = MultipleItems ? null : (DateTime?)_items.First().DateTaken;
         }
 
         public DateTime? DateAdded
@@ -131,7 +131,7 @@ namespace MediaCenter.Media
         }
         private void InitializeDateAdded()
         {
-            DateAdded = SingleItem ? (DateTime?)_items.First().DateAdded : null;
+            DateAdded = MultipleItems ? null : (DateTime?)_items.First().DateAdded;
         }
 
         public TagsViewModel TagsViewModel
@@ -142,9 +142,9 @@ namespace MediaCenter.Media
         private void InitializeTagsViewModel(IEnumerable<string> allTags)
         {
             // in case of multiple items, edit only the tags that are shared by all items
-            var tags = SingleItem
-                ? _items.First().Tags.ToList()
-                : (_originalTagsIntersect = _items.Select(x => x.Tags).Cast<IEnumerable<string>>().Aggregate((x, y) => x.Intersect(y)).ToList());
+            var tags = MultipleItems
+                ? (_originalTagsIntersect = _items.Select(x => x.Tags).Cast<IEnumerable<string>>().Aggregate((x, y) => x.Intersect(y)).ToList())
+                : _items.First().Tags.ToList();
             TagsViewModel = new TagsViewModel(allTags, tags);
         }
     }

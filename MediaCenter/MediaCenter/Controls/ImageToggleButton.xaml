@@ -6,7 +6,7 @@
             <Border x:Name="Background" BorderBrush="Transparent" Background="Gray" Opacity="0"
                     Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}"
                     Width="{Binding Width, RelativeSource={RelativeSource TemplatedParent}}"/>
-            <Image x:Name="ButtonImage" 
+            <Image x:Name="ButtonImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                    Source="{Binding NullImage, RelativeSource={RelativeSource TemplatedParent}}"
                    Stretch="Uniform" Margin="1"/>
         </Grid>
