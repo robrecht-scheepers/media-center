@@ -9,6 +9,7 @@
              xmlns:slideshow="clr-namespace:MediaCenter.Sessions.Slideshow"
              xmlns:filters="clr-namespace:MediaCenter.Sessions.Query.Filters"
              xmlns:media="clr-namespace:MediaCenter.Media"
+             xmlns:controls="clr-namespace:MediaCenter.Controls"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:QuerySessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -40,7 +41,8 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
+            <controls:HideableColumnDefinition x:Name="FilterColumn" Width="2*" Visible="{Binding ElementName=ShowFilter, Path=IsChecked }"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="6*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
@@ -57,10 +59,24 @@
                 <ComboBox ItemsSource="{Binding ResultViewModesList}" SelectedItem="{Binding ResultViewMode}"/>
             </StackPanel>
         </Grid>
-
-        <ContentControl Grid.Column="1" Content="{Binding QueryResultViewModel}"/>
         
-        <Grid Grid.Column="2">
+        <Border Grid.Column="1" BorderBrush="#F0F0F0" BorderThickness="1" Background="Transparent" Margin="2" CornerRadius="2">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#FDFDFD"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>
+        <controls:ImageToggleButton x:Name="ShowFilter" Grid.Column="1" VerticalAlignment="Stretch" Width="16" IsChecked="True"
+                                    CheckedImage="/Resources/Icons/control-180.png" UncheckedImage="/Resources/Icons/control.png" />
+
+        <ContentControl Grid.Column="2" Content="{Binding QueryResultViewModel}"/>
+        
+        <Grid Grid.Column="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>

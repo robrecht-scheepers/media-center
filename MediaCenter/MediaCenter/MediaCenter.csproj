@@ -96,6 +96,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Controls\HideableColumnDefinition.cs" />
     <Compile Include="Controls\ImageButton.cs" />
     <Compile Include="Controls\ImageToggleButton.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
@@ -368,6 +369,8 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\control-180.png" />
+    <Resource Include="Resources\Icons\control.png" />
     <Resource Include="Resources\Icons\lock-grey.png" />
     <Resource Include="Resources\Icons\lock-half.png" />
     <Resource Include="Resources\Icons\emblem-favorite.png" />
