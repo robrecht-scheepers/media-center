@@ -9,14 +9,22 @@ using MediaCenter.Media;
 using MediaCenter.Repository;
 using MessageBox = System.Windows.MessageBox;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
+using System.Collections.Generic;
+using System;
 
 namespace MediaCenter.Sessions.Query
 {
     public class QuerySessionViewModel : SessionViewModelBase
     {
+        private SlideShowViewModel _slideShowViewModel;
+        private QueryResultViewModel _queryResultViewModel;
+        private EditMediaInfoViewModel _editMediaInfoViewModel;
+        private QueryResultViewMode _resultViewMode;
+
         public QuerySessionViewModel(SessionBase session) : base(session)
         {
             InitializeFilterCollectionViewModel();
+            ResultViewModesList = new List<QueryResultViewMode>{QueryResultViewMode.Detail, QueryResultViewMode.List};
         }
 
         public override string Name => "View media";
@@ -31,6 +39,19 @@ namespace MediaCenter.Sessions.Query
             FilterCollectionViewModel = new FilterCollectionViewModel(QuerySession.Filters, Repository.Tags);
         }
 
+        public QueryResultViewMode ResultViewMode
+        {
+            get { return _resultViewMode; }
+            set { SetValue(ref _resultViewMode, value, ResultViewModeChanged); }
+        }
+
+        private void ResultViewModeChanged()
+        {
+            if(QueryResultViewModel != null)
+                InitializeQueryResultViewModel();
+        }
+
+        public List<QueryResultViewMode> ResultViewModesList { get; }
         public QueryResultViewModel QueryResultViewModel
         {
             get { return _queryResultViewModel; }
@@ -41,7 +62,9 @@ namespace MediaCenter.Sessions.Query
             if(QueryResultViewModel != null)
                 QueryResultViewModel.SelectionChanged -= QueryResultViewModelOnSelectionChanged;
 
-            QueryResultViewModel = new QueryResultDetailViewModel(QuerySession.QueryResult, Repository);
+            QueryResultViewModel = ResultViewMode == QueryResultViewMode.Detail 
+                ? (QueryResultViewModel)new QueryResultDetailViewModel(QuerySession.QueryResult, Repository)
+                : (QueryResultViewModel)new QueryResultListViewModel(QuerySession.QueryResult);
             QueryResultViewModel.SelectionChanged += QueryResultViewModelOnSelectionChanged;
         }
         private async void QueryResultViewModelOnSelectionChanged(object sender, SelectionChangedEventArgs args)
@@ -184,9 +207,7 @@ namespace MediaCenter.Sessions.Query
             set { SetValue(ref _slideShowActive, value); }
         }
 
-        private SlideShowViewModel _slideShowViewModel;
-        private QueryResultViewModel _queryResultViewModel;
-        private EditMediaInfoViewModel _editMediaInfoViewModel;
+        
 
         public SlideShowViewModel SlideShowViewModel
         {
