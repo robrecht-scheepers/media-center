@@ -67,9 +67,7 @@
         </ListBox>
 
         <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding SelectedItemViewModel}" />
-        <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource IconButton}" Command="{Binding SelectPreviousImageCommand}">
-            <Image Source="/Resources/Icons/arrow-180.png" Stretch="None"/>
-        </Button>
+        <controls:ImageButton Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding SelectPreviousImageCommand}" ImageSource="/Resources/Icons/arrow-180.png" Height="32" Width="32"/>
         <controls:ImageButton Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding SelectNextImageCommand}" ImageSource="/Resources/Icons/arrow.png" Height="32" Width="32"/>
         
     </Grid>

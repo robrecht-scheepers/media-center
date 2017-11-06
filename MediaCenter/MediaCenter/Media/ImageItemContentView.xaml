@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MediaCenter.Media"
+             xmlns:controls="clr-namespace:MediaCenter.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance Type=local:ImageItemViewModel}">
@@ -21,12 +22,8 @@
         </Grid.RowDefinitions>
         <Image Grid.Row="0" Grid.RowSpan="2" Source="{Binding Path=MediaItem.Content}" />
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Style="{StaticResource IconButton}" Command="{Binding RotateCounterclockwiseCommand}">
-                <Image Source="/Resources/Icons/arrow-circle-315-rev.png" Stretch="None"/>
-            </Button>
-            <Button Style="{StaticResource IconButton}" Command="{Binding RotateClockwiseCommand}">
-                <Image Source="/Resources/Icons/arrow-circle-315.png" Stretch="None"/>
-            </Button>
+            <controls:ImageButton ImageSource="/Resources/Icons/arrow-circle-315-rev.png" Width="32" Height="32" Command="{Binding RotateCounterclockwiseCommand}"/>
+            <controls:ImageButton ImageSource="/Resources/Icons/arrow-circle-315.png" Width="32" Height="32" Command="{Binding RotateClockwiseCommand}"/>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -8,6 +8,7 @@
         xmlns:staging="clr-namespace:MediaCenter.Sessions.Staging"
         xmlns:query="clr-namespace:MediaCenter.Sessions.Query"
         xmlns:repository="clr-namespace:MediaCenter.Repository"
+        xmlns:controls="clr-namespace:MediaCenter.Controls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel}"
         Title="{Binding Path=AppVersion, StringFormat={}Media Center - v {0}}" Height="350" Width="525" WindowState="Maximized" Background="DarkSeaGreen">
@@ -43,11 +44,9 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
-                        <Button Style="{StaticResource IconButton}" VerticalAlignment="Center" Margin="5"
+                        <controls:ImageButton ImageSource="Resources/Icons/cross-grey.png" VerticalAlignment="Center" Height="16" Width="16" Margin="5"
                                 Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.CloseSessionCommand}" 
-                                CommandParameter="{Binding}">
-                            <Image Source="Resources/Icons/cross-grey.png" Width="10" Height="10" Stretch="Fill"/>
-                        </Button>
+                                CommandParameter="{Binding}"/>
                     </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>

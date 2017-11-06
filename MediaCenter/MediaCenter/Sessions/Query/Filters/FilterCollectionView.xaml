@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MediaCenter.Sessions.Query.Filters"
+             xmlns:controls="clr-namespace:MediaCenter.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -87,11 +88,9 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <ContentPresenter Grid.Column="0" Content="{Binding}"/>
-                        <Button Grid.Column="1" Style="{StaticResource IconButton}" 
+                        <controls:ImageButton Grid.Column="1" ImageSource="/Resources/Icons/cross-button.png" Height="16" Width="16"
                                     CommandParameter="{Binding}" 
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveFilterCommand}">
-                            <Image Source="/Resources/Icons/cross-button.png" Stretch="None"/>
-                        </Button>
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveFilterCommand}"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
