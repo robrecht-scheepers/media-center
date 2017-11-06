@@ -10,6 +10,9 @@ namespace MediaCenter.Sessions.Query
 {
     public class QueryResultListViewModel : QueryResultViewModel
     {
-        public QueryResultListViewModel(ObservableCollection<MediaItem> queryResultItems) : base(queryResultItems) { }
+        public QueryResultListViewModel(ObservableCollection<MediaItem> queryResultItems) : base(queryResultItems)
+        {
+            
+        }
     }
 }
