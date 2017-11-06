@@ -35,6 +35,16 @@ namespace MediaCenter.Controls
         public static readonly DependencyProperty UncheckedImageProperty =
             DependencyProperty.Register("UncheckedImage", typeof(string), typeof(ImageToggleButton), new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.AffectsRender, ImageSourceChanged));
 
+        public string NullImage
+        {
+            get { return (string)GetValue(NullImageProperty); }
+            set { SetValue(NullImageProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for NullImage.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty NullImageProperty =
+            DependencyProperty.Register("NullImage", typeof(string), typeof(ImageToggleButton), new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.AffectsRender, ImageSourceChanged));
+
 
         private static void ImageSourceChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {

@@ -5,10 +5,9 @@
         <Grid>
             <Border x:Name="Background" BorderBrush="Transparent" Background="Gray" Opacity="0"
                     Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}"
-                    Width="{Binding Width, RelativeSource={RelativeSource TemplatedParent}}"
-            />
+                    Width="{Binding Width, RelativeSource={RelativeSource TemplatedParent}}"/>
             <Image x:Name="ButtonImage" 
-                   Source="{Binding UncheckedImage, RelativeSource={RelativeSource TemplatedParent}}"
+                   Source="{Binding NullImage, RelativeSource={RelativeSource TemplatedParent}}"
                    Stretch="Uniform" Margin="1"/>
         </Grid>
         <ControlTemplate.Triggers>
@@ -17,6 +16,9 @@
             </Trigger>
             <Trigger Property="IsChecked" Value="True">
                 <Setter TargetName="ButtonImage" Property="Source" Value="{Binding CheckedImage, RelativeSource={RelativeSource TemplatedParent}}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="False">
+                <Setter TargetName="ButtonImage" Property="Source" Value="{Binding UncheckedImage, RelativeSource={RelativeSource TemplatedParent}}"/>
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
