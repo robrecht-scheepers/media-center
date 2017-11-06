@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
 using MediaCenter.Media;
+using MediaCenter.MVVM;
 
 namespace MediaCenter.Styles
 {
     public class BindableListboxSelectionBehavior : Behavior<ListBox>
     {
-        private ObservableCollection<MediaItem> _selection;
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -28,34 +24,39 @@ namespace MediaCenter.Styles
 
         private void AssociatedObject_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach (var eRemovedItem in e.RemovedItems)
+            if(SelectedItems == null) return;
+
+            var tmp = SelectedItems.ToList();
+
+            foreach (var obj in e.RemovedItems)
             {
-                var removedMediaItem = (MediaItem) eRemovedItem;
-                if (_selection.Contains(removedMediaItem))
-                    _selection.Remove(removedMediaItem);
+                var removedMediaItem = (MediaItem)obj;
+                if (tmp.Contains(removedMediaItem))
+                    tmp.Remove(removedMediaItem);
             }
-            foreach (var eAddedItem in e.AddedItems)
+            foreach (var obj in e.AddedItems)
             {
-                var addedMedaiItem = (MediaItem) eAddedItem;
-                if(!_selection.Contains(addedMedaiItem))
-                    _selection.Add(addedMedaiItem);
+                var addedMedaiItem = (MediaItem)obj;
+                if(!tmp.Contains(addedMedaiItem))
+                    tmp.Add(addedMedaiItem);
             }
+
+            SelectedItems.ReplaceAllItems(tmp);
         }
 
-        public ObservableCollection<MediaItem> SelectedItems
+        public SmartObservableCollection<MediaItem> SelectedItems
         {
-            get { return (ObservableCollection<MediaItem>)GetValue(SelectedItemsProperty); }
+            get { return (SmartObservableCollection<MediaItem>)GetValue(SelectedItemsProperty); }
             set { SetValue(SelectedItemsProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for SelectedItems.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectedItemsProperty =
-            DependencyProperty.Register("SelectedItems", typeof(ObservableCollection<MediaItem>), typeof(BindableListboxSelectionBehavior), new PropertyMetadata(null,SelectedItemsChanged));
+            DependencyProperty.Register("SelectedItems", typeof(SmartObservableCollection<MediaItem>), typeof(BindableListboxSelectionBehavior), new PropertyMetadata(null,SelectedItemsChanged));
 
         private static void SelectedItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var me = (BindableListboxSelectionBehavior) d;
-            me._selection = e.NewValue as ObservableCollection<MediaItem>;
+            
         }
     }
 }

@@ -7,12 +7,23 @@ namespace MediaCenter.Sessions.Query
     public delegate void SelectionChangedEventHandler(object sender, SelectionChangedEventArgs args); 
     public class SelectionChangedEventArgs : EventArgs
     {
-        public SelectionChangedEventArgs(List<MediaItem> oldSelection, List<MediaItem> newSelection)
+        /// <summary>
+        /// Notifies that the selected items collection has changed
+        /// </summary>
+        /// <param name="itemsRemoved">Items that were removed from the selection</param>
+        /// <param name="itemsAdded">Items that were added to the selection</param>
+        public SelectionChangedEventArgs(List<MediaItem> itemsRemoved, List<MediaItem> itemsAdded)
         {
-            OldSelection = oldSelection;
-            NewSelection = newSelection;
+            ItemsRemoved = itemsRemoved;
+            ItemsAdded = itemsAdded;
         }
-        public List<MediaItem> OldSelection { get; set; }
-        public List<MediaItem> NewSelection { get; set; }
+        /// <summary>
+        /// Items that were removed from the selection
+        /// </summary>
+        public List<MediaItem> ItemsRemoved { get; set; }
+        /// <summary>
+        /// Items that were added to the selection
+        /// </summary>
+        public List<MediaItem> ItemsAdded { get; set; }
     }
 }

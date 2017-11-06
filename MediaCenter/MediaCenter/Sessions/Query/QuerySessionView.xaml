@@ -24,6 +24,7 @@
             <DataTemplate DataType="{x:Type local:QueryResultListViewModel}">
                 <local:QueryResultListView/>
             </DataTemplate>
+            <style:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     
@@ -65,7 +66,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <media:EditMediaInfoView Grid.Row="0" DataContext="{Binding EditMediaInfoViewModel}"/>
+            <media:EditMediaInfoView Grid.Row="0" DataContext="{Binding EditMediaInfoViewModel}" Visibility="{Binding Converter={StaticResource NullVisibilityConverter}}"/>
             <Button Grid.Row="1" Command="{Binding StartSlideShowCommand}">Start Slideshow</Button>
         </Grid>
     </Grid>

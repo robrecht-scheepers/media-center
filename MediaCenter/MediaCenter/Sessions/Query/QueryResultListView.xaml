@@ -13,6 +13,25 @@
     <Grid>
         <ListBox ItemsSource="{Binding QueryResultItems}" SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                <Grid>
+                                    <Border x:Name="Border" BorderBrush="DarkBlue" Background="Transparent"/>
+                                    <ContentPresenter Margin="1"/>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Border" Property="BorderBrush" Value="DarkGreen"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
             <interactivity:Interaction.Behaviors>
                 <styles:BindableListboxSelectionBehavior SelectedItems="{Binding SelectedItems}"/>
             </interactivity:Interaction.Behaviors>
@@ -24,6 +43,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid>
+                        <Border x:Name="Border" BorderBrush="Transparent" Background="Transparent" Margin="0"/>
                         <Image Source="{Binding Thumbnail}" Height="100" Width="100" Margin="5"/>
                         <Image Grid.Row="0" Stretch="UniformToFill" Source="/Resources/Images/film-strip.png" Height="100" Width="100" Margin="5">
                             <Image.Style>
@@ -46,8 +66,15 @@
                             </Image.Style>
                         </Image>
                     </Grid>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" 
+                                     Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="Green"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ListBox>
     </Grid>
 </UserControl>
+

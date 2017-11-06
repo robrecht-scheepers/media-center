@@ -70,8 +70,10 @@ namespace MediaCenter.Sessions.Query
         private async void QueryResultViewModelOnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             EditMediaInfoViewModel?.PublishToItems();
-            EditMediaInfoViewModel = new EditMediaInfoViewModel(args.NewSelection, Repository.Tags.ToList());
-            foreach (var dirtyItem in args.OldSelection.Where(x => x.IsDirty))
+            EditMediaInfoViewModel = QueryResultViewModel.SelectedItems.Count > 0
+                ? new EditMediaInfoViewModel(QueryResultViewModel.SelectedItems.ToList(), Repository.Tags.ToList())
+                : null;
+            foreach (var dirtyItem in args.ItemsRemoved.Where(x => x.IsDirty))
             {
                 await Repository.SaveItem(dirtyItem.Name);
             }
