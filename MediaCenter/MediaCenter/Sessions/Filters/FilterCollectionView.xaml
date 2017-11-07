@@ -32,9 +32,7 @@
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type local:FavoriteFilter}">
-                <controls:ImageToggleButton IsChecked="{Binding Path=Favorite, Mode=TwoWay}" HorizontalAlignment="Center" 
-                                            CheckedImage="/Resources/Icons/emblem-favorite.png" 
-                                            UncheckedImage="/Resources/Icons/emblem-favorite-grey.png"/>
+                <ComboBox ItemsSource="{Binding Options}" SelectedItem="{Binding Path=FavoriteString, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>

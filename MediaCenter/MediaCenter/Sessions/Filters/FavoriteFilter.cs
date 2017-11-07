@@ -7,26 +7,80 @@ namespace MediaCenter.Sessions.Filters
 {
     public class FavoriteFilter : Filter
     {
-        private bool _favorite;
+        public enum FavoriteOption { OnlyFavorite, NoFavorite, All }
+
+        private const string NoFavorite = "No favorites";
+        private const string OnlyFavorite = "Only favorites";
+        private const string All = "All";
+
+        private FavoriteOption _favoriteSetting;
+        private string _favoriteString;
+
 
         public static string Name = "Favorite";
 
-        public bool Favorite
+        public FavoriteOption FavoriteSetting
         {
-            get { return _favorite; }
-            set { SetValue(ref _favorite, value); }
+            get { return _favoriteSetting; }
+            set { SetValue(ref _favoriteSetting, value, () => SetStringFromSetting()); }
+        }
+
+        public string FavoriteString
+        {
+            get { return _favoriteString; }
+            set { SetValue(ref _favoriteString, value, () => SetSettingFromString()); }
+        }
+
+        public List<string> Options => new List<string> { OnlyFavorite, NoFavorite, All };
+
+        private void SetSettingFromString()
+        {
+            switch (FavoriteString)
+            {
+                case NoFavorite:
+                    FavoriteSetting = FavoriteOption.NoFavorite;
+                    break;
+                case OnlyFavorite:
+                    FavoriteSetting = FavoriteOption.OnlyFavorite;
+                    break;
+                case All:
+                    FavoriteSetting = FavoriteOption.All;
+                    break;
+                default:
+                    FavoriteSetting = FavoriteOption.All;
+                    break;
+            }
+        }
+
+        private void SetStringFromSetting()
+        {
+            switch (FavoriteSetting)
+            {
+                case FavoriteOption.NoFavorite:
+                    FavoriteString = NoFavorite;
+                    break;
+                case FavoriteOption.OnlyFavorite:
+                    FavoriteString = OnlyFavorite;
+                    break;
+                case FavoriteOption.All:
+                    FavoriteString = All;
+                    break;
+                default:
+                    FavoriteString = "";
+                    break;
+            }
         }
 
         public override IEnumerable<MediaItem> Apply(IEnumerable<MediaItem> source)
         {
-            switch (FilterMode)
+            switch (FavoriteSetting)
             {
-                case FilterMode.Match:
-                    return source.Where(x => x.Favorite == Favorite);
-                case FilterMode.NoMatch:
-                    return source.Where(x => x.Favorite != Favorite);
+                case FavoriteOption.OnlyFavorite:
+                    return source.Where(x => x.Favorite);
+                case FavoriteOption.NoFavorite:
+                    return source.Where(x => !x.Favorite);
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return source;
             }
         }
     }
