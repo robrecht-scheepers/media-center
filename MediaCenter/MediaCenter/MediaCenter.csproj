@@ -324,10 +324,6 @@
     <Resource Include="Resources\Icons\tag-label-green.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Icons\star-empty.png" />
-    <Resource Include="Resources\Icons\star.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Icons\cross.png" />
   </ItemGroup>
   <ItemGroup>
@@ -344,15 +340,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\film.png" />
-    <Resource Include="Resources\Icons\pause.png" />
-    <Resource Include="Resources\Icons\navigation-180.png" />
-    <Resource Include="Resources\Icons\navigation.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\cross-grey.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Icons\arrow-repeat.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\lock.png" />

@@ -24,7 +24,7 @@
                             <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}" 
                                               Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveTagCommand}" />
                         </StackPanel.InputBindings>
-                        <Image Source="/Resources/Icons/tag-label-green.png"></Image>
+                        <Image Source="/Resources/Icons/tag-label-green.png"/>
                         <TextBlock Text="{Binding}"/>
                         <controls:ImageButton ImageSource="/Resources/Icons/cross-button.png" Width="16" Height="16" 
                                               CommandParameter="{Binding}" 

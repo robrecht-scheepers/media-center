@@ -149,32 +149,6 @@ namespace MediaCenter.Sessions.Query
         }
         #endregion
         
-        //private RelayCommand _copyTagsFromPreviousCommand;
-        //public RelayCommand CopyTagsFromPreviousCommand => _copyTagsFromPreviousCommand ?? (_copyTagsFromPreviousCommand = new RelayCommand(CopyTagsFromPrevious));
-
-        //public void CopyTagsFromPrevious()
-        //{
-        //    if(SelectedItem == null)
-        //        return;
-        //    var index = QueryResult.IndexOf(SelectedItem);
-        //    if (index <= 0)
-        //        return;
-        //    foreach (var tag in QueryResult[index - 1].Tags)
-        //    {
-        //        if(!SelectedItem.Tags.Contains(tag))
-        //            SelectedItem.Tags.Add(tag);
-        //    }
-        //    InitializeTagsViewModel();
-        //}
-
-        //public bool CanExecuteCopyTagFromPrevious()
-        //{
-        //    if (SelectedItem == null)
-        //        return false;
-        //    var index = QueryResult.IndexOf(SelectedItem);
-        //    return index > 0;
-        //}
-        
         private AsyncRelayCommand _executeQueryCommand;
         public AsyncRelayCommand ExecuteQueryCommand => _executeQueryCommand ?? (_executeQueryCommand = new AsyncRelayCommand(ExecuteQuery));
         private async Task ExecuteQuery()
