@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MediaCenter.Media;
 
-namespace MediaCenter.Sessions.Query.Filters
+namespace MediaCenter.Sessions.Filters
 {
     public class PrivateFilter : Filter
     {

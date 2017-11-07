@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using MediaCenter.MVVM;
-using MediaCenter.Sessions.Query.Filters;
+using MediaCenter.Sessions.Filters;
 using MediaCenter.Sessions.Slideshow;
 using System.Windows;
 using System.Windows.Forms;
@@ -11,6 +11,7 @@ using MessageBox = System.Windows.MessageBox;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 using System.Collections.Generic;
 using System;
+using MediaCenter.Sessions.Filters;
 
 namespace MediaCenter.Sessions.Query
 {

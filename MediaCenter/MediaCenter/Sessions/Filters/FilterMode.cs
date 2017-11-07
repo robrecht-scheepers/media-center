@@ -1,4 +1,4 @@
-﻿namespace MediaCenter.Sessions.Query.Filters
+﻿namespace MediaCenter.Sessions.Filters
 {
     public enum FilterMode
     {

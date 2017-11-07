@@ -139,19 +139,19 @@
       <DependentUpon>RepositoryStatusView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Repository\RepositoryViewModel.cs" />
-    <Compile Include="Sessions\Query\Filters\DateAddedFilter.cs" />
-    <Compile Include="Sessions\Query\Filters\DatePeriodFilter.cs" />
-    <Compile Include="Sessions\Query\Filters\FavoriteFilter.cs" />
-    <Compile Include="Sessions\Query\Filters\Filter.cs" />
-    <Compile Include="Sessions\Query\Filters\DateTakenFilter.cs" />
-    <Compile Include="Sessions\Query\Filters\FilterCollectionView.xaml.cs">
+    <Compile Include="Sessions\Filters\DateAddedFilter.cs" />
+    <Compile Include="Sessions\Filters\DatePeriodFilter.cs" />
+    <Compile Include="Sessions\Filters\FavoriteFilter.cs" />
+    <Compile Include="Sessions\Filters\Filter.cs" />
+    <Compile Include="Sessions\Filters\DateTakenFilter.cs" />
+    <Compile Include="Sessions\Filters\FilterCollectionView.xaml.cs">
       <DependentUpon>FilterCollectionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sessions\Query\Filters\FilterCollectionViewModel.cs" />
-    <Compile Include="Sessions\Query\Filters\FilterMode.cs" />
-    <Compile Include="Sessions\Query\Filters\MediaTypeFilter.cs" />
-    <Compile Include="Sessions\Query\Filters\PrivateFilter.cs" />
-    <Compile Include="Sessions\Query\Filters\TagFilter.cs" />
+    <Compile Include="Sessions\Filters\FilterCollectionViewModel.cs" />
+    <Compile Include="Sessions\Filters\FilterMode.cs" />
+    <Compile Include="Sessions\Filters\MediaTypeFilter.cs" />
+    <Compile Include="Sessions\Filters\PrivateFilter.cs" />
+    <Compile Include="Sessions\Filters\TagFilter.cs" />
     <Compile Include="Media\EditMediaInfoViewModel.cs" />
     <Compile Include="Sessions\Query\QueryResultDetailView.xaml.cs">
       <DependentUpon>QueryResultDetailView.xaml</DependentUpon>
@@ -246,11 +246,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Sessions\Query\Filters\FilterCollectionView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Sessions\Query\Filters\FilterDataTemplates.xaml">
+    <Page Include="Sessions\Filters\FilterCollectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

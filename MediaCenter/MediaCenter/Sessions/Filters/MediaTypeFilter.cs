@@ -2,7 +2,7 @@
 using System.Linq;
 using MediaCenter.Media;
 
-namespace MediaCenter.Sessions.Query.Filters
+namespace MediaCenter.Sessions.Filters
 {
     public class MediaTypeFilter : Filter
     {

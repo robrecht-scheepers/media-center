@@ -7,7 +7,7 @@
              xmlns:style="clr-namespace:MediaCenter.Styles"
              xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:slideshow="clr-namespace:MediaCenter.Sessions.Slideshow"
-             xmlns:filters="clr-namespace:MediaCenter.Sessions.Query.Filters"
+             xmlns:filters="clr-namespace:MediaCenter.Sessions.Filters"
              xmlns:media="clr-namespace:MediaCenter.Media"
              xmlns:controls="clr-namespace:MediaCenter.Controls"
              mc:Ignorable="d" 

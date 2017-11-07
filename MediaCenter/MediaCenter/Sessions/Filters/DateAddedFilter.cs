@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MediaCenter.Media;
 
-namespace MediaCenter.Sessions.Query.Filters
+namespace MediaCenter.Sessions.Filters
 {
     public class DateAddedFilter : DatePeriodFilter
     {

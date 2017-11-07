@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MediaCenter.Sessions.Query.Filters
+namespace MediaCenter.Sessions.Filters
 {
     public abstract class DatePeriodFilter : Filter
     {

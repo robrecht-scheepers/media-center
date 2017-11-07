@@ -3,7 +3,6 @@ using MediaCenter.MVVM;
 using MediaCenter.Repository;
 using MediaCenter.Sessions;
 using MediaCenter.Sessions.Query;
-using MediaCenter.Sessions.Query.Filters;
 using MediaCenter.Sessions.Staging;
 using System.Reflection;
 

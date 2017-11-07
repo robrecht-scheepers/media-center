@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediaCenter.Media;
 using MediaCenter.Repository;
-using MediaCenter.Sessions.Query.Filters;
+using MediaCenter.Sessions.Filters;
 
 namespace MediaCenter.Sessions.Query
 {
