@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace MediaCenter.Controls
 {
@@ -30,5 +31,19 @@ namespace MediaCenter.Controls
         {
             Application.GetResourceStream(new Uri("pack://application:,,," + (string)e.NewValue));
         }
+
+
+
+        public SolidColorBrush HoverBackground
+        {
+            get { return (SolidColorBrush)GetValue(HoverBackgroundProperty); }
+            set { SetValue(HoverBackgroundProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HoverBackground.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HoverBackgroundProperty =
+            DependencyProperty.Register("HoverBackground", typeof(SolidColorBrush), typeof(ImageButton), new PropertyMetadata(Brushes.Gray));
+
+
     }
 }

@@ -3,7 +3,7 @@
                     xmlns:local="clr-namespace:MediaCenter.Controls">
     <ControlTemplate x:Key="ImageButtonTemplate" TargetType="{x:Type local:ImageButton}">
         <Grid>
-            <Border x:Name="Background" BorderBrush="Transparent" Background="Gray" Opacity="0"
+            <Border x:Name="Background" BorderBrush="Transparent" Background="{Binding HoverBackground, RelativeSource={RelativeSource TemplatedParent}}" Opacity="0"
                     Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}"
                     Width="{Binding Width, RelativeSource={RelativeSource TemplatedParent}}"
             />

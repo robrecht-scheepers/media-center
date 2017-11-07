@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 
 namespace MediaCenter.Controls
 {
@@ -44,6 +45,17 @@ namespace MediaCenter.Controls
         // Using a DependencyProperty as the backing store for NullImage.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty NullImageProperty =
             DependencyProperty.Register("NullImage", typeof(string), typeof(ImageToggleButton), new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.AffectsRender, ImageSourceChanged));
+
+        public SolidColorBrush HoverBackground
+        {
+            get { return (SolidColorBrush)GetValue(HoverBackgroundProperty); }
+            set { SetValue(HoverBackgroundProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HoverBackground.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HoverBackgroundProperty =
+            DependencyProperty.Register("HoverBackground", typeof(SolidColorBrush), typeof(ImageToggleButton), new PropertyMetadata(Brushes.Gray));
+
 
 
         private static void ImageSourceChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
