@@ -8,22 +8,14 @@
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance Type=local:RepositoryViewModel}">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-
-        <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" HorizontalAlignment="Left" Margin="2" />
-        
-        <TextBlock Grid.Column="1" Text="{Binding Path=Location, StringFormat='Repository: {0}'}" Margin="20 2 20 2"/>
-
-        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Text="{Binding Path=ItemCount, StringFormat='{}({0} items: '}" Margin="0,2"/>
-            <TextBlock Text="{Binding Path=ImageItemCount, StringFormat='{} {0} images and'}" Margin="0,2"/>
-            <TextBlock Text="{Binding Path=VideoItemCount, StringFormat='{} {0} videos)'}" Margin="0,2,20,2"/>            
-        </StackPanel>
-
-        
+        <DockPanel>
+            <TextBlock DockPanel.Dock="Left" Text="{Binding StatusMessage}" HorizontalAlignment="Stretch" Margin="2" Background="Transparent" />
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Grid.Column="1" Text="{Binding Path=Location, StringFormat='Repository: {0}'}" Margin="20 2 20 2"/>
+                <TextBlock Text="{Binding Path=ItemCount, StringFormat='{}({0} items: '}" Margin="0,2"/>
+                <TextBlock Text="{Binding Path=ImageItemCount, StringFormat='{} {0} images and'}" Margin="0,2"/>
+                <TextBlock Text="{Binding Path=VideoItemCount, StringFormat='{} {0} videos)'}" Margin="0,2,20,2"/>
+            </StackPanel>
+        </DockPanel>
     </Grid>
 </UserControl>
