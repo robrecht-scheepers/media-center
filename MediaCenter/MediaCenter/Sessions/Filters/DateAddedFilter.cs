@@ -11,6 +11,9 @@ namespace MediaCenter.Sessions.Filters
 
         public override IEnumerable<MediaItem> Apply(IEnumerable<MediaItem> source)
         {
+            if (!From.HasValue && !Until.HasValue)
+                return source;
+
             switch (FilterMode)
             {
                 case FilterMode.Match:

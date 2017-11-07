@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using MediaCenter.MVVM;
 
 namespace MediaCenter.Sessions.Filters
@@ -7,27 +9,34 @@ namespace MediaCenter.Sessions.Filters
     public class FilterCollectionViewModel : PropertyChangedNotifier
     {
         private IEnumerable<string> _tags;
+        private List<Filter> _filters;
 
-        public FilterCollectionViewModel(ObservableCollection<Filter> filters, IEnumerable<string> tags)
+        public FilterCollectionViewModel(List<Filter> filters, IEnumerable<string> tags)
         {
             _tags = tags;
-            Filters = filters;
-            InitialzeFilterNames();
+            _filters = filters;
+            InitializeFilterViewModels();
         }
 
-        public ObservableCollection<Filter> Filters { get; }
-
-        public List<string> FilterNames { get; private set; }
-
-        private string _selectedFilterName;
-        public string SelectedFilterName
+        public ObservableCollection<FilterViewModel> FilterViewModels { get; private set;}
+        private void InitializeFilterViewModels()
         {
-            get { return _selectedFilterName; }
-            set { SetValue(ref _selectedFilterName, value); }
+            FilterViewModels = new ObservableCollection<FilterViewModel>();
+            foreach (var filter in _filters)
+            {
+                var filterViewModel = new FilterViewModel(filter, _tags);
+                filterViewModel.FilterChanged += FilterChanged;
+                FilterViewModels.Add(new FilterViewModel(filter,_tags));
+            }
         }
-        private void InitialzeFilterNames()
+
+        private void FilterChanged(object sender, EventArgs e)
         {
-            FilterNames = new List<string> { DateTakenFilter.Name, TagFilter.Name, FavoriteFilter.Name, DateAddedFilter.Name, PrivateFilter.Name, MediaTypeFilter.Name };
+            _filters.Clear();
+            foreach (var filterViewModel in FilterViewModels.Where(x => x.Filter != null))
+            {
+                _filters.Add(filterViewModel.Filter);
+            }
         }
 
         #region Command: Add filter
@@ -35,28 +44,22 @@ namespace MediaCenter.Sessions.Filters
         public RelayCommand AddFilterCommand => _addFilterCommand ?? (_addFilterCommand = new RelayCommand(AddFilter));
         private void AddFilter()
         {
-            if (SelectedFilterName == DateTakenFilter.Name)
-                Filters.Add(new DateTakenFilter());
-            else if (SelectedFilterName == TagFilter.Name)
-                Filters.Add(new TagFilter(_tags));
-            else if (SelectedFilterName == FavoriteFilter.Name)
-                Filters.Add(new FavoriteFilter());
-            else if (SelectedFilterName == DateAddedFilter.Name)
-                Filters.Add(new DateAddedFilter());
-            else if (SelectedFilterName == PrivateFilter.Name)
-                Filters.Add(new PrivateFilter());
-            else if (SelectedFilterName == MediaTypeFilter.Name)
-                Filters.Add(new MediaTypeFilter());
-
+            var filterViewModel = new FilterViewModel(_tags);
+            filterViewModel.FilterChanged += FilterChanged;
+            FilterViewModels.Add(filterViewModel);
         }
         #endregion
 
         #region Command: Remove filter
-        private RelayCommand<Filter> _removeFilterCommand;
-        public RelayCommand<Filter> RemoveFilterCommand => _removeFilterCommand ?? (_removeFilterCommand = new RelayCommand<Filter>(RemoveFilter));
-        private void RemoveFilter(Filter filter)
+        private RelayCommand<FilterViewModel> _removeFilterCommand;
+        public RelayCommand<FilterViewModel> RemoveFilterCommand => _removeFilterCommand ?? (_removeFilterCommand = new RelayCommand<FilterViewModel>(RemoveFilter));
+        private void RemoveFilter(FilterViewModel filterViewModel)
         {
-            Filters.Remove(filter);
+            if (filterViewModel.Filter != null)
+                _filters.Remove(filterViewModel.Filter);
+
+            filterViewModel.FilterChanged -= FilterChanged;
+            FilterViewModels.Remove(filterViewModel);
         }
         #endregion
 

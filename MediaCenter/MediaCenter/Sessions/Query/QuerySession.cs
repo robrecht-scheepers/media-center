@@ -16,11 +16,11 @@ namespace MediaCenter.Sessions.Query
 
         public QuerySession(IRepository repository) : base(repository)
         {
-            Filters = new ObservableCollection<Filter>();
+            Filters = new List<Filter>();
             QueryResult = new ObservableCollection<MediaItem>();
         }
 
-        public ObservableCollection<Filter> Filters { get; } 
+        public List<Filter> Filters { get; } 
 
         public ObservableCollection<MediaItem> QueryResult { get; }
 

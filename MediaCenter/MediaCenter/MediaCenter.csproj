@@ -149,6 +149,7 @@
     </Compile>
     <Compile Include="Sessions\Filters\FilterCollectionViewModel.cs" />
     <Compile Include="Sessions\Filters\FilterMode.cs" />
+    <Compile Include="Sessions\Filters\FilterViewModel.cs" />
     <Compile Include="Sessions\Filters\MediaTypeFilter.cs" />
     <Compile Include="Sessions\Filters\PrivateFilter.cs" />
     <Compile Include="Sessions\Filters\TagFilter.cs" />

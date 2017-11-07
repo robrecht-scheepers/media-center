@@ -10,17 +10,11 @@ namespace MediaCenter
 {
     public class MainWindowViewModel : PropertyChangedNotifier
     {
-        
         public MainWindowViewModel(IRepository repository)
         {
             Sessions = new ObservableCollection<SessionViewModelBase>();
             Repository = repository;
             RepositoryViewModel = new RepositoryViewModel(Repository);
-
-            // debug code
-            var debugSession = new StagingSessionViewModel(new StagingSession(Repository));
-            Sessions.Add(debugSession);
-            
         }
 
         public string AppVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
