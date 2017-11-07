@@ -52,11 +52,7 @@ namespace MediaCenter.Styles
 
         // Using a DependencyProperty as the backing store for SelectedItems.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectedItemsProperty =
-            DependencyProperty.Register("SelectedItems", typeof(BatchObservableCollection<MediaItem>), typeof(BindableListboxSelectionBehavior), new PropertyMetadata(null,SelectedItemsChanged));
-
-        private static void SelectedItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            
-        }
+            DependencyProperty.Register("SelectedItems", typeof(BatchObservableCollection<MediaItem>), typeof(BindableListboxSelectionBehavior), new PropertyMetadata(null));
+        
     }
 }
