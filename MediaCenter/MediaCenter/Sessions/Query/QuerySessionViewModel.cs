@@ -10,8 +10,6 @@ using MediaCenter.Repository;
 using MessageBox = System.Windows.MessageBox;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 using System.Collections.Generic;
-using System;
-using MediaCenter.Sessions.Filters;
 
 namespace MediaCenter.Sessions.Query
 {

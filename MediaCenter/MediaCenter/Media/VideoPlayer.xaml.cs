@@ -18,7 +18,7 @@ namespace MediaCenter.Media
         private DispatcherTimer _timer;
         private bool _isDragging = false;
         private bool _sliderlengthSet = false;
-        private bool _StartOnLoad = false;
+        
         public VideoPlayer()
         {
             InitializeComponent();
