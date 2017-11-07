@@ -15,12 +15,12 @@ namespace MediaCenter.Sessions.Query
         public QueryResultViewModel(ObservableCollection<MediaItem> queryResultItems)
         {
             QueryResultItems = queryResultItems;
-            SelectedItems = new SmartObservableCollection<MediaItem>();
+            SelectedItems = new BatchObservableCollection<MediaItem>();
         }
 
         public ObservableCollection<MediaItem> QueryResultItems { get; }
 
-        public SmartObservableCollection<MediaItem> SelectedItems { get; }
+        public BatchObservableCollection<MediaItem> SelectedItems { get; }
 
         public event SelectionChangedEventHandler SelectionChanged;
 

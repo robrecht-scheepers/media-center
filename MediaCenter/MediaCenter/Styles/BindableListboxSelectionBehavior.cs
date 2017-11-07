@@ -44,15 +44,15 @@ namespace MediaCenter.Styles
             SelectedItems.ReplaceAllItems(tmp);
         }
 
-        public SmartObservableCollection<MediaItem> SelectedItems
+        public BatchObservableCollection<MediaItem> SelectedItems
         {
-            get { return (SmartObservableCollection<MediaItem>)GetValue(SelectedItemsProperty); }
+            get { return (BatchObservableCollection<MediaItem>)GetValue(SelectedItemsProperty); }
             set { SetValue(SelectedItemsProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for SelectedItems.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectedItemsProperty =
-            DependencyProperty.Register("SelectedItems", typeof(SmartObservableCollection<MediaItem>), typeof(BindableListboxSelectionBehavior), new PropertyMetadata(null,SelectedItemsChanged));
+            DependencyProperty.Register("SelectedItems", typeof(BatchObservableCollection<MediaItem>), typeof(BindableListboxSelectionBehavior), new PropertyMetadata(null,SelectedItemsChanged));
 
         private static void SelectedItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

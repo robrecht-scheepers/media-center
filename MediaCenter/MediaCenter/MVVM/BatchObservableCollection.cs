@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace MediaCenter.MVVM
 {
-    public class SmartObservableCollection<T> : ObservableCollection<T>
+    public class BatchObservableCollection<T> : ObservableCollection<T>
     {
-        public SmartObservableCollection() : base()
+        public BatchObservableCollection() : base()
         {
         }
 
-        public SmartObservableCollection(IEnumerable<T> collection) : base(collection)
+        public BatchObservableCollection(IEnumerable<T> collection) : base(collection)
         {
         }
 
-        public SmartObservableCollection(List<T> list) : base(list)
+        public BatchObservableCollection(List<T> list) : base(list)
         {
         }
 

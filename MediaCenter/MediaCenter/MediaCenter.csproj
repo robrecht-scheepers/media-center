@@ -122,7 +122,7 @@
     <Compile Include="Media\VideoPlayer.xaml.cs">
       <DependentUpon>VideoPlayer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MVVM\SmartObservableCollection.cs" />
+    <Compile Include="MVVM\BatchObservableCollection.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\MediaInfo.cs" />
     <Compile Include="MVVM\AsyncRelayCommand.cs" />
@@ -328,7 +328,6 @@
     <Resource Include="Resources\Icons\star.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Icons\cross-script.png" />
     <Resource Include="Resources\Icons\cross.png" />
   </ItemGroup>
   <ItemGroup>
