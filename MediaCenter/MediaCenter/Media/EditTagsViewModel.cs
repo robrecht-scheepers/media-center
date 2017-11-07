@@ -3,13 +3,13 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using MediaCenter.MVVM;
 
-namespace MediaCenter.Sessions.Tags
+namespace MediaCenter.Media
 {
-    public class TagsViewModel : PropertyChangedNotifier
+    public class EditTagsViewModel : PropertyChangedNotifier
     {
         private List<string> _originalTags;
 
-        public TagsViewModel(IEnumerable<string> allTags, IEnumerable<string> currentTags = null)
+        public EditTagsViewModel(IEnumerable<string> allTags, IEnumerable<string> currentTags = null)
         {
             _originalTags = currentTags?.ToList() ?? new List<string>();
 

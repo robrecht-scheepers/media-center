@@ -7,7 +7,6 @@ using MediaCenter.Media;
 using MediaCenter.MVVM;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using System.Configuration;
-using MediaCenter.Sessions.Tags;
 
 namespace MediaCenter.Sessions.Staging
 {
@@ -23,8 +22,8 @@ namespace MediaCenter.Sessions.Staging
 
         public StagingSession StagingSession => (StagingSession)Session;
 
-        private TagsViewModel _tagsViewModel;
-        public TagsViewModel TagsViewModel
+        private EditTagsViewModel _tagsViewModel;
+        public EditTagsViewModel TagsViewModel
         {
             get { return _tagsViewModel; }
             set { SetValue(ref _tagsViewModel, value); }
@@ -34,7 +33,7 @@ namespace MediaCenter.Sessions.Staging
 
         private void InitializeTagsViewModel()
         {
-            TagsViewModel = new TagsViewModel(Session.Repository.Tags);
+            TagsViewModel = new EditTagsViewModel(Session.Repository.Tags);
         }
 
         #region Edit item

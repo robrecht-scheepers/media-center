@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using MediaCenter.MVVM;
-using MediaCenter.Sessions.Tags;
 
 namespace MediaCenter.Media
 {
@@ -15,7 +14,7 @@ namespace MediaCenter.Media
         private DateTime? _dateTaken;
         private DateTime? _dateAdded;
 
-        private TagsViewModel _tagsViewModel;
+        private EditTagsViewModel _tagsViewModel;
         private List<string> _originalTagsIntersect;
 
         public EditMediaInfoViewModel(List<MediaItem> items, List<string> allTags)
@@ -134,7 +133,7 @@ namespace MediaCenter.Media
             DateAdded = MultipleItems ? null : (DateTime?)_items.First().DateAdded;
         }
 
-        public TagsViewModel TagsViewModel
+        public EditTagsViewModel TagsViewModel
         {
             get { return _tagsViewModel; }
             set { SetValue(ref _tagsViewModel, value); }
@@ -145,7 +144,7 @@ namespace MediaCenter.Media
             var tags = MultipleItems
                 ? (_originalTagsIntersect = _items.Select(x => x.Tags).Cast<IEnumerable<string>>().Aggregate((x, y) => x.Intersect(y)).ToList())
                 : _items.First().Tags.ToList();
-            TagsViewModel = new TagsViewModel(allTags, tags);
+            TagsViewModel = new EditTagsViewModel(allTags, tags);
         }
     }
 }

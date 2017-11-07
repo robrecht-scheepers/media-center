@@ -193,10 +193,10 @@
       <DependentUpon>StagingSessionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Staging\StagingSessionViewModel.cs" />
-    <Compile Include="Sessions\Tags\TagsView.xaml.cs">
-      <DependentUpon>TagsView.xaml</DependentUpon>
+    <Compile Include="Media\EditTagsView.xaml.cs">
+      <DependentUpon>EditTagsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sessions\Tags\TagsViewModel.cs" />
+    <Compile Include="Media\EditTagsViewModel.cs" />
     <Compile Include="Styles\ScrollIntoViewBehavior.cs" />
     <Page Include="Controls\Controls.xaml">
       <SubType>Designer</SubType>
@@ -278,7 +278,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Sessions\Tags\TagsView.xaml">
+    <Page Include="Media\EditTagsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -378,7 +378,9 @@
     <Resource Include="Resources\Icons\disk--arrow.png" />
     <Resource Include="Resources\Icons\pencil.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Sessions\Tags\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
