@@ -355,6 +355,7 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\plus.png" />
     <Resource Include="Resources\Icons\control-180.png" />
     <Resource Include="Resources\Icons\control.png" />
     <Resource Include="Resources\Icons\lock-grey.png" />

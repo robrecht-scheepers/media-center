@@ -8,57 +8,72 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance Type=local:EditTagsViewModel}">
-    
+    <UserControl.Resources>
+        <Style TargetType="{x:Type ListBoxItem}" x:Key="TagListItemStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Border x:Name="border" Margin="1">
+                            <ContentPresenter HorizontalAlignment="Stretch"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="3*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
-
-        <ListBox Grid.Row="0" ItemsSource="{Binding Path=SelectedTags}" Margin="5" BorderThickness="0" Background="Transparent">
+        
+        <ListBox Grid.Row="0" ItemsSource="{Binding Path=AvailableTags}" Margin="5" ItemContainerStyle="{StaticResource TagListItemStyle}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel.InputBindings>
-                            <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}" 
-                                              Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveTagCommand}" />
-                        </StackPanel.InputBindings>
-                        <Image Source="/Resources/Icons/tag-label-green.png"/>
-                        <TextBlock Text="{Binding}"/>
-                        <controls:ImageButton ImageSource="/Resources/Icons/cross-button.png" Width="16" Height="16" 
-                                              CommandParameter="{Binding}" 
-                                              Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveTagCommand}"/>
-                    </StackPanel>
+                    <Grid>
+                        <TextBlock Text="{Binding}" HorizontalAlignment="Stretch">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}" 
+                                              Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.AddExistingTagCommand}" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            
-            <TextBox Grid.Column="1" Text="{Binding NewTag, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" MinWidth="100" Margin="5">
+            <TextBox Grid.Column="0" Text="{Binding NewTag, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" MinWidth="100" Margin="5">
                 <TextBox.InputBindings>
                     <KeyBinding Key="Enter" Command="{Binding AddNewTagCommand}"/>
                 </TextBox.InputBindings>
             </TextBox>
-            <Button Grid.Column="2" Command="{Binding AddNewTagCommand}" Width="50" Margin="5">+</Button>
+            <controls:ImageButton Grid.Column="1" ImageSource="/Resources/Icons/plus.png" Command="{Binding AddNewTagCommand}" Width="32" Height="32" Margin="5"/>
         </Grid>
-        <ListBox Grid.Row="2" ItemsSource="{Binding Path=AvailableTags}" Margin="5">
+        <ListBox Grid.Row="2" ItemsSource="{Binding Path=SelectedTags}" Margin="5" ItemContainerStyle="{StaticResource TagListItemStyle}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding}">
-                        <TextBlock.InputBindings>
-                            <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}" 
-                                              Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.AddExistingTagCommand}" />
-                        </TextBlock.InputBindings>
-                    </TextBlock>
+                    <Grid>
+                        <TextBlock Text="{Binding}" HorizontalAlignment="Stretch">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}" 
+                                              Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveTagCommand}" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        
 
     </Grid>
 </UserControl>

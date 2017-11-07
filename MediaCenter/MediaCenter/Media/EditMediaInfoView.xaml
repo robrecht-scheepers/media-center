@@ -14,6 +14,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -21,14 +22,10 @@
         <TextBlock Grid.Row="1" Text="{Binding DateTaken, StringFormat='{}Date taken: {0:dd.MM.yyyy, HH:mm:ss}'}"/>
         <TextBlock Grid.Row="2" Text="{Binding DateAdded, StringFormat='{}Date added: {0:dd.MM.yyyy, HH:mm:ss}'}"/>
 
-        <DockPanel Grid.Row="3" HorizontalAlignment="Stretch" >
-            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                <controls:ImageToggleButton IsChecked="{Binding Favorite, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}" Height="32" Width="32"
+        <controls:ImageToggleButton Grid.Row="3" IsChecked="{Binding Favorite, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}" Height="32" Width="32" HorizontalAlignment="Left"
                     CheckedImage="/Resources/Icons/emblem-favorite.png" UncheckedImage="/Resources/Icons/emblem-favorite-grey.png" NullImage="/Resources/Icons/emblem-favorite-half.png" />
-                <controls:ImageToggleButton IsChecked="{Binding Private, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}"  Height="32" Width="32"
+        <controls:ImageToggleButton Grid.Row="4" IsChecked="{Binding Private, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}"  Height="32" Width="32" HorizontalAlignment="Left"
                     CheckedImage="/Resources/Icons/lock.png" UncheckedImage="/Resources/Icons/lock-grey.png" NullImage="/Resources/Icons/lock-half.png"/>
-            </StackPanel>
-        </DockPanel>
-        <local:EditTagsView Grid.Row="4" DataContext="{Binding TagsViewModel}"/>
+        <local:EditTagsView Grid.Row="5" DataContext="{Binding TagsViewModel}"/>
     </Grid>
 </UserControl>
