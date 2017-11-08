@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MediaCenter.Media"
+             xmlns:styles="clr-namespace:MediaCenter.Styles"
              xmlns:controls="clr-namespace:MediaCenter.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
@@ -28,12 +29,45 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
-        <ListBox Grid.Row="0" ItemsSource="{Binding Path=AvailableTags}" Margin="5" ItemContainerStyle="{StaticResource TagListItemStyle}">
+        <Border Grid.Row="0" Grid.RowSpan="2" BorderThickness="1" BorderBrush="DarkGray" Margin="1"/>
+
+        <StackPanel Grid.Row="0" Orientation="Vertical">
+            <Grid>
+                <Border Background="LightGray" Margin="6">
+                    <TextBlock Text="No tags selected" HorizontalAlignment="Stretch" Margin="2" />
+                </Border>
+                <Grid.Style>
+                    <Style TargetType="{x:Type Grid}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=SelectedTagsList, Path=HasItems}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+            <ListBox x:Name="SelectedTagsList" ItemsSource="{Binding Path=SelectedTags}" Margin="5" ItemContainerStyle="{StaticResource TagListItemStyle}" BorderThickness="0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Border Background="LightGray"/>
+                            <TextBlock Text="{Binding}" HorizontalAlignment="Stretch">
+                                <TextBlock.InputBindings>
+                                    <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}" 
+                                                  Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveTagCommand}" />
+                                </TextBlock.InputBindings>
+                            </TextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+        <ListBox Grid.Row="1" ItemsSource="{Binding Path=AvailableTags}" Margin="5" ItemContainerStyle="{StaticResource TagListItemStyle}" BorderThickness="0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -47,7 +81,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -59,20 +93,7 @@
             </TextBox>
             <controls:ImageButton Grid.Column="1" ImageSource="/Resources/Icons/plus.png" Command="{Binding AddNewTagCommand}" Width="32" Height="32" Margin="5"/>
         </Grid>
-        <ListBox Grid.Row="2" ItemsSource="{Binding Path=SelectedTags}" Margin="5" ItemContainerStyle="{StaticResource TagListItemStyle}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <TextBlock Text="{Binding}" HorizontalAlignment="Stretch">
-                            <TextBlock.InputBindings>
-                                <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}" 
-                                              Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveTagCommand}" />
-                            </TextBlock.InputBindings>
-                        </TextBlock>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        
         
 
     </Grid>
