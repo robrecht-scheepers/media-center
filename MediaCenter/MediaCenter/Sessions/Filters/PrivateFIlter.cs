@@ -30,11 +30,11 @@ namespace MediaCenter.Sessions.Filters
             switch(PrivateSetting)
             {
                 case PrivateOption.NoPrivate:
-                    return source.Where(x => !x.Private);
+                    return Invert ? source.Where(x => x.Private) : source.Where(x => !x.Private);
                 case PrivateOption.OnlyPrivate:
-                    return source.Where(x => x.Private);
+                    return Invert ? source.Where(x => !x.Private) : source.Where(x => x.Private);
                 case PrivateOption.All:
-                    return source;
+                    return Invert ? source.Where(x => false) : source;
                 default:
                     throw new ArgumentException("PrivateSetting");
             }

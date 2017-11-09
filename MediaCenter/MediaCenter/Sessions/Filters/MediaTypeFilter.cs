@@ -15,7 +15,9 @@ namespace MediaCenter.Sessions.Filters
 
         public override IEnumerable<MediaItem> Apply(IEnumerable<MediaItem> source)
         {
-            return source.Where(x => x.MediaType == MediaType);
+            return Invert
+                ? source.Where(x => x.MediaType != MediaType)
+                : source.Where(x => x.MediaType == MediaType);
         }
 
         private MediaType _mediaType;

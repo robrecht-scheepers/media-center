@@ -8,10 +8,10 @@ namespace MediaCenter.Sessions.Filters
     {
         protected Filter()
         {
-            FilterMode = FilterMode.Match;
+            Invert = false;
         }
 
-        public FilterMode FilterMode { get; set; }
+        public bool Invert { get; set; }
 
         public abstract IEnumerable<MediaItem> Apply(IEnumerable<MediaItem> source);
 

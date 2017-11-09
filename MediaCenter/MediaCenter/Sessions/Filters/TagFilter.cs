@@ -29,15 +29,9 @@ namespace MediaCenter.Sessions.Filters
             if (string.IsNullOrEmpty(Tag))
                 return source;
 
-            switch (FilterMode)
-            {
-                case FilterMode.Match:
-                    return source.Where(x => x.Tags.Contains(Tag));
-                case FilterMode.NoMatch:
-                    return source.Where(x => !x.Tags.Contains(Tag));
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(FilterMode), FilterMode, null);
-            }
+            return Invert
+                ? source.Where(x => !x.Tags.Contains(Tag))
+                : source.Where(x => x.Tags.Contains(Tag));
         }
     }
 }

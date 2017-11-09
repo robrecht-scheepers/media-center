@@ -14,16 +14,9 @@ namespace MediaCenter.Sessions.Filters
             if (!From.HasValue && !Until.HasValue)
                 return source;
 
-            switch (FilterMode)
-            {
-                case FilterMode.Match:
-                    return source.Where(x => x.DateTaken.Date >= From?.Date && x.DateTaken.Date <= Until?.Date);
-                case FilterMode.NoMatch:
-                    return source.Where(x => x.DateTaken.Date < From?.Date || x.DateTaken.Date > Until?.Date);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(FilterMode), FilterMode, null);
-            }
-            
+            return Invert
+                ? source.Where(x => x.DateTaken.Date < From?.Date || x.DateTaken.Date > Until?.Date)
+                : source.Where(x => x.DateTaken.Date >= From?.Date && x.DateTaken.Date <= Until?.Date);
         }
     }
 }
