@@ -6,7 +6,7 @@
              xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity" 
              xmlns:local="clr-namespace:MediaCenter.Sessions.Query"
              xmlns:media="clr-namespace:MediaCenter.Media"
-             xmlns:styles="clr-namespace:MediaCenter.Styles"
+             xmlns:wpf="clr-namespace:MediaCenter.WPF"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:QueryResultListViewModel}">
@@ -14,7 +14,7 @@
         <ListBox ItemsSource="{Binding QueryResultItems}" SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemContainerStyle="{StaticResource ThumbnailListItemContainerStyle}">
             <interactivity:Interaction.Behaviors>
-                <styles:BindableListboxSelectionBehavior SelectedItems="{Binding SelectedItems}"/>
+                <wpf:BindableListboxSelectionBehavior SelectedItems="{Binding SelectedItems}"/>
             </interactivity:Interaction.Behaviors>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

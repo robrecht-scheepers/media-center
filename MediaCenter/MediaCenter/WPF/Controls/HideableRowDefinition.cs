@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace MediaCenter.Controls
+namespace MediaCenter.WPF.Controls
 {
     public class HideableRowDefinition : RowDefinition
     {

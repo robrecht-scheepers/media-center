@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
 
-namespace MediaCenter.Styles
+namespace MediaCenter.WPF
 {
     public class OpenCloseWindowBehavior : Behavior<UserControl>
     {

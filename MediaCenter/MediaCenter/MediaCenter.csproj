@@ -96,11 +96,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Controls\HideableColumnDefinition.cs" />
-    <Compile Include="Controls\HideableRowDefinition.cs" />
-    <Compile Include="Controls\ImageButton.cs" />
-    <Compile Include="Controls\ImageToggleButton.cs" />
-    <Compile Include="Controls\ZoomImage.xaml.cs">
+    <Compile Include="WPF\Controls\HideableColumnDefinition.cs" />
+    <Compile Include="WPF\Controls\HideableRowDefinition.cs" />
+    <Compile Include="WPF\Controls\ImageButton.cs" />
+    <Compile Include="WPF\Controls\ImageToggleButton.cs" />
+    <Compile Include="WPF\Controls\ZoomImage.xaml.cs">
       <DependentUpon>ZoomImage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ImageHelper.cs" />
@@ -126,7 +126,7 @@
       <DependentUpon>VideoItemContentView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Media\VideoItemViewModel.cs" />
-    <Compile Include="Controls\VideoPlayer.xaml.cs">
+    <Compile Include="WPF\Controls\VideoPlayer.xaml.cs">
       <DependentUpon>VideoPlayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\BatchObservableCollection.cs" />
@@ -183,10 +183,10 @@
     </Compile>
     <Compile Include="Sessions\Staging\StagedItem.cs" />
     <Compile Include="Sessions\Staging\StagedItemListBehavior.cs" />
-    <Compile Include="Styles\BindableListboxSelectionBehavior.cs" />
-    <Compile Include="Styles\InvertedNullVisibilityConverter.cs" />
-    <Compile Include="Styles\NullVisibilityConverter.cs" />
-    <Compile Include="Styles\OpenCloseWindowBehavior.cs" />
+    <Compile Include="WPF\BindableListboxSelectionBehavior.cs" />
+    <Compile Include="WPF\InvertedNullVisibilityConverter.cs" />
+    <Compile Include="WPF\NullVisibilityConverter.cs" />
+    <Compile Include="WPF\OpenCloseWindowBehavior.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowViewModel.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowWindow.xaml.cs">
       <DependentUpon>SlideShowWindow.xaml</DependentUpon>
@@ -206,20 +206,20 @@
       <DependentUpon>EditTagsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Media\EditTagsViewModel.cs" />
-    <Compile Include="Styles\ScrollIntoViewBehavior.cs" />
-    <Page Include="Controls\CustomControls.xaml">
+    <Compile Include="WPF\ScrollIntoViewBehavior.cs" />
+    <Page Include="WPF\Controls\CustomControls.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ImageButton.xaml">
+    <Page Include="WPF\Controls\ImageButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ImageToggleButton.xaml">
+    <Page Include="WPF\Controls\ImageToggleButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ZoomImage.xaml">
+    <Page Include="WPF\Controls\ZoomImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -259,7 +259,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\VideoPlayer.xaml">
+    <Page Include="WPF\Controls\VideoPlayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -303,7 +303,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\Styles.xaml">
+    <Page Include="WPF\Styles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

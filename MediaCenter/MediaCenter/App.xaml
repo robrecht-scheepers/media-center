@@ -2,17 +2,17 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:MediaCenter"
-             xmlns:styles="clr-namespace:MediaCenter.Styles"
+             xmlns:wpf="clr-namespace:MediaCenter.WPF"
              Startup="ApplicationStartup" Exit="ApplicationExit">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Controls/CustomControls.xaml"/>
-                <ResourceDictionary Source="Styles/Styles.xaml"/>
+                <ResourceDictionary Source="WPF/Controls/CustomControls.xaml"/>
+                <ResourceDictionary Source="WPF/Styles.xaml"/>
                 <ResourceDictionary Source="Media/ThumbnailListItemContainerStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <styles:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
-            <styles:InvertedNullVisibilityConverter x:Key="InvertedNullVisibilityConverter"/>
+            <wpf:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
+            <wpf:InvertedNullVisibilityConverter x:Key="InvertedNullVisibilityConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

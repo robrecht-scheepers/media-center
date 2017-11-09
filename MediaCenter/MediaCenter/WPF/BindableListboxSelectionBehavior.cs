@@ -1,12 +1,11 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
 using MediaCenter.Media;
 using MediaCenter.MVVM;
 
-namespace MediaCenter.Styles
+namespace MediaCenter.WPF
 {
     public class BindableListboxSelectionBehavior : Behavior<ListBox>
     {

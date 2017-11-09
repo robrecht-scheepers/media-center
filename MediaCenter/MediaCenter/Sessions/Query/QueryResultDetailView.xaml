@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"             
              xmlns:local="clr-namespace:MediaCenter.Sessions.Query"
-             xmlns:style="clr-namespace:MediaCenter.Styles"
              xmlns:media="clr-namespace:MediaCenter.Media"
-             xmlns:controls="clr-namespace:MediaCenter.Controls"
+             xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
+             xmlns:wpf="clr-namespace:MediaCenter.WPF"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:QueryResultDetailViewModel}">
@@ -32,14 +32,14 @@
         <controls:ImageButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding SelectNextImageCommand}" ImageSource="/Resources/Icons/arrow.png" Height="32" Width="32"/>
 
         <Border Grid.Row="1" BorderBrush="#E5E5E5" BorderThickness="1" Background="Transparent" Margin="2" CornerRadius="2">
-            <controls:ImageToggleButton x:Name="ShowList" VerticalAlignment="Stretch" Width="16" HoverBackground="LightGray" IsChecked="True"
+            <controls:ImageToggleButton x:Name="ShowList" HorizontalAlignment="Stretch" Height="16" HoverBackground="LightGray" IsChecked="True"
                                     CheckedImage="/Resources/Icons/control-90.png" UncheckedImage="/Resources/Icons/control-270.png" />
         </Border>
 
         <ListBox Grid.Row="2" ItemsSource="{Binding QueryResultItems}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
                  ScrollViewer.HorizontalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource ThumbnailListItemContainerStyle}">
             <interactivity:Interaction.Behaviors>
-                <style:ScrollIntoViewBehavior/>
+                <wpf:ScrollIntoViewBehavior/>
             </interactivity:Interaction.Behaviors>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

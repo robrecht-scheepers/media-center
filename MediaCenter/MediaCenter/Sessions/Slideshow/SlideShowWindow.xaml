@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:MediaCenter.Sessions.Slideshow"
         xmlns:query="clr-namespace:MediaCenter.Sessions.Query"
         xmlns:media="clr-namespace:MediaCenter.Media"
-        xmlns:controls="clr-namespace:MediaCenter.Controls"
+        xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
         mc:Ignorable="d"
         Title="SlideShowWindow" Height="300" Width="300"
         WindowState="Maximized" WindowStyle="None"

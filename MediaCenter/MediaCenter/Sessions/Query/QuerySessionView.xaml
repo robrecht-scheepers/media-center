@@ -4,12 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MediaCenter.Sessions.Query"
-             xmlns:style="clr-namespace:MediaCenter.Styles"
              xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:slideshow="clr-namespace:MediaCenter.Sessions.Slideshow"
              xmlns:filters="clr-namespace:MediaCenter.Sessions.Filters"
              xmlns:media="clr-namespace:MediaCenter.Media"
-             xmlns:controls="clr-namespace:MediaCenter.Controls"
+             xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
+             xmlns:wpf="clr-namespace:MediaCenter.WPF"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:QuerySessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -28,7 +28,7 @@
     </UserControl.Resources>
     
     <interactivity:Interaction.Behaviors>
-        <style:OpenCloseWindowBehavior WindowType="slideshow:SlideShowWindow" Trigger="{Binding SlideShowActive}" WindowDataContext="{Binding Path=SlideShowViewModel}" 
+        <wpf:OpenCloseWindowBehavior WindowType="slideshow:SlideShowWindow" Trigger="{Binding SlideShowActive}" WindowDataContext="{Binding Path=SlideShowViewModel}" 
                                        OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" />
     </interactivity:Interaction.Behaviors>
     

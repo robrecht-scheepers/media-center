@@ -1,10 +1,8 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Microsoft.WindowsAPICodePack.ApplicationServices;
 
-namespace MediaCenter.Controls
+namespace MediaCenter.WPF.Controls
 {
     /// <summary>
     /// Interaction logic for ZoomImage.xaml

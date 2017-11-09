@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:MediaCenter.Controls">
+                    xmlns:local="clr-namespace:MediaCenter.WPF.Controls">
     <ControlTemplate x:Key="ImageToggleButtonTemplate" TargetType="{x:Type local:ImageToggleButton}">
         <Grid>
             <Border x:Name="Background" BorderBrush="Transparent" Background="{Binding HoverBackground, RelativeSource={RelativeSource TemplatedParent}}" Opacity="0"
