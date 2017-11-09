@@ -1,6 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Microsoft.WindowsAPICodePack.ApplicationServices;
 
 namespace MediaCenter.Controls
 {
@@ -160,8 +162,17 @@ namespace MediaCenter.Controls
 
         // Using a DependencyProperty as the backing store for ImageContent.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ImageContentProperty =
-            DependencyProperty.Register("ImageContent", typeof(byte[]), typeof(ZoomImage), new PropertyMetadata(null));
+            DependencyProperty.Register("ImageContent", typeof(byte[]), typeof(ZoomImage), new PropertyMetadata(null, ImageContentChanged));
 
-        
+        private static void ImageContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var me = (ZoomImage) d;
+            me.Reset();
+        }
+
+        private void Reset()
+        {
+            slider.Value = 1;
+        }
     }
 }
