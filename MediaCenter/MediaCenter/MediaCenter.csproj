@@ -99,6 +99,9 @@
     <Compile Include="Controls\HideableColumnDefinition.cs" />
     <Compile Include="Controls\ImageButton.cs" />
     <Compile Include="Controls\ImageToggleButton.cs" />
+    <Compile Include="Controls\ZoomImage.xaml.cs">
+      <DependentUpon>ZoomImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\IOHelper.cs" />
     <Compile Include="Helpers\ProcessAsyncExtension.cs" />
@@ -211,6 +214,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ImageToggleButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ZoomImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
