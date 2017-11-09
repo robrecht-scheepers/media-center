@@ -186,7 +186,6 @@
     <Compile Include="Sessions\Staging\StagedItem.cs" />
     <Compile Include="Sessions\Staging\StagedItemListBehavior.cs" />
     <Compile Include="WPF\BindableListboxSelectionBehavior.cs" />
-    <Compile Include="WPF\InvertedNullVisibilityConverter.cs" />
     <Compile Include="WPF\NullVisibilityConverter.cs" />
     <Compile Include="WPF\OpenCloseWindowBehavior.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowViewModel.cs" />
