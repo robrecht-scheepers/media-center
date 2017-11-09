@@ -96,6 +96,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Sessions\Filters\FilterView.xaml.cs">
+      <DependentUpon>FilterView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WPF\Controls\HideableColumnDefinition.cs" />
     <Compile Include="WPF\Controls\HideableRowDefinition.cs" />
     <Compile Include="WPF\Controls\ImageButton.cs" />
@@ -206,6 +209,10 @@
     </Compile>
     <Compile Include="Media\EditTagsViewModel.cs" />
     <Compile Include="WPF\ScrollIntoViewBehavior.cs" />
+    <Page Include="Sessions\Filters\FilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WPF\Controls\CustomControls.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -374,6 +381,8 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\arrow-return-180-gray.png" />
+    <Resource Include="Resources\Icons\arrow-return-180.png" />
     <Resource Include="Resources\Icons\control-270.png" />
     <Resource Include="Resources\Icons\control-90.png" />
     <Resource Include="Resources\Icons\plus.png" />
