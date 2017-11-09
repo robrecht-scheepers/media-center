@@ -20,12 +20,11 @@ namespace MediaCenter.Sessions.Query
         private SlideShowViewModel _slideShowViewModel;
         private QueryResultViewModel _queryResultViewModel;
         private EditMediaInfoViewModel _editMediaInfoViewModel;
-        private ViewMode _resultViewMode;
+        private ViewMode _selectedResultViewMode;
 
         public QuerySessionViewModel(SessionBase session) : base(session)
         {
             InitializeFilterCollectionViewModel();
-            ResultViewModesList = new List<ViewMode>{ViewMode.Detail, ViewMode.List};
         }
 
         public override string Name => "View media";
@@ -40,19 +39,28 @@ namespace MediaCenter.Sessions.Query
             FilterCollectionViewModel = new FilterCollectionViewModel(QuerySession.Filters, Repository.Tags);
         }
 
-        public ViewMode ResultViewMode
+        public EditMediaInfoViewModel EditMediaInfoViewModel
         {
-            get { return _resultViewMode; }
-            set { SetValue(ref _resultViewMode, value, ResultViewModeChanged); }
+            get { return _editMediaInfoViewModel; }
+            set { SetValue(ref _editMediaInfoViewModel, value); }
         }
 
-        private void ResultViewModeChanged()
+        public List<ViewMode> ResultViewModesList { get; private set; }
+        private void InitializeResultViewModelList()
+        {
+            ResultViewModesList = new List<ViewMode> { ViewMode.Detail, ViewMode.List };
+        }
+        public ViewMode SelectedResultViewMode
+        {
+            get { return _selectedResultViewMode; }
+            set { SetValue(ref _selectedResultViewMode, value, SelectedResultViewModeChanged); }
+        }
+        private void SelectedResultViewModeChanged()
         {
             if(QueryResultViewModel != null)
                 InitializeQueryResultViewModel();
         }
 
-        public List<ViewMode> ResultViewModesList { get; }
         public QueryResultViewModel QueryResultViewModel
         {
             get { return _queryResultViewModel; }
@@ -63,7 +71,7 @@ namespace MediaCenter.Sessions.Query
             if(QueryResultViewModel != null)
                 QueryResultViewModel.SelectionChanged -= QueryResultViewModelOnSelectionChanged;
 
-            QueryResultViewModel = ResultViewMode == ViewMode.Detail 
+            QueryResultViewModel = SelectedResultViewMode == ViewMode.Detail 
                 ? (QueryResultViewModel)new QueryResultDetailViewModel(QuerySession.QueryResult, Repository)
                 : (QueryResultViewModel)new QueryResultListViewModel(QuerySession.QueryResult);
             QueryResultViewModel.SelectionChanged += QueryResultViewModelOnSelectionChanged;
@@ -78,12 +86,6 @@ namespace MediaCenter.Sessions.Query
             {
                 await Repository.SaveItem(dirtyItem.Name);
             }
-        }
-
-        public EditMediaInfoViewModel EditMediaInfoViewModel
-        {
-            get { return _editMediaInfoViewModel; }
-            set { SetValue(ref _editMediaInfoViewModel, value); }
         }
 
         #region Command: delete current selection
@@ -148,7 +150,8 @@ namespace MediaCenter.Sessions.Query
             return (QueryResultViewModel != null && QueryResultViewModel.SelectedItems.Count > 0);
         }
         #endregion
-        
+
+        #region Command: execute query
         private AsyncRelayCommand _executeQueryCommand;
         public AsyncRelayCommand ExecuteQueryCommand => _executeQueryCommand ?? (_executeQueryCommand = new AsyncRelayCommand(ExecuteQuery));
         private async Task ExecuteQuery()
@@ -156,7 +159,8 @@ namespace MediaCenter.Sessions.Query
             await QuerySession.ExecuteQuery();
             InitializeQueryResultViewModel();
         }
-        
+        #endregion
+
         #region Slideshow
         private RelayCommand _startSlideShowCommand;
         public RelayCommand StartSlideShowCommand
