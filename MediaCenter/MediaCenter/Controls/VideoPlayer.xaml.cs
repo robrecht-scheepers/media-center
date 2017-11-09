@@ -96,6 +96,7 @@ namespace MediaCenter.Controls
                 TotalTime.Text = MediaElement.NaturalDuration.TimeSpan.ToString("mm\\:ss");
                 _sliderlengthSet = true;
             }
+
             if (!_isDragging)
             {
                 SeekSlider.Value = MediaElement.Position.TotalMilliseconds / _milisecondPerSliderTick;
@@ -195,5 +196,11 @@ namespace MediaCenter.Controls
             Stop();
         }
         #endregion
+
+        private void SeekSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if(!_isDragging)
+                MediaElement.Position = TimeSpan.FromMilliseconds(SeekSlider.Value * _milisecondPerSliderTick);
+        }
     }
 }
