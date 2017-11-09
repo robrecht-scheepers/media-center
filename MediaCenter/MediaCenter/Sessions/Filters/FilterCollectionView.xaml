@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MediaCenter.Sessions.Filters"
              xmlns:controls="clr-namespace:MediaCenter.Controls"
+             xmlns:styles="clr-namespace:MediaCenter.Styles"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:FilterCollectionViewModel}">
@@ -38,13 +39,6 @@
     </UserControl.Resources>
     
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
-        
-        <Button Grid.Row="0" Command="{Binding AddFilterCommand}" VerticalAlignment="Top">Add</Button>
-        
         <ListView Grid.Row="1" ItemsSource="{Binding FilterViewModels}" HorizontalContentAlignment="Stretch">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
@@ -72,8 +66,11 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" ItemsSource="{Binding FilterNames}" SelectedItem="{Binding SelectedFilterName, Mode=TwoWay}"/>
-                            <controls:ImageButton Grid.Column="1" ImageSource="/Resources/Icons/cross-button.png" Height="24" Width="24"
+                            <ComboBox Grid.Column="0" x:Name="FilterType" ItemsSource="{Binding FilterNames}" SelectedItem="{Binding SelectedFilterName, Mode=TwoWay}"/>
+                            <TextBlock Grid.Column="0" Text="-- Select filter type --" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="DarkGray"
+                                       Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource InvertedNullVisibilityConverter}}" />
+                            <controls:ImageButton Grid.Column="1" Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource NullVisibilityConverter}}"
+                                                  ImageSource="/Resources/Icons/cross.png" Height="24" Width="24"
                                                   Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FilterCollectionView}}, Path=DataContext.RemoveFilterCommand}"
                                                   CommandParameter="{Binding}"/>
                         </Grid>

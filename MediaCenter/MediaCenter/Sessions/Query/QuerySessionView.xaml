@@ -24,7 +24,6 @@
             <DataTemplate DataType="{x:Type local:QueryResultListViewModel}">
                 <local:QueryResultListView/>
             </DataTemplate>
-            <style:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     

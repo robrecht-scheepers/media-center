@@ -28,9 +28,16 @@ namespace MediaCenter.Sessions.Filters
                 filterViewModel.FilterChanged += FilterChanged;
                 FilterViewModels.Add(new FilterViewModel(filter,_tags));
             }
+            InitializeEmptyFilter();
         }
 
         private void FilterChanged(object sender, EventArgs e)
+        {
+            UpdateFilters();
+            InitializeEmptyFilter();
+        }
+
+        private void UpdateFilters()
         {
             _filters.Clear();
             foreach (var filterViewModel in FilterViewModels.Where(x => x.Filter != null))
@@ -38,17 +45,6 @@ namespace MediaCenter.Sessions.Filters
                 _filters.Add(filterViewModel.Filter);
             }
         }
-
-        #region Command: Add filter
-        private RelayCommand _addFilterCommand;
-        public RelayCommand AddFilterCommand => _addFilterCommand ?? (_addFilterCommand = new RelayCommand(AddFilter));
-        private void AddFilter()
-        {
-            var filterViewModel = new FilterViewModel(_tags);
-            filterViewModel.FilterChanged += FilterChanged;
-            FilterViewModels.Add(filterViewModel);
-        }
-        #endregion
 
         #region Command: Remove filter
         private RelayCommand<FilterViewModel> _removeFilterCommand;
@@ -62,6 +58,17 @@ namespace MediaCenter.Sessions.Filters
             FilterViewModels.Remove(filterViewModel);
         }
         #endregion
+
+        private void InitializeEmptyFilter()
+        {
+            // make sure the list end with an empty filter, that allows the user to creat the next one
+            if (!FilterViewModels.Any() || FilterViewModels.Last().Filter != null)
+            {
+                var filterViewModel = new FilterViewModel(_tags);
+                filterViewModel.FilterChanged += FilterChanged;
+                FilterViewModels.Add(filterViewModel);
+            }
+        }
 
     }
 }
