@@ -34,6 +34,9 @@ namespace MediaCenter.Controls
 
         void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if(slider.Value == 1)
+                return;
+
             var mousePos = e.GetPosition(scrollViewer);
             if (mousePos.X <= scrollViewer.ViewportWidth
                 && mousePos.Y < scrollViewer.ViewportHeight) //make sure we still can use the scrollbars
@@ -168,6 +171,24 @@ namespace MediaCenter.Controls
         {
             var me = (ZoomImage) d;
             me.Reset();
+        }
+
+
+
+        public bool ShowSlider
+        {
+            get { return (bool)GetValue(ShowSliderProperty); }
+            set { SetValue(ShowSliderProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ShowSlider.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ShowSliderProperty =
+            DependencyProperty.Register("ShowSlider", typeof(bool), typeof(ZoomImage), new PropertyMetadata(true, ShowSliderChanged));
+
+        private static void ShowSliderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var me = (ZoomImage)d;
+            me.slider.Visibility = Visibility.Collapsed;
         }
 
         private void Reset()
