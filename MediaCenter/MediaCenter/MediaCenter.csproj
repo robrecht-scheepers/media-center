@@ -125,7 +125,7 @@
       <DependentUpon>VideoItemContentView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Media\VideoItemViewModel.cs" />
-    <Compile Include="Media\VideoPlayer.xaml.cs">
+    <Compile Include="Controls\VideoPlayer.xaml.cs">
       <DependentUpon>VideoPlayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\BatchObservableCollection.cs" />
@@ -205,7 +205,7 @@
     </Compile>
     <Compile Include="Media\EditTagsViewModel.cs" />
     <Compile Include="Styles\ScrollIntoViewBehavior.cs" />
-    <Page Include="Controls\Controls.xaml">
+    <Page Include="Controls\CustomControls.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -253,7 +253,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Media\VideoPlayer.xaml">
+    <Page Include="Controls\VideoPlayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

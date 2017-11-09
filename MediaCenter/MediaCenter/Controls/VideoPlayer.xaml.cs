@@ -5,7 +5,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Threading;
 
-namespace MediaCenter.Media
+namespace MediaCenter.Controls
 {
     /// <summary>
     /// Interaction logic for VideoPlayer.xaml
