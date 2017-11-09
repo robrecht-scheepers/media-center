@@ -8,6 +8,7 @@
              <ResourceDictionary.MergedDictionaries>
                  <ResourceDictionary Source="Controls/CustomControls.xaml"/>
                  <ResourceDictionary Source="Styles/Styles.xaml"/>
+                 <ResourceDictionary Source="Media/ThumbnailListItemContainerStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
          </ResourceDictionary>
     </Application.Resources>

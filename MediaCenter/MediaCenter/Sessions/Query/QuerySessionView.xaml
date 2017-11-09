@@ -40,10 +40,11 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <controls:HideableColumnDefinition x:Name="FilterColumn" Width="2*" Visible="{Binding ElementName=ShowFilter, Path=IsChecked }"/>
+            <controls:HideableColumnDefinition Width="*" Visible="{Binding ElementName=ShowFilter, Path=IsChecked }"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="6*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="Auto"/>
+            <controls:HideableColumnDefinition Width="*" Visible="{Binding ElementName=ShowEdit, Path=IsChecked }"/>
         </Grid.ColumnDefinitions>
         
         <Grid Grid.Column ="0">
@@ -59,13 +60,19 @@
             </StackPanel>
         </Grid>
 
-        <Border Grid.Column="1" BorderBrush="#E5E5E5" BorderThickness="1" Background="Transparent" Margin="2" CornerRadius="2"/>
-        <controls:ImageToggleButton x:Name="ShowFilter" Grid.Column="1" VerticalAlignment="Stretch" Width="16" HoverBackground="LightGray" IsChecked="True"
-                                    CheckedImage="/Resources/Icons/control-180.png" UncheckedImage="/Resources/Icons/control.png" />
-
-        <ContentControl Grid.Column="2" Content="{Binding QueryResultViewModel}"/>
+        <Border Grid.Column="1" BorderBrush="#E5E5E5" BorderThickness="1" Background="Transparent" Margin="2" CornerRadius="2">
+            <controls:ImageToggleButton x:Name="ShowFilter" Grid.Column="1" VerticalAlignment="Stretch" Width="16" HoverBackground="LightGray" IsChecked="True"
+                                        CheckedImage="/Resources/Icons/control-180.png" UncheckedImage="/Resources/Icons/control.png" />
+        </Border>
         
-        <Grid Grid.Column="3">
+        <ContentControl Grid.Column="2" Content="{Binding QueryResultViewModel}"/>
+
+        <Border Grid.Column="3" BorderBrush="#E5E5E5" BorderThickness="1" Background="Transparent" Margin="2" CornerRadius="2">
+            <controls:ImageToggleButton x:Name="ShowEdit" Grid.Column="1" VerticalAlignment="Stretch" Width="16" HoverBackground="LightGray" IsChecked="True"
+                                    CheckedImage="/Resources/Icons/control.png" UncheckedImage="/Resources/Icons/control-180.png" />
+        </Border>
+        
+        <Grid Grid.Column="4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>

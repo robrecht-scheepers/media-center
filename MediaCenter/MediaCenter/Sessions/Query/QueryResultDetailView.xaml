@@ -36,9 +36,8 @@
                                     CheckedImage="/Resources/Icons/control-90.png" UncheckedImage="/Resources/Icons/control-270.png" />
         </Border>
 
-
         <ListBox Grid.Row="2" ItemsSource="{Binding QueryResultItems}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
-                 ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource ThumbnailListItemContainerStyle}">
             <interactivity:Interaction.Behaviors>
                 <style:ScrollIntoViewBehavior/>
             </interactivity:Interaction.Behaviors>
@@ -49,33 +48,10 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <Image Source="{Binding Thumbnail}" Height="100" Width="100" Margin="5"/>
-                        <Image Grid.Row="0" Stretch="UniformToFill" Source="/Resources/Images/film-strip.png" Height="100" Width="100" Margin="5">
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding MediaType}">
-                                            <DataTrigger.Value>
-                                                <media:MediaType>Video</media:MediaType>
-                                            </DataTrigger.Value>
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding MediaType}">
-                                            <DataTrigger.Value>
-                                                <media:MediaType>Image</media:MediaType>
-                                            </DataTrigger.Value>
-                                            <Setter Property="Visibility" Value="Hidden"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                    </Grid>
+                    <media:ThumbnailView DataContext="{Binding}" Margin="5"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ListBox>
-
         
     </Grid>
 </UserControl>
