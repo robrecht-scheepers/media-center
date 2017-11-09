@@ -12,6 +12,7 @@ namespace MediaCenter.Media
         private bool? _favorite;
         private bool? _private;
         private DateTime? _dateTaken;
+        private string _multipleDateTaken;
         private DateTime? _dateAdded;
 
         private EditTagsViewModel _tagsViewModel;
@@ -118,9 +119,34 @@ namespace MediaCenter.Media
             get { return _dateTaken; }
             set { SetValue(ref _dateTaken, value); }
         }
+
+        public string MultipleDateTaken
+        {
+            get { return _multipleDateTaken; }
+            set { SetValue(ref _multipleDateTaken, value); }
+        }
         private void InitializeDateTaken()
         {
-            DateTaken = MultipleItems ? null : (DateTime?)_items.First().DateTaken;
+            if (MultipleItems)
+            {
+                string dateFormat = "dd.MM.yyyy";
+                DateTaken = null;
+                var firstDate = _items.OrderBy(x => x.DateTaken).First().DateTaken.Date;
+                var lastDate = _items.OrderBy(x => x.DateTaken).Last().DateTaken.Date;
+
+                if (firstDate == lastDate)
+                    MultipleDateTaken = firstDate.ToString(dateFormat);
+                else
+                    MultipleDateTaken = $"{firstDate.ToString(dateFormat)} - {lastDate.ToString(dateFormat)}";
+            }
+            else
+            {
+                DateTaken = (DateTime?)_items.First().DateTaken;
+                MultipleDateTaken = null;
+            }
+            
+            
+            
         }
 
         public DateTime? DateAdded

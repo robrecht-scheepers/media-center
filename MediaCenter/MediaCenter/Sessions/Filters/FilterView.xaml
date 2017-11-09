@@ -20,13 +20,13 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <ComboBox Grid.Column="0" x:Name="FilterType" ItemsSource="{Binding FilterNames}" SelectedItem="{Binding SelectedFilterName, Mode=TwoWay}"/>
-            <TextBlock Grid.Column="0" Text="-- Select filter type --" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="DarkGray"
-                       Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource InvertedNullVisibilityConverter}}" />
+            <TextBlock Grid.Column="0" Text="-- Select filter type --" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="DarkGray" IsHitTestVisible="False"
+                       Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource HideWhenNotNullConverter}}" />
             <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <controls:ImageToggleButton Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource NullVisibilityConverter}}"
+                <controls:ImageToggleButton Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource HideWhenNullConverter}}"
                                       CheckedImage="/Resources/Icons/arrow-return-180.png" UncheckedImage="/Resources/Icons/arrow-return-180-gray.png"  Height="24" Width="24"
                                       IsChecked="{Binding Path=Filter.Invert}" />
-                <controls:ImageButton Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource NullVisibilityConverter}}"
+                <controls:ImageButton Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource HideWhenNullConverter}}"
                                       ImageSource="/Resources/Icons/cross.png" Height="24" Width="24"
                                       Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FilterCollectionView}}, Path=DataContext.RemoveFilterCommand}"
                                       CommandParameter="{Binding}"/>

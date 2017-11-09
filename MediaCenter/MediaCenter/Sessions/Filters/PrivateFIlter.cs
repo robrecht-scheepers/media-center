@@ -20,7 +20,7 @@ namespace MediaCenter.Sessions.Filters
         public PrivateFilter()
         {
             PrivateSetting = PrivateOption.NoPrivate;
-            PrivateString = NoPrivate;
+            SetStringFromSetting(); // call manually, because if the value just set was the default value of the enum, the setter action was not executed
         }
 
         public static string Name = "Private";

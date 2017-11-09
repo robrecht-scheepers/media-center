@@ -16,6 +16,11 @@ namespace MediaCenter.Sessions.Filters
         private FavoriteOption _favoriteSetting;
         private string _favoriteString;
 
+        public FavoriteFilter()
+        {
+            FavoriteSetting = FavoriteOption.OnlyFavorite;
+            SetStringFromSetting(); // call manually, because if the value just set was the default value of the enum, the setter action was not executed
+        }
 
         public static string Name = "Favorite";
 
@@ -76,11 +81,11 @@ namespace MediaCenter.Sessions.Filters
             switch (FavoriteSetting)
             {
                 case FavoriteOption.OnlyFavorite:
-                    return source.Where(x => x.Favorite);
+                    return Invert ? source.Where(x => !x.Favorite) : source.Where(x => x.Favorite);
                 case FavoriteOption.NoFavorite:
-                    return source.Where(x => !x.Favorite);
+                    return Invert ? source.Where(x => x.Favorite) : source.Where(x => !x.Favorite);
                 default:
-                    return source;
+                    return Invert ? source.Where(x => false) : source;
             }
         }
     }

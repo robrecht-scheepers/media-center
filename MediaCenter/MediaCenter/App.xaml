@@ -11,8 +11,10 @@
                 <ResourceDictionary Source="WPF/Styles.xaml"/>
                 <ResourceDictionary Source="Media/ThumbnailListItemContainerStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <wpf:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
-            <wpf:InvertedNullVisibilityConverter x:Key="InvertedNullVisibilityConverter"/>
+            <wpf:NullVisibilityConverter x:Key="HideWhenNullConverter" NotNullVisibility="Visible" NullVisibility="Hidden"/>
+            <wpf:NullVisibilityConverter x:Key="HideWhenNotNullConverter" NotNullVisibility="Hidden" NullVisibility="Visible"/>
+            <wpf:NullVisibilityConverter x:Key="CollapseWhenNullConverter" NotNullVisibility="Visible" NullVisibility="Collapsed"/>
+            <wpf:NullVisibilityConverter x:Key="CollapseWhenNotNullConverter" NotNullVisibility="Collapsed" NullVisibility="Visible"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
