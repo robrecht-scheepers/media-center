@@ -15,15 +15,17 @@ namespace MediaCenter.Sessions.Query
 {
     public class QuerySessionViewModel : SessionViewModelBase
     {
+        public enum ViewMode { List, Detail }
+    
         private SlideShowViewModel _slideShowViewModel;
         private QueryResultViewModel _queryResultViewModel;
         private EditMediaInfoViewModel _editMediaInfoViewModel;
-        private QueryResultViewMode _resultViewMode;
+        private ViewMode _resultViewMode;
 
         public QuerySessionViewModel(SessionBase session) : base(session)
         {
             InitializeFilterCollectionViewModel();
-            ResultViewModesList = new List<QueryResultViewMode>{QueryResultViewMode.Detail, QueryResultViewMode.List};
+            ResultViewModesList = new List<ViewMode>{ViewMode.Detail, ViewMode.List};
         }
 
         public override string Name => "View media";
@@ -38,7 +40,7 @@ namespace MediaCenter.Sessions.Query
             FilterCollectionViewModel = new FilterCollectionViewModel(QuerySession.Filters, Repository.Tags);
         }
 
-        public QueryResultViewMode ResultViewMode
+        public ViewMode ResultViewMode
         {
             get { return _resultViewMode; }
             set { SetValue(ref _resultViewMode, value, ResultViewModeChanged); }
@@ -50,7 +52,7 @@ namespace MediaCenter.Sessions.Query
                 InitializeQueryResultViewModel();
         }
 
-        public List<QueryResultViewMode> ResultViewModesList { get; }
+        public List<ViewMode> ResultViewModesList { get; }
         public QueryResultViewModel QueryResultViewModel
         {
             get { return _queryResultViewModel; }
@@ -61,7 +63,7 @@ namespace MediaCenter.Sessions.Query
             if(QueryResultViewModel != null)
                 QueryResultViewModel.SelectionChanged -= QueryResultViewModelOnSelectionChanged;
 
-            QueryResultViewModel = ResultViewMode == QueryResultViewMode.Detail 
+            QueryResultViewModel = ResultViewMode == ViewMode.Detail 
                 ? (QueryResultViewModel)new QueryResultDetailViewModel(QuerySession.QueryResult, Repository)
                 : (QueryResultViewModel)new QueryResultListViewModel(QuerySession.QueryResult);
             QueryResultViewModel.SelectionChanged += QueryResultViewModelOnSelectionChanged;

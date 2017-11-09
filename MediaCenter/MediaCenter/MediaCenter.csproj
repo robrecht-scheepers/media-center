@@ -169,7 +169,6 @@
       <DependentUpon>QueryResultListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Query\QueryResultListViewModel.cs" />
-    <Compile Include="Sessions\Query\QueryResultViewMode.cs" />
     <Compile Include="Sessions\Query\QueryResultViewModel.cs" />
     <Compile Include="Sessions\Query\QuerySessionView.xaml.cs">
       <DependentUpon>QuerySessionView.xaml</DependentUpon>
