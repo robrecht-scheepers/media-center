@@ -23,7 +23,9 @@
         </ResourceDictionary>
     </Window.Resources>
     
-    
+    <Window.InputBindings>
+        <KeyBinding Key="Escape" Command="{Binding CloseCOmmand}"/>
+    </Window.InputBindings>
 
     <interactivity:Interaction.Behaviors>
         <local:HideIdleMouseBehavior Interval="00:00:04"/>
@@ -36,12 +38,12 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ContentControl Grid.Row="0" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{Binding QuerySessionViewModel.SelectedItemViewModel}"/>
+        <ContentControl Grid.Row="0" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{Binding SelectedItemViewModel}"/>
         <controls:ImageButton Grid.Row="0" ImageSource="/Resources/Icons/cross-grey.png" Command="{Binding CloseCOmmand}" Width="32" Height="32" HorizontalAlignment="Right"/>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <controls:ImageButton ImageSource="/Resources/Icons/navigation-180.png" Command="{Binding PreviousImageCommand}" Width="32" Height="32"/>
+            <controls:ImageButton ImageSource="/Resources/Icons/control-180.png" Command="{Binding SelectPreviousImageCommand}" Width="32" Height="32"/>
             <controls:ImageButton ImageSource="/Resources/Icons/film.png" Command="{Binding PauseResumeCommand}" Width="32" Height="32"/>
-            <controls:ImageButton ImageSource="/Resources/Icons/navigation.png" Command="{Binding NextImageCommand}" Width="32" Height="32"/>
+            <controls:ImageButton ImageSource="/Resources/Icons/control.png" Command="{Binding SelectNextImageCommand}" Width="32" Height="32"/>
         </StackPanel>
     </Grid>
 </Window>

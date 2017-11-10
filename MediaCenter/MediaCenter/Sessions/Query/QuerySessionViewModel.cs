@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MediaCenter.MVVM;
 using MediaCenter.Sessions.Filters;
@@ -163,23 +164,10 @@ namespace MediaCenter.Sessions.Query
         #endregion
 
         #region Slideshow
-        private RelayCommand _startSlideShowCommand;
-        public RelayCommand StartSlideShowCommand
-            => _startSlideShowCommand ?? (_startSlideShowCommand = new RelayCommand(StartSlideShow));
-        public void StartSlideShow()
+        public SlideShowViewModel SlideShowViewModel
         {
-            if(SlideShowViewModel == null)
-                SlideShowViewModel = new SlideShowViewModel(this);
-            SlideShowActive = true;
-            SlideShowViewModel.Start();
-        }
-
-        private RelayCommand _closeSlideShowCommand;
-        public RelayCommand CloseSlideShowCommand => _closeSlideShowCommand ?? (_closeSlideShowCommand = new RelayCommand(CloseSlideShow));
-        private void CloseSlideShow()
-        {
-            SlideShowViewModel.Stop();
-            SlideShowActive = false;
+            get { return _slideShowViewModel; }
+            set { SetValue(ref _slideShowViewModel, value); }
         }
 
         private bool _slideShowActive;
@@ -189,13 +177,41 @@ namespace MediaCenter.Sessions.Query
             set { SetValue(ref _slideShowActive, value); }
         }
 
-        
-
-        public SlideShowViewModel SlideShowViewModel
+        private RelayCommand _startSlideShowCommand;
+        public RelayCommand StartSlideShowCommand
+            => _startSlideShowCommand ?? (_startSlideShowCommand = new RelayCommand(StartSlideShow));
+        public void StartSlideShow()
         {
-            get { return _slideShowViewModel; }
-            set { SetValue(ref _slideShowViewModel, value); }
+            // no multiple slideshows at the same time
+            if (SlideShowActive)
+            {
+                CloseSlideShow();
+            }
+
+            var startIndex = 0;
+            if (QueryResultViewModel != null && QueryResultViewModel.SelectedItems.Any())
+            {
+                startIndex = QuerySession.QueryResult.IndexOf(QueryResultViewModel.SelectedItems.First());
+            }
+            SlideShowViewModel = new SlideShowViewModel(QuerySession.QueryResult, Repository, startIndex);
+            SlideShowViewModel.CloseRequested += SlideShowViewModelOnCloseRequested;
+            SlideShowActive = true;
+            SlideShowViewModel.Start();
         }
+
+        private void SlideShowViewModelOnCloseRequested(object sender, EventArgs eventArgs)
+        {
+            CloseSlideShow();
+        }
+
+        private void CloseSlideShow()
+        {
+            SlideShowViewModel.Stop();
+            SlideShowViewModel.CloseRequested -= SlideShowViewModelOnCloseRequested;
+            SlideShowActive = false;
+            SlideShowViewModel = null;
+        }
+        
         #endregion
     }
 }

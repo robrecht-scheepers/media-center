@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using System.Timers;
 using MediaCenter.MVVM;
 using MediaCenter.Sessions.Query;
+using System.Collections.ObjectModel;
+using MediaCenter.Media;
+using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions.Slideshow
 {
@@ -17,17 +20,17 @@ namespace MediaCenter.Sessions.Slideshow
         Stopped
     }
 
-    public class SlideShowViewModel : PropertyChangedNotifier
+    public class SlideShowViewModel : QueryResultDetailViewModel
     {
         private Timer _timer;
-
-        public QuerySessionViewModel QuerySessionViewModel { get; }
-
-        public SlideShowViewModel(QuerySessionViewModel querySessionViewModel)
+        
+        public SlideShowViewModel(ObservableCollection<MediaItem> queryResultItems, IRepository repository, int startIndex = 0) : base(queryResultItems, repository)
         {
-            QuerySessionViewModel = querySessionViewModel;
             Interval = 4;
             Status = SlideshowStatus.Stopped;
+
+            if (startIndex > 0)
+                SelectedItem = QueryResultItems[startIndex];
         }
 
         private SlideshowStatus _status;
@@ -127,45 +130,9 @@ namespace MediaCenter.Sessions.Slideshow
         public RelayCommand CloseCOmmand => _closeCommand ?? (_closeCommand = new RelayCommand(Close));
         private void Close()
         {
-            QuerySessionViewModel.CloseSlideShowCommand.Execute(null);
+            CloseRequested?.Invoke(this, EventArgs.Empty);
         }
-
-        private RelayCommand _nextImageCommand;
-        public RelayCommand NextImageCommand => _nextImageCommand ?? (_nextImageCommand = new RelayCommand(NextImage, CanExecuteNextImage));
-        private void NextImage()
-        {
-
-            if(Status == SlideshowStatus.Active)
-                _timer.Stop();
-
-            //QuerySessionViewModel.SelectNextImageCommand.Execute(null);
-
-            if (Status == SlideshowStatus.Active)
-                _timer.Start();
-        }
-        private bool CanExecuteNextImage()
-        {
-            return true;
-            //return QuerySessionViewModel.SelectNextImageCommand.CanExecute(null);
-        }
-
-        private RelayCommand _previousImageCommand;
-        public RelayCommand PreviousImageCommand => _previousImageCommand ?? (_previousImageCommand = new RelayCommand(PreviousImage, CanExecutePreviousImage));
-        private void PreviousImage()
-        {
-
-            if (Status == SlideshowStatus.Active)
-                _timer.Stop();
-
-            //QuerySessionViewModel.SelectPreviousImageCommand.Execute(null);
-
-            if (Status == SlideshowStatus.Active)
-                _timer.Start();
-        }
-        private bool CanExecutePreviousImage()
-        {
-            return true;
-            //return QuerySessionViewModel.SelectPreviousImageCommand.CanExecute(null);
-        }
+        public event EventHandler CloseRequested;
+        
     }
 }
