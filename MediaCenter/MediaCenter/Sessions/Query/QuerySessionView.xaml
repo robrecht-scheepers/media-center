@@ -55,7 +55,7 @@
             <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollectionViewModel}"/>
             <StackPanel Grid.Row="1" Orientation="Vertical">
                 <Button Command="{Binding ExecuteQueryCommand}">Search</Button>
-                <ComboBox ItemsSource="{Binding ResultViewModesList}" SelectedItem="{Binding ResultViewMode}"/>
+                <ComboBox ItemsSource="{Binding ResultViewModesList}" SelectedItem="{Binding SelectedResultViewMode}"/>
             </StackPanel>
         </Grid>
 
