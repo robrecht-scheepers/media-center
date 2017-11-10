@@ -20,7 +20,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <ComboBox Grid.Column="0" x:Name="FilterType" ItemsSource="{Binding FilterNames}" SelectedItem="{Binding SelectedFilterName, Mode=TwoWay}"/>
-            <TextBlock Grid.Column="0" Text="-- Select filter type --" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="DarkGray" IsHitTestVisible="False"
+            <TextBlock Grid.Column="0" Text="-- Select a filter type to add a new filter --" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="DarkGray" IsHitTestVisible="False"
                        Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource HideWhenNotNullConverter}}" />
             <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <controls:ImageToggleButton Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource HideWhenNullConverter}}"

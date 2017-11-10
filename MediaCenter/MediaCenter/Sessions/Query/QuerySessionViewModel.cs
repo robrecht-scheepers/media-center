@@ -24,6 +24,7 @@ namespace MediaCenter.Sessions.Query
 
         public QuerySessionViewModel(SessionBase session) : base(session)
         {
+            InitializeResultViewModesList();
             InitializeFilterCollectionViewModel();
         }
 
@@ -46,7 +47,7 @@ namespace MediaCenter.Sessions.Query
         }
 
         public List<ViewMode> ResultViewModesList { get; private set; }
-        private void InitializeResultViewModelList()
+        private void InitializeResultViewModesList()
         {
             ResultViewModesList = new List<ViewMode> { ViewMode.Detail, ViewMode.List };
         }
