@@ -109,16 +109,16 @@ namespace MediaCenter.Sessions.Query
             }
         }
 
-        #region Command: Select next image
-        private RelayCommand _selectNextImageCommand;
-        public RelayCommand SelectNextImageCommand
-            => _selectNextImageCommand ?? (_selectNextImageCommand = new RelayCommand(SelectNextImage, CanExecuteSelectNextImage));
-        private void SelectNextImage()
+        #region Command: Select next item
+        private RelayCommand _selectNextItemCommand;
+        public RelayCommand SelectNextItemCommand
+            => _selectNextItemCommand ?? (_selectNextItemCommand = new RelayCommand(SelectNextItem, CanExecuteSelectNextItem));
+        protected void SelectNextItem()
         {
-            if (CanExecuteSelectNextImage())
+            if (CanExecuteSelectNextItem())
                 SelectedItem = QueryResultItems[QueryResultItems.IndexOf(SelectedItem) + 1];
         }
-        private bool CanExecuteSelectNextImage()
+        private bool CanExecuteSelectNextItem()
         {
             if (SelectedItem == null)
                 return false;
@@ -126,15 +126,15 @@ namespace MediaCenter.Sessions.Query
         }
         #endregion
 
-        #region Command: Select previous image
-        private RelayCommand _selectPreviousImageCommand;
-        public RelayCommand SelectPreviousImageCommand
-            => _selectPreviousImageCommand ?? (_selectPreviousImageCommand = new RelayCommand(SelectPreviousImage, CanExecuteSelectPreviousImage));
-        private void SelectPreviousImage()
+        #region Command: Select previous item
+        private RelayCommand _selectPreviousItemCommand;
+        public RelayCommand SelectPreviousItemCommand
+            => _selectPreviousItemCommand ?? (_selectPreviousItemCommand = new RelayCommand(SelectPreviousItem, CanExecuteSelectPreviousItem));
+        protected void SelectPreviousItem()
         {
             SelectedItem = QueryResultItems[QueryResultItems.IndexOf(SelectedItem) - 1];
         }
-        private bool CanExecuteSelectPreviousImage()
+        private bool CanExecuteSelectPreviousItem()
         {
             if (SelectedItem == null)
                 return false;

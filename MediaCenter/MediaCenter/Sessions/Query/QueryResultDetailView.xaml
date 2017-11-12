@@ -28,8 +28,8 @@
         </Grid.RowDefinitions>
 
         <ContentControl Grid.Row="0" Content="{Binding SelectedItemViewModel}" />
-        <controls:ImageButton Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding SelectPreviousImageCommand}" ImageSource="/Resources/Icons/arrow-180.png" Height="32" Width="32"/>
-        <controls:ImageButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding SelectNextImageCommand}" ImageSource="/Resources/Icons/arrow.png" Height="32" Width="32"/>
+        <controls:ImageButton Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding SelectPreviousItemCommand}" ImageSource="/Resources/Icons/arrow-180.png" Height="32" Width="32"/>
+        <controls:ImageButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding SelectNextItemCommand}" ImageSource="/Resources/Icons/arrow.png" Height="32" Width="32"/>
 
         <Border Grid.Row="1" BorderBrush="#E5E5E5" BorderThickness="1" Background="Transparent" Margin="2" CornerRadius="2">
             <controls:ImageToggleButton x:Name="ShowList" HorizontalAlignment="Stretch" Height="16" HoverBackground="LightGray" IsChecked="True"

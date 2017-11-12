@@ -45,7 +45,15 @@ namespace MediaCenter.Sessions.Slideshow
         public int Interval
         {
             get { return _interval; }
-            set { SetValue(ref _interval, value); }
+            set { SetValue(ref _interval, value, IntervalChanged); }
+        }
+
+        private void IntervalChanged()
+        {
+            if(_timer == null)
+                return;
+
+            _timer.Interval = 1000 * Interval;
         }
 
         private void InitializeTimer()
@@ -77,24 +85,22 @@ namespace MediaCenter.Sessions.Slideshow
             }
         }
 
-        private RelayCommand _pauseResumeCommand;
-        public RelayCommand PauseResumeCommand => _pauseResumeCommand ?? (_pauseResumeCommand = new RelayCommand(PauseResume));
-        public void PauseResume()
+        private RelayCommand _pauseCommand;
+        public RelayCommand PauseCommand => _pauseCommand ?? (_pauseCommand = new RelayCommand(Pause));
+        public void Pause()
         {
-            switch (Status)
+            if (Status == SlideshowStatus.Active)
             {
-                case SlideshowStatus.Active:
-                    _timer.Stop();
-                    Status = SlideshowStatus.Paused;
-                    break;
-                case SlideshowStatus.Paused:
-                    Start();
-                    break;
-                case SlideshowStatus.Stopped:
-                    return;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                _timer.Stop();
+                Status = SlideshowStatus.Paused;
             }
+        }
+
+        private RelayCommand _playCommand;
+        public RelayCommand PlayCommand => _playCommand ?? (_playCommand = new RelayCommand(Play));
+        public void Play()
+        {
+            Start();
         }
 
         public void Stop()
@@ -116,14 +122,15 @@ namespace MediaCenter.Sessions.Slideshow
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
-            //Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss tt ss.fff")} | Timer tick");
-            //if (!QuerySessionViewModel.SelectNextImageCommand.CanExecute(null))
-            //{
-            //    Close();
-            //}
-            //QuerySessionViewModel.SelectNextImageCommand.Execute(null);
-            //if(Status == SlideshowStatus.Active)
-            //    _timer.Start();
+            if (SelectedItem == QueryResultItems.Last())
+            {
+                Stop();
+                Close();
+                return;
+            }
+
+            SelectNextItem();
+            _timer.Start();
         }
 
         private RelayCommand _closeCommand;
