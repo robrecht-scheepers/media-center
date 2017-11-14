@@ -120,8 +120,12 @@ namespace MediaCenter.Sessions.Slideshow
             }
         }
 
-        private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        private void Next()
         {
+            if (SelectedItem != null && SelectedItem.MediaType == MediaType.Video)
+            {
+                ((VideoItemViewModel)SelectedItemViewModel).VideoPlayFinished -= SelectedVideoPlayFinished;
+            }
             if (SelectedItem == QueryResultItems.Last())
             {
                 Stop();
@@ -130,8 +134,26 @@ namespace MediaCenter.Sessions.Slideshow
             }
 
             SelectNextItem();
-            _timer.Start();
+            if (SelectedItem.MediaType == MediaType.Video)
+            {
+                ((VideoItemViewModel)SelectedItemViewModel).VideoPlayFinished += SelectedVideoPlayFinished;
+            }
+            else
+            {
+                _timer.Start();
+            }
         }
+
+        private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        {
+            Next();
+        }
+
+        private void SelectedVideoPlayFinished(object sender, EventArgs e)
+        {
+            Next();
+        }
+        
 
         private RelayCommand _closeCommand;
         public RelayCommand CloseCOmmand => _closeCommand ?? (_closeCommand = new RelayCommand(Close));

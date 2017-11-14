@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MediaCenter.Media;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -12,8 +13,6 @@ namespace MediaCenter.WPF.Controls
     /// </summary>
     public partial class VideoPlayer : UserControl
     {
-        private enum PlayState { Playing, Paused, Stopped }
-
         private int _milisecondPerSliderTick = 200;
         private DispatcherTimer _timer;
         private bool _isDragging = false;
@@ -22,7 +21,7 @@ namespace MediaCenter.WPF.Controls
         public VideoPlayer()
         {
             InitializeComponent();
-            _playState = PlayState.Stopped;
+            PlayState = PlayState.Stopped;
             _timer = new DispatcherTimer()
             {
                 Interval = TimeSpan.FromMilliseconds(100)
@@ -31,7 +30,7 @@ namespace MediaCenter.WPF.Controls
         }
 
         public bool StartOnLoad { get { return (bool)GetValue(StartOnLoadProperty); } set { SetValue(StartOnLoadProperty, value); } }
-        public static readonly DependencyProperty StartOnLoadProperty = DependencyProperty.Register("StartOnLoad", typeof(bool), typeof(VideoPlayer), new PropertyMetadata(false, StartOnLoadChanged));
+        public static readonly DependencyProperty StartOnLoadProperty = DependencyProperty.Register("StartOnLoad", typeof(bool), typeof(VideoPlayer), new PropertyMetadata(false));
 
         public Uri VideoUri { get { return (Uri)GetValue(VideoUriProperty); } set { SetValue(VideoUriProperty, value); } }
         public static readonly DependencyProperty VideoUriProperty = DependencyProperty.Register("VideoUri", typeof(System.Uri), typeof(VideoPlayer), new PropertyMetadata(default(Uri), VideoUriChanged));
@@ -39,15 +38,22 @@ namespace MediaCenter.WPF.Controls
         public int Rotation { get { return (int)GetValue(RotationProperty); } set { SetValue(RotationProperty, value); } }
         public static readonly DependencyProperty RotationProperty = DependencyProperty.Register("Rotation", typeof(int), typeof(VideoPlayer), new PropertyMetadata(0, RotationChanged));
         
-        private static void StartOnLoadChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var me = d as VideoPlayer;
-            if(me == null) return;
 
-            if (me.StartOnLoad)
-                me.MediaElement.LoadedBehavior = MediaState.Play;
-            else
-                me.MediaElement.LoadedBehavior = MediaState.Manual;
+        public PlayState PlayState
+        {
+            get { return (PlayState)GetValue(PlayStateProperty); }
+            set { SetValue(PlayStateProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PlayState.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PlayStateProperty =
+            DependencyProperty.Register("PlayState", typeof(PlayState), typeof(VideoPlayer), new PropertyMetadata(PlayState.Stopped, OnPlayStateChanged));
+
+        private static void OnPlayStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var me = (VideoPlayer) d;
+
+            me.ApplyPlayStateChange((PlayState)e.OldValue, (PlayState)e.NewValue);
         }
 
         private static void RotationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -123,6 +129,9 @@ namespace MediaCenter.WPF.Controls
             }
 
             _timer.Start();
+
+            if(StartOnLoad)
+                Play(); 
         }
 
         private void SeekSlider_OnDragStarted(object sender, DragStartedEventArgs e)
@@ -138,49 +147,48 @@ namespace MediaCenter.WPF.Controls
         #endregion
 
         #region Control
-
-        private PlayState _playState;
-
-        private void ApplyPlayState(PlayState state)
-        {
-            if (_playState == state)
+        
+        private void ApplyPlayStateChange(PlayState oldPlayState, PlayState newPlayState)
+        { 
+            if (oldPlayState == newPlayState)
                 return;
 
-            switch (state)
+            switch (newPlayState)
             {
                 case PlayState.Stopped:
-                    _playState = PlayState.Stopped;
                     MediaElement.Stop();
                     break;
                 case PlayState.Paused:
-                    _playState = PlayState.Paused;
                     MediaElement.Pause();
                     break;
                 case PlayState.Playing:
-                    _playState = PlayState.Playing;
                     MediaElement.Play();
+                    break;
+                case PlayState.Finished:
+                    // do nothing, the media element has stopped by itself. 
+                    // The state is set to finished, notify anyone who needs to know this (for instance the slide show)
                     break;
             }
         }
 
         private void Stop()
         {
-            ApplyPlayState(PlayState.Stopped);
+            PlayState = PlayState.Stopped;
         }
 
         private void Pause()
         {
-            ApplyPlayState(PlayState.Paused);
+            PlayState = PlayState.Paused;
         }
 
         private void Play()
         {
-            ApplyPlayState(PlayState.Playing);
+            PlayState = PlayState.Playing;
         }
 
         private void PlayPause_OnClick(object sender, RoutedEventArgs e)
         {
-            if (_playState == PlayState.Playing)
+            if (PlayState == PlayState.Playing)
                 Pause();
             else
                 Play();
@@ -193,7 +201,7 @@ namespace MediaCenter.WPF.Controls
 
         private void MediaElement_OnMediaEnded(object sender, RoutedEventArgs e)
         {
-            Stop();
+            PlayState = PlayState.Finished; 
         }
         #endregion
 

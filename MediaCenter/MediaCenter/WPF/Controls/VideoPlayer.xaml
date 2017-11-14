@@ -11,7 +11,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <MediaElement Grid.Row="0"  Name="MediaElement" LoadedBehavior="Manual" MediaOpened="MediaElement_OnMediaOpened" MediaEnded="MediaElement_OnMediaEnded" />
+        <MediaElement Grid.Row="0"  Name="MediaElement" LoadedBehavior="Manual" 
+                      MediaOpened="MediaElement_OnMediaOpened" MediaEnded="MediaElement_OnMediaEnded" />
         <Grid Grid.Row="1" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
