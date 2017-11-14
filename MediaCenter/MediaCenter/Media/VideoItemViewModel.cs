@@ -33,9 +33,6 @@ namespace MediaCenter.Media
         }
 
         public event EventHandler VideoPlayFinished;
-
-
-
     }
 
     

@@ -99,7 +99,7 @@ namespace MediaCenter.Sessions.Query
             var confirmationResult = MessageBox.Show("Are you sure you want to delete the selected items from the repository? This action cannot be undone.", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Hand);
             if (confirmationResult == MessageBoxResult.Yes)
             {
-                foreach (var item in QueryResultViewModel.SelectedItems)
+                foreach (var item in QueryResultViewModel.SelectedItems.ToList())
                 {
                     await QuerySession.DeleteItem(item);
                 }    
@@ -146,6 +146,9 @@ namespace MediaCenter.Sessions.Query
                     return;
                 await Repository.SaveContentToFolder(QueryResultViewModel.SelectedItems.ToList(), selectedFolder);
             }
+
+            
+
         }
         private bool CanExecuteSaveCurrentSelectionToFile()
         {
