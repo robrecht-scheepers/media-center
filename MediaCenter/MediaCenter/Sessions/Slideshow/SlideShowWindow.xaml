@@ -17,7 +17,7 @@
                 <Image Source="{Binding Path=MediaItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type media:VideoItemViewModel}">
-                <controls:VideoPlayer VideoUri="{Binding Path=MediaItem.ContentUri}" Rotation="{Binding MediaItem.Rotation}" StartOnLoad="True" />
+                <media:VideoItemContentView/>
             </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
