@@ -11,6 +11,7 @@ using MediaCenter.Repository;
 using MessageBox = System.Windows.MessageBox;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 using System.Collections.Generic;
+using System.IO;
 
 namespace MediaCenter.Sessions.Query
 {
@@ -96,7 +97,7 @@ namespace MediaCenter.Sessions.Query
             => _deleteCurrentSelectionCommand ?? (_deleteCurrentSelectionCommand = new AsyncRelayCommand(DeleteCurrentSelection, CanExecuteDeleteCurrentSelection));
         private async Task DeleteCurrentSelection()
         {
-            var confirmationResult = MessageBox.Show("Are you sure you want to delete the selected items from the repository? This action cannot be undone.", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Hand);
+            var confirmationResult = MessageBox.Show("Are you sure you want to delete the selected items from the repository? This action cannot be undone.", "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (confirmationResult == MessageBoxResult.Yes)
             {
                 foreach (var item in QueryResultViewModel.SelectedItems.ToList())
@@ -120,19 +121,19 @@ namespace MediaCenter.Sessions.Query
             if (QueryResultViewModel == null || QueryResultViewModel.SelectedItems.Count == 0)
                 return;
 
+            string message = "";
+
             if (QueryResultViewModel.SelectedItems.Count == 1)
             {
                 var item = QueryResultViewModel.SelectedItems.First();
-                var dialog = new SaveFileDialog()
-                {
-                    FileName = item.ContentFileName
-                };
+
+                var dialog = new SaveFileDialog() { FileName = item.ContentFileName };
                 dialog.ShowDialog();
                 if (string.IsNullOrEmpty(dialog.FileName))
                     return;
-                {
-                    await Repository.SaveContentToFile(item, dialog.FileName);
-                }
+                
+                await Repository.SaveContentToFile(item, dialog.FileName);
+                message = $"File {Path.GetFileName(dialog.FileName)} was saved successfully.";
             }
             else
             {
@@ -145,10 +146,10 @@ namespace MediaCenter.Sessions.Query
                 if (string.IsNullOrEmpty(selectedFolder))
                     return;
                 await Repository.SaveContentToFolder(QueryResultViewModel.SelectedItems.ToList(), selectedFolder);
+                message = $"{QueryResultViewModel.SelectedItems.Count} files were saved successfully";
             }
 
-            
-
+            MessageBox.Show(message,"Save success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         private bool CanExecuteSaveCurrentSelectionToFile()
         {
