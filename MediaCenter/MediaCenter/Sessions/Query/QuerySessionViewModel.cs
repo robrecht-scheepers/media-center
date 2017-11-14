@@ -162,6 +162,14 @@ namespace MediaCenter.Sessions.Query
         public AsyncRelayCommand ExecuteQueryCommand => _executeQueryCommand ?? (_executeQueryCommand = new AsyncRelayCommand(ExecuteQuery));
         private async Task ExecuteQuery()
         {
+            if (QuerySession.Filters.Count == 0)
+            {
+                if(MessageBox.Show(
+                    "You have not selected any filters. This will load all items in the repository. Are you sure?",
+                    "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                    return;
+                
+            }
             await QuerySession.ExecuteQuery();
             InitializeQueryResultViewModel();
         }
