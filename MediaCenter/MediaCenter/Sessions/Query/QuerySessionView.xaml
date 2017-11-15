@@ -12,7 +12,8 @@
              xmlns:wpf="clr-namespace:MediaCenter.WPF"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:QuerySessionViewModel}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="{StaticResource AppBackground}">
     <UserControl.Resources>
         <ResourceDictionary>
             <DataTemplate DataType="{x:Type local:QueryResultDetailViewModel}">

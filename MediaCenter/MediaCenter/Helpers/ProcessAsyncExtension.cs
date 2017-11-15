@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,7 +9,7 @@ namespace MediaCenter.Helpers
         /// <summary>
         /// Waits asynchronously for the process to exit.
         /// </summary>
-        /// <param name="process">The process to wait for cancellation.</param>
+        /// <param name="process">The process to wait for.</param>
         /// <param name="cancellationToken">A cancellation token. If invoked, the task will return 
         /// immediately as canceled.</param>
         /// <returns>A Task representing waiting for the process to end.</returns>

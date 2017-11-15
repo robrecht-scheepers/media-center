@@ -11,8 +11,8 @@
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:QueryResultListViewModel}">
     <Grid>
-        <ListBox ItemsSource="{Binding QueryResultItems}" SelectionMode="Extended"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemContainerStyle="{StaticResource ThumbnailListItemContainerStyle}">
+        <ListBox Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding QueryResultItems}" 
+                 SelectionMode="Extended" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
             <interactivity:Interaction.Behaviors>
                 <wpf:BindableListboxSelectionBehavior SelectedItems="{Binding SelectedItems}"/>
             </interactivity:Interaction.Behaviors>

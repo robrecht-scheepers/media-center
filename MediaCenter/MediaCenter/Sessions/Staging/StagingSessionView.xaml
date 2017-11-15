@@ -9,7 +9,8 @@
              xmlns:wpf="clr-namespace:MediaCenter.WPF"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:StagingSessionViewModel}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="{StaticResource AppBackground}">
     
     <i:Interaction.Behaviors>
         <wpf:OpenCloseWindowBehavior Trigger="{Binding ShowEditViewModel}" WindowType="local:EditStagedItemView" WindowDataContext="{Binding EditViewModel}" 
@@ -32,11 +33,11 @@
                 <TextBlock Text="{Binding StagingSession.StatusMessage}" Margin="5"/>
             </StackPanel>
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
-                <TextBlock Text="{Binding StagingSession.StagedItems.Count, StringFormat={}{0} items staged}" Margin="5"/>
+                <TextBlock Text="{Binding StagingSession.StagedItems.Count, StringFormat={}{0} items staged}" Foreground="{StaticResource FontColorOnBackground}" VerticalAlignment="Center" Margin="5"/>
                 <Button Command="{Binding SaveToRepositoryCommand}" Width="100" Margin="5">Save</Button>                
             </StackPanel>
         </DockPanel>
-        <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding StagingSession.StagedItems}" SelectionMode="Extended"
+        <ListBox Grid.Row="1" Grid.Column="0" Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding StagingSession.StagedItems}" SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

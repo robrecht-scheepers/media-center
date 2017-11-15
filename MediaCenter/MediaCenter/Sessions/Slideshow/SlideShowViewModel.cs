@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using MediaCenter.MVVM;
 using MediaCenter.Sessions.Query;
@@ -13,13 +9,6 @@ using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions.Slideshow
 {
-    public enum SlideshowStatus
-    {
-        Active,
-        Paused,
-        Stopped
-    }
-
     public class SlideShowViewModel : QueryResultDetailViewModel
     {
         private Timer _timer;
@@ -27,15 +16,15 @@ namespace MediaCenter.Sessions.Slideshow
         public SlideShowViewModel(ObservableCollection<MediaItem> queryResultItems, IRepository repository, int startIndex = 0) : base(queryResultItems, repository)
         {
             Interval = 4;
-            Status = SlideshowStatus.Stopped;
+            Status = PlayState.Stopped;
 
             if (startIndex > 0)
                 SelectedItem = QueryResultItems[startIndex];
         }
 
-        private SlideshowStatus _status;
+        private PlayState _status;
 
-        public SlideshowStatus Status
+        public PlayState Status
         {
             get { return _status; }
             set { SetValue(ref _status, value); }
@@ -69,15 +58,15 @@ namespace MediaCenter.Sessions.Slideshow
         {
             switch (Status)
             {
-                case SlideshowStatus.Active:
+                case PlayState.Playing:
                     return;
-                case SlideshowStatus.Paused:
-                    Status = SlideshowStatus.Active;
+                case PlayState.Paused:
+                    Status = PlayState.Playing;
                     _timer.Start();
                     break;
-                case SlideshowStatus.Stopped:
+                case PlayState.Stopped:
                     InitializeTimer();
-                    Status = SlideshowStatus.Active;
+                    Status = PlayState.Playing;
                     _timer.Start();
                     break;
                 default:
@@ -89,10 +78,10 @@ namespace MediaCenter.Sessions.Slideshow
         public RelayCommand PauseCommand => _pauseCommand ?? (_pauseCommand = new RelayCommand(Pause));
         public void Pause()
         {
-            if (Status == SlideshowStatus.Active)
+            if (Status == PlayState.Playing)
             {
                 _timer.Stop();
-                Status = SlideshowStatus.Paused;
+                Status = PlayState.Paused;
             }
         }
 
@@ -107,13 +96,13 @@ namespace MediaCenter.Sessions.Slideshow
         {
             switch (Status)
             {
-                case SlideshowStatus.Active:
-                case SlideshowStatus.Paused:
-                    Status = SlideshowStatus.Stopped;
+                case PlayState.Playing:
+                case PlayState.Paused:
+                    Status = PlayState.Stopped;
                     _timer.Stop();
                     _timer.Dispose();
                     break;
-                case SlideshowStatus.Stopped:
+                case PlayState.Stopped:
                     return;
                 default:
                     throw new ArgumentOutOfRangeException();

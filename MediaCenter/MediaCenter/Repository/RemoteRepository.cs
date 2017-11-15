@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediaCenter.Helpers;
 using MediaCenter.Media;
-using MediaCenter.Sessions;
 using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter.Repository

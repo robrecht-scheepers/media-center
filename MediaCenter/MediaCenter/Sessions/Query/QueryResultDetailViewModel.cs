@@ -1,11 +1,9 @@
 ﻿using MediaCenter.Media;
 using MediaCenter.MVVM;
 using MediaCenter.Repository;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 

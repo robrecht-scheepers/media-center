@@ -8,8 +8,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="WPF/Controls/CustomControls.xaml"/>
-                <ResourceDictionary Source="WPF/Styles.xaml"/>
-                <ResourceDictionary Source="Media/ThumbnailListItemContainerStyle.xaml"/>
+                <ResourceDictionary Source="WPF/Style.xaml"/>
+                <ResourceDictionary Source="Media/ThumbnailListStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <wpf:NullVisibilityConverter x:Key="HideWhenNullConverter" NotNullVisibility="Visible" NullVisibility="Hidden"/>
             <wpf:NullVisibilityConverter x:Key="HideWhenNotNullConverter" NotNullVisibility="Hidden" NullVisibility="Visible"/>

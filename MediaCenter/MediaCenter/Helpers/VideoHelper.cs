@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.WindowsAPICodePack.Shell;
-using System.Text;
 
 namespace MediaCenter.Helpers
 {
@@ -18,7 +16,7 @@ namespace MediaCenter.Helpers
         public static async Task<byte[]> GetFirstFrameImage(string filePath)
         {
             // run ffmpeg.exe from command line in a separate process to
-            // extract the first fram into a temp file. Then read the temp 
+            // extract the first frame into a temp file. Then read the temp 
             // file and delete it afterwards
             var firstFrameFile = @"C:\TEMP\thumbnail.jpg";
 
@@ -53,6 +51,8 @@ namespace MediaCenter.Helpers
 
         public static int ReadRotation(string filePath)
         {
+            // run ffmpeg.exe from command line in a separate process 
+            // and read the rotation output from the StandardOutput
             var ffprobe = new Process
             {
                 StartInfo =
