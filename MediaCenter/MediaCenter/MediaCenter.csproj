@@ -117,8 +117,8 @@
       <DependentUpon>EditMediaInfoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Media\ImageItemViewModel.cs" />
-    <Compile Include="Media\ImageItemContentView.xaml.cs">
-      <DependentUpon>ImageItemContentView.xaml</DependentUpon>
+    <Compile Include="Media\ImageItemView.xaml.cs">
+      <DependentUpon>ImageItemView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Media\MediaItemStatus.cs" />
     <Compile Include="Media\MediaItemViewModel.cs" />
@@ -245,7 +245,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Media\ImageItemContentView.xaml">
+    <Page Include="Media\ImageItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
