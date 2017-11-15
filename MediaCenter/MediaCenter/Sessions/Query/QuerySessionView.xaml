@@ -15,9 +15,6 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Media/MediaItemDataTemplates.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
             <DataTemplate DataType="{x:Type local:QueryResultDetailViewModel}">
                 <local:QueryResultDetailView/>
             </DataTemplate>
