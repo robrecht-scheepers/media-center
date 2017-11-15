@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace MediaCenter.Media
 {
     /// <summary>
-    /// Interaction logic for VideoItemContentView.xaml
+    /// Interaction logic for VideoItemView.xaml
     /// </summary>
-    public partial class VideoItemContentView : UserControl
+    public partial class VideoItemView : UserControl
     {
-        public VideoItemContentView()
+        public VideoItemView()
         {
             InitializeComponent();
         }

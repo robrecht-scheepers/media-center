@@ -17,7 +17,7 @@
                 <Image Source="{Binding Path=MediaItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type media:VideoItemViewModel}">
-                <media:VideoItemContentView/>
+                <media:VideoItemView/>
             </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>

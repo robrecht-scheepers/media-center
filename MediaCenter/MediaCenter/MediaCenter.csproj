@@ -126,8 +126,8 @@
     <Compile Include="Media\ThumbnailView.xaml.cs">
       <DependentUpon>ThumbnailView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Media\VideoItemContentView.xaml.cs">
-      <DependentUpon>VideoItemContentView.xaml</DependentUpon>
+    <Compile Include="Media\VideoItemView.xaml.cs">
+      <DependentUpon>VideoItemView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Media\VideoItemViewModel.cs" />
     <Compile Include="WPF\Controls\VideoPlayer.xaml.cs">
@@ -261,7 +261,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Media\VideoItemContentView.xaml">
+    <Page Include="Media\VideoItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

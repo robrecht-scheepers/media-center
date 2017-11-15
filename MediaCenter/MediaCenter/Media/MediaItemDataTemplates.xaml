@@ -7,7 +7,7 @@
         <local:ImageItemContentView/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type local:VideoItemViewModel}">
-        <local:VideoItemContentView/>
+        <local:VideoItemView/>
     </DataTemplate>
     
 </ResourceDictionary>
