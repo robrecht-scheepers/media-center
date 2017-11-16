@@ -10,7 +10,7 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:StagingSessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300"
-             Background="{StaticResource AppBackground}">
+             Background="{StaticResource AppStandardBackground}">
     
     <i:Interaction.Behaviors>
         <wpf:OpenCloseWindowBehavior Trigger="{Binding ShowEditViewModel}" WindowType="local:EditStagedItemView" WindowDataContext="{Binding EditViewModel}" 
@@ -33,7 +33,7 @@
                 <TextBlock Text="{Binding StagingSession.StatusMessage}" Margin="5"/>
             </StackPanel>
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
-                <TextBlock Text="{Binding StagingSession.StagedItems.Count, StringFormat={}{0} items staged}" Foreground="{StaticResource FontColorOnBackground}" VerticalAlignment="Center" Margin="5"/>
+                <TextBlock Text="{Binding StagingSession.StagedItems.Count, StringFormat={}{0} items staged}" Foreground="{StaticResource AppBrightColor}" VerticalAlignment="Center" Margin="5"/>
                 <Button Command="{Binding SaveToRepositoryCommand}" Width="100" Margin="5">Save</Button>                
             </StackPanel>
         </DockPanel>

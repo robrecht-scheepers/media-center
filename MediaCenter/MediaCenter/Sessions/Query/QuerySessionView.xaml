@@ -13,7 +13,7 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:QuerySessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300"
-             Background="{StaticResource AppBackground}">
+             Background="{StaticResource AppStandardBackground}">
     <UserControl.Resources>
         <ResourceDictionary>
             <DataTemplate DataType="{x:Type local:QueryResultDetailViewModel}">
