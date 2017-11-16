@@ -1,11 +1,11 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <SolidColorBrush x:Key="MainWindowBackground" Color="#a9bcd0" />
-    <SolidColorBrush x:Key="AppStandardBackground" Color="#373f51" />
-    <SolidColorBrush x:Key="AppBrightColor" Color="#d8dbe2"/>
-    <SolidColorBrush x:Key="AppDarkColor" Color="#1b1b1e"/>
-    <SolidColorBrush x:Key="AppAccentColor" Color="#58a4b0"/>
+    <SolidColorBrush x:Key="MainWindowBackground" Color="#6e7f80 " />
+    <SolidColorBrush x:Key="AppStandardBackground" Color="#536872 " />
+    <SolidColorBrush x:Key="AppBrightColor" Color="#c5ccd3"/>
+    <SolidColorBrush x:Key="AppDarkColor" Color="#36454f"/>
+    <SolidColorBrush x:Key="AppAccentColor" Color="#c9ada7"/>
     
     <SolidColorBrush x:Key="FontColorOnBackground" Color="White"/>
     <SolidColorBrush x:Key="FontColorInElement" Color="Black"/>

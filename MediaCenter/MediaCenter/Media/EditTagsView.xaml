@@ -18,7 +18,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#f0f0f0"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource AppAccentColor}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -54,7 +54,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <Border Background="LightGray"/>
+                            <Border Background="{StaticResource AppAccentColor}"/>
                             <TextBlock Text="{Binding}" HorizontalAlignment="Stretch">
                                 <TextBlock.InputBindings>
                                     <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}" 
