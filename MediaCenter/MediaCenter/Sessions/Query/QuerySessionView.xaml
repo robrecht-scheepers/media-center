@@ -57,17 +57,13 @@
             </StackPanel>
         </Grid>
 
-        <Border Grid.Column="1" BorderBrush="#E5E5E5" BorderThickness="1" Background="Transparent" Margin="2" CornerRadius="2">
-            <controls:ImageToggleButton x:Name="ShowFilter" Grid.Column="1" VerticalAlignment="Stretch" Width="16" Padding="1" IsChecked="True"
-                                        CheckedImage="/Resources/Icons/control-180.png" UncheckedImage="/Resources/Icons/control.png" />
-        </Border>
+        <controls:ColumnToggleButton Grid.Column="1" x:Name="ShowFilter" Margin="5" IsChecked="True"
+                                     CheckedImage="/Resources/Icons/control-180.png" UncheckedImage="/Resources/Icons/control.png"/>
         
         <ContentControl Grid.Column="2" Content="{Binding QueryResultViewModel}"/>
 
-        <Border Grid.Column="3" BorderBrush="#E5E5E5" BorderThickness="1" Background="Transparent" Margin="2" CornerRadius="2">
-            <controls:ImageToggleButton x:Name="ShowEdit" Grid.Column="1" VerticalAlignment="Stretch" Width="16" Padding="1" IsChecked="True"
-                                    CheckedImage="/Resources/Icons/control.png" UncheckedImage="/Resources/Icons/control-180.png" />
-        </Border>
+        <controls:ColumnToggleButton Grid.Column="3" x:Name="ShowEdit" Margin="5" IsChecked="True"
+                                     CheckedImage="/Resources/Icons/control.png" UncheckedImage="/Resources/Icons/control-180.png"/>
         
         <Grid Grid.Column="4">
             <Grid.RowDefinitions>
