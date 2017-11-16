@@ -32,7 +32,7 @@
         <controls:ImageButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding SelectNextItemCommand}" ImageSource="/Resources/Icons/arrow.png" Height="32" Width="32"/>
 
         <Border Grid.Row="1" BorderBrush="#E5E5E5" BorderThickness="1" Background="Transparent" Margin="2" CornerRadius="2">
-            <controls:ImageToggleButton x:Name="ShowList" HorizontalAlignment="Stretch" Height="16" HoverBackground="LightGray" IsChecked="True"
+            <controls:ImageToggleButton x:Name="ShowList" HorizontalAlignment="Stretch" Height="16" Padding="1" IsChecked="True"
                                     CheckedImage="/Resources/Icons/control-90.png" UncheckedImage="/Resources/Icons/control-270.png" />
         </Border>
 

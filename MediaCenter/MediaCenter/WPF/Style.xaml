@@ -1,8 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MediaCenter.WPF.Controls">
 
     <SolidColorBrush x:Key="MainWindowBackground" Color="#6e7f80 " />
-    <SolidColorBrush x:Key="AppStandardBackground" Color="#536872 " />
+    <SolidColorBrush x:Key="AppStandardBackground" Color="#36454f " />
     <SolidColorBrush x:Key="AppBrightColor" Color="#c5ccd3"/>
     <SolidColorBrush x:Key="AppDarkColor" Color="#36454f"/>
     <SolidColorBrush x:Key="AppAccentColor" Color="#c9ada7"/>

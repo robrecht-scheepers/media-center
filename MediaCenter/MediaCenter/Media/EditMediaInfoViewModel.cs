@@ -17,6 +17,7 @@ namespace MediaCenter.Media
 
         private EditTagsViewModel _tagsViewModel;
         private List<string> _originalTagsIntersect;
+        private string _name;
 
         public EditMediaInfoViewModel(List<MediaItem> items, List<string> allTags)
         {
@@ -81,6 +82,10 @@ namespace MediaCenter.Media
                 }
             }
         }
+
+        public string Name => _items.Count == 1
+            ? (_items.First().MediaType == MediaType.Video ? "Video " : "Image ") + _items.First().Name
+            : $"{_items.Count} items selected";
 
         public bool MultipleItems => _items.Count > 1;
 

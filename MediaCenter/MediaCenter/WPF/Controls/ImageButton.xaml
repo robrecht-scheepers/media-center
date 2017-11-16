@@ -3,25 +3,33 @@
                     xmlns:local="clr-namespace:MediaCenter.WPF.Controls">
     <ControlTemplate x:Key="ImageButtonTemplate" TargetType="{x:Type local:ImageButton}">
         <Grid>
-            <Border x:Name="Background" BorderBrush="Transparent" Background="{Binding HoverBackground, RelativeSource={RelativeSource TemplatedParent}}" Opacity="0"
+            <Border x:Name="Background" Background="{Binding HoverBackground, RelativeSource={RelativeSource TemplatedParent}}" Opacity="0"
                     Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}"
                     Width="{Binding Width, RelativeSource={RelativeSource TemplatedParent}}"
             />
             <Image x:Name="ButtonImage" 
                    Source="{Binding ImageSource, RelativeSource={RelativeSource TemplatedParent}}"
-                   Stretch="Uniform" Margin="1"/>
+                   Stretch="Uniform" Margin="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}}"/>
         </Grid>
         <ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="Background" Property="Opacity" Value="0.2"/>
+                <Setter TargetName="Background" Property="Opacity" Value="0.3"/>
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter TargetName="ButtonImage" Property="Margin" Value="0"/>
+                <Setter TargetName="ButtonImage" Property="Margin" Value="4"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="ButtonImage" Property="Opacity" Value="0.3"/>
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <Style TargetType="{x:Type local:ImageButton}" BasedOn="{x:Null}">
         <Setter Property="Template" Value="{StaticResource ImageButtonTemplate}"/>
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Width" Value="40" />
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
     </Style>
 </ResourceDictionary>

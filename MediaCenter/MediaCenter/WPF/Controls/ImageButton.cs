@@ -38,7 +38,8 @@ namespace MediaCenter.WPF.Controls
 
         // Using a DependencyProperty as the backing store for HoverBackground.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HoverBackgroundProperty =
-            DependencyProperty.Register("HoverBackground", typeof(SolidColorBrush), typeof(ImageButton), new PropertyMetadata(Brushes.Gray));
+            DependencyProperty.Register("HoverBackground", typeof(SolidColorBrush), typeof(ImageButton), new PropertyMetadata(Application.Current.FindResource("AppBrightColor")));
+
 
 
     }

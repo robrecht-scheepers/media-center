@@ -8,6 +8,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:EditMediaInfoViewModel}">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource AppBrightColor}"/>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -18,15 +23,22 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="TODO:Name"/>
+        <TextBlock Grid.Row="0" Text="{Binding Name}"/>
         <TextBlock Grid.Row="1" Text="{Binding DateTaken, StringFormat='{}Date taken: {0:dd.MM.yyyy, HH:mm:ss}'}" Visibility="{Binding DateTaken, Converter={StaticResource CollapseWhenNullConverter}}"/>
         <TextBlock Grid.Row="1" Text="{Binding MultipleDateTaken, StringFormat='{}Date taken: {0}'}" Visibility="{Binding MultipleDateTaken, Converter={StaticResource CollapseWhenNullConverter}}"/>
-        <TextBlock Grid.Row="2" Text="{Binding DateAdded, StringFormat='{}Date added: {0:dd.MM.yyyy, HH:mm:ss}'}"/>
+        <TextBlock Grid.Row="2" Text="{Binding DateAdded, StringFormat='{}Date added: {0:dd.MM.yyyy, HH:mm:ss}'}" Visibility="{Binding DateAdded, Converter={StaticResource HideWhenNullConverter}}"/>
 
-        <controls:ImageToggleButton Grid.Row="3" IsChecked="{Binding Favorite, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}" Height="32" Width="32" HorizontalAlignment="Left"
-                    CheckedImage="/Resources/Icons/emblem-favorite.png" UncheckedImage="/Resources/Icons/emblem-favorite-grey.png" NullImage="/Resources/Icons/emblem-favorite-half.png" />
-        <controls:ImageToggleButton Grid.Row="4" IsChecked="{Binding Private, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}"  Height="32" Width="32" HorizontalAlignment="Left"
-                    CheckedImage="/Resources/Icons/lock.png" UncheckedImage="/Resources/Icons/lock-grey.png" NullImage="/Resources/Icons/lock-half.png"/>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <controls:ImageToggleButton Grid.Column="0" IsChecked="{Binding Favorite, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}" HorizontalAlignment="Center"
+                                        CheckedImage="/Resources/Icons/heart-filled.png" UncheckedImage="/Resources/Icons/heart.png" NullImage="/Resources/Icons/emblem-favorite-half.png" />
+            <controls:ImageToggleButton Grid.Column="1" IsChecked="{Binding Private, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}"  HorizontalAlignment="Center"
+                                        CheckedImage="/Resources/Icons/lock-locked-filled.png" UncheckedImage="/Resources/Icons/lock-unlocked.png" NullImage="/Resources/Icons/lock-half.png"/>
+        </Grid>
+        
         <local:EditTagsView Grid.Row="5" DataContext="{Binding TagsViewModel}"/>
     </Grid>
 </UserControl>

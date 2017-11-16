@@ -71,13 +71,19 @@ namespace MediaCenter.Sessions.Query
         }
         private void InitializeQueryResultViewModel()
         {
-            if(QueryResultViewModel != null)
+            MediaItem selectedElement = null;
+
+            if (QueryResultViewModel != null)
+            {
                 QueryResultViewModel.SelectionChanged -= QueryResultViewModelOnSelectionChanged;
+                selectedElement = QueryResultViewModel?.SelectedItems.FirstOrDefault();
+            }
 
             QueryResultViewModel = SelectedResultViewMode == ViewMode.Detail 
                 ? (QueryResultViewModel)new QueryResultDetailViewModel(QuerySession.QueryResult, Repository)
                 : (QueryResultViewModel)new QueryResultListViewModel(QuerySession.QueryResult);
             QueryResultViewModel.SelectionChanged += QueryResultViewModelOnSelectionChanged;
+            
         }
         private async void QueryResultViewModelOnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
@@ -128,8 +134,8 @@ namespace MediaCenter.Sessions.Query
                 var item = QueryResultViewModel.SelectedItems.First();
 
                 var dialog = new SaveFileDialog() { FileName = item.ContentFileName };
-                dialog.ShowDialog();
-                if (string.IsNullOrEmpty(dialog.FileName))
+                var dialogResult = dialog.ShowDialog();
+                if (!dialogResult.HasValue || !dialogResult.Value || string.IsNullOrEmpty(dialog.FileName))
                     return;
                 
                 await Repository.SaveContentToFile(item, dialog.FileName);
@@ -141,10 +147,10 @@ namespace MediaCenter.Sessions.Query
                 {
                     Description = $"Select the destination folder for saving the selected {QueryResultViewModel.SelectedItems.Count} items"
                 };
-                dialog.ShowDialog();
-                var selectedFolder = dialog.SelectedPath;
-                if (string.IsNullOrEmpty(selectedFolder))
+                if(dialog.ShowDialog() != DialogResult.OK || string.IsNullOrEmpty(dialog.SelectedPath))
                     return;
+
+                var selectedFolder = dialog.SelectedPath;
                 await Repository.SaveContentToFolder(QueryResultViewModel.SelectedItems.ToList(), selectedFolder);
                 message = $"{QueryResultViewModel.SelectedItems.Count} files were saved successfully";
             }
