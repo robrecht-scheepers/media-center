@@ -24,20 +24,16 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
-                        <controls:ImageButton ImageSource="/Resources/Icons/cross-grey.png" VerticalAlignment="Center" Height="16" Width="16" Margin="5"
+                        <controls:ImageButton x:Name="CloseButton" ImageSource="/Resources/Icons/cross-grey.png" VerticalAlignment="Center" Height="16" Width="16" Margin="5"
                                 Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.CloseSessionCommand}" 
                                 CommandParameter="{Binding}">
-                            <controls:ImageButton.Style>
-                                <Style TargetType="{x:Type controls:ImageButton}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding SessionViewModel}" Value="{x:Null}">
-                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </controls:ImageButton.Style>
                         </controls:ImageButton>
                     </StackPanel>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding SessionViewModel}" Value="{x:Null}">
+                            <Setter TargetName="CloseButton" Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
