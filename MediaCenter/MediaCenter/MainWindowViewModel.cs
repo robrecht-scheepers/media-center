@@ -5,6 +5,8 @@ using MediaCenter.Sessions;
 using MediaCenter.Sessions.Query;
 using MediaCenter.Sessions.Staging;
 using System.Reflection;
+using System;
+using System.Linq;
 
 namespace MediaCenter
 {
@@ -12,43 +14,47 @@ namespace MediaCenter
     {
         public MainWindowViewModel(IRepository repository)
         {
-            Sessions = new ObservableCollection<SessionViewModelBase>();
+            Sessions = new ObservableCollection<SessionTabViewModel>();
             Repository = repository;
             RepositoryViewModel = new RepositoryViewModel(Repository);
+            CreateNewSessionTab();
+            SelectedSessionTab = Sessions.First();
         }
+
 
         public string AppVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
         public IRepository Repository { get; }
         public RepositoryViewModel RepositoryViewModel { get; }
         
-        public ObservableCollection<SessionViewModelBase> Sessions { get; private set; }
+        public ObservableCollection<SessionTabViewModel> Sessions { get; private set; }
 
-        // Start new staging session
-        private RelayCommand _newStagingSessionCommand;
-        public RelayCommand NewStagingSessionCommand => _newStagingSessionCommand ?? (_newStagingSessionCommand = new RelayCommand(CreateNewStagingSession));
-        private void CreateNewStagingSession()
+        public SessionTabViewModel SelectedSessionTab
         {
-            Sessions.Add(new StagingSessionViewModel(new StagingSession(Repository)));
+            get { return _selectedSessionTab; }
+            set { SetValue(ref _selectedSessionTab, value); }
         }
 
-        // Start new query session
-        private RelayCommand _newQuerySessionCommand;
-        public RelayCommand NewQuerySessionCommand
-            => _newQuerySessionCommand ?? (_newQuerySessionCommand = new RelayCommand(StartNewQuerySessionCommand));
+        private RelayCommand<SessionTabViewModel> _closeSessionCommand;
+        private SessionTabViewModel _selectedSessionTab;
 
-        private void StartNewQuerySessionCommand()
-        {
-            Sessions.Add(new QuerySessionViewModel(new QuerySession(Repository)));
-        }
-
-        private RelayCommand<SessionViewModelBase> _closeSessionCommand;
-
-        public RelayCommand<SessionViewModelBase> CloseSessionCommand =>
-            _closeSessionCommand ?? (_closeSessionCommand = new RelayCommand<SessionViewModelBase>(CloseSession));
-
-        public void CloseSession(SessionViewModelBase session)
+        public RelayCommand<SessionTabViewModel> CloseSessionCommand =>
+            _closeSessionCommand ?? (_closeSessionCommand = new RelayCommand<SessionTabViewModel>(CloseSession));
+        public void CloseSession(SessionTabViewModel session)
         {
             Sessions.Remove(session);
+        }
+
+        private void CreateNewSessionTab()
+        {
+            var newSessionTab = new SessionTabViewModel(Repository);
+            newSessionTab.SessionCreated += NewSessionTabOnSessionCreated;
+            Sessions.Add(newSessionTab);
+        }
+
+        private void NewSessionTabOnSessionCreated(object sender, EventArgs eventArgs)
+        {
+            ((SessionTabViewModel)sender).SessionCreated -= NewSessionTabOnSessionCreated;
+            CreateNewSessionTab();
         }
     }
 }

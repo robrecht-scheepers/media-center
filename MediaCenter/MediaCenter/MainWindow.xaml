@@ -15,50 +15,64 @@
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
-
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Command="{Binding NewStagingSessionCommand}" Margin="20">Add new media</Button>
-            <Button Grid.Column="1" Command="{Binding NewQuerySessionCommand}" Margin="20">View media</Button>
-        </Grid>
-        
-        <TabControl Grid.Row="1" ItemsSource="{Binding Sessions}" Background="{StaticResource AppStandardBackground}">
+        <TabControl Grid.Row="0" ItemsSource="{Binding Sessions}" SelectedItem="{Binding SelectedSessionTab}" Background="{StaticResource AppStandardBackground}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
                         <controls:ImageButton ImageSource="/Resources/Icons/cross-grey.png" VerticalAlignment="Center" Height="16" Width="16" Margin="5"
                                 Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.CloseSessionCommand}" 
-                                CommandParameter="{Binding}"/>
+                                CommandParameter="{Binding}">
+                            <controls:ImageButton.Style>
+                                <Style TargetType="{x:Type controls:ImageButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SessionViewModel}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </controls:ImageButton.Style>
+                        </controls:ImageButton>
                     </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <ContentControl Content="{Binding}">
-                        <ContentControl.Resources>
-                            <DataTemplate DataType="{x:Type staging:StagingSessionViewModel}">
-                                <staging:StagingSessionView DataContext="{Binding}"/>
-                            </DataTemplate>
-                            <DataTemplate DataType="{x:Type query:QuerySessionViewModel}">
-                                <query:QuerySessionView DataContext="{Binding}"/>
-                            </DataTemplate>
-                        </ContentControl.Resources>
-                    </ContentControl>
+                    <Grid>
+                        <Grid x:Name="CreateNewSessionGrid" Visibility="Collapsed">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Command="{Binding CreateStagingSessionCommand}">Staging</Button>
+                            <Button Grid.Column="1" Command="{Binding CreateQuerySessionCommand}">Query</Button>
+                        </Grid>
+                        <ContentControl x:Name="SessionContent" Content="{Binding SessionViewModel}">
+                            <ContentControl.Resources>
+                                <DataTemplate DataType="{x:Type staging:StagingSessionViewModel}">
+                                    <staging:StagingSessionView />
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type query:QuerySessionViewModel}">
+                                    <query:QuerySessionView />
+                                </DataTemplate>
+                            </ContentControl.Resources>
+                        </ContentControl>
+                    </Grid>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding SessionViewModel}" Value="{x:Null}">
+                            <Setter TargetName="CreateNewSessionGrid" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="SessionContent" Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
                     
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
 
-        <repository:RepositoryStatusView Grid.Row="2" DataContext="{Binding RepositoryViewModel}"/>
+        <repository:RepositoryStatusView Grid.Row="1" DataContext="{Binding RepositoryViewModel}"/>
     </Grid>
 </Window>

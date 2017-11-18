@@ -100,6 +100,7 @@
     <Compile Include="Sessions\Filters\FilterView.xaml.cs">
       <DependentUpon>FilterView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Sessions\SessionTabViewModel.cs" />
     <Compile Include="WPF\Controls\ColumnToggleButton.cs" />
     <Compile Include="WPF\Controls\HideableColumnDefinition.cs" />
     <Compile Include="WPF\Controls\HideableRowDefinition.cs" />
