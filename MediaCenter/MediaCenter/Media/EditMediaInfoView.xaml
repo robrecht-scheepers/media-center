@@ -34,7 +34,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <controls:ImageToggleButton Grid.Column="0" IsChecked="{Binding Favorite, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}" HorizontalAlignment="Center"
-                                        CheckedImage="/Resources/Icons/heart-filled.png" UncheckedImage="/Resources/Icons/heart.png" NullImage="/Resources/Icons/emblem-favorite-half.png" />
+                                        CheckedImage="/Resources/Icons/heart-filled.png" UncheckedImage="/Resources/Icons/heart.png" NullImage="/Resources/Icons/heart-half.png" />
             <controls:ImageToggleButton Grid.Column="1" IsChecked="{Binding Private, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}"  HorizontalAlignment="Center"
                                         CheckedImage="/Resources/Icons/lock-locked-filled.png" UncheckedImage="/Resources/Icons/lock-unlocked.png" NullImage="/Resources/Icons/lock-half.png"/>
         </Grid>

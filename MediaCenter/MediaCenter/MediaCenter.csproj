@@ -384,6 +384,7 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\heart-half.png" />
     <Resource Include="Resources\Icons\content-download.png" />
     <Resource Include="Resources\Icons\screen.png" />
     <Resource Include="Resources\Icons\trash-can.png" />
@@ -400,9 +401,6 @@
     <Resource Include="Resources\Icons\control-180.png" />
     <Resource Include="Resources\Icons\control.png" />
     <Resource Include="Resources\Icons\lock-half.png" />
-    <Resource Include="Resources\Icons\emblem-favorite.png" />
-    <Resource Include="Resources\Icons\emblem-favorite-half.png" />
-    <Resource Include="Resources\Icons\emblem-favorite-grey.png" />
     <Resource Include="Resources\Icons\status-error.png" />
     <Resource Include="Resources\Icons\status-ok.png" />
     <Resource Include="Resources\Images\film-strip.png" />
