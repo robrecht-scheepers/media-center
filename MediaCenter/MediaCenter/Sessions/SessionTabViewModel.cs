@@ -24,7 +24,7 @@ namespace MediaCenter.Sessions
             set { SetValue(ref _sessionViewModel, value); }
         }
 
-        public string Name => SessionViewModel?.Name ?? "Start new session";
+        public string Name => SessionViewModel?.Name ?? "...";
 
         public RelayCommand CreateQuerySessionCommand => _createQuerySessionCommand ?? (_createQuerySessionCommand = new RelayCommand(CreateQuerySession));
         private void CreateQuerySession()
