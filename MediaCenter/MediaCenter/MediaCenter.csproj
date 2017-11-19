@@ -354,9 +354,6 @@
     <Resource Include="Resources\Icons\cross-button.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Icons\tag-label-green.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Icons\cross.png" />
   </ItemGroup>
   <ItemGroup>
@@ -390,7 +387,6 @@
     <Resource Include="Resources\Icons\trash-can.png" />
     <Resource Include="Resources\Icons\heart-filled.png" />
     <Resource Include="Resources\Icons\lock-locked-filled.png" />
-    <Resource Include="Resources\Icons\lock-locked.png" />
     <Resource Include="Resources\Icons\lock-unlocked.png" />
     <Resource Include="Resources\Icons\heart.png" />
     <Resource Include="Resources\Icons\arrow-return-180-gray.png" />
@@ -404,7 +400,6 @@
     <Resource Include="Resources\Icons\status-error.png" />
     <Resource Include="Resources\Icons\status-ok.png" />
     <Resource Include="Resources\Images\film-strip.png" />
-    <Resource Include="Resources\Icons\disk--arrow.png" />
     <Resource Include="Resources\Icons\pencil.png" />
   </ItemGroup>
   <ItemGroup />
