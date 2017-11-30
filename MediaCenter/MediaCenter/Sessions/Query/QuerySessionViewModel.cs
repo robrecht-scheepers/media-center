@@ -178,6 +178,10 @@ namespace MediaCenter.Sessions.Query
             }
             await QuerySession.ExecuteQuery();
             InitializeQueryResultViewModel();
+            foreach (var item in QuerySession.QueryResult)
+            {
+                item.Thumbnail = await Repository.GetThumbnail(item.Name);
+            }
         }
         #endregion
 

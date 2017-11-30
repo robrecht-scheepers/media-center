@@ -40,10 +40,6 @@ namespace MediaCenter.Sessions.Query
             {
                 QueryResult.Add(item);
             }
-            foreach (var item in QueryResult)
-            {
-                item.Thumbnail = await Repository.GetThumbnail(item.Name);
-            }
         }
 
         public int CalculatMatchCount()
