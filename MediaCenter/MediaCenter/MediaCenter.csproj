@@ -100,6 +100,7 @@
     <Compile Include="Sessions\Filters\FilterView.xaml.cs">
       <DependentUpon>FilterView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Sessions\Query\ViewModeBoolConverter.cs" />
     <Compile Include="Sessions\SessionTabViewModel.cs" />
     <Compile Include="WPF\Controls\ColumnToggleButton.cs" />
     <Compile Include="WPF\Controls\HideableColumnDefinition.cs" />
@@ -381,6 +382,10 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\image-filled.png" />
+    <Resource Include="Resources\Icons\tiles-filled.png" />
+    <Resource Include="Resources\Icons\image.png" />
+    <Resource Include="Resources\Icons\tiles.png" />
     <Resource Include="Resources\Icons\heart-half.png" />
     <Resource Include="Resources\Icons\content-download.png" />
     <Resource Include="Resources\Icons\screen.png" />

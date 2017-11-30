@@ -22,6 +22,8 @@
             <DataTemplate DataType="{x:Type local:QueryResultListViewModel}">
                 <local:QueryResultListView/>
             </DataTemplate>
+            <local:ViewModeBoolConverter x:Key="ViewModeBoolConverter"/>
+            <local:ViewModeBoolConverter Invert="True" x:Key="InvertedViewModeBoolConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     
@@ -37,11 +39,11 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <controls:HideableColumnDefinition Width="*" Visible="{Binding ElementName=ShowFilter, Path=IsChecked }"/>
+            <controls:HideableColumnDefinition Width="4*" Visible="{Binding ElementName=ShowFilter, Path=IsChecked }"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="9*"/>
             <ColumnDefinition Width="Auto"/>
-            <controls:HideableColumnDefinition Width="*" Visible="{Binding ElementName=ShowEdit, Path=IsChecked }"/>
+            <controls:HideableColumnDefinition Width="3*" Visible="{Binding ElementName=ShowEdit, Path=IsChecked }"/>
         </Grid.ColumnDefinitions>
         
         <Grid Grid.Column ="0">
@@ -53,7 +55,13 @@
             <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollectionViewModel}"/>
             <StackPanel Grid.Row="1" Orientation="Vertical">
                 <Button Command="{Binding ExecuteQueryCommand}">Search</Button>
-                <ComboBox ItemsSource="{Binding ResultViewModesList}" SelectedItem="{Binding SelectedResultViewMode}"/>
+             <!--   <ComboBox ItemsSource="{Binding ResultViewModesList}" SelectedItem="{Binding SelectedResultViewMode}"/> -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <controls:ImageToggleButton x:Name="detailView" IsChecked="{Binding SelectedResultViewMode, Converter={StaticResource ViewModeBoolConverter}, Mode=TwoWay}" 
+                                        CheckedImage="/Resources/Icons/Image-filled.png" UncheckedImage="/Resources/Icons/Image.png" IsEnabled="{Binding ElementName=listView, Path=IsChecked}"/>
+            <controls:ImageToggleButton x:Name="listView" IsChecked="{Binding SelectedResultViewMode, Converter={StaticResource InvertedViewModeBoolConverter}, Mode=TwoWay}" 
+                                CheckedImage="/Resources/Icons/Tiles-filled.png" UncheckedImage="/Resources/Icons/Tiles.png" IsEnabled="{Binding ElementName=detailView, Path=IsChecked}"/>
+                </StackPanel>
             </StackPanel>
         </Grid>
 
