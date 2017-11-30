@@ -16,9 +16,11 @@ namespace MediaCenter.Repository
     public class RemoteRepository : IRepository
     {
         private const string MediaFileExtension = ".mcd";
+        private const string RemoteStoreLastUpdateFileName = "store.smd";
 
         private readonly string _localStoreFilePath;
         private readonly string _lastSyncFilePath;
+        private readonly string _lastUpdateFilePath;
         private readonly string _remoteStore;
         private readonly string _localCachePath;
         private DateTime _lastSyncFromRemote;
@@ -53,6 +55,7 @@ namespace MediaCenter.Repository
             _remoteStore = remoteStore;
             _localStoreFilePath = localStoreFilePath;
             _lastSyncFilePath = Path.ChangeExtension(_localStoreFilePath, ".mct");
+            _lastUpdateFilePath = Path.Combine(_remoteStore, RemoteStoreLastUpdateFileName);
             _localCachePath = localCachePath;
             _catalog = new List<MediaItem>();
             _buffer = new ConcurrentDictionary<string, byte[]>();
@@ -102,8 +105,29 @@ namespace MediaCenter.Repository
             await IOHelper.SaveObject(_lastSyncFromRemote, _lastSyncFilePath);
         }
 
+        private async Task<DateTime> ReadLastRemoteUpdate()
+        {
+            if (File.Exists(_lastUpdateFilePath))
+            {
+                return await IOHelper.OpenObject<DateTime>(_lastUpdateFilePath);
+            }
+            else
+            {
+               return DateTime.MinValue.AddDays(1);
+            }
+        }
+
+        private async Task SetRemoteLastUpdate(DateTime lastUpdate)
+        {
+            await IOHelper.SaveObject(lastUpdate, _lastUpdateFilePath);
+        }
+
         public async Task SynchronizeFromRemoteStore()
         {
+            var remoteLastUpdate = await ReadLastRemoteUpdate();
+            if(_lastSyncFromRemote >= remoteLastUpdate)
+                return;
+
             var newLastSyncedDate = DateTime.Now;
             var remoteStoreMediaFiles = await IOHelper.GetFiles(_remoteStore, "*" + MediaFileExtension);
             
@@ -134,8 +158,9 @@ namespace MediaCenter.Repository
             await UpdateLastSyncDate(newLastSyncedDate);
         }
 
-        public async Task SaveNewItems(IEnumerable<StagedItem> newItems) 
+        public async Task SaveNewItems(IEnumerable<StagedItem> newItems)
         {
+            int saveCount = 0;
             var itemsToSave = newItems.Where(x => x.Status == MediaItemStatus.Staged).ToList();
             var count = itemsToSave.Count;
             var i = 1;
@@ -163,7 +188,8 @@ namespace MediaCenter.Repository
                     await IOHelper.SaveObject(new MediaInfo(newItem), ItemNameToInfoFilePath(newItem.Name));
                     await IOHelper.CopyFile(newItem.FilePath, mediaItemFilePath);
                     await IOHelper.SaveBytes(newItem.Thumbnail, ItemNameToThumbnailFilePath(newItem.Name));
-                    
+                    saveCount++;
+
                     newItem.ContentUri = new Uri(mediaItemFilePath);
                     newItem.Status = MediaItemStatus.Saved;                    
                 }
@@ -177,8 +203,12 @@ namespace MediaCenter.Repository
                     continue;
                 }
             }
+            if (saveCount > 0)
+                await SetRemoteLastUpdate(DateTime.Now);
+
             StatusMessage = "Updating the local store";
             await UpdateLocalStore();
+            await UpdateLastSyncDate(DateTime.Now);
             StatusMessage = "";
             RaiseCollectionChangedEvent();
         }
@@ -220,6 +250,9 @@ namespace MediaCenter.Repository
                 await IOHelper.DeleteFile(infoFileName);
                 await UpdateLocalStore();
 
+                await SetRemoteLastUpdate(DateTime.Now);
+                await UpdateLastSyncDate(DateTime.Now);
+
                 RaiseCollectionChangedEvent();
             }
             catch (Exception)
@@ -230,7 +263,6 @@ namespace MediaCenter.Repository
             {
                 StatusMessage = "";
             }
-            
         }
 
         public async Task<byte[]> GetThumbnail(string name)
@@ -355,8 +387,8 @@ namespace MediaCenter.Repository
         public async Task SaveItemInfo(MediaItem item)
         {
             await IOHelper.SaveObject(new MediaInfo(item), ItemNameToInfoFilePath(item.Name));
-            await UpdateLocalStore();
-            await UpdateLastSyncDate(DateTime.Now); // TODO: this approach does not allow concurrent access
+            await SetRemoteLastUpdate(DateTime.Now);
+            await UpdateLastSyncDate(DateTime.Now);
         }
 
         public async Task SaveItemContent(MediaItem item)
