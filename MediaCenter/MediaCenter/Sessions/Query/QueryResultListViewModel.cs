@@ -7,8 +7,10 @@ namespace MediaCenter.Sessions.Query
 {
     public class QueryResultListViewModel : QueryResultViewModel
     {
-        public QueryResultListViewModel(ObservableCollection<MediaItem> queryResultItems) : base(queryResultItems)
+        public QueryResultListViewModel(ObservableCollection<MediaItem> queryResultItems, MediaItem selectedItem = null) : base(queryResultItems)
         {
+            if(selectedItem != null && QueryResultItems.Contains(selectedItem))
+                SelectedItems.Add(selectedItem);
             SelectedItems.CollectionChanged += SelectedItemsOnCollectionChanged;
         }
 

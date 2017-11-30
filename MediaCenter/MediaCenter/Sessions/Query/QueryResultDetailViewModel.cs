@@ -16,10 +16,12 @@ namespace MediaCenter.Sessions.Query
         private MediaItem _previousSelectedItem = null;
         private IRepository _repository;
 
-        public QueryResultDetailViewModel(ObservableCollection<MediaItem> queryResultItems, IRepository repository) : base(queryResultItems)
+        public QueryResultDetailViewModel(ObservableCollection<MediaItem> queryResultItems, IRepository repository, MediaItem selectedItem = null) : base(queryResultItems)
         {
             _repository = repository;
-            if (QueryResultItems.Any())
+            if (selectedItem != null && QueryResultItems.Contains(selectedItem))
+                SelectedItem = selectedItem;
+            else if (QueryResultItems.Any())
                 SelectedItem = QueryResultItems.First();
         }
 

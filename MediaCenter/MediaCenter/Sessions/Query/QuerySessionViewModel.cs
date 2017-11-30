@@ -80,7 +80,7 @@ namespace MediaCenter.Sessions.Query
             }
 
             QueryResultViewModel = SelectedResultViewMode == ViewMode.Detail 
-                ? (QueryResultViewModel)new QueryResultDetailViewModel(QuerySession.QueryResult, Repository)
+                ? (QueryResultViewModel)new QueryResultDetailViewModel(QuerySession.QueryResult, Repository, selectedElement)
                 : (QueryResultViewModel)new QueryResultListViewModel(QuerySession.QueryResult);
             QueryResultViewModel.SelectionChanged += QueryResultViewModelOnSelectionChanged;
             
