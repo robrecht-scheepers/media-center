@@ -11,6 +11,7 @@
     <UserControl.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="Foreground" Value="{StaticResource AppBrightColor}"/>
+            <Setter Property="FontSize" Value="16"/>
         </Style>
     </UserControl.Resources>
     <Grid>

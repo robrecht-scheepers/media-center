@@ -37,8 +37,8 @@
 
         <StackPanel Grid.Row="0" Orientation="Vertical">
             <Grid>
-                <Border Background="LightGray" Margin="6">
-                    <TextBlock Text="No tags selected" HorizontalAlignment="Stretch" Margin="2" />
+                <Border Background="{StaticResource AppBrightColor}" Margin="5">
+                    <TextBlock Text="No tags selected" Foreground="{StaticResource AppDarkColor}" Opacity="0.8" HorizontalAlignment="Stretch" Margin="6" />
                 </Border>
                 <Grid.Style>
                     <Style TargetType="{x:Type Grid}">
@@ -50,11 +50,11 @@
                     </Style>
                 </Grid.Style>
             </Grid>
-            <ListBox x:Name="SelectedTagsList" ItemsSource="{Binding Path=SelectedTags}" Margin="5" ItemContainerStyle="{StaticResource TagListItemStyle}" BorderThickness="0">
+            <ListBox x:Name="SelectedTagsList" ItemsSource="{Binding Path=SelectedTags}" Margin="5" ItemContainerStyle="{StaticResource TagListItemStyle}" BorderThickness="0" 
+                     Visibility="{Binding ElementName=SelectedTagsList, Path=HasItems, Converter={StaticResource CollapseWhenFalseConverter}}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <Border Background="{StaticResource AppAccentColor}"/>
                             <TextBlock Text="{Binding}" HorizontalAlignment="Stretch">
                                 <TextBlock.InputBindings>
                                     <MouseBinding Gesture="LeftDoubleClick" CommandParameter="{Binding}" 
@@ -85,12 +85,12 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Text="{Binding NewTag, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" MinWidth="100" Margin="5">
+            <TextBox Grid.Column="0" Text="{Binding NewTag, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" MinWidth="100" Margin="1 5">
                 <TextBox.InputBindings>
                     <KeyBinding Key="Enter" Command="{Binding AddNewTagCommand}"/>
                 </TextBox.InputBindings>
             </TextBox>
-            <controls:ImageButton Grid.Column="1" ImageSource="/Resources/Icons/plus.png" Command="{Binding AddNewTagCommand}" Width="32" Height="32" Margin="5"/>
+            <controls:ImageButton Grid.Column="1" ImageSource="/Resources/Icons/plus.png" Command="{Binding AddNewTagCommand}" />
         </Grid>
         
         

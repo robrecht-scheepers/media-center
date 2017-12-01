@@ -84,7 +84,7 @@ namespace MediaCenter.Media
         }
 
         public string Name => _items.Count == 1
-            ? (_items.First().MediaType == MediaType.Video ? "Video " : "Image ") + _items.First().Name
+            ? (_items.First().MediaType == MediaType.Video ? "Video: " : "Image: ") + _items.First().Name
             : $"{_items.Count} items selected";
 
         public bool MultipleItems => _items.Count > 1;

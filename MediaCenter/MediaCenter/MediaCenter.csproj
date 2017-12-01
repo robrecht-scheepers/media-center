@@ -102,6 +102,7 @@
     </Compile>
     <Compile Include="Sessions\Query\ViewModeBoolConverter.cs" />
     <Compile Include="Sessions\SessionTabViewModel.cs" />
+    <Compile Include="WPF\BoolVisibilityConverter.cs" />
     <Compile Include="WPF\Controls\ColumnToggleButton.cs" />
     <Compile Include="WPF\Controls\HideableColumnDefinition.cs" />
     <Compile Include="WPF\Controls\HideableRowDefinition.cs" />
