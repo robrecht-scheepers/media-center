@@ -8,37 +8,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:FilterCollectionViewModel}">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <DataTemplate DataType="{x:Type local:DatePeriodFilter}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="From" VerticalAlignment="Center"/>
-                    <DatePicker SelectedDate="{Binding From}" SelectedDateFormat="Short" VerticalAlignment="Center" />
-                    <TextBlock Text="Until" VerticalAlignment="Center"/>
-                    <DatePicker SelectedDate="{Binding Until}" SelectedDateFormat="Short" VerticalAlignment="Center" />
-                </StackPanel>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type local:TagFilter}">
-                <ComboBox ItemsSource="{Binding Tags}" SelectedItem="{Binding Tag}" HorizontalAlignment="Stretch"/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type local:PrivateFilter}">
-                <ComboBox ItemsSource="{Binding Options}" SelectedItem="{Binding Path=PrivateString, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type local:MediaTypeFilter}">
-                <ComboBox ItemsSource="{Binding MediaTypes}" SelectedItem="{Binding Path=MediaType, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type local:FavoriteFilter}">
-                <ComboBox ItemsSource="{Binding Options}" SelectedItem="{Binding Path=FavoriteString, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
-            </DataTemplate>
-        </ResourceDictionary>
-    </UserControl.Resources>
-    
     <Grid>
-        <ListView Grid.Row="1" ItemsSource="{Binding FilterViewModels}" HorizontalContentAlignment="Stretch">
+        <ListView Grid.Row="1" ItemsSource="{Binding FilterViewModels}" HorizontalContentAlignment="Stretch" Background="{StaticResource AppBrightColor}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="Template">

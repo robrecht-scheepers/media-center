@@ -16,6 +16,7 @@
             <wpf:NullVisibilityConverter x:Key="CollapseWhenNullConverter" NotNullVisibility="Visible" NullVisibility="Collapsed"/>
             <wpf:NullVisibilityConverter x:Key="CollapseWhenNotNullConverter" NotNullVisibility="Collapsed" NullVisibility="Visible"/>
             <wpf:BoolVisibilityConverter x:Key="CollapseWhenFalseConverter" TrueVisibility="Visible" FalseVisibility="Collapsed"/>
+            <wpf:BoolVisibilityConverter x:Key="CollapseWhenTrueConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

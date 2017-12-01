@@ -55,10 +55,10 @@
             <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollectionViewModel}"/>
             <StackPanel Grid.Row="1" Orientation="Vertical">
                 <Button Command="{Binding ExecuteQueryCommand}">Search</Button>
-             <!--   <ComboBox ItemsSource="{Binding ResultViewModesList}" SelectedItem="{Binding SelectedResultViewMode}"/> -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <controls:ImageToggleButton x:Name="detailView" IsChecked="{Binding SelectedResultViewMode, Converter={StaticResource ViewModeBoolConverter}, Mode=TwoWay}" 
-                                        CheckedImage="/Resources/Icons/Image-filled.png" UncheckedImage="/Resources/Icons/Image.png" IsEnabled="{Binding ElementName=listView, Path=IsChecked}"/>
+                                        CheckedImage="/Resources/Icons/Image-filled.png" UncheckedImage="/Resources/Icons/Image.png" 
+                                        IsEnabled="{Binding ElementName=listView, Path=IsChecked}"/>
             <controls:ImageToggleButton x:Name="listView" IsChecked="{Binding SelectedResultViewMode, Converter={StaticResource InvertedViewModeBoolConverter}, Mode=TwoWay}" 
                                 CheckedImage="/Resources/Icons/Tiles-filled.png" UncheckedImage="/Resources/Icons/Tiles.png" IsEnabled="{Binding ElementName=detailView, Path=IsChecked}"/>
                 </StackPanel>

@@ -8,12 +8,49 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:FilterViewModel}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <DataTemplate DataType="{x:Type local:DatePeriodFilter}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="From" VerticalAlignment="Center"/>
+                    <DatePicker Grid.Row="0" Grid.Column="1" SelectedDate="{Binding From}" SelectedDateFormat="Short" VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Until" VerticalAlignment="Center"/>
+                    <DatePicker Grid.Row="1" Grid.Column="1" SelectedDate="{Binding Until}" SelectedDateFormat="Short" VerticalAlignment="Center" />
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type local:TagFilter}">
+                <ComboBox ItemsSource="{Binding Tags}" SelectedItem="{Binding Tag}" HorizontalAlignment="Stretch"/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type local:PrivateFilter}">
+                <ComboBox ItemsSource="{Binding Options}" SelectedItem="{Binding Path=PrivateString, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type local:MediaTypeFilter}">
+                <ComboBox ItemsSource="{Binding MediaTypes}" SelectedItem="{Binding Path=MediaType, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type local:FavoriteFilter}">
+                <ComboBox ItemsSource="{Binding Options}" SelectedItem="{Binding Path=FavoriteString, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Border Grid.RowSpan="2" BorderBrush="DarkGray" Background="LightGray" BorderThickness="1" Margin="1" />
+        <Border Grid.RowSpan="2" BorderBrush="{StaticResource AppDarkColor}" Background="{StaticResource AppAccentColor}" BorderThickness="1" Margin="1" />
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -22,12 +59,10 @@
             <ComboBox Grid.Column="0" x:Name="FilterType" ItemsSource="{Binding FilterNames}" SelectedItem="{Binding SelectedFilterName, Mode=TwoWay}"/>
             <TextBlock Grid.Column="0" Text="-- Select a filter type to add a new filter --" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="DarkGray" IsHitTestVisible="False"
                        Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource HideWhenNotNullConverter}}" />
-            <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <controls:ImageToggleButton Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource HideWhenNullConverter}}"
-                                      CheckedImage="/Resources/Icons/arrow-return-180.png" UncheckedImage="/Resources/Icons/arrow-return-180-gray.png"  Height="24" Width="24"
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource CollapseWhenNullConverter}}">
+                <controls:ImageToggleButton CheckedImage="/Resources/Icons/arrow-return-180.png" UncheckedImage="/Resources/Icons/arrow-return-180-gray.png"  Height="24" Width="24"
                                       IsChecked="{Binding Path=Filter.Invert}" />
-                <controls:ImageButton Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource HideWhenNullConverter}}"
-                                      ImageSource="/Resources/Icons/cross.png" Height="24" Width="24"
+                <controls:ImageButton ImageSource="/Resources/Icons/cross.png" Height="24" Width="24"
                                       Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FilterCollectionView}}, Path=DataContext.RemoveFilterCommand}"
                                       CommandParameter="{Binding}"/>
             </StackPanel>

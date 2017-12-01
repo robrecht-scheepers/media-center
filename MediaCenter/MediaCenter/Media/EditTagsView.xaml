@@ -36,22 +36,13 @@
         <Border Grid.Row="0" Grid.RowSpan="2" BorderThickness="1" BorderBrush="DarkGray" Margin="1"/>
 
         <StackPanel Grid.Row="0" Orientation="Vertical">
-            <Grid>
-                <Border Background="{StaticResource AppBrightColor}" Margin="5">
-                    <TextBlock Text="No tags selected" Foreground="{StaticResource AppDarkColor}" Opacity="0.8" HorizontalAlignment="Stretch" Margin="6" />
-                </Border>
-                <Grid.Style>
-                    <Style TargetType="{x:Type Grid}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=SelectedTagsList, Path=HasItems}" Value="True">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Grid.Style>
-            </Grid>
+
+            <Border Background="{StaticResource AppBrightColor}" Margin="5">
+                <TextBlock Text="No tags selected" Foreground="{StaticResource AppDarkColor}" Opacity="0.8" HorizontalAlignment="Stretch" Margin="6"
+                            Visibility="{Binding ElementName=SelectedTagsList, Path=HasItems, Converter={StaticResource CollapseWhenTrueConverter}}"/>
+            </Border>
             <ListBox x:Name="SelectedTagsList" ItemsSource="{Binding Path=SelectedTags}" Margin="5" ItemContainerStyle="{StaticResource TagListItemStyle}" BorderThickness="0" 
-                     Visibility="{Binding ElementName=SelectedTagsList, Path=HasItems, Converter={StaticResource CollapseWhenFalseConverter}}">
+                     Visibility="{Binding Path=HasItems, RelativeSource={RelativeSource Self}, Converter={StaticResource CollapseWhenFalseConverter}}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
