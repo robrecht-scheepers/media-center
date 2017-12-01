@@ -50,7 +50,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Border Grid.RowSpan="2" BorderBrush="{StaticResource AppDarkColor}" Background="{StaticResource AppAccentColor}" BorderThickness="1" Margin="1" />
+        <Border Grid.RowSpan="2" BorderBrush="{StaticResource AppDarkColor}" Background="{StaticResource AppAccentColor}" BorderThickness="0" Margin="1" />
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

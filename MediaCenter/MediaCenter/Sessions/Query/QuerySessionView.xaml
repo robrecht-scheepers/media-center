@@ -54,7 +54,9 @@
 
             <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollectionViewModel}"/>
             <StackPanel Grid.Row="1" Orientation="Vertical">
-                <Button Command="{Binding ExecuteQueryCommand}">Search</Button>
+                <Button Command="{Binding ExecuteQueryCommand}">
+                    <TextBlock Text="{Binding MatchCount, StringFormat='{}Go! ({0} matches)'}"/>
+                </Button>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <controls:ImageToggleButton x:Name="detailView" IsChecked="{Binding SelectedResultViewMode, Converter={StaticResource ViewModeBoolConverter}, Mode=TwoWay}" 
                                         CheckedImage="/Resources/Icons/Image-filled.png" UncheckedImage="/Resources/Icons/Image.png" 

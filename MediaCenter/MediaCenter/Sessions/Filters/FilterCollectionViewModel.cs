@@ -25,16 +25,17 @@ namespace MediaCenter.Sessions.Filters
             foreach (var filter in _filters)
             {
                 var filterViewModel = new FilterViewModel(filter, _tags);
-                filterViewModel.FilterChanged += FilterChanged;
+                filterViewModel.FilterChanged += OnFilterChanged;
                 FilterViewModels.Add(new FilterViewModel(filter,_tags));
             }
             InitializeEmptyFilter();
         }
 
-        private void FilterChanged(object sender, EventArgs e)
+        private void OnFilterChanged(object sender, EventArgs e)
         {
             UpdateFilters();
             InitializeEmptyFilter();
+            RaiseFilterChanged();
         }
 
         private void UpdateFilters()
@@ -54,8 +55,10 @@ namespace MediaCenter.Sessions.Filters
             if (filterViewModel.Filter != null)
                 _filters.Remove(filterViewModel.Filter);
 
-            filterViewModel.FilterChanged -= FilterChanged;
+            filterViewModel.FilterChanged -= OnFilterChanged;
             FilterViewModels.Remove(filterViewModel);
+
+            RaiseFilterChanged();
         }
         #endregion
 
@@ -65,9 +68,15 @@ namespace MediaCenter.Sessions.Filters
             if (!FilterViewModels.Any() || FilterViewModels.Last().Filter != null)
             {
                 var filterViewModel = new FilterViewModel(_tags);
-                filterViewModel.FilterChanged += FilterChanged;
+                filterViewModel.FilterChanged += OnFilterChanged;
                 FilterViewModels.Add(filterViewModel);
             }
+        }
+
+        public event EventHandler FilterChanged;
+        private void RaiseFilterChanged()
+        {
+            FilterChanged?.Invoke(this, EventArgs.Empty);
         }
 
     }

@@ -22,7 +22,13 @@ namespace MediaCenter.Sessions.Filters
         {
             // set private members instead of properties to avoid PropertyChanged being raised during intialization
             _filter = filter;
+            _filter.PropertyChanged += Filter_PropertyChanged;
             _selectedFilterName = Filter.GetName(filter); 
+        }
+
+        private void Filter_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            RaiseFilterChanged();
         }
 
         public event EventHandler FilterChanged;
@@ -50,9 +56,18 @@ namespace MediaCenter.Sessions.Filters
 
         private void SelectedFilterNameChanged()
         {
-            Filter = string.IsNullOrEmpty(SelectedFilterName) 
-                ? null : 
-                Filter.Create(SelectedFilterName, _tags);
+            if (Filter != null)
+                Filter.PropertyChanged -= Filter_PropertyChanged;
+
+            if (string.IsNullOrEmpty(SelectedFilterName))
+            {
+                Filter = null;
+            }
+            else
+            {
+                Filter = Filter.Create(SelectedFilterName, _tags);
+                Filter.PropertyChanged += Filter_PropertyChanged;
+            }
         }
         
     }

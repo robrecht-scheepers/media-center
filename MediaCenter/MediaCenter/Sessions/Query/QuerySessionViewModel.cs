@@ -28,6 +28,7 @@ namespace MediaCenter.Sessions.Query
         {
             InitializeResultViewModesList();
             InitializeFilterCollectionViewModel();
+            UpdateMatchCount();
         }
 
         public override string Name => "View media";
@@ -36,10 +37,30 @@ namespace MediaCenter.Sessions.Query
 
         public IRepository Repository => Session.Repository;
 
+        public int MatchCount
+        {
+            get { return _matchCount; }
+            set { SetValue(ref _matchCount, value); }
+        }
+
         public FilterCollectionViewModel FilterCollectionViewModel { get; private set; }
         private void InitializeFilterCollectionViewModel()
         {
+            if(FilterCollectionViewModel != null)
+                FilterCollectionViewModel.FilterChanged -= FilterCollectionViewModelOnFilterChanged;
+
             FilterCollectionViewModel = new FilterCollectionViewModel(QuerySession.Filters, Repository.Tags);
+            FilterCollectionViewModel.FilterChanged += FilterCollectionViewModelOnFilterChanged;
+        }
+
+        private void FilterCollectionViewModelOnFilterChanged(object sender, EventArgs eventArgs)
+        {
+            UpdateMatchCount();
+        }
+
+        private void UpdateMatchCount()
+        {
+            MatchCount = QuerySession.CalculatMatchCount();
         }
 
         public EditMediaInfoViewModel EditMediaInfoViewModel
@@ -200,6 +221,8 @@ namespace MediaCenter.Sessions.Query
         }
 
         private RelayCommand _startSlideShowCommand;
+        private int _matchCount;
+
         public RelayCommand StartSlideShowCommand
             => _startSlideShowCommand ?? (_startSlideShowCommand = new RelayCommand(StartSlideShow));
         public void StartSlideShow()
