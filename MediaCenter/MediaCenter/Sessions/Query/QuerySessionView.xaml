@@ -52,22 +52,22 @@
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollectionViewModel}"/>
+            <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollectionViewModel}" Margin="{StaticResource CommonMargin}"/>
             <StackPanel Grid.Row="1" Orientation="Vertical">
                 <controls:TextButton Text="{Binding MatchCount, StringFormat='Load selected items ({0} matches)'}" Command="{Binding ExecuteQueryCommand}"
                                      Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}" Background="{StaticResource MainWindowBackground}"
-                                     Height="40"/>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <controls:ImageToggleButton x:Name="detailView" IsChecked="{Binding SelectedResultViewMode, Converter={StaticResource ViewModeBoolConverter}, Mode=TwoWay}" 
-                                        CheckedImage="/Resources/Icons/Image-filled.png" UncheckedImage="/Resources/Icons/Image.png" 
-                                        IsEnabled="{Binding ElementName=listView, Path=IsChecked}"/>
-            <controls:ImageToggleButton x:Name="listView" IsChecked="{Binding SelectedResultViewMode, Converter={StaticResource InvertedViewModeBoolConverter}, Mode=TwoWay}" 
-                                CheckedImage="/Resources/Icons/Tiles-filled.png" UncheckedImage="/Resources/Icons/Tiles.png" IsEnabled="{Binding ElementName=detailView, Path=IsChecked}"/>
+                                     Height="{StaticResource TextButtonHeight}"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <controls:ImageToggleButton x:Name="detailView" IsChecked="{Binding SelectedResultViewMode, Converter={StaticResource ViewModeBoolConverter}, Mode=TwoWay}" 
+                                            CheckedImage="/Resources/Icons/Image-filled.png" UncheckedImage="/Resources/Icons/Image.png" 
+                                            IsEnabled="{Binding ElementName=listView, Path=IsChecked}"/>
+                    <controls:ImageToggleButton x:Name="listView" IsChecked="{Binding SelectedResultViewMode, Converter={StaticResource InvertedViewModeBoolConverter}, Mode=TwoWay}" 
+                                    CheckedImage="/Resources/Icons/Tiles-filled.png" UncheckedImage="/Resources/Icons/Tiles.png" IsEnabled="{Binding ElementName=detailView, Path=IsChecked}"/>
                 </StackPanel>
             </StackPanel>
         </Grid>
 
-        <controls:ColumnToggleButton Grid.Column="1" x:Name="ShowFilter" Margin="5" IsChecked="True"
+        <controls:ColumnToggleButton Grid.Column="1" x:Name="ShowFilter" Margin="0 5" IsChecked="True"
                                      CheckedImage="/Resources/Icons/control-180.png" UncheckedImage="/Resources/Icons/control.png"/>
         
         <ContentControl Grid.Column="2" Content="{Binding QueryResultViewModel}"/>

@@ -7,6 +7,7 @@
              xmlns:local="clr-namespace:MediaCenter.Sessions.Staging"
              xmlns:media="clr-namespace:MediaCenter.Media"
              xmlns:wpf="clr-namespace:MediaCenter.WPF"
+             xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:StagingSessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300"
@@ -28,16 +29,15 @@
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch">
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
-                <Button Command="{Binding AddMediaCommand}" Width="100" Margin="5">Select media files</Button>
-                <Button Command="{Binding AddDirectoryCommand}" Width="100" Margin="5">Select folder</Button>
-                <TextBlock Text="{Binding StagingSession.StatusMessage}" Margin="5"/>
+                <controls:TextButton Command="{Binding AddMediaCommand}" Text="Select media files" Height="{StaticResource TextButtonHeight}" Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}"/>
+                <controls:TextButton Command="{Binding AddDirectoryCommand}" Text="Select folder" Height="{StaticResource TextButtonHeight}" Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}"/>
+                <TextBlock Text="{Binding StagingSession.StatusMessage}" Foreground="{StaticResource AppBrightColor}"/>
             </StackPanel>
-            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
-                <TextBlock Text="{Binding StagingSession.StagedItems.Count, StringFormat={}{0} items staged}" Foreground="{StaticResource AppBrightColor}" VerticalAlignment="Center" Margin="5"/>
-                <Button Command="{Binding SaveToRepositoryCommand}" Width="100" Margin="5">Save</Button>                
-            </StackPanel>
+            <controls:TextButton DockPanel.Dock="Right" Command="{Binding SaveToRepositoryCommand}" Text="{Binding Path=StagingSession.StagedItems.Count, StringFormat='{}Save {0} staged items'}" 
+                                 Visibility="{Binding ElementName=stagedItemsList, Path=HasItems, Converter={StaticResource CollapseWhenFalseConverter}}" 
+                                 Foreground="{StaticResource AppBrightColor}" HorizontalAlignment="Right" Margin="{StaticResource CommonMargin}"/>
         </DockPanel>
-        <ListBox Grid.Row="1" Grid.Column="0" Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding StagingSession.StagedItems}" SelectionMode="Extended"
+        <ListBox x:Name="stagedItemsList" Grid.Row="1" Grid.Column="0" Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding StagingSession.StagedItems}" SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
