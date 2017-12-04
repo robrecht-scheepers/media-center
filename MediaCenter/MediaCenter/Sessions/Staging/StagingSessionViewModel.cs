@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -11,28 +13,31 @@ namespace MediaCenter.Sessions.Staging
 {
     public class StagingSessionViewModel : SessionViewModelBase
     {
+        private EditMediaInfoViewModel _editMediaInfoViewModel;
+
         public StagingSessionViewModel(StagingSession session) : base(session)
         {
-            InitializeTagsViewModel();
-
+            SelectedItems = new BatchObservableCollection<MediaItem>();
+            SelectedItems.CollectionChanged += SelectedItemsOnCollectionChanged;
         }
 
         public override string Name => "Add media";
 
         public StagingSession StagingSession => (StagingSession)Session;
 
-        private EditTagsViewModel _tagsViewModel;
-        public EditTagsViewModel TagsViewModel
+        public BatchObservableCollection<MediaItem> SelectedItems { get; }
+        private void SelectedItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
-            get { return _tagsViewModel; }
-            set { SetValue(ref _tagsViewModel, value); }
+            EditMediaInfoViewModel?.PublishToItems();
+            EditMediaInfoViewModel = SelectedItems.Any() 
+                ? new EditMediaInfoViewModel(SelectedItems.ToList(), StagingSession.Repository.Tags.ToList()) 
+                : null;
         }
 
-        
-
-        private void InitializeTagsViewModel()
+        public EditMediaInfoViewModel EditMediaInfoViewModel
         {
-            TagsViewModel = new EditTagsViewModel(Session.Repository.Tags);
+            get { return _editMediaInfoViewModel; }
+            set { SetValue(ref _editMediaInfoViewModel, value); }
         }
 
         #region Edit item
@@ -84,7 +89,7 @@ namespace MediaCenter.Sessions.Staging
         }
         #endregion
 
-        #region Command: Add image files 
+        #region Command: Add items
         private AsyncRelayCommand _addMediaCommand;
         public AsyncRelayCommand AddMediaCommand => _addMediaCommand ?? (_addMediaCommand = new AsyncRelayCommand(AddMedia));
         private async Task AddMedia()
@@ -104,7 +109,7 @@ namespace MediaCenter.Sessions.Staging
         }
         #endregion
 
-        #region Command: add image folder
+        #region Command: add folder
         private AsyncRelayCommand _addDirectoryCommand;
         public AsyncRelayCommand AddDirectoryCommand => _addDirectoryCommand ?? (_addDirectoryCommand = new AsyncRelayCommand(AddDirectory));
         private async Task AddDirectory()
@@ -125,20 +130,17 @@ namespace MediaCenter.Sessions.Staging
         }
         #endregion
         
-        #region Command: Remove staged items
+        #region Command: Remove selected items
         
-        private RelayCommand<object> _removeItemsCommand;
-        public RelayCommand<object> RemoveItemsCommand => _removeItemsCommand ?? (_removeItemsCommand = new RelayCommand<object>(RemoveItems));
+        private RelayCommand _removeItemsCommand;
+        public RelayCommand RemoveItemsCommand => _removeItemsCommand ?? (_removeItemsCommand = new RelayCommand(RemoveItems));
 
-        private void RemoveItems(object items)
+        private void RemoveItems()
         {
-            var list = (System.Collections.IList) items;
-
-            foreach (var item in list.Cast<StagedItem>().ToList())
+            foreach (var item in SelectedItems.Cast<StagedItem>().ToList())
             {
                 StagingSession.RemoveStagedItem(item);
             }
-            
         }
         #endregion
 
@@ -151,14 +153,8 @@ namespace MediaCenter.Sessions.Staging
         }
         private async Task SaveToRepository()
         {
-            if(TagsViewModel.SelectedTags.Any())
-                await StagingSession.SaveToRepository(TagsViewModel.SelectedTags);
-            else
-                await StagingSession.SaveToRepository();
-            InitializeTagsViewModel();
+            await StagingSession.SaveToRepository();
         }
         #endregion
-
-        
     }
 }

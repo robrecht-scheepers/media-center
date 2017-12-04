@@ -37,15 +37,6 @@
                 </Style>
             </Image.Style>
         </Image>
-        
-        <StackPanel Name="ButtonList" Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="Collapsed" >
-            <controls:ImageButton ImageSource="/Resources/Icons/cross-button.png" Width="16" Height="16"
-                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}, Path=SelectedItems}"
-                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:StagingSessionView}}, Path=DataContext.RemoveItemsCommand}"/>
-            <controls:ImageButton ImageSource="/Resources/Icons/pencil.png" Width="16" Height="16"
-                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}, Path=SelectedItems}"
-                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:StagingSessionView}}, Path=DataContext.BeginEditItemCommand}"/>
-        </StackPanel>
         <TextBlock Grid.Row="1" Text="{Binding Name}" Margin="5" />
     </Grid>
 </UserControl>
