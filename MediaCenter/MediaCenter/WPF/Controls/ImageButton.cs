@@ -6,7 +6,8 @@ using System.Windows.Media;
 namespace MediaCenter.WPF.Controls
 {
     public class ImageButton : Button
-    {static ImageButton()
+    {
+        static ImageButton()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ImageButton),
                 new FrameworkPropertyMetadata(typeof(ImageButton)));
