@@ -38,7 +38,8 @@
                                  Visibility="{Binding ElementName=stagedItemsList, Path=HasItems, Converter={StaticResource CollapseWhenFalseConverter}}" 
                                  Foreground="{StaticResource AppBrightColor}" HorizontalAlignment="Right" Margin="{StaticResource CommonMargin}"/>
         </DockPanel>
-        <ListBox x:Name="stagedItemsList" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding StagingSession.StagedItems}" SelectionMode="Extended"
+        <ListBox x:Name="stagedItemsList" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Style="{StaticResource ThumbnailListStyle}" Margin="{StaticResource CommonMargin}"
+                 ItemsSource="{Binding StagingSession.StagedItems}" SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <i:Interaction.Behaviors>
                 <wpf:BindableListboxSelectionBehavior SelectedItems="{Binding SelectedItems}"/>

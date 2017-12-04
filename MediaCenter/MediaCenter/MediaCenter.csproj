@@ -190,7 +190,6 @@
       <DependentUpon>EditStagedItemView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Staging\StagedItem.cs" />
-    <Compile Include="Sessions\Staging\StagedItemListBehavior.cs" />
     <Compile Include="WPF\BindableListboxSelectionBehavior.cs" />
     <Compile Include="WPF\NullVisibilityConverter.cs" />
     <Compile Include="WPF\OpenCloseWindowBehavior.cs" />
