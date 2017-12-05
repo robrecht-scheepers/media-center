@@ -33,7 +33,7 @@
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
                 <controls:TextButton Command="{Binding AddMediaCommand}" Text="Select media files" Height="{StaticResource TextButtonHeight}" Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}"/>
                 <controls:TextButton Command="{Binding AddDirectoryCommand}" Text="Select folder" Height="{StaticResource TextButtonHeight}" Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}"/>
-                <TextBlock Text="{Binding StagingSession.StatusMessage}" Foreground="{StaticResource AppBrightColor}"/>
+                <TextBlock Text="{Binding StagingSession.StatusMessage}" Foreground="{StaticResource AppBrightColor}" VerticalAlignment="Center"/>
             </StackPanel>
             <controls:TextButton DockPanel.Dock="Right" Command="{Binding SaveToRepositoryCommand}" Text="{Binding Path=StagingSession.StagedItems.Count, StringFormat='{}Save {0} staged items'}" 
                                  Visibility="{Binding ElementName=stagedItemsList, Path=HasItems, Converter={StaticResource CollapseWhenFalseConverter}}" 
