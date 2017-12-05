@@ -395,6 +395,10 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\close.png" />
+    <Resource Include="Resources\Icons\maximize.png" />
+    <Resource Include="Resources\Icons\minimize.png" />
+    <Resource Include="Resources\Icons\restore.png" />
     <Resource Include="Resources\Icons\image-filled.png" />
     <Resource Include="Resources\Icons\tiles-filled.png" />
     <Resource Include="Resources\Icons\image.png" />
