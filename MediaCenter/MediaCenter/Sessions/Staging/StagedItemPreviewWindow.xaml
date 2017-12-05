@@ -1,0 +1,49 @@
+﻿<Window x:Class="MediaCenter.Sessions.Staging.StagedItemPreviewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MediaCenter.Sessions.Staging"
+        xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
+        xmlns:media="clr-namespace:MediaCenter.Media"
+        mc:Ignorable="d"
+        Title="StagedItemPreviewWindow" MaxHeight="800" MaxWidth="800"
+        d:DataContext="{d:DesignInstance local:StagedItem}"
+        WindowStyle="None">
+    <Grid>
+        <controls:ImageButton HorizontalAlignment="Right" VerticalAlignment="Top" ImageSource="/resources/Icons/cross-grey.png" Click="CloseButton_OnClick"></controls:ImageButton>
+        <Image Source="{Binding Path=FilePath}">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=MediaType}">
+                            <DataTrigger.Value>
+                                <media:MediaType>Video</media:MediaType>
+                            </DataTrigger.Value>
+                            <DataTrigger.Setters>
+                                <Setter Property="Visibility" Value="Collapsed" ></Setter>
+                            </DataTrigger.Setters>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+        <controls:VideoPlayer VideoUri="{Binding Path=FilePath}" StartOnLoad="True">
+            <controls:VideoPlayer.Style>
+                <Style TargetType="{x:Type controls:VideoPlayer}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=MediaType}">
+                            <DataTrigger.Value>
+                                <media:MediaType>Image</media:MediaType>
+                            </DataTrigger.Value>
+                            <DataTrigger.Setters>
+                                <Setter Property="Visibility" Value="Collapsed" ></Setter>
+                            </DataTrigger.Setters>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </controls:VideoPlayer.Style>
+        </controls:VideoPlayer>
+        
+    </Grid>
+</Window>

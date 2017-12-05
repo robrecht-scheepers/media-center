@@ -102,6 +102,9 @@
     </Compile>
     <Compile Include="Sessions\Query\ViewModeBoolConverter.cs" />
     <Compile Include="Sessions\SessionTabViewModel.cs" />
+    <Compile Include="Sessions\Staging\StagedItemPreviewWindow.xaml.cs">
+      <DependentUpon>StagedItemPreviewWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WPF\BoolVisibilityConverter.cs" />
     <Compile Include="WPF\Controls\ColumnToggleButton.cs" />
     <Compile Include="WPF\Controls\HideableColumnDefinition.cs" />
@@ -192,6 +195,7 @@
     <Compile Include="Sessions\Staging\StagedItem.cs" />
     <Compile Include="WPF\BindableListboxSelectionBehavior.cs" />
     <Compile Include="WPF\NullVisibilityConverter.cs" />
+    <Compile Include="WPF\ObjectBoolConverter.cs" />
     <Compile Include="WPF\OpenCloseWindowBehavior.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowViewModel.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowWindow.xaml.cs">
@@ -214,6 +218,10 @@
     <Compile Include="Media\EditTagsViewModel.cs" />
     <Compile Include="WPF\ScrollIntoViewBehavior.cs" />
     <Page Include="Sessions\Filters\FilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sessions\Staging\StagedItemPreviewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

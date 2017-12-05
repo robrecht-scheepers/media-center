@@ -40,6 +40,23 @@ namespace MediaCenter.Sessions.Staging
             set { SetValue(ref _editMediaInfoViewModel, value); }
         }
 
+        public StagedItem PreviewItem
+        {
+            get { return _previewItem; }
+            set { SetValue(ref _previewItem, value); }
+        }
+
+        #region Command: Show preview
+
+        private RelayCommand<StagedItem> _showPreviewCommand;
+        public RelayCommand<StagedItem> ShowPreviewCommand => _showPreviewCommand ?? (_showPreviewCommand = new RelayCommand<StagedItem>(ShowPreview));
+        private void ShowPreview(StagedItem item)
+        {
+            PreviewItem = item;
+        }
+
+        #endregion
+
         #region Edit item
         private EditStagedItemViewModel _editViewModel;
         public EditStagedItemViewModel EditViewModel
@@ -146,6 +163,7 @@ namespace MediaCenter.Sessions.Staging
 
         #region Command: save staged images to repository
         private AsyncRelayCommand _saveToRepositoryCommand;
+        private StagedItem _previewItem;
         public AsyncRelayCommand SaveToRepositoryCommand => _saveToRepositoryCommand ?? (_saveToRepositoryCommand = new AsyncRelayCommand(SaveToRepository,CanExecuteSaveToRepository));
         private bool CanExecuteSaveToRepository()
         {

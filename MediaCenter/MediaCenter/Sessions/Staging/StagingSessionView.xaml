@@ -14,8 +14,9 @@
              Background="{StaticResource AppStandardBackground}">
     
     <i:Interaction.Behaviors>
-        <wpf:OpenCloseWindowBehavior Trigger="{Binding ShowEditViewModel}" WindowType="local:EditStagedItemView" WindowDataContext="{Binding EditViewModel}" 
-                                        OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+        <wpf:OpenCloseWindowBehavior WindowDataContext="{Binding PreviewItem}" WindowType="local:StagedItemPreviewWindow"   
+                                     Trigger="{Binding PreviewItem, Converter={StaticResource FalseWhenNullConverter}, Mode=TwoWay}"
+                                     OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
     </i:Interaction.Behaviors>
     
     <Grid>
@@ -51,7 +52,14 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <local:StagedItemView DataContext="{Binding}"/>
+                    <local:StagedItemView DataContext="{Binding}">
+                        <local:StagedItemView.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" 
+                                          CommandParameter="{Binding}"
+                                          Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:StagingSessionView}}, Path=DataContext.ShowPreviewCommand}" />
+                                          
+                        </local:StagedItemView.InputBindings>
+                    </local:StagedItemView>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ListBox>
