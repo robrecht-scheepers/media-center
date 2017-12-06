@@ -11,8 +11,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel}"
         Title="{Binding Path=AppVersion, StringFormat={}Media Center - v {0}}" 
-        Height="350" Width="525" WindowState="Maximized" 
-        Background="{StaticResource MainWindowBackground}"
+        Height="350" Width="525" WindowState="Normal" Background="{StaticResource MainWindowBackground}"
         WindowStyle="None">
     
     <Window.Resources>
@@ -47,9 +46,9 @@
             </Grid.RowDefinitions>
 
             <DockPanel Grid.Row="0" x:Name="TitleBar" MouseDown="TitleBar_OnMouseDown">
-                <controls:ImageButton x:Name="Close" ImageSource="/Resources/Icons/close.png" Click="Close_OnClick" DockPanel.Dock="Right" Height="20" Width="20" Margin="0" HoverBackground="#FF0000"/>
-                <controls:ImageButton x:Name="Adjust" ImageSource="/Resources/Icons/maximize.png" Click="Adjust_OnClick" DockPanel.Dock="Right" Height="20" Width="20" Margin="0"/>
-                <controls:ImageButton x:Name="Minimize" ImageSource="/Resources/Icons/minimize.png" Click="Minimize_OnClick" DockPanel.Dock="Right" Height="20" Width="20" Margin="0"/>
+                <controls:ImageButton x:Name="Close" ImageSource="/Resources/Icons/close.png" Click="Close_OnClick" DockPanel.Dock="Right" VerticalAlignment="Top" Height="32" Width="32" Margin="0" Padding="10" HoverBackground="#FF0000"/>
+            <controls:ImageButton x:Name="Adjust" ImageSource="/Resources/Icons/maximize.png" Click="Adjust_OnClick" DockPanel.Dock="Right" VerticalAlignment="Top"  Height="32" Width="32" Margin="0" Padding="10" />
+            <controls:ImageButton x:Name="Minimize" ImageSource="/Resources/Icons/minimize.png" Click="Minimize_OnClick" DockPanel.Dock="Right" VerticalAlignment="Top"  Height="32" Width="32" Margin="0" Padding="10" />
                 <TextBlock HorizontalAlignment="Center" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Path=Title}"
                            Foreground="{StaticResource AppBrightColor}" FontSize="14"/>
             </DockPanel>

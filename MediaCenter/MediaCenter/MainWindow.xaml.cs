@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace MediaCenter
 {
@@ -11,6 +12,7 @@ namespace MediaCenter
         public MainWindow()
         {
             InitializeComponent();
+            MaximizeWindow();
         }
 
         private void Close_OnClick(object sender, RoutedEventArgs e)
@@ -39,9 +41,16 @@ namespace MediaCenter
             }
             else
             {
-                this.WindowState = WindowState.Maximized;
+                MaximizeWindow();
             }
+        }
 
+        private void MaximizeWindow()
+        {
+            var size = System.Windows.Forms.Screen.FromHandle(new WindowInteropHelper(this).Handle).Bounds;
+            this.MaxWidth = size.Width;
+            this.MaxHeight = size.Height;
+            this.WindowState = WindowState.Maximized;
         }
 
         private void TitleBar_OnMouseDown(object sender, MouseButtonEventArgs e)
