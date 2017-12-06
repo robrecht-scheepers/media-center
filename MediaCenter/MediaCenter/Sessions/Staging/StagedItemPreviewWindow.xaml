@@ -11,7 +11,6 @@
         d:DataContext="{d:DesignInstance local:StagedItem}"
         WindowStyle="None">
     <Grid>
-        <controls:ImageButton HorizontalAlignment="Right" VerticalAlignment="Top" ImageSource="/resources/Icons/cross-grey.png" Click="CloseButton_OnClick"></controls:ImageButton>
         <Image Source="{Binding Path=FilePath}">
             <Image.Style>
                 <Style TargetType="Image">
@@ -44,6 +43,7 @@
                 </Style>
             </controls:VideoPlayer.Style>
         </controls:VideoPlayer>
-        
+        <controls:ImageButton HorizontalAlignment="Right" VerticalAlignment="Top" Width="24" Height="24"
+                              ImageSource="/resources/Icons/cross-grey.png" Click="CloseButton_OnClick"/>
     </Grid>
 </Window>

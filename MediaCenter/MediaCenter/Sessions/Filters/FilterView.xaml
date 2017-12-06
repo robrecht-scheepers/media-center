@@ -57,8 +57,8 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <ComboBox Grid.Column="0" x:Name="FilterType" ItemsSource="{Binding FilterNames}" SelectedItem="{Binding SelectedFilterName, Mode=TwoWay}"/>
-            <TextBlock Grid.Column="0" Text="-- Select a filter type to add a new filter --" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource AppDarkColor}" Opacity="0.8" IsHitTestVisible="False"
-                       Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource HideWhenNotNullConverter}}" />
+            <TextBlock Grid.Column="0" Text="Select a filter type to add a new filter" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource AppDarkColor}" Opacity="0.8" IsHitTestVisible="False"
+                       Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource CollapseWhenNotNullConverter}}" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" Visibility="{Binding ElementName=FilterType, Path=SelectedItem, Converter={StaticResource CollapseWhenNullConverter}}">
                 <controls:ImageToggleButton CheckedImage="/Resources/Icons/arrow-return-180.png" UncheckedImage="/Resources/Icons/arrow-return-180-gray.png"  Height="24" Width="24"
                                       IsChecked="{Binding Path=Filter.Invert}" />

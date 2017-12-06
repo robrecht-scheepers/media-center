@@ -41,7 +41,7 @@
         <Grid.ColumnDefinitions>
             <controls:HideableColumnDefinition Width="4*" Visible="{Binding ElementName=ShowFilter, Path=IsChecked }"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="9*"/>
+            <ColumnDefinition Width="11*"/>
             <ColumnDefinition Width="Auto"/>
             <controls:HideableColumnDefinition Width="3*" Visible="{Binding ElementName=ShowEdit, Path=IsChecked }"/>
         </Grid.ColumnDefinitions>
@@ -54,7 +54,7 @@
 
             <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollectionViewModel}" Margin="{StaticResource CommonMargin}"/>
             <StackPanel Grid.Row="1" Orientation="Vertical">
-                <controls:TextButton Text="{Binding MatchCount, StringFormat='Load selected items ({0} matches)'}" Command="{Binding ExecuteQueryCommand}"
+                <controls:TextButton Text="{Binding MatchCount, StringFormat='Load {0} matching items'}" Command="{Binding ExecuteQueryCommand}"
                                      Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}" Background="{StaticResource MainWindowBackground}"
                                      Height="{StaticResource TextButtonHeight}"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">

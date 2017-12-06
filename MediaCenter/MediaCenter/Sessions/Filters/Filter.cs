@@ -6,12 +6,18 @@ namespace MediaCenter.Sessions.Filters
 {
     public abstract class Filter : PropertyChangedNotifier
     {
+        private bool _invert;
+
         protected Filter()
         {
             Invert = false;
         }
 
-        public bool Invert { get; set; }
+        public bool Invert
+        {
+            get { return _invert; }
+            set { SetValue(ref _invert, value); }
+        }
 
         public abstract IEnumerable<MediaItem> Apply(IEnumerable<MediaItem> source);
 
