@@ -39,17 +39,17 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <controls:HideableColumnDefinition Width="4*" Visible="{Binding ElementName=ShowFilter, Path=IsChecked }"/>
+            <controls:HideableColumnDefinition Width="*" Visible="{Binding ElementName=ShowFilter, Path=IsChecked }"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="11*"/>
+            <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="Auto"/>
-            <controls:HideableColumnDefinition Width="3*" Visible="{Binding ElementName=ShowEdit, Path=IsChecked }"/>
+            <controls:HideableColumnDefinition Width="*" Visible="{Binding ElementName=ShowEdit, Path=IsChecked }"/>
         </Grid.ColumnDefinitions>
         
         <Grid Grid.Column ="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollectionViewModel}" Margin="{StaticResource CommonMargin}"/>

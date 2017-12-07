@@ -9,11 +9,12 @@
     <SolidColorBrush x:Key="AppDarkColor" Color="#36454f"/>
     <SolidColorBrush x:Key="AppAccentColor" Color="#b6bfc8 "/>
     
-    <SolidColorBrush x:Key="FontColorOnBackground" Color="White"/>
-    <SolidColorBrush x:Key="FontColorInElement" Color="Black"/>
+    
+    
 
     <sys:Double x:Key="TextButtonHeight">36</sys:Double>
     <Thickness x:Key="CommonMargin" Left="5" Top="5" Right="5" Bottom="5"/>
+    <sys:Double x:Key="CommonFontSize">14</sys:Double>
     
     <Style TargetType="Button">
         <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
@@ -29,7 +30,7 @@
     </Style>
     <Style TargetType="TextBlock">
         <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
-        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
     </Style>
     <Style TargetType="ComboBox">
         <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
