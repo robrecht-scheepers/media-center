@@ -20,6 +20,9 @@ namespace MediaCenter.Helpers
             // file and delete it afterwards
             var firstFrameFile = @"C:\TEMP\thumbnail.jpg";
 
+            if (IOHelper.FileExists(firstFrameFile))
+                await IOHelper.DeleteFile(firstFrameFile);
+
             var ffmpeg = new Process
             {
                 StartInfo =

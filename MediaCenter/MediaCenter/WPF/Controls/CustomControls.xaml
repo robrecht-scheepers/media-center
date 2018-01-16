@@ -5,6 +5,5 @@
         <ResourceDictionary Source="ImageButton.xaml"/>
         <ResourceDictionary Source="ImageToggleButton.xaml"/>
         <ResourceDictionary Source="TextButton.xaml"/>
-        <ResourceDictionary Source="ColumnToggleButton.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

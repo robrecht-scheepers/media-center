@@ -106,7 +106,6 @@
       <DependentUpon>StagedItemPreviewWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="WPF\BoolVisibilityConverter.cs" />
-    <Compile Include="WPF\Controls\ColumnToggleButton.cs" />
     <Compile Include="WPF\Controls\HideableColumnDefinition.cs" />
     <Compile Include="WPF\Controls\HideableRowDefinition.cs" />
     <Compile Include="WPF\Controls\ImageButton.cs" />
@@ -225,7 +224,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WPF\Controls\ColumnToggleButton.xaml">
+    <Page Include="WPF\RowColumnToggleButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

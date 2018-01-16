@@ -4,6 +4,7 @@ using System.Timers;
 using MediaCenter.MVVM;
 using MediaCenter.Sessions.Query;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using MediaCenter.Media;
 using MediaCenter.Repository;
 
@@ -15,7 +16,7 @@ namespace MediaCenter.Sessions.Slideshow
         
         public SlideShowViewModel(ObservableCollection<MediaItem> queryResultItems, IRepository repository, int startIndex = 0) : base(queryResultItems, repository)
         {
-            Interval = 4;
+            Interval = int.Parse(ConfigurationManager.AppSettings["SlideshowIntervalSeconds"]);
             Status = PlayState.Stopped;
 
             if (startIndex > 0)

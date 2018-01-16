@@ -24,6 +24,9 @@
             </DataTemplate>
             <local:ViewModeBoolConverter x:Key="ViewModeBoolConverter"/>
             <local:ViewModeBoolConverter Invert="True" x:Key="InvertedViewModeBoolConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/WPF/RowColumnToggleButton.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     
@@ -67,12 +70,12 @@
             </StackPanel>
         </Grid>
 
-        <controls:ColumnToggleButton Grid.Column="1" x:Name="ShowFilter" Margin="0 5" IsChecked="True"
+        <controls:ImageToggleButton Grid.Column="1" x:Name="ShowFilter" Style="{StaticResource ColumnToggleButtonStyle}" Margin="0 5" IsChecked="True"
                                      CheckedImage="/Resources/Icons/control-180.png" UncheckedImage="/Resources/Icons/control.png"/>
         
         <ContentControl Grid.Column="2" Content="{Binding QueryResultViewModel}"/>
 
-        <controls:ColumnToggleButton Grid.Column="3" x:Name="ShowEdit" Margin="5" IsChecked="True"
+        <controls:ImageToggleButton Grid.Column="3" x:Name="ShowEdit" Style="{StaticResource ColumnToggleButtonStyle}"  Margin="5" IsChecked="True"
                                      CheckedImage="/Resources/Icons/control.png" UncheckedImage="/Resources/Icons/control-180.png"/>
         
         <Grid Grid.Column="4">

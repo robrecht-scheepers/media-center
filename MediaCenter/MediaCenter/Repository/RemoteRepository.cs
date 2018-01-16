@@ -113,7 +113,7 @@ namespace MediaCenter.Repository
             }
             else
             {
-               return DateTime.MinValue.AddDays(1);
+               return DateTime.MaxValue.AddDays(-1);
             }
         }
 
