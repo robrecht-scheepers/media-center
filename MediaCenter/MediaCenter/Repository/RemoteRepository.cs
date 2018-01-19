@@ -387,7 +387,9 @@ namespace MediaCenter.Repository
         public async Task SaveItemInfo(MediaItem item)
         {
             await IOHelper.SaveObject(new MediaInfo(item), ItemNameToInfoFilePath(item.Name));
+            //TODO: issue: how to save only the current dirty one in the local store, and not everything??
             await SetRemoteLastUpdate(DateTime.Now);
+            await UpdateLocalStore();
             await UpdateLastSyncDate(DateTime.Now);
         }
 

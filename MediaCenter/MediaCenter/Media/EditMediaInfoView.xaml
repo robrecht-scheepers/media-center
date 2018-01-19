@@ -25,7 +25,18 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Text="{Binding Name}"/>
-        <TextBlock Grid.Row="1" Text="{Binding DateTaken, StringFormat='{}Date taken: {0:dd.MM.yyyy, HH:mm:ss}'}" Visibility="{Binding DateTaken, Converter={StaticResource CollapseWhenNullConverter}}"/>
+
+        <Grid Grid.Row="1" Visibility="{Binding DateTaken, Converter={StaticResource CollapseWhenNullConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="{Binding DateTaken, StringFormat='{}Date taken: {0:dd.MM.yyyy, HH:mm:ss}'}" Visibility="{Binding ElementName=editToggleButton, Path=IsChecked, Converter={StaticResource CollapseWhenTrueConverter}}" />
+            <DatePicker Grid.Column="0" SelectedDate="{Binding DateTaken, Mode=TwoWay}" SelectedDateFormat="Short" Visibility="{Binding ElementName=editToggleButton, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" />
+            <controls:ImageToggleButton Grid.Column="1" x:Name="editToggleButton" CheckedImage="/Resources/Icons/pen.png" UncheckedImage="/Resources/Icons/pen-filled.png" />
+        </Grid>
+        
         <TextBlock Grid.Row="1" Text="{Binding MultipleDateTaken, StringFormat='{}Date taken: {0}'}" Visibility="{Binding MultipleDateTaken, Converter={StaticResource CollapseWhenNullConverter}}"/>
         <TextBlock Grid.Row="2" Text="{Binding DateAdded, StringFormat='{}Date added: {0:dd.MM.yyyy, HH:mm:ss}'}" Visibility="{Binding DateAdded, Converter={StaticResource HideWhenNullConverter}}"/>
 
