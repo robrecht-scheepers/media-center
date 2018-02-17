@@ -1,0 +1,72 @@
+﻿<UserControl x:Class="MediaCenter.Sessions.Staging.StagingSessionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:local="clr-namespace:MediaCenter.Sessions.Staging"
+             xmlns:media="clr-namespace:MediaCenter.Media"
+             xmlns:wpf="clr-namespace:MediaCenter.WPF"
+             xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance local:StagingSessionViewModel}"
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="{StaticResource AppStandardBackground}">
+    
+    <i:Interaction.Behaviors>
+        <wpf:OpenCloseWindowBehavior WindowDataContext="{Binding PreviewItem}" WindowType="local:StagedItemPreviewWindow"   
+                                     Trigger="{Binding PreviewItem, Converter={StaticResource FalseWhenNullConverter}, Mode=TwoWay}"
+                                     OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+    </i:Interaction.Behaviors>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch">
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
+                <controls:TextButton Command="{Binding AddMediaCommand}" Text="Select media files" Height="{StaticResource TextButtonHeight}" Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}"/>
+                <controls:TextButton Command="{Binding AddDirectoryCommand}" Text="Select folder" Height="{StaticResource TextButtonHeight}" Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}"/>
+                <TextBlock Text="{Binding StagingSession.StatusMessage}" Foreground="{StaticResource AppBrightColor}" VerticalAlignment="Center"/>
+            </StackPanel>
+            <controls:TextButton DockPanel.Dock="Right" Command="{Binding SaveToRepositoryCommand}" Text="{Binding Path=StagingSession.StagedItems.Count, StringFormat='{}Save {0} staged items'}" 
+                                 Visibility="{Binding ElementName=stagedItemsList, Path=HasItems, Converter={StaticResource CollapseWhenFalseConverter}}" 
+                                 Foreground="{StaticResource AppBrightColor}" HorizontalAlignment="Right" Margin="{StaticResource CommonMargin}"/>
+        </DockPanel>
+        <ListBox x:Name="stagedItemsList" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Style="{StaticResource ThumbnailListStyle}" Margin="{StaticResource CommonMargin}"
+                 ItemsSource="{Binding StagingSession.StagedItems}" SelectionMode="Extended"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <i:Interaction.Behaviors>
+                <wpf:BindableListboxSelectionBehavior SelectedItems="{Binding SelectedItems}"/>
+            </i:Interaction.Behaviors>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <local:StagedItemView DataContext="{Binding}">
+                        <local:StagedItemView.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" 
+                                          CommandParameter="{Binding}"
+                                          Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:StagingSessionView}}, Path=DataContext.ShowPreviewCommand}" />
+                                          
+                        </local:StagedItemView.InputBindings>
+                    </local:StagedItemView>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ListBox>
+        <media:EditMediaInfoView Grid.Row="1" Grid.Column="1" DataContext="{Binding EditMediaInfoViewModel}" 
+                                 Visibility="{Binding Converter={StaticResource HideWhenNullConverter}}" Margin="{StaticResource CommonMargin}"/>
+        
+        <controls:ImageButton Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Command="{Binding RemoveItemsCommand}" ImageSource="/Resources/Icons/trash-can.png"
+                              Visibility="{Binding EditMediaInfoViewModel, Converter={StaticResource HideWhenNullConverter}}" Margin="{StaticResource CommonMargin}"  />
+    </Grid>
+</UserControl>

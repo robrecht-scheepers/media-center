@@ -1,0 +1,102 @@
+﻿<UserControl x:Class="MediaCenter.Sessions.Query.QuerySessionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:MediaCenter.Sessions.Query"
+             xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:slideshow="clr-namespace:MediaCenter.Sessions.Slideshow"
+             xmlns:filters="clr-namespace:MediaCenter.Sessions.Filters"
+             xmlns:media="clr-namespace:MediaCenter.Media"
+             xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
+             xmlns:wpf="clr-namespace:MediaCenter.WPF"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance local:QuerySessionViewModel}"
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="{StaticResource AppStandardBackground}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <DataTemplate DataType="{x:Type local:QueryResultDetailViewModel}">
+                <local:QueryResultDetailView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type local:QueryResultListViewModel}">
+                <local:QueryResultListView/>
+            </DataTemplate>
+            <local:ViewModeBoolConverter x:Key="ViewModeBoolConverter"/>
+            <local:ViewModeBoolConverter Invert="True" x:Key="InvertedViewModeBoolConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/WPF/RowColumnToggleButton.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <interactivity:Interaction.Behaviors>
+        <wpf:OpenCloseWindowBehavior WindowType="slideshow:SlideShowWindow" Trigger="{Binding SlideShowActive}" WindowDataContext="{Binding Path=SlideShowViewModel}" 
+                                       OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" />
+    </interactivity:Interaction.Behaviors>
+    
+    <UserControl.InputBindings>
+        <KeyBinding Key="Right" Modifiers="Control" Command="{Binding SelectNextImageCommand}"/>
+        <KeyBinding Key="Left" Modifiers="Control" Command="{Binding SelectPreviousImageCommand}"/>
+    </UserControl.InputBindings>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <controls:HideableColumnDefinition Width="*" Visible="{Binding ElementName=ShowFilter, Path=IsChecked }"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="Auto"/>
+            <controls:HideableColumnDefinition Width="*" Visible="{Binding ElementName=ShowEdit, Path=IsChecked }"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid Grid.Column ="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollectionViewModel}" Margin="{StaticResource CommonMargin}"/>
+            <StackPanel Grid.Row="1" Orientation="Vertical">
+                <controls:TextButton Text="{Binding MatchCount, StringFormat='Load {0} matching items'}" Command="{Binding ExecuteQueryCommand}"
+                                     Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}" Background="{StaticResource MainWindowBackground}"
+                                     Height="{StaticResource TextButtonHeight}"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <controls:ImageToggleButton x:Name="detailView" IsChecked="{Binding SelectedResultViewMode, Converter={StaticResource ViewModeBoolConverter}, Mode=TwoWay}" 
+                                            CheckedImage="/Resources/Icons/Image-filled.png" UncheckedImage="/Resources/Icons/Image.png" 
+                                            IsEnabled="{Binding ElementName=listView, Path=IsChecked}"/>
+                    <controls:ImageToggleButton x:Name="listView" IsChecked="{Binding SelectedResultViewMode, Converter={StaticResource InvertedViewModeBoolConverter}, Mode=TwoWay}" 
+                                    CheckedImage="/Resources/Icons/Tiles-filled.png" UncheckedImage="/Resources/Icons/Tiles.png" IsEnabled="{Binding ElementName=detailView, Path=IsChecked}"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <controls:ImageToggleButton Grid.Column="1" x:Name="ShowFilter" Style="{StaticResource ColumnToggleButtonStyle}" Margin="0 5" IsChecked="True"
+                                     CheckedImage="/Resources/Icons/control-180.png" UncheckedImage="/Resources/Icons/control.png"/>
+        
+        <ContentControl Grid.Column="2" Content="{Binding QueryResultViewModel}"/>
+
+        <controls:ImageToggleButton Grid.Column="3" x:Name="ShowEdit" Style="{StaticResource ColumnToggleButtonStyle}"  Margin="5" IsChecked="True"
+                                     CheckedImage="/Resources/Icons/control.png" UncheckedImage="/Resources/Icons/control-180.png"/>
+        
+        <Grid Grid.Column="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <media:EditMediaInfoView Grid.Row="0" DataContext="{Binding EditMediaInfoViewModel}" Visibility="{Binding Converter={StaticResource HideWhenNullConverter}}"/>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <controls:ImageButton Grid.Column="0" HorizontalAlignment="Center" Command="{Binding StartSlideShowCommand}" ImageSource="/Resources/Icons/screen.png" Margin="5" HoverBackground="{StaticResource AppBrightColor}" />
+                <controls:ImageButton Grid.Column="1" HorizontalAlignment="Center" Command="{Binding SaveCurrentSelectionToFileCommand}" ImageSource="/Resources/Icons/content-download.png" Margin="5" />
+                <controls:ImageButton Grid.Column="2" HorizontalAlignment="Center" Command="{Binding DeleteCurrentSelectionCommand}" ImageSource="/Resources/Icons/trash-can.png" Margin="5" />
+            </Grid>
+        </Grid>
+    </Grid>
+        
+
+</UserControl>

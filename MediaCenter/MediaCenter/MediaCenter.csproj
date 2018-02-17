@@ -1,0 +1,437 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{87205786-C3D2-461E-8D39-F23B649AEF8C}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MediaCenter</RootNamespace>
+    <AssemblyName>MediaCenter</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAPICodePack.Core.1.1.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAPICodePack.Shell.1.1.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Reactive.Core, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Core.3.1.1\lib\net46\System.Reactive.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Interfaces.3.1.1\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Linq.3.1.1\lib\net46\System.Reactive.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.PlatformServices.3.1.1\lib\net46\System.Reactive.PlatformServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Windows.Threading, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Windows.Threading.3.1.1\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Media\PlayState.cs" />
+    <Compile Include="Sessions\Filters\FilterView.xaml.cs">
+      <DependentUpon>FilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sessions\Query\ViewModeBoolConverter.cs" />
+    <Compile Include="Sessions\SessionTabViewModel.cs" />
+    <Compile Include="Sessions\Staging\StagedItemPreviewWindow.xaml.cs">
+      <DependentUpon>StagedItemPreviewWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WPF\BoolVisibilityConverter.cs" />
+    <Compile Include="WPF\Controls\HideableColumnDefinition.cs" />
+    <Compile Include="WPF\Controls\HideableRowDefinition.cs" />
+    <Compile Include="WPF\Controls\ImageButton.cs" />
+    <Compile Include="WPF\Controls\ImageToggleButton.cs" />
+    <Compile Include="WPF\Controls\TextButton.cs" />
+    <Compile Include="WPF\Controls\ZoomImage.xaml.cs">
+      <DependentUpon>ZoomImage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\ImageHelper.cs" />
+    <Compile Include="Helpers\IOHelper.cs" />
+    <Compile Include="Helpers\ProcessAsyncExtension.cs" />
+    <Compile Include="Helpers\SerializationHelper.cs" />
+    <Compile Include="Helpers\VideoHelper.cs" />
+    <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="Media\EditMediaInfoView.xaml.cs">
+      <DependentUpon>EditMediaInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Media\ImageItemViewModel.cs" />
+    <Compile Include="Media\ImageItemView.xaml.cs">
+      <DependentUpon>ImageItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Media\MediaItemStatus.cs" />
+    <Compile Include="Media\MediaItemViewModel.cs" />
+    <Compile Include="Media\RotationDirection.cs" />
+    <Compile Include="Media\ThumbnailView.xaml.cs">
+      <DependentUpon>ThumbnailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Media\VideoItemView.xaml.cs">
+      <DependentUpon>VideoItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Media\VideoItemViewModel.cs" />
+    <Compile Include="WPF\Controls\VideoPlayer.xaml.cs">
+      <DependentUpon>VideoPlayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\BatchObservableCollection.cs" />
+    <Compile Include="Repository\IRepository.cs" />
+    <Compile Include="Repository\MediaInfo.cs" />
+    <Compile Include="MVVM\AsyncRelayCommand.cs" />
+    <Compile Include="MVVM\CommandBase.cs" />
+    <Compile Include="MVVM\IAsyncCommand.cs" />
+    <Compile Include="MVVM\ICommandEx.cs" />
+    <Compile Include="MVVM\PropertyChangedNotifier.cs" />
+    <Compile Include="MVVM\RelayCommand.cs" />
+    <Compile Include="MVVM\RelayCommandBase.cs" />
+    <Compile Include="Media\MediaItem.cs" />
+    <Compile Include="Media\MediaType.cs" />
+    <Compile Include="Repository\RemoteRepository.cs" />
+    <Compile Include="Repository\RepositoryStatusView.xaml.cs">
+      <DependentUpon>RepositoryStatusView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\RepositoryViewModel.cs" />
+    <Compile Include="Sessions\Filters\DateAddedFilter.cs" />
+    <Compile Include="Sessions\Filters\DatePeriodFilter.cs" />
+    <Compile Include="Sessions\Filters\FavoriteFilter.cs" />
+    <Compile Include="Sessions\Filters\Filter.cs" />
+    <Compile Include="Sessions\Filters\DateTakenFilter.cs" />
+    <Compile Include="Sessions\Filters\FilterCollectionView.xaml.cs">
+      <DependentUpon>FilterCollectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sessions\Filters\FilterCollectionViewModel.cs" />
+    <Compile Include="Sessions\Filters\FilterMode.cs" />
+    <Compile Include="Sessions\Filters\FilterViewModel.cs" />
+    <Compile Include="Sessions\Filters\MediaTypeFilter.cs" />
+    <Compile Include="Sessions\Filters\PrivateFilter.cs" />
+    <Compile Include="Sessions\Filters\TagFilter.cs" />
+    <Compile Include="Media\EditMediaInfoViewModel.cs" />
+    <Compile Include="Sessions\Query\QueryResultDetailView.xaml.cs">
+      <DependentUpon>QueryResultDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sessions\Query\QueryResultDetailViewModel.cs" />
+    <Compile Include="Sessions\Query\QueryResultListView.xaml.cs">
+      <DependentUpon>QueryResultListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sessions\Query\QueryResultListViewModel.cs" />
+    <Compile Include="Sessions\Query\QueryResultViewModel.cs" />
+    <Compile Include="Sessions\Query\QuerySessionView.xaml.cs">
+      <DependentUpon>QuerySessionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sessions\Query\QuerySessionViewModel.cs" />
+    <Compile Include="Sessions\Query\SelectionChangedEventArgs.cs" />
+    <Compile Include="Sessions\SessionViewModelBase.cs" />
+    <Compile Include="Sessions\Slideshow\HideIdleMouseBehavior.cs" />
+    <Compile Include="Sessions\Staging\EditStagedItemView.xaml.cs">
+      <DependentUpon>EditStagedItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sessions\Staging\StagedItem.cs" />
+    <Compile Include="WPF\BindableListboxSelectionBehavior.cs" />
+    <Compile Include="WPF\NullVisibilityConverter.cs" />
+    <Compile Include="WPF\ObjectBoolConverter.cs" />
+    <Compile Include="WPF\OpenCloseWindowBehavior.cs" />
+    <Compile Include="Sessions\Slideshow\SlideShowViewModel.cs" />
+    <Compile Include="Sessions\Slideshow\SlideShowWindow.xaml.cs">
+      <DependentUpon>SlideShowWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sessions\Staging\EditStagedItemViewModel.cs" />
+    <Compile Include="Sessions\Staging\StagedItemView.xaml.cs">
+      <DependentUpon>StagedItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sessions\Staging\StagingSession.cs" />
+    <Compile Include="Sessions\Query\QuerySession.cs" />
+    <Compile Include="Sessions\SessionBase.cs" />
+    <Compile Include="Sessions\Staging\StagingSessionView.xaml.cs">
+      <DependentUpon>StagingSessionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sessions\Staging\StagingSessionViewModel.cs" />
+    <Compile Include="Media\EditTagsView.xaml.cs">
+      <DependentUpon>EditTagsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Media\EditTagsViewModel.cs" />
+    <Compile Include="WPF\ScrollIntoViewBehavior.cs" />
+    <Page Include="Sessions\Filters\FilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sessions\Staging\StagedItemPreviewWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WPF\RowColumnToggleButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WPF\Controls\CustomControls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WPF\Controls\ImageButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WPF\Controls\ImageToggleButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WPF\Controls\TextButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WPF\Controls\ZoomImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Media\EditMediaInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Media\ImageItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Media\MediaItemViews.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Media\ThumbnailListStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Media\ThumbnailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Media\VideoItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WPF\Controls\VideoPlayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Repository\RepositoryStatusView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sessions\Filters\FilterCollectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sessions\Query\QueryResultDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sessions\Query\QueryResultListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sessions\Query\QuerySessionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sessions\Slideshow\SlideShowWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sessions\Staging\EditStagedItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sessions\Staging\StagedItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sessions\Staging\StagingSessionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Media\EditTagsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WPF\Style.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\cross-button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\cross.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\arrow-180.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\arrow-circle-315.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\arrow-circle-315-rev.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\film.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\cross-grey.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Dependencies\ffmpeg.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dependencies\ffprobe.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Resources\Icons\pen-filled.png" />
+    <Resource Include="Resources\Icons\pen.png" />
+    <Resource Include="Resources\Icons\close.png" />
+    <Resource Include="Resources\Icons\maximize.png" />
+    <Resource Include="Resources\Icons\minimize.png" />
+    <Resource Include="Resources\Icons\restore.png" />
+    <Resource Include="Resources\Icons\image-filled.png" />
+    <Resource Include="Resources\Icons\tiles-filled.png" />
+    <Resource Include="Resources\Icons\image.png" />
+    <Resource Include="Resources\Icons\tiles.png" />
+    <Resource Include="Resources\Icons\heart-half.png" />
+    <Resource Include="Resources\Icons\content-download.png" />
+    <Resource Include="Resources\Icons\screen.png" />
+    <Resource Include="Resources\Icons\trash-can.png" />
+    <Resource Include="Resources\Icons\heart-filled.png" />
+    <Resource Include="Resources\Icons\lock-locked-filled.png" />
+    <Resource Include="Resources\Icons\lock-unlocked.png" />
+    <Resource Include="Resources\Icons\heart.png" />
+    <Resource Include="Resources\Icons\arrow-return-180-gray.png" />
+    <Resource Include="Resources\Icons\arrow-return-180.png" />
+    <Resource Include="Resources\Icons\control-270.png" />
+    <Resource Include="Resources\Icons\control-90.png" />
+    <Resource Include="Resources\Icons\plus.png" />
+    <Resource Include="Resources\Icons\control-180.png" />
+    <Resource Include="Resources\Icons\control.png" />
+    <Resource Include="Resources\Icons\lock-half.png" />
+    <Resource Include="Resources\Icons\status-error.png" />
+    <Resource Include="Resources\Icons\status-ok.png" />
+    <Resource Include="Resources\Images\film-strip.png" />
+    <Resource Include="Resources\Icons\pencil.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="MediaCenter.Sessions.Query.QueryResultDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"             
+             xmlns:local="clr-namespace:MediaCenter.Sessions.Query"
+             xmlns:media="clr-namespace:MediaCenter.Media"
+             xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
+             xmlns:wpf="clr-namespace:MediaCenter.WPF"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance local:QueryResultDetailViewModel}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Media/MediaItemViews.xaml"/>
+                <ResourceDictionary Source="/WPF/RowColumnToggleButton.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <controls:HideableRowDefinition Height="Auto" Visible="{Binding ElementName=ShowList, Path=IsChecked}"/>
+        </Grid.RowDefinitions>
+
+        <ContentControl Grid.Row="0" Content="{Binding SelectedItemViewModel}" />
+        <controls:ImageButton Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding SelectPreviousItemCommand}" ImageSource="/Resources/Icons/arrow-180.png" Height="32" Width="32"/>
+        <controls:ImageButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding SelectNextItemCommand}" ImageSource="/Resources/Icons/arrow.png" Height="32" Width="32"/>
+
+        <controls:ImageToggleButton Grid.Row="1" x:Name="ShowList" Style="{StaticResource RowToggleButtonStyle}" IsChecked="True"
+                                    CheckedImage="/Resources/Icons/control-90.png" UncheckedImage="/Resources/Icons/control-270.png" />
+
+        <ListBox Grid.Row="2" Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding QueryResultItems}" 
+                 SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
+            <interactivity:Interaction.Behaviors>
+                <wpf:ScrollIntoViewBehavior/>
+            </interactivity:Interaction.Behaviors>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <media:ThumbnailView DataContext="{Binding}" Margin="5"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ListBox>
+        
+    </Grid>
+</UserControl>
