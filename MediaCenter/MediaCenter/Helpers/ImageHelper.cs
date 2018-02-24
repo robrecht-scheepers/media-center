@@ -38,15 +38,6 @@ namespace MediaCenter.Helpers
                 thumbnail.Save(resultStream, ImageFormat.Png);
                 return resultStream.ToArray();
             }
-        }        
-
-        public static DateTime ReadCreationDate(byte[] image)
-        {
-            using (var imageStream = new MemoryStream(image))
-            {
-                var bitmap = Image.FromStream(imageStream);
-                return ReadCreationDate(bitmap);
-            }
         }
 
         public static DateTime ReadCreationDate(Image image)
@@ -68,32 +59,70 @@ namespace MediaCenter.Helpers
             return creationDate;
         }
 
-        public static byte[] Rotate(byte[] image, RotationDirection direction)
+        public static int ReadRotation(Image image)
         {
+            int rotationPropertyID = 0x112; //274
+
+            ASCIIEncoding encoding = new ASCIIEncoding();
+            PropertyItem[] propertyItems = image.PropertyItems;
+            var rotationProperty = propertyItems.FirstOrDefault(p => p.Id == rotationPropertyID);
+            if (rotationProperty == null)
+            {
+                return 0;
+            }
+
+            int val = BitConverter.ToUInt16(rotationProperty.Value, 0);
+            
+            if (val == 3 || val == 4)
+                return 180;
+            if (val == 5 || val == 6)
+                return 90;
+            if (val == 7 || val == 8)
+                return 270;
+
+            return 0;
+        }
+
+        /// <summary>
+        /// returns a rotated version of the original image 
+        /// </summary>
+        /// <param name="image">The image to be rotated</param>
+        /// <param name="angle">The angle. Allowed values are: 0, 90, 180, 270. Other values will cause an argument exception</param>
+        /// <returns></returns>
+        public static byte[] Rotate(byte[] image, int angle)
+        {
+            RotateFlipType rotationtype;
+            switch (angle)
+            {
+                case 0:
+                    rotationtype = RotateFlipType.RotateNoneFlipNone;
+                    break;
+                case 90:
+                    rotationtype = RotateFlipType.Rotate90FlipNone;
+                    break;
+                case 180:
+                    rotationtype = RotateFlipType.Rotate180FlipNone;
+                    break;
+                case 270:
+                    rotationtype = RotateFlipType.Rotate270FlipNone;
+                    break;
+                default:
+                    throw new ArgumentException($"{angle} is not a valid image rotation angle. Only 0, 90 180 and 270 are valid rotation angles.");
+            }
+
             using (var sourceStream = new MemoryStream(image))
             {
                 var bitmap = Image.FromStream(sourceStream);
 
-                RotateFlipType rotationtype = RotateFlipType.RotateNoneFlipNone;
-                switch (direction)
-                {
-                    case RotationDirection.Clockwise:
-                        rotationtype = RotateFlipType.Rotate90FlipNone;
-                        break;
-                    case RotationDirection.Counterclockwise:
-                        rotationtype = RotateFlipType.Rotate270FlipNone;
-                        break;
-                }
                 bitmap.RotateFlip(rotationtype);
 
                 using (var destinationStream = new MemoryStream())
                 {
-                    bitmap.Save(destinationStream,ImageFormat.Jpeg);
+                    bitmap.Save(destinationStream, ImageFormat.Jpeg);
                     return destinationStream.ToArray();
                 }
             }
         }
-
         
     }
 }

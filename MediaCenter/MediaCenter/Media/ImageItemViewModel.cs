@@ -15,12 +15,12 @@ namespace MediaCenter.Media
 
         public MediaItem MediaItem { get; }
 
-        public void RotateImage(RotationDirection direction)
+        public void RotateImage(int angle)
         {
-            MediaItem.Content = ImageHelper.Rotate(MediaItem.Content, direction);
-            MediaItem.IsContentDirty = true;
+            MediaItem.Rotation = (MediaItem.Rotation + angle) % 360;
+            MediaItem.IsInfoDirty = true;
 
-            MediaItem.Thumbnail = ImageHelper.CreateThumbnail(MediaItem.Content, 100);
+            MediaItem.Thumbnail = ImageHelper.Rotate(MediaItem.Thumbnail, angle);
             MediaItem.IsThumbnailDirty = true;
         }
 
@@ -29,7 +29,7 @@ namespace MediaCenter.Media
             => _rotateClockwiseCommand ?? (_rotateClockwiseCommand = new RelayCommand(RotateClockwise));
         private void RotateClockwise()
         {
-            RotateImage(RotationDirection.Clockwise);
+            RotateImage(90);
         }
 
         private RelayCommand _rotateCounterclockwiseCommand;
@@ -37,7 +37,7 @@ namespace MediaCenter.Media
             => _rotateCounterclockwiseCommand ?? (_rotateCounterclockwiseCommand = new RelayCommand(RotateCounterClockwise));
         private void RotateCounterClockwise()
         {
-            RotateImage(RotationDirection.Counterclockwise);
+            RotateImage(270);
         }
     }
 }

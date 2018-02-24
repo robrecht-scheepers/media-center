@@ -28,8 +28,8 @@ namespace MediaCenterUnitTest
         {
             var image = File.ReadAllBytes(@"c:\TEMP\Personal documents\MCTest\ImageTesting\DSC_0001.JPG");
 
-            var rotatedIMageR = ImageHelper.Rotate(image, RotationDirection.Clockwise);
-            var rotatedIMageL = ImageHelper.Rotate(image, RotationDirection.Counterclockwise);
+            var rotatedIMageR = ImageHelper.Rotate(image, 90);
+            var rotatedIMageL = ImageHelper.Rotate(image, 270);
 
             File.WriteAllBytes(@"c:\TEMP\Personal documents\MCTest\ImageTesting\DSC_0001_R.JPG", rotatedIMageR);
             File.WriteAllBytes(@"c:\TEMP\Personal documents\MCTest\ImageTesting\DSC_0001_L.JPG", rotatedIMageL);

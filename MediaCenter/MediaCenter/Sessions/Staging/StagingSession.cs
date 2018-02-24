@@ -60,6 +60,9 @@ namespace MediaCenter.Sessions.Staging
                             var dateTaken = ImageHelper.ReadCreationDate(image);
                             var name = CreateUniqueItemName(dateTaken);
                             var thumbnail = ImageHelper.CreateThumbnail(image, 100);
+                            var rotation = ImageHelper.ReadRotation(image);
+                            if (rotation > 0)
+                                thumbnail = ImageHelper.Rotate(thumbnail, rotation);
 
                             StagedItems.Add(new StagedItem(name, MediaType.Image)
                             {
@@ -67,7 +70,8 @@ namespace MediaCenter.Sessions.Staging
                                 Status = MediaItemStatus.Staged,
                                 DateTaken = dateTaken,
                                 DateAdded = DateTime.Now,
-                                Thumbnail = thumbnail
+                                Thumbnail = thumbnail,
+                                Rotation = rotation
                             });
                         }
                     }
