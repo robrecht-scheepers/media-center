@@ -105,6 +105,7 @@
     <Compile Include="Sessions\Staging\StagedItemPreviewWindow.xaml.cs">
       <DependentUpon>StagedItemPreviewWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Media\PlayStateVisibilityConverter.cs" />
     <Compile Include="WPF\BoolVisibilityConverter.cs" />
     <Compile Include="WPF\Controls\HideableColumnDefinition.cs" />
     <Compile Include="WPF\Controls\HideableRowDefinition.cs" />
@@ -186,7 +187,7 @@
     <Compile Include="Sessions\Query\QuerySessionViewModel.cs" />
     <Compile Include="Sessions\Query\SelectionChangedEventArgs.cs" />
     <Compile Include="Sessions\SessionViewModelBase.cs" />
-    <Compile Include="Sessions\Slideshow\HideIdleMouseBehavior.cs" />
+    <Compile Include="Sessions\Slideshow\HideOnIdleMouseBehavior.cs" />
     <Compile Include="Sessions\Staging\EditStagedItemView.xaml.cs">
       <DependentUpon>EditStagedItemView.xaml</DependentUpon>
     </Compile>
@@ -393,6 +394,11 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\close_circle.png" />
+    <Resource Include="Resources\Icons\next.png" />
+    <Resource Include="Resources\Icons\pause.png" />
+    <Resource Include="Resources\Icons\play.png" />
+    <Resource Include="Resources\Icons\previous.png" />
     <Resource Include="Resources\Icons\pen-filled.png" />
     <Resource Include="Resources\Icons\pen.png" />
     <Resource Include="Resources\Icons\close.png" />

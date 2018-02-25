@@ -6,18 +6,19 @@ using System.Windows.Threading;
 
 namespace MediaCenter.Sessions.Slideshow
 {
-    public class HideIdleMouseBehavior : Behavior<Window>
+    public class HideOnIdleMouseBehavior : Behavior<SlideShowWindow>
     {
         public TimeSpan Interval { get { return (TimeSpan)GetValue(IntervalProperty); } set { SetValue(IntervalProperty, value); } }
-        public static readonly DependencyProperty IntervalProperty = DependencyProperty.Register("Interval", typeof(TimeSpan), typeof(HideIdleMouseBehavior), new PropertyMetadata(null));
+        public static readonly DependencyProperty IntervalProperty = DependencyProperty.Register("Interval", typeof(TimeSpan), typeof(HideOnIdleMouseBehavior), new PropertyMetadata(null));
 
         private DispatcherTimer _activityTimer;
+        private Cursor _hiddenCursor;
         
         protected override void OnAttached()
         {
             base.OnAttached();
 
-            HideCursor();
+            Hide();
 
             if (_activityTimer == null)
             {
@@ -26,7 +27,7 @@ namespace MediaCenter.Sessions.Slideshow
                     IsEnabled = true,
                     Interval = Interval
                 };
-                _activityTimer.Tick += (s,a) => HideCursor();
+                _activityTimer.Tick += (s,a) => Hide();
 
                 AssociatedObject.MouseMove += AssociatedObjectOnMouseMove;
             }
@@ -37,27 +38,33 @@ namespace MediaCenter.Sessions.Slideshow
             _activityTimer.Stop();
             _activityTimer = null;
             AssociatedObject.MouseMove -= AssociatedObjectOnMouseMove;
-            ShowCursor();
+            Show();
 
             base.OnDetaching();
         }
 
         private void AssociatedObjectOnMouseMove(object sender, MouseEventArgs mouseEventArgs)
         {
-            ShowCursor();
+            Show();
 
             _activityTimer.Stop();
             _activityTimer.Start();
         }
 
-        private void HideCursor()
+        private void Hide()
         {
+            _hiddenCursor = AssociatedObject.Cursor;
             AssociatedObject.Cursor = Cursors.None;
+            if(AssociatedObject.Controls != null)
+                AssociatedObject.Controls.Visibility = Visibility.Hidden;
+
         }
 
-        private void ShowCursor()
+        private void Show()
         {
-            AssociatedObject.Cursor = Cursors.Arrow;
+            AssociatedObject.Cursor = _hiddenCursor;
+            if (AssociatedObject.Controls != null)
+                AssociatedObject.Controls.Visibility = Visibility.Visible;
         }
     }
 }
