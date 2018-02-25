@@ -13,8 +13,6 @@ namespace MediaCenter.Media
             MediaItem = item;
         }
 
-        public MediaItem MediaItem { get; }
-
         public void RotateImage(int angle)
         {
             MediaItem.Rotation = (MediaItem.Rotation + angle) % 360;
