@@ -13,6 +13,8 @@ namespace MediaCenter.Sessions.Slideshow
 
         private DispatcherTimer _activityTimer;
         private Cursor _hiddenCursor;
+        private bool _isHidden;
+        private Point _lastMousePosition;
         
         protected override void OnAttached()
         {
@@ -27,7 +29,10 @@ namespace MediaCenter.Sessions.Slideshow
                     IsEnabled = true,
                     Interval = Interval
                 };
-                _activityTimer.Tick += (s,a) => Hide();
+                _activityTimer.Tick += (s,a) =>
+                {
+                    if(!_isHidden) Hide();
+                };
 
                 AssociatedObject.MouseMove += AssociatedObjectOnMouseMove;
             }
@@ -45,10 +50,12 @@ namespace MediaCenter.Sessions.Slideshow
 
         private void AssociatedObjectOnMouseMove(object sender, MouseEventArgs mouseEventArgs)
         {
-            Show();
+            if(_isHidden && mouseEventArgs.GetPosition(AssociatedObject)!=_lastMousePosition)
+                Show();
 
             _activityTimer.Stop();
             _activityTimer.Start();
+            _lastMousePosition = mouseEventArgs.GetPosition(AssociatedObject);
         }
 
         private void Hide()
@@ -57,6 +64,7 @@ namespace MediaCenter.Sessions.Slideshow
             AssociatedObject.Cursor = Cursors.None;
             if(AssociatedObject.Controls != null)
                 AssociatedObject.Controls.Visibility = Visibility.Hidden;
+            _isHidden = true;
 
         }
 
@@ -65,6 +73,7 @@ namespace MediaCenter.Sessions.Slideshow
             AssociatedObject.Cursor = _hiddenCursor;
             if (AssociatedObject.Controls != null)
                 AssociatedObject.Controls.Visibility = Visibility.Visible;
+            _isHidden = false;
         }
     }
 }

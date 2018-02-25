@@ -14,7 +14,11 @@
     <Window.Resources>
         <ResourceDictionary>
             <DataTemplate DataType="{x:Type media:ImageItemViewModel}">
-                <Image Source="{Binding Path=MediaItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Image Source="{Binding Path=MediaItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Image.LayoutTransform>
+                        <RotateTransform Angle="{Binding Path=MediaItem.Rotation}"/>
+                    </Image.LayoutTransform>
+                </Image>
             </DataTemplate>
             <DataTemplate DataType="{x:Type media:VideoItemViewModel}">
                 <media:VideoItemView/>
@@ -29,7 +33,7 @@
     </Window.InputBindings>
 
     <interactivity:Interaction.Behaviors>
-        <local:HideOnIdleMouseBehavior Interval="00:00:04"/>
+        <local:HideOnIdleMouseBehavior Interval="00:00:02"/>
     </interactivity:Interaction.Behaviors>
 
     <Grid Background="Black">
