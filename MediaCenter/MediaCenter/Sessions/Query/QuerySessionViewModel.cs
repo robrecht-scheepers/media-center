@@ -118,6 +118,15 @@ namespace MediaCenter.Sessions.Query
             }
         }
 
+        private RelayCommand<MediaItem> _selectForDetailViewCommand;
+        public RelayCommand<MediaItem> SelectForDetailViewCommand =>
+            _selectForDetailViewCommand ??
+            (_selectForDetailViewCommand = new RelayCommand<MediaItem>(SelectForDetailView));
+        private void SelectForDetailView(MediaItem item)
+        {
+            SelectedResultViewMode = ViewMode.Detail;
+        }
+
         #region Command: delete current selection
         private AsyncRelayCommand _deleteCurrentSelectionCommand;
         public AsyncRelayCommand DeleteCurrentSelectionCommand

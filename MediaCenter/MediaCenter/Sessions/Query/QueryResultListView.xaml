@@ -24,7 +24,13 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <media:ThumbnailView DataContext="{Binding}" Margin="5"/>
+                    <media:ThumbnailView DataContext="{Binding}" Margin="5">
+                        <media:ThumbnailView.InputBindings>
+                            <MouseBinding MouseAction="LeftDoubleClick" 
+                                          Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:QuerySessionView}, Path=DataContext.SelectForDetailViewCommand}"
+                                          CommandParameter="{Binding}"/>
+                        </media:ThumbnailView.InputBindings>
+                    </media:ThumbnailView>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ListBox>
