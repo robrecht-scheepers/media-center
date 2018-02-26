@@ -1,4 +1,5 @@
 ﻿<UserControl x:Class="MediaCenter.Media.VideoItemView"
+             x:Name="Root"    
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,7 +10,7 @@
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance Type=local:VideoItemViewModel}">
     <Grid>
-        <controls:VideoPlayer VideoUri="{Binding MediaItem.ContentUri}" StartOnLoad="True" 
+        <controls:VideoPlayer VideoUri="{Binding MediaItem.ContentUri}" StartOnLoad="True" HideControls="{Binding ElementName=Root, Path=HideControls}"
                               Rotation="{Binding MediaItem.Rotation}" PlayState="{Binding VideoPlayState, Mode=TwoWay}"/>
     </Grid>
 </UserControl>

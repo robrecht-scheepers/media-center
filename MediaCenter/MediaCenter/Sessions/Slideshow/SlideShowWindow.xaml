@@ -21,7 +21,7 @@
                 </Image>
             </DataTemplate>
             <DataTemplate DataType="{x:Type media:VideoItemViewModel}">
-                <media:VideoItemView/>
+                <media:VideoItemView HideControls="True"/>
             </DataTemplate>
             <media:PlayStateVisibilityConverter x:Key="VisibleWhenPlayingConverer" PlayingVisibility="Visible" NotPlayingVisibility="Collapsed"/>
             <media:PlayStateVisibilityConverter x:Key="CollapsedWhenPlayingConverer" PlayingVisibility="Collapsed" NotPlayingVisibility="Visible"/>

@@ -28,13 +28,13 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Name="CurrentTime"/>
+            <TextBlock Grid.Column="0" Name="CurrentTime" Foreground="White"/>
             <Slider Grid.Column="1" Name="SeekSlider" Margin="5" HorizontalAlignment="Stretch" 
                     Thumb.DragStarted="SeekSlider_OnDragStarted" Thumb.DragCompleted="SeekSlider_OnDragCompleted" ValueChanged="SeekSlider_OnValueChanged" 
                     IsMoveToPointEnabled="True"/>
-            <TextBlock Grid.Column="2" Name="TotalTime"/>
+            <TextBlock Grid.Column="2" Name="TotalTime" Foreground="White"/>
         </Grid>
-        <StackPanel Grid.Row="2"  Orientation="Horizontal" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="2"  Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ElementName=Root, Path=HideControls, Converter={StaticResource CollapseWhenTrueConverter}}">
             <controls:ImageButton ImageSource="/Resources/Icons/pause.png" Click="PlayPause_OnClick" Width="40" Height="40"
                                   Visibility="{Binding ElementName=Root, Path=PlayState, Converter={StaticResource VisibleWhenPlayingConverer}}"/>
             <controls:ImageButton ImageSource="/Resources/Icons/play.png" Click="PlayPause_OnClick" Width="40" Height="40"

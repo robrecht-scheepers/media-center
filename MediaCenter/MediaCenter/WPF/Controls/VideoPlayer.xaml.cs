@@ -29,7 +29,16 @@ namespace MediaCenter.WPF.Controls
             _timer.Tick += new EventHandler(TimerTick);
         }
 
-        public bool HideControls { get; set; }
+        public bool HideControls
+        {
+            get { return (bool)GetValue(HideControlsProperty); }
+            set { SetValue(HideControlsProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HideControls.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HideControlsProperty =
+            DependencyProperty.Register("HideControls", typeof(bool), typeof(VideoPlayer), new PropertyMetadata(false));
+        
 
         public bool StartOnLoad { get { return (bool)GetValue(StartOnLoadProperty); } set { SetValue(StartOnLoadProperty, value); } }
         public static readonly DependencyProperty StartOnLoadProperty = DependencyProperty.Register("StartOnLoad", typeof(bool), typeof(VideoPlayer), new PropertyMetadata(false));
