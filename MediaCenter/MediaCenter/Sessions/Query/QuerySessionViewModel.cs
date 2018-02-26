@@ -60,7 +60,7 @@ namespace MediaCenter.Sessions.Query
 
         private void UpdateMatchCount()
         {
-            MatchCount = QuerySession.CalculatMatchCount();
+            MatchCount = QuerySession.CalculateMatchCount();
         }
 
         public EditMediaInfoViewModel EditMediaInfoViewModel
