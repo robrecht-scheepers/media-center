@@ -16,7 +16,7 @@ namespace MediaCenter.Sessions.Slideshow
         
         public SlideShowViewModel(ObservableCollection<MediaItem> queryResultItems, IRepository repository, int startIndex = 0) : base(queryResultItems, repository)
         {
-            Interval = int.Parse(ConfigurationManager.AppSettings["SlideshowIntervalSeconds"]);
+            Interval = Properties.Settings.Default.SlideshowInterval;
             Status = PlayState.Stopped;
 
             if (startIndex > 0)
@@ -40,10 +40,18 @@ namespace MediaCenter.Sessions.Slideshow
 
         private void IntervalChanged()
         {
+            Properties.Settings.Default.SlideshowInterval = Interval;
             if(_timer == null)
                 return;
 
             _timer.Interval = 1000 * Interval;
+
+            // check if the timer is running before restarting as the timer is not used for videos
+            if (_timer.Enabled) 
+            {
+                _timer.Stop();
+                _timer.Start();
+            }
         }
 
         private void InitializeTimer()
@@ -57,22 +65,18 @@ namespace MediaCenter.Sessions.Slideshow
 
         public void Start()
         {
-            switch (Status)
-            {
-                case PlayState.Playing:
-                    return;
-                case PlayState.Paused:
-                    Status = PlayState.Playing;
-                    _timer.Start();
-                    break;
-                case PlayState.Stopped:
-                    InitializeTimer();
-                    Status = PlayState.Playing;
-                    _timer.Start();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            if(Status == PlayState.Playing)
+                return;
+
+            if(Status == PlayState.Stopped)
+                InitializeTimer();
+
+            if (SelectedItemViewModel.MediaItem.MediaType == MediaType.Image)
+                _timer.Start();
+            else // video
+                ((VideoItemViewModel)SelectedItemViewModel).VideoPlayState = PlayState.Playing;
+
+            Status = PlayState.Playing;
         }
 
         private RelayCommand _pauseCommand;
@@ -81,7 +85,11 @@ namespace MediaCenter.Sessions.Slideshow
         {
             if (Status == PlayState.Playing)
             {
-                _timer.Stop();
+                if (SelectedItemViewModel.MediaItem.MediaType == MediaType.Image)
+                    _timer.Stop();
+                else // video
+                    ((VideoItemViewModel) SelectedItemViewModel).VideoPlayState = PlayState.Paused;
+
                 Status = PlayState.Paused;
             }
         }
@@ -100,6 +108,8 @@ namespace MediaCenter.Sessions.Slideshow
                 case PlayState.Playing:
                 case PlayState.Paused:
                     Status = PlayState.Stopped;
+                    if (SelectedItemViewModel.MediaItem.MediaType == MediaType.Video)
+                        ((VideoItemViewModel)SelectedItemViewModel).VideoPlayState = PlayState.Stopped;
                     _timer.Stop();
                     _timer.Dispose();
                     break;

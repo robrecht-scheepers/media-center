@@ -48,20 +48,33 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="{Binding SelectedItemViewModel.MediaItem.DateTaken}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" FontSize="24"/>
-                <controls:ImageButton Grid.Column="1" ImageSource="/Resources/Icons/previous.png" Command="{Binding SelectPreviousItemCommand}" Width="64" Height="64"/>
-                <controls:ImageButton x:Name="Pause" Grid.Column="2" ImageSource="/Resources/Icons/pause.png" Command="{Binding PauseCommand}" Width="64" Height="64"
-                                      Visibility="{Binding Path=Status, Converter={StaticResource VisibleWhenPlayingConverer}}"/>
-                <controls:ImageButton x:Name="Play" Grid.Column="2" ImageSource="/Resources/Icons/play.png" Command="{Binding PlayCommand}" Width="64" Height="64"
-                                      Visibility="{Binding Path=Status, Converter={StaticResource CollapsedWhenPlayingConverer}}"/>
-                <controls:ImageButton Grid.Column="3" ImageSource="/Resources/Icons/next.png" Command="{Binding SelectNextItemCommand}" Width="64" Height="64"/>
-                <controls:ImageButton Grid.Column="4" ImageSource="/Resources/Icons/close_circle.png" Command="{Binding CloseCOmmand}" Width="64" Height="64" HorizontalAlignment="Right"/>
-
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <controls:ImageButton ImageSource="/Resources/Icons/previous.png" Command="{Binding SelectPreviousItemCommand}" Width="64" Height="64"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/pause.png" Command="{Binding PauseCommand}" Width="64" Height="64"
+                                          Visibility="{Binding Path=Status, Converter={StaticResource VisibleWhenPlayingConverer}}"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/play.png" Command="{Binding PlayCommand}" Width="64" Height="64"
+                                          Visibility="{Binding Path=Status, Converter={StaticResource CollapsedWhenPlayingConverer}}"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/next.png" Command="{Binding SelectNextItemCommand}" Width="64" Height="64"/>
+                </StackPanel>
+                <Grid Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <controls:ImageToggleButton Grid.Column="0" x:Name="ShowIntervalSlider" CheckedImage="/Resources/Icons/timer.png" UncheckedImage="/Resources/Icons/timer.png" Width="64" Height="64"/>
+                    <Slider Grid.Column="1" Value="{Binding Interval, Mode=TwoWay}" Minimum="2" Maximum="10" TickFrequency="1" IsSnapToTickEnabled="True" 
+                            Visibility="{Binding ElementName=ShowIntervalSlider, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="2" Text="{Binding Path=Interval, StringFormat={}{0}s}" Foreground="White" FontSize="20"
+                               Visibility="{Binding ElementName=ShowIntervalSlider, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" VerticalAlignment="Center" />
+                    <controls:ImageButton Grid.Column="4" ImageSource="/Resources/Icons/close_circle.png" Command="{Binding CloseCOmmand}" Width="64" Height="64" HorizontalAlignment="Right"/>
+                </Grid>
             </Grid>
         </Border>
     </Grid>

@@ -29,6 +29,8 @@ namespace MediaCenter.WPF.Controls
             _timer.Tick += new EventHandler(TimerTick);
         }
 
+        public bool HideControls { get; set; }
+
         public bool StartOnLoad { get { return (bool)GetValue(StartOnLoadProperty); } set { SetValue(StartOnLoadProperty, value); } }
         public static readonly DependencyProperty StartOnLoadProperty = DependencyProperty.Register("StartOnLoad", typeof(bool), typeof(VideoPlayer), new PropertyMetadata(false));
 
@@ -38,16 +40,8 @@ namespace MediaCenter.WPF.Controls
         public int Rotation { get { return (int)GetValue(RotationProperty); } set { SetValue(RotationProperty, value); } }
         public static readonly DependencyProperty RotationProperty = DependencyProperty.Register("Rotation", typeof(int), typeof(VideoPlayer), new PropertyMetadata(0, RotationChanged));
         
-
-        public PlayState PlayState
-        {
-            get { return (PlayState)GetValue(PlayStateProperty); }
-            set { SetValue(PlayStateProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for PlayState.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty PlayStateProperty =
-            DependencyProperty.Register("PlayState", typeof(PlayState), typeof(VideoPlayer), new PropertyMetadata(PlayState.Stopped, OnPlayStateChanged));
+        public PlayState PlayState{ get { return (PlayState)GetValue(PlayStateProperty); } set { SetValue(PlayStateProperty, value); } }
+        public static readonly DependencyProperty PlayStateProperty = DependencyProperty.Register("PlayState", typeof(PlayState), typeof(VideoPlayer), new PropertyMetadata(PlayState.Stopped, OnPlayStateChanged));
 
         private static void OnPlayStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using MediaCenter.Properties;
 
 namespace MediaCenter
 {
@@ -24,6 +25,7 @@ namespace MediaCenter
         private void ApplicationExit(object sender, ExitEventArgs e)
         {
             _bootstrapper.Exit();
+            Settings.Default.Save();
         }
     }
 }

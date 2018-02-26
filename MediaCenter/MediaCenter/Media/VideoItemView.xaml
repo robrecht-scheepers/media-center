@@ -9,7 +9,7 @@
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance Type=local:VideoItemViewModel}">
     <Grid>
-        <controls:VideoPlayer VideoUri="{Binding MediaItem.ContentUri}" StartOnLoad="True"  
+        <controls:VideoPlayer VideoUri="{Binding MediaItem.ContentUri}" StartOnLoad="True" 
                               Rotation="{Binding MediaItem.Rotation}" PlayState="{Binding VideoPlayState, Mode=TwoWay}"/>
     </Grid>
 </UserControl>
