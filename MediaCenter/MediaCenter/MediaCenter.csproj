@@ -394,6 +394,7 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\stop.png" />
     <Resource Include="Resources\Icons\timer.png" />
     <Resource Include="Resources\Icons\close_circle.png" />
     <Resource Include="Resources\Icons\next.png" />
