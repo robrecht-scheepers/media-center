@@ -5,7 +5,7 @@ using System.Windows.Interactivity;
 using MediaCenter.Media;
 using MediaCenter.MVVM;
 
-namespace MediaCenter.WPF
+namespace MediaCenter.WPF.Behaviors
 {
     public class BindableListboxSelectionBehavior : Behavior<ListBox>
     {

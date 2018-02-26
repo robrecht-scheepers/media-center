@@ -10,6 +10,7 @@
              xmlns:media="clr-namespace:MediaCenter.Media"
              xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
              xmlns:wpf="clr-namespace:MediaCenter.WPF"
+             xmlns:behaviors="clr-namespace:MediaCenter.WPF.Behaviors"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:QuerySessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300"
@@ -25,13 +26,13 @@
             <local:ViewModeBoolConverter x:Key="ViewModeBoolConverter"/>
             <local:ViewModeBoolConverter Invert="True" x:Key="InvertedViewModeBoolConverter"/>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/WPF/RowColumnToggleButton.xaml"/>
+                <ResourceDictionary Source="/WPF/Controls/RowColumnToggleButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     
     <interactivity:Interaction.Behaviors>
-        <wpf:OpenCloseWindowBehavior WindowType="slideshow:SlideShowWindow" Trigger="{Binding SlideShowActive}" WindowDataContext="{Binding Path=SlideShowViewModel}" 
+        <behaviors:OpenCloseWindowBehavior WindowType="slideshow:SlideShowWindow" Trigger="{Binding SlideShowActive}" WindowDataContext="{Binding Path=SlideShowViewModel}" 
                                        OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" />
     </interactivity:Interaction.Behaviors>
     
