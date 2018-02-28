@@ -13,8 +13,7 @@ namespace MediaCenter.Media
                 throw new ArgumentException($"Cannot create video view model for non-video item. Item type is {item.MediaType}.");
             MediaItem = item;
         }
-        public MediaItem MediaItem { get; }
-
+        
         public PlayState VideoPlayState
         {
             get { return _videoPlayState; }

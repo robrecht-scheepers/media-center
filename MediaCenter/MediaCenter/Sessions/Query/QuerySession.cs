@@ -42,7 +42,7 @@ namespace MediaCenter.Sessions.Query
             }
         }
 
-        public int CalculatMatchCount()
+        public int CalculateMatchCount()
         {
             var tmpFiltersList = Filters.ToList();
             if (!tmpFiltersList.Any(x => x is PrivateFilter))

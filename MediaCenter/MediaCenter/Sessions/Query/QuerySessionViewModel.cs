@@ -60,7 +60,7 @@ namespace MediaCenter.Sessions.Query
 
         private void UpdateMatchCount()
         {
-            MatchCount = QuerySession.CalculatMatchCount();
+            MatchCount = QuerySession.CalculateMatchCount();
         }
 
         public EditMediaInfoViewModel EditMediaInfoViewModel
@@ -116,6 +116,15 @@ namespace MediaCenter.Sessions.Query
             {
                 await Repository.SaveItem(dirtyItem.Name);
             }
+        }
+
+        private RelayCommand<MediaItem> _selectForDetailViewCommand;
+        public RelayCommand<MediaItem> SelectForDetailViewCommand =>
+            _selectForDetailViewCommand ??
+            (_selectForDetailViewCommand = new RelayCommand<MediaItem>(SelectForDetailView));
+        private void SelectForDetailView(MediaItem item)
+        {
+            SelectedResultViewMode = ViewMode.Detail;
         }
 
         #region Command: delete current selection

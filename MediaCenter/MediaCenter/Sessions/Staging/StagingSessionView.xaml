@@ -8,13 +8,14 @@
              xmlns:media="clr-namespace:MediaCenter.Media"
              xmlns:wpf="clr-namespace:MediaCenter.WPF"
              xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
+             xmlns:behaviors="clr-namespace:MediaCenter.WPF.Behaviors"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:StagingSessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300"
              Background="{StaticResource AppStandardBackground}">
     
     <i:Interaction.Behaviors>
-        <wpf:OpenCloseWindowBehavior WindowDataContext="{Binding PreviewItem}" WindowType="local:StagedItemPreviewWindow"   
+        <behaviors:OpenCloseWindowBehavior WindowDataContext="{Binding PreviewItem}" WindowType="local:StagedItemPreviewWindow"   
                                      Trigger="{Binding PreviewItem, Converter={StaticResource FalseWhenNullConverter}, Mode=TwoWay}"
                                      OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
     </i:Interaction.Behaviors>
@@ -43,7 +44,7 @@
                  ItemsSource="{Binding StagingSession.StagedItems}" SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <i:Interaction.Behaviors>
-                <wpf:BindableListboxSelectionBehavior SelectedItems="{Binding SelectedItems}"/>
+                <behaviors:BindableListboxSelectionBehavior SelectedItems="{Binding SelectedItems}"/>
             </i:Interaction.Behaviors>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

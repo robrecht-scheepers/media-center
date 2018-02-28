@@ -14,11 +14,17 @@
     <Window.Resources>
         <ResourceDictionary>
             <DataTemplate DataType="{x:Type media:ImageItemViewModel}">
-                <Image Source="{Binding Path=MediaItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Image Source="{Binding Path=MediaItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Image.LayoutTransform>
+                        <RotateTransform Angle="{Binding Path=MediaItem.Rotation}"/>
+                    </Image.LayoutTransform>
+                </Image>
             </DataTemplate>
             <DataTemplate DataType="{x:Type media:VideoItemViewModel}">
-                <media:VideoItemView/>
+                <media:VideoItemView HideControls="True"/>
             </DataTemplate>
+            <media:PlayStateVisibilityConverter x:Key="VisibleWhenPlayingConverer" PlayingVisibility="Visible" NotPlayingVisibility="Collapsed"/>
+            <media:PlayStateVisibilityConverter x:Key="CollapsedWhenPlayingConverer" PlayingVisibility="Collapsed" NotPlayingVisibility="Visible"/>
         </ResourceDictionary>
     </Window.Resources>
     
@@ -27,22 +33,49 @@
     </Window.InputBindings>
 
     <interactivity:Interaction.Behaviors>
-        <local:HideIdleMouseBehavior Interval="00:00:04"/>
+        <local:HideOnIdleMouseBehavior Interval="00:00:02"/>
     </interactivity:Interaction.Behaviors>
 
     <Grid Background="Black">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="4*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
         <ContentControl Grid.Row="0" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{Binding SelectedItemViewModel}"/>
-        <controls:ImageButton Grid.Row="0" ImageSource="/Resources/Icons/cross-grey.png" Command="{Binding CloseCOmmand}" Width="32" Height="32" HorizontalAlignment="Right"/>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <controls:ImageButton ImageSource="/Resources/Icons/control-180.png" Command="{Binding SelectPreviousItemCommand}" Width="32" Height="32"/>
-            <controls:ImageButton ImageSource="/Resources/Icons/film.png" Command="{Binding PauseResumeCommand}" Width="32" Height="32" />
-            <controls:ImageButton ImageSource="/Resources/Icons/control.png" Command="{Binding SelectNextItemCommand}" Width="32" Height="32"/>
-        </StackPanel>
+        <Border x:Name="Controls" Grid.Row="1" Background="{StaticResource AppDarkColor}" Opacity="0.75" Margin="70 0 70 30">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding SelectedItemViewModel.MediaItem.DateTaken}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" FontSize="24"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <controls:ImageButton ImageSource="/Resources/Icons/previous.png" Command="{Binding SelectPreviousItemCommand}" Width="64" Height="64"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/pause.png" Command="{Binding PauseCommand}" Width="64" Height="64"
+                                          Visibility="{Binding Path=Status, Converter={StaticResource VisibleWhenPlayingConverer}}"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/play.png" Command="{Binding PlayCommand}" Width="64" Height="64"
+                                          Visibility="{Binding Path=Status, Converter={StaticResource CollapsedWhenPlayingConverer}}"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/next.png" Command="{Binding SelectNextItemCommand}" Width="64" Height="64"/>
+                </StackPanel>
+                <Grid Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <controls:ImageToggleButton Grid.Column="0" x:Name="ShowIntervalSlider" CheckedImage="/Resources/Icons/timer.png" UncheckedImage="/Resources/Icons/timer.png" Width="64" Height="64"/>
+                    <Slider Grid.Column="1" Value="{Binding Interval, Mode=TwoWay}" Minimum="2" Maximum="10" TickFrequency="1" IsSnapToTickEnabled="True" 
+                            Visibility="{Binding ElementName=ShowIntervalSlider, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="2" Text="{Binding Path=Interval, StringFormat={}{0}s}" Foreground="White" FontSize="20"
+                               Visibility="{Binding ElementName=ShowIntervalSlider, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" VerticalAlignment="Center" />
+                    <controls:ImageButton Grid.Column="4" ImageSource="/Resources/Icons/close_circle.png" Command="{Binding CloseCOmmand}" Width="64" Height="64" HorizontalAlignment="Right"/>
+                </Grid>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
