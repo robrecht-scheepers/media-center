@@ -35,11 +35,11 @@
             <TextBlock Grid.Column="2" Name="TotalTime" Foreground="White"/>
         </Grid>
         <StackPanel Grid.Row="2"  Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ElementName=Root, Path=HideControls, Converter={StaticResource CollapseWhenTrueConverter}}">
-            <controls:ImageButton ImageSource="/Resources/Icons/pause.png" Click="PlayPause_OnClick" Width="40" Height="40"
+            <controls:ImageButton ImageSource="/Resources/Icons/pause.png" Click="PlayPause_OnClick"
                                   Visibility="{Binding ElementName=Root, Path=PlayState, Converter={StaticResource VisibleWhenPlayingConverer}}"/>
-            <controls:ImageButton ImageSource="/Resources/Icons/play.png" Click="PlayPause_OnClick" Width="40" Height="40"
+            <controls:ImageButton ImageSource="/Resources/Icons/play.png" Click="PlayPause_OnClick"
                                   Visibility="{Binding ElementName=Root, Path=PlayState, Converter={StaticResource CollapsedWhenPlayingConverer}}"/>
-            <controls:ImageButton ImageSource="/Resources/Icons/stop.png" Click="Stop_OnClick" Width="40" Height="40"/>
+            <controls:ImageButton ImageSource="/Resources/Icons/stop.png" Click="Stop_OnClick" />
         </StackPanel>
     </Grid>
     
