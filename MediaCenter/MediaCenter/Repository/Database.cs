@@ -74,7 +74,7 @@ namespace MediaCenter.Repository
         {
             const string cmdTxt =
                 "UPDATE MediaInfo " +
-                "SET Name = @name, Type = @type, Filename = @filename = @filename, DateTaken = @dateTaken, DateAdded = @dateAdded, Favorite = @favorite, Private = @private, Rotation = @rotation, Tags = @tags " +
+                "SET Name = @name, Type = @type, Filename = @filename, DateTaken = @dateTaken, DateAdded = @dateAdded, Favorite = @favorite, Private = @private, Rotation = @rotation, Tags = @tags " +
                 "WHERE Id = @Id;";
             using (var conn = GetConnection())
             using (var command = GetCommand(conn, cmdTxt))
@@ -217,51 +217,59 @@ namespace MediaCenter.Repository
         {
             if (filter is DateTakenFilter dateTakenFilter)
             {
-                conditions.Append(" AND DateTaken >= @dateTakenFrom AND DateTaken <= @dateTakenTo");
-                command.Parameters.AddWithValue("@dateTakenFrom", dateTakenFilter.From);
-                command.Parameters.AddWithValue("@dateTakenTo", dateTakenFilter.Until);
+                conditions.Append(!filter.Invert
+                    ? " AND DateTaken >= @dateTakenFrom AND DateTaken <= @dateTakenTo"
+                    : " AND (DateTaken < @dateTakenFrom OR DateTaken > @dateTakenTo)");
+                command.Parameters.AddWithValue("@dateTakenFrom", dateTakenFilter.From ?? DateTime.MinValue);
+                command.Parameters.AddWithValue("@dateTakenTo", dateTakenFilter.Until?.Date.AddDays(1).AddMilliseconds(-1) ?? DateTime.MaxValue);
             }
             else if (filter is DateAddedFilter dateAddedFilter)
             {
-                conditions.Append(" AND DateAdded >= @dateAddedFrom AND DateAdded <= @dateAddedTo");
-                command.Parameters.AddWithValue("@dateAddedFrom", dateAddedFilter.From);
-                command.Parameters.AddWithValue("@dateAddedTo", dateAddedFilter.Until);
+                conditions.Append(!filter.Invert
+                    ? " AND DateAdded >= @dateAddedFrom AND DateAdded <= @dateAddedTo"
+                    : " AND (DateAdded < @dateAddedFrom OR DateAdded > @dateAddedTo)");
+                command.Parameters.AddWithValue("@dateAddedFrom", dateAddedFilter.From ?? DateTime.MinValue);
+                command.Parameters.AddWithValue("@dateAddedTo", dateAddedFilter.Until?.Date.AddDays(1).AddMilliseconds(-1) ?? DateTime.MaxValue);
             }
             else if (filter is FavoriteFilter favoriteFilter)
             {
-                switch (favoriteFilter.FavoriteSetting)
+                if (!favoriteFilter.Invert && favoriteFilter.FavoriteSetting == FavoriteFilter.FavoriteOption.OnlyFavorite
+                    || favoriteFilter.Invert && favoriteFilter.FavoriteSetting == FavoriteFilter.FavoriteOption.NoFavorite)
                 {
-                    case FavoriteFilter.FavoriteOption.OnlyFavorite:
-                        conditions.Append(" AND Favorite = 1");
-                        break;
-                    case FavoriteFilter.FavoriteOption.NoFavorite:
-                        conditions.Append(" AND Favorite = 0");
-                        break;
-                    case FavoriteFilter.FavoriteOption.All:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    conditions.Append(" AND Favorite = 1");
+                }
+                else if (!favoriteFilter.Invert && favoriteFilter.FavoriteSetting == FavoriteFilter.FavoriteOption.NoFavorite
+                    || favoriteFilter.Invert && favoriteFilter.FavoriteSetting == FavoriteFilter.FavoriteOption.OnlyFavorite)
+                {
+                    conditions.Append(" AND Favorite = 0");
+                }
+                else if(favoriteFilter.Invert && favoriteFilter.FavoriteSetting == FavoriteFilter.FavoriteOption.All)
+                {
+                    conditions.Append(" AND 1 = 0");
                 }
             }
             else if(filter is PrivateFilter privateFilter)
             {
-                switch (privateFilter.PrivateSetting)
+                if (!privateFilter.Invert && privateFilter.PrivateSetting == PrivateFilter.PrivateOption.OnlyPrivate
+                    || privateFilter.Invert && privateFilter.PrivateSetting == PrivateFilter.PrivateOption.NoPrivate)
                 {
-                    case PrivateFilter.PrivateOption.NoPrivate:
-                        conditions.Append(" AND Private = 0");
-                        break;
-                    case PrivateFilter.PrivateOption.OnlyPrivate:
-                        conditions.Append(" AND Private = 1");
-                        break;
-                    case PrivateFilter.PrivateOption.All:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    conditions.Append(" AND Private = 1");
+                }
+                else if (!privateFilter.Invert && privateFilter.PrivateSetting == PrivateFilter.PrivateOption.NoPrivate
+                    || privateFilter.Invert && privateFilter.PrivateSetting == PrivateFilter.PrivateOption.OnlyPrivate)
+                {
+                    conditions.Append(" AND Private = 0");
+                }
+                else if (privateFilter.Invert && privateFilter.PrivateSetting == PrivateFilter.PrivateOption.All)
+                {
+                    conditions.Append(" AND 1 = 0");
                 }
             }
             else if(filter is MediaTypeFilter mediaTypeFilter)
             {
-                conditions.Append(" AND Type = @mediaType");
+                conditions.Append(!filter.Invert
+                    ? " AND Type = @mediaType"
+                    : " AND Type <> @mediaType");
                 command.Parameters.AddWithValue("@mediaType", mediaTypeFilter.MediaType);
             }
         }
