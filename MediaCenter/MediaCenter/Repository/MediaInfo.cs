@@ -60,7 +60,7 @@ namespace MediaCenter.Repository
         [DataMember]
         public DateTime DateAdded { get; set; }
 
-        [DataMember()]
+        [DataMember]
         public MediaType Type { get; set; }
 
         [DataMember]
