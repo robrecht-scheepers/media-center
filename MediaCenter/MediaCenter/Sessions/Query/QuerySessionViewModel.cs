@@ -181,7 +181,7 @@ namespace MediaCenter.Sessions.Query
                     return;
 
                 var selectedFolder = dialog.SelectedPath;
-                await Repository.SaveContentToFolder(QueryResultViewModel.SelectedItems.ToList(), selectedFolder);
+                await Repository.SaveMultipleContentToFolder(QueryResultViewModel.SelectedItems.ToList(), selectedFolder);
                 message = $"{QueryResultViewModel.SelectedItems.Count} files were saved successfully";
             }
 

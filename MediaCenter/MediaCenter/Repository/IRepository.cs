@@ -15,13 +15,13 @@ namespace MediaCenter.Repository
         IEnumerable<string> Tags { get; }
         Task Initialize();
         Task SaveNewItems(IEnumerable<StagedItem> newItems); 
-        Task DeleteItem(string name);
-        Task<byte[]> GetThumbnail(string name);
-        Task<byte[]> GetFullImage(string name, IEnumerable<string> prefetch);
-        Task SaveItem(string name);
+        Task DeleteItem(MediaItem item);
+        Task<byte[]> GetThumbnail(MediaItem item);
+        Task<byte[]> GetFullImage(MediaItem item, IEnumerable<MediaItem> prefetch);
+        Task SaveItem(MediaItem item);
         System.Uri Location { get; }
         Task SaveContentToFile(MediaItem item, string filePath);
-        Task SaveContentToFolder(List<MediaItem> items, string folderPath);
+        Task SaveMultipleContentToFolder(List<MediaItem> items, string folderPath);
         string StatusMessage { get; }
     }
 }

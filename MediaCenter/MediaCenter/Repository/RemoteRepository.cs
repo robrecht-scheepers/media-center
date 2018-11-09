@@ -455,7 +455,7 @@ namespace MediaCenter.Repository
             await IOHelper.CopyFile(FileNameToRemoteFilePath(item.ContentFileName), filePath);
         }
 
-        public async Task SaveContentToFolder(List<MediaItem> items, string folderPath)
+        public async Task SaveMultipleContentToFolder(List<MediaItem> items, string folderPath)
         {
             foreach (var item in items)
             {
