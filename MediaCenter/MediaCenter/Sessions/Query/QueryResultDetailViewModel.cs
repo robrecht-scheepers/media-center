@@ -28,18 +28,15 @@ namespace MediaCenter.Sessions.Query
         private MediaItem _selectedItem;
         public MediaItem SelectedItem
         {
-            get { return _selectedItem; }
-            set
-            {
-                SetValue(ref _selectedItem, value, async () => await SelectedItemChanged(), SelectedItemChanging);
-            }
+            get => _selectedItem;
+            set => SetValue(ref _selectedItem, value, async () => await SelectedItemChanged(), SelectedItemChanging);
         }
 
         private MediaItemViewModel _selectedItemViewModel;
         public MediaItemViewModel SelectedItemViewModel
         {
-            get { return _selectedItemViewModel; }
-            set { SetValue(ref _selectedItemViewModel, value); }
+            get => _selectedItemViewModel;
+            set => SetValue(ref _selectedItemViewModel, value);
         }
 
         private void SelectedItemChanging()

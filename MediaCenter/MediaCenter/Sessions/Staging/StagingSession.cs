@@ -20,7 +20,7 @@ namespace MediaCenter.Sessions.Staging
         private readonly Dictionary<string, string> _filePaths = new Dictionary<string, string>();
         
 
-        public StagingSession(IRepository repository) : base(repository)
+        public StagingSession(IRepository repository, IWindowService windowService) : base(repository, windowService)
         {
             StagedItems = new ObservableCollection<StagedItem>();
         }

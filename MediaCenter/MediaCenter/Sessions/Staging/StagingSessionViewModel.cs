@@ -28,9 +28,8 @@ namespace MediaCenter.Sessions.Staging
         public BatchObservableCollection<MediaItem> SelectedItems { get; }
         private void SelectedItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
-            EditMediaInfoViewModel?.PublishToItems();
             EditMediaInfoViewModel = SelectedItems.Any() 
-                ? new EditMediaInfoViewModel(SelectedItems.ToList(), StagingSession.Repository.Tags.ToList()) 
+                ? new EditMediaInfoViewModel(SelectedItems.ToList(), StagingSession.Repository, false) 
                 : null;
         }
 

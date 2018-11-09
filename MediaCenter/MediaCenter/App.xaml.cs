@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.IO;
 using System.Windows;
+using MediaCenter.Helpers;
 using MediaCenter.Properties;
 using MediaCenter.Repository;
 
@@ -21,11 +22,12 @@ namespace MediaCenter
             var mediaPath = Path.Combine(repoPath, "media");
             var thumbnailPath = Path.Combine(repoPath, "thumbnails");
             _repository = new DbRepository(dbPath, mediaPath, thumbnailPath);
-
             var repositoryTask = _repository.Initialize();
 
-            var mainViewModel = new MainWindowViewModel(_repository);
-            var mainView = new MainWindow { DataContext = mainViewModel };
+            var mainView = new MainWindow();
+            var windowService = new WindowService(mainView); 
+            var mainViewModel = new MainWindowViewModel(_repository,windowService);
+            mainView.DataContext = mainViewModel;
             mainView.Show();
 
             await repositoryTask;

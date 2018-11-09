@@ -113,6 +113,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\IWindowService.cs" />
+    <Compile Include="Helpers\WindowService.cs" />
     <Compile Include="Media\PlayState.cs" />
     <Compile Include="Repository\Database.cs" />
     <Compile Include="Repository\DbRepository.cs" />

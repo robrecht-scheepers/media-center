@@ -7,13 +7,17 @@ using MediaCenter.Sessions.Staging;
 using System.Reflection;
 using System;
 using System.Linq;
+using MediaCenter.Helpers;
 
 namespace MediaCenter
 {
     public class MainWindowViewModel : PropertyChangedNotifier
     {
-        public MainWindowViewModel(IRepository repository)
+        private readonly IWindowService _windowService;
+
+        public MainWindowViewModel(IRepository repository, IWindowService windowService)
         {
+            _windowService = windowService;
             Sessions = new ObservableCollection<SessionTabViewModel>();
             Repository = repository;
             RepositoryViewModel = new RepositoryViewModel(Repository);
@@ -30,8 +34,8 @@ namespace MediaCenter
 
         public SessionTabViewModel SelectedSessionTab
         {
-            get { return _selectedSessionTab; }
-            set { SetValue(ref _selectedSessionTab, value); }
+            get => _selectedSessionTab;
+            set => SetValue(ref _selectedSessionTab, value);
         }
 
         private RelayCommand<SessionTabViewModel> _closeSessionCommand;
@@ -46,7 +50,7 @@ namespace MediaCenter
 
         private void CreateNewSessionTab()
         {
-            var newSessionTab = new SessionTabViewModel(Repository);
+            var newSessionTab = new SessionTabViewModel(Repository,_windowService);
             newSessionTab.SessionCreated += NewSessionTabOnSessionCreated;
             Sessions.Add(newSessionTab);
         }

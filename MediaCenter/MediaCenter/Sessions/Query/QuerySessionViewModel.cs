@@ -61,10 +61,10 @@ namespace MediaCenter.Sessions.Query
             set => SetValue(ref _editMediaInfoViewModel, value);
         }
 
-        public List<ViewMode> ResultViewModesList { get; private set; }
+        public List<ViewMode> ViewModesList { get; private set; }
         private void InitializeResultViewModesList()
         {
-            ResultViewModesList = new List<ViewMode> { ViewMode.Detail, ViewMode.List };
+            ViewModesList = new List<ViewMode> { ViewMode.Detail, ViewMode.List };
         }
         public ViewMode SelectedResultViewMode
         {
@@ -94,20 +94,14 @@ namespace MediaCenter.Sessions.Query
 
             QueryResultViewModel = SelectedResultViewMode == ViewMode.Detail 
                 ? (QueryResultViewModel)new QueryResultDetailViewModel(QuerySession.QueryResult, Repository, selectedElement)
-                : (QueryResultViewModel)new QueryResultListViewModel(QuerySession.QueryResult);
+                : (QueryResultViewModel)new QueryResultListViewModel(QuerySession.QueryResult, selectedElement);
             QueryResultViewModel.SelectionChanged += QueryResultViewModelOnSelectionChanged;
-            
         }
         private async void QueryResultViewModelOnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
-            EditMediaInfoViewModel?.PublishToItems();
             EditMediaInfoViewModel = QueryResultViewModel.SelectedItems.Count > 0
-                ? new EditMediaInfoViewModel(QueryResultViewModel.SelectedItems.ToList(), Repository.Tags.ToList())
-                : null;
-            foreach (var dirtyItem in args.ItemsRemoved.Where(x => x.IsDirty))
-            {
-                await Repository.SaveItem(dirtyItem);
-            }
+                ? new EditMediaInfoViewModel(QueryResultViewModel.SelectedItems.ToList(), Repository,true)
+                : null;            
         }
 
         private RelayCommand<MediaItem> _selectForDetailViewCommand;
@@ -190,14 +184,6 @@ namespace MediaCenter.Sessions.Query
         public AsyncRelayCommand ExecuteQueryCommand => _executeQueryCommand ?? (_executeQueryCommand = new AsyncRelayCommand(ExecuteQuery));
         private async Task ExecuteQuery()
         {
-            if (QuerySession.Filters.Count == 0)
-            {
-                if(MessageBox.Show(
-                    "You have not selected any filters. This will load all items in the repository. Are you sure?",
-                    "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
-                    return;
-                
-            }
             await QuerySession.ExecuteQuery();
             InitializeQueryResultViewModel();
             foreach (var item in QuerySession.QueryResult)

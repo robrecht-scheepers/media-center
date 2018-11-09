@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
+using MediaCenter.Helpers;
 using MediaCenter.Media;
 using MediaCenter.Repository;
 using MediaCenter.Sessions.Filters;
@@ -14,7 +15,7 @@ namespace MediaCenter.Sessions.Query
     {
         private readonly int PrefetchBufferSize = int.Parse(ConfigurationManager.AppSettings["PrefetchBufferSize"]);
 
-        public QuerySession(IRepository repository) : base(repository)
+        public QuerySession(IRepository repository, IWindowService windowService) : base(repository, windowService)
         {
             Filters = new List<Filter>();
             QueryResult = new ObservableCollection<MediaItem>();
