@@ -1,19 +1,4 @@
 BEGIN TRANSACTION;
-DROP TABLE IF EXISTS `Tags`;
-CREATE TABLE IF NOT EXISTS `Tags` (
-	`Id`	INTEGER,
-	`Name`	TEXT NOT NULL UNIQUE,
-	PRIMARY KEY(`Id`)
-);
-DROP TABLE IF EXISTS `MediaInfoTags`;
-CREATE TABLE IF NOT EXISTS `MediaInfoTags` (
-	`Id`	INTEGER,
-	`MediaInfo`	INTEGER NOT NULL,
-	`Tag`	INTEGER NOT NULL,
-	PRIMARY KEY(`Id`),
-	FOREIGN KEY(`Tag`) REFERENCES `Tags`(`Id`),
-	FOREIGN KEY(`MediaInfo`) REFERENCES `MediaInfo`(`Id`)
-);
 DROP TABLE IF EXISTS `MediaInfo`;
 CREATE TABLE IF NOT EXISTS `MediaInfo` (
 	`Id`	INTEGER,
@@ -25,6 +10,22 @@ CREATE TABLE IF NOT EXISTS `MediaInfo` (
 	`Favorite`	INTEGER NOT NULL,
 	`Private`	INTEGER NOT NULL,
 	`Rotation`	INTEGER NOT NULL,
+	`Tags`	TEXT NOT NULL DEFAULT '',
 	PRIMARY KEY(`Id`)
+);
+DROP INDEX IF EXISTS `MediaInfo_Favorite`;
+CREATE INDEX IF NOT EXISTS `MediaInfo_Favorite` ON `MediaInfo` (
+	`Favorite`	ASC,
+	`Private`	ASC
+);
+DROP INDEX IF EXISTS `MediaInfo_DateTaken`;
+CREATE INDEX IF NOT EXISTS `MediaInfo_DateTaken` ON `MediaInfo` (
+	`DateTaken`	ASC,
+	`Private`	ASC
+);
+DROP INDEX IF EXISTS `MediaInfo_DateAdded`;
+CREATE INDEX IF NOT EXISTS `MediaInfo_DateAdded` ON `MediaInfo` (
+	`DateAdded`	ASC,
+	`Private`	ASC
 );
 COMMIT;

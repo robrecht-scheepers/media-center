@@ -5,10 +5,8 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using MediaCenter.Media;
-using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter.Repository
 {
@@ -44,37 +42,99 @@ namespace MediaCenter.Repository
                 throw new Exception("Created DB script is empty");
 
             SQLiteConnection.CreateFile(dbPath);
-            using (var dbConnection = GetConnection())
+            using (var conn = GetConnection())
+            using (var command = GetCommand(conn, createDbSql))
             {
-                using (var command = new SQLiteCommand(dbConnection) {CommandText = createDbSql})
-                {
-                    dbConnection.Open();
-                    command.ExecuteNonQuery(CommandBehavior.CloseConnection);
-                }
+                conn.Open();
+                command.ExecuteNonQuery(CommandBehavior.CloseConnection);
             }
         }
 
-        public async Task AddMediaInfo(MediaItem newItem)
+        public async Task AddMediaInfo(MediaItem item)
         {
             const string cmdTxt = 
-                "INSERT INTO MediaInfo(Name, Type, Filename, DateTaken, DateAdded, Favorite, Private, Rotation) " +
-                "VALUES(@name, @type, @filename, @dateTaken, @dateAdded, @favorite, @private, @rotation);";
-
+                "INSERT INTO MediaInfo(Name, Type, Filename, DateTaken, DateAdded, Favorite, Private, Rotation, Tags) " +
+                "VALUES(@name, @type, @filename, @dateTaken, @dateAdded, @favorite, @private, @rotation, @tags);";
             using (var conn = GetConnection())
             using (var command = GetCommand(conn, cmdTxt))
             {
-                command.Parameters.AddWithValue("@name", newItem.Name);
-                command.Parameters.AddWithValue("@type", newItem.MediaType);
-                command.Parameters.AddWithValue("@filename", newItem.ContentFileName);
-                command.Parameters.AddWithValue("@dateTaken", newItem.DateTaken);
-                command.Parameters.AddWithValue("@dateAdded", newItem.DateAdded);
-                command.Parameters.AddWithValue("@favorite", newItem.Favorite);
-                command.Parameters.AddWithValue("@private", newItem.Private);
-                command.Parameters.AddWithValue("@rotation", newItem.Rotation);
-
+                LoadCommandParameters(command, item);
                 conn.Open();
                 await command.ExecuteNonQueryAsync();
             }
+        }
+
+        public async Task UpdateMediaInfo(MediaItem item)
+        {
+            const string cmdTxt =
+                "UPDATE MediaInfo " +
+                "SET Name = @name, Type = @type, Filename = @filename = @filename, DateTaken = @dateTaken, DateAdded = @dateAdded, Favorite = @favorite, Private = @private, Rotation = @rotation, Tags = @tags " +
+                "WHERE Id = @Id;";
+            using (var conn = GetConnection())
+            using (var command = GetCommand(conn, cmdTxt))
+            {
+                LoadCommandParameters(command, item);
+                conn.Open();
+                await command.ExecuteNonQueryAsync();
+            }
+        }
+
+        public async Task DeleteMediaInfo(MediaItem item)
+        {
+            const string cmdTxt =
+                "DELETE FROM MediaInfo WHENE Id = @Id;";
+            using (var conn = GetConnection())
+            using (var command = GetCommand(conn, cmdTxt))
+            {
+                command.Parameters.AddWithValue("@Id", item.Id);
+                conn.Open();
+                await command.ExecuteNonQueryAsync();
+            }
+        }
+
+        private void LoadCommandParameters(SQLiteCommand command, MediaItem item)
+        {
+            command.Parameters.AddWithValue("@id", item.Id);
+            command.Parameters.AddWithValue("@name", item.Name);
+            command.Parameters.AddWithValue("@type", item.MediaType);
+            command.Parameters.AddWithValue("@filename", item.ContentFileName);
+            command.Parameters.AddWithValue("@dateTaken", item.DateTaken);
+            command.Parameters.AddWithValue("@dateAdded", item.DateAdded);
+            command.Parameters.AddWithValue("@favorite", item.Favorite);
+            command.Parameters.AddWithValue("@private", item.Private);
+            command.Parameters.AddWithValue("@rotation", item.Rotation);
+            command.Parameters.AddWithValue("@tags", AggregateTags(item.Tags));
+        }
+
+        private string AggregateTags(IEnumerable<string> tags)
+        {
+            return tags.Aggregate((a, n) => a + (string.IsNullOrEmpty(a) ? "" : "#") + n);
+        }
+
+        private List<string> SeparateTags(string aggregatedTags)
+        {
+            return aggregatedTags.Split('#').ToList();
+        }
+
+        public async Task<List<string>> GetNameClashes(string name)
+        {
+            var result = new List<string>();
+            var cmdTxt = $"SELECT Name FROM MediaInfo WHERE Name LIKE '{name}%'";
+            using (var conn = GetConnection())
+            using (var command = GetCommand(conn, cmdTxt))
+            {
+                conn.Open();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if (reader.HasRows)
+                        while (reader.Read())
+                        {
+                            result.Add(reader.GetString(0));
+                        }
+                }
+            }
+
+            return result;
         }
     }
 }
