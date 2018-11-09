@@ -72,7 +72,7 @@ namespace MediaCenter.Sessions.Query
         private async Task LoadFullImage(MediaItem item)
         {
             // decide other prefetch items
-            var prefetchList = new List<string>();
+            var prefetchList = new List<MediaItem>();
             var index = QueryResultItems.IndexOf(item);
             var prefetchCount = 0;
             if (index < QueryResultItems.Count - 1)
@@ -81,17 +81,17 @@ namespace MediaCenter.Sessions.Query
                 {
                     if (QueryResultItems[index + i].MediaType == MediaType.Image)
                     {
-                        prefetchList.Add(QueryResultItems[index + i].Name);
+                        prefetchList.Add(QueryResultItems[index + i]);
                         prefetchCount++;
                     }
                 }
             }
             if (index > 0 && QueryResultItems[index - 1].MediaType == MediaType.Image)
             {
-                prefetchList.Add(QueryResultItems[index - 1].Name);
+                prefetchList.Add(QueryResultItems[index - 1]);
             }
             if (item.MediaType == MediaType.Image)
-                item.Content = await _repository.GetFullImage(item.Name, prefetchList);
+                item.Content = await _repository.GetFullImage(item, prefetchList);
         }
 
         private MediaItemViewModel CreateItemViewModel(MediaItem selectedItem)

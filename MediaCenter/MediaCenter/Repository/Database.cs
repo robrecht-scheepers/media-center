@@ -41,6 +41,8 @@ namespace MediaCenter.Repository
             if (string.IsNullOrEmpty(createDbSql))
                 throw new Exception("Created DB script is empty");
 
+            if (!Directory.Exists(Path.GetDirectoryName(dbPath)))
+                Directory.CreateDirectory(Path.GetDirectoryName(dbPath));
             SQLiteConnection.CreateFile(dbPath);
             using (var conn = GetConnection())
             using (var command = GetCommand(conn, createDbSql))
@@ -103,12 +105,15 @@ namespace MediaCenter.Repository
             command.Parameters.AddWithValue("@favorite", item.Favorite);
             command.Parameters.AddWithValue("@private", item.Private);
             command.Parameters.AddWithValue("@rotation", item.Rotation);
-            command.Parameters.AddWithValue("@tags", AggregateTags(item.Tags));
+            command.Parameters.AddWithValue("@tags", AggregateTags(item.Tags.ToList()));
         }
 
-        private string AggregateTags(IEnumerable<string> tags)
+        private string AggregateTags(List<string> tags)
         {
-            return tags.Aggregate((a, n) => a + (string.IsNullOrEmpty(a) ? "" : "#") + n);
+            if (tags == null || !tags.Any())
+                return "";
+
+            return  tags.Aggregate((a, n) => a + (string.IsNullOrEmpty(a) ? "" : "#") + n);
         }
 
         private List<string> SeparateTags(string aggregatedTags)

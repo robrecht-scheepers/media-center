@@ -59,7 +59,7 @@ namespace MediaCenter.Sessions.Query
 
             if (QueryResult.Contains(item))
                 QueryResult.Remove(item);
-            await Repository.DeleteItem(item.Name);
+            await Repository.DeleteItem(item);
         }
     }
 }

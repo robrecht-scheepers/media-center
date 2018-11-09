@@ -114,7 +114,7 @@ namespace MediaCenter.Sessions.Query
                 : null;
             foreach (var dirtyItem in args.ItemsRemoved.Where(x => x.IsDirty))
             {
-                await Repository.SaveItem(dirtyItem.Name);
+                await Repository.SaveItem(dirtyItem);
             }
         }
 
@@ -210,7 +210,7 @@ namespace MediaCenter.Sessions.Query
             InitializeQueryResultViewModel();
             foreach (var item in QuerySession.QueryResult)
             {
-                item.Thumbnail = await Repository.GetThumbnail(item.Name);
+                item.Thumbnail = await Repository.GetThumbnail(item);
             }
         }
         #endregion

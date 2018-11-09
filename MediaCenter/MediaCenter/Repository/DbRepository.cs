@@ -20,21 +20,29 @@ namespace MediaCenter.Repository
         private readonly string _thumbnailFolderPath;
         private readonly Database _database;
 
-        private ConcurrentDictionary<string, byte[]> _buffer;
+        private readonly ConcurrentDictionary<string, byte[]> _buffer;
         private CancellationTokenSource _bufferCancellationTokenSource;
-        private bool _prefetchingInProgress;
+        private bool _prefetchInProgress;
 
         public DbRepository(string dbPath, string mediaFolderPath, string thumbnailFolderPath)
         {
             _database = new Database(dbPath);
             _mediaFolderPath = mediaFolderPath;
+            if (!Directory.Exists(mediaFolderPath))
+                Directory.CreateDirectory(mediaFolderPath);
+
             _thumbnailFolderPath = thumbnailFolderPath;
+            if (!Directory.Exists(thumbnailFolderPath))
+                Directory.CreateDirectory(thumbnailFolderPath);
+
+            _buffer = new ConcurrentDictionary<string, byte[]>();
         }
 
         public event EventHandler CollectionChanged;
         public event EventHandler StatusChanged;
-        public IEnumerable<MediaItem> Catalog { get; }
-        public IEnumerable<string> Tags { get; }
+
+        public IEnumerable<MediaItem> Catalog => new List<MediaItem>();
+        public IEnumerable<string> Tags => new List<string>();
         public Task Initialize()
         {
             return Task.CompletedTask;
@@ -74,6 +82,7 @@ namespace MediaCenter.Repository
                     await IOHelper.CopyFile(newItem.FilePath, mediaItemFilePath);
                     await IOHelper.SaveBytes(newItem.Thumbnail, GetThumbnailPath(newItem));
                     await _database.AddMediaInfo(newItem);
+                    newItem.Status = MediaItemStatus.Saved;
                 }
                 catch (Exception e)
                 {
@@ -169,7 +178,7 @@ namespace MediaCenter.Repository
             if (itemsToBeFetched.Any())
             {
                 // cancel any prefetch action still in progress
-                if (_prefetchingInProgress)
+                if (_prefetchInProgress)
                 {
                     _bufferCancellationTokenSource?.Cancel();
                 }
@@ -177,7 +186,7 @@ namespace MediaCenter.Repository
                 var prefetchSequence = Observable.Create<KeyValuePair<string, byte[]>>(
                 async (observer, token) =>
                 {
-                    _prefetchingInProgress = true;
+                    _prefetchInProgress = true;
                     foreach (var bufferItem in itemsToBeFetched)
                     {
                         // before fetching each item, check if cancellation was requested
@@ -194,7 +203,7 @@ namespace MediaCenter.Repository
                         _buffer[pair.Key] = pair.Value;
                         Debug.WriteLine($"{DateTime.Now:HH:mm:ss tt ss.fff} | Prefetched { pair.Key}");
                     },
-                    () => { _prefetchingInProgress = false; },
+                    () => { _prefetchInProgress = false; },
                     _bufferCancellationTokenSource.Token);
             }
 
@@ -209,7 +218,7 @@ namespace MediaCenter.Repository
             await _database.UpdateMediaInfo(item);
         }
 
-        public Uri Location { get; }
+        public Uri Location => default(Uri);
         public async Task SaveContentToFile(MediaItem item, string filePath)
         {
             await IOHelper.CopyFile(GetMediaPath(item), filePath);

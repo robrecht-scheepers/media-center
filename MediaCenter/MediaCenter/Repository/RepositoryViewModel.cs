@@ -62,6 +62,6 @@ namespace MediaCenter.Repository
             set { SetValue(ref _statusMessage, value); }
         }
         
-        public string Location => _repository.Location.LocalPath;
+        public string Location => _repository.Location?.LocalPath;
     }
 }
