@@ -28,7 +28,7 @@ namespace MediaCenter.Sessions.Query
         {
             InitializeResultViewModesList();
             InitializeFilterCollectionViewModel();
-            UpdateMatchCount();
+            UpdateMatchCount().Wait();
         }
 
         public override string Name => "View media";
@@ -39,34 +39,26 @@ namespace MediaCenter.Sessions.Query
 
         public int MatchCount
         {
-            get { return _matchCount; }
-            set { SetValue(ref _matchCount, value); }
+            get => _matchCount;
+            set => SetValue(ref _matchCount, value);
         }
 
         public FilterCollectionViewModel FilterCollectionViewModel { get; private set; }
         private void InitializeFilterCollectionViewModel()
         {
-            if(FilterCollectionViewModel != null)
-                FilterCollectionViewModel.FilterChanged -= FilterCollectionViewModelOnFilterChanged;
-
             FilterCollectionViewModel = new FilterCollectionViewModel(QuerySession.Filters, Repository.Tags);
-            FilterCollectionViewModel.FilterChanged += FilterCollectionViewModelOnFilterChanged;
+            FilterCollectionViewModel.FilterChanged += async (sender, args) => await UpdateMatchCount();
         }
-
-        private void FilterCollectionViewModelOnFilterChanged(object sender, EventArgs eventArgs)
+        
+        private async Task UpdateMatchCount()
         {
-            UpdateMatchCount();
-        }
-
-        private void UpdateMatchCount()
-        {
-            MatchCount = QuerySession.CalculateMatchCount();
+            MatchCount = await QuerySession.CalculateMatchCount();
         }
 
         public EditMediaInfoViewModel EditMediaInfoViewModel
         {
-            get { return _editMediaInfoViewModel; }
-            set { SetValue(ref _editMediaInfoViewModel, value); }
+            get => _editMediaInfoViewModel;
+            set => SetValue(ref _editMediaInfoViewModel, value);
         }
 
         public List<ViewMode> ResultViewModesList { get; private set; }
@@ -76,8 +68,8 @@ namespace MediaCenter.Sessions.Query
         }
         public ViewMode SelectedResultViewMode
         {
-            get { return _selectedResultViewMode; }
-            set { SetValue(ref _selectedResultViewMode, value, SelectedResultViewModeChanged); }
+            get => _selectedResultViewMode;
+            set => SetValue(ref _selectedResultViewMode, value, SelectedResultViewModeChanged);
         }
         private void SelectedResultViewModeChanged()
         {
@@ -87,8 +79,8 @@ namespace MediaCenter.Sessions.Query
 
         public QueryResultViewModel QueryResultViewModel
         {
-            get { return _queryResultViewModel; }
-            set { SetValue(ref _queryResultViewModel, value); }
+            get => _queryResultViewModel;
+            set => SetValue(ref _queryResultViewModel, value);
         }
         private void InitializeQueryResultViewModel()
         {
@@ -218,15 +210,15 @@ namespace MediaCenter.Sessions.Query
         #region Slideshow
         public SlideShowViewModel SlideShowViewModel
         {
-            get { return _slideShowViewModel; }
-            set { SetValue(ref _slideShowViewModel, value); }
+            get => _slideShowViewModel;
+            set => SetValue(ref _slideShowViewModel, value);
         }
 
         private bool _slideShowActive;
         public bool SlideShowActive
         {
-            get { return _slideShowActive; }
-            set { SetValue(ref _slideShowActive, value); }
+            get => _slideShowActive;
+            set => SetValue(ref _slideShowActive, value);
         }
 
         private RelayCommand _startSlideShowCommand;

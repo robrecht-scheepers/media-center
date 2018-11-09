@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using MediaCenter.Media;
+using MediaCenter.Sessions.Filters;
 
 namespace MediaCenter.Repository
 {
@@ -23,6 +26,7 @@ namespace MediaCenter.Repository
         }
 
         private SQLiteConnection GetConnection() => new SQLiteConnection(_connectionString);
+        private SQLiteCommand GetCommand(SQLiteConnection conn) => new SQLiteCommand(conn);
         private SQLiteCommand GetCommand(SQLiteConnection conn, string cmdTxt) => new SQLiteCommand(conn){CommandText = cmdTxt};
 
         private void CreateNewDatabase(string dbPath)
@@ -140,6 +144,126 @@ namespace MediaCenter.Repository
             }
 
             return result;
+        }
+
+        public async Task<List<MediaItem>> GetFilteredItemList(IEnumerable<Filter> filters)
+        {
+            var results = new List<MediaItem>();
+            const string baseCommandText =
+                "SELECT Id, Name, Type, Filename, DateTaken, DateAdded, Favorite, Private, Rotation, Tags " +
+                "FROM MediaInfo WHERE 1 = 1 {0};";
+
+            using (var conn = GetConnection())
+            using (var command = GetCommand(conn))
+            {
+                var conditions = new StringBuilder();
+                foreach (var filter in filters)
+                {
+                    TranslateFilter(filter, conditions, command);
+                }
+
+                command.CommandText = string.Format(baseCommandText, conditions);
+                conn.Open();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if(!reader.HasRows)
+                        return new List<MediaItem>();
+                    while (reader.Read())
+                    {
+                        results.Add(new MediaItem(reader.GetString(1), (MediaType)reader.GetInt32(2))
+                        {
+                            Id = reader.GetInt32(0),
+                            ContentFileName = reader.GetString(3),
+                            DateTaken = reader.GetDateTime(4),
+                            DateAdded = reader.GetDateTime(5),
+                            Favorite = reader.GetBoolean(6),
+                            Private = reader.GetBoolean(7),
+                            Rotation = reader.GetInt32(8),
+                            Tags = new ObservableCollection<string>(SeparateTags(reader.GetString(9)))
+                        });
+                    }
+                }
+            }
+
+            return results;
+        }
+
+        public async Task<int> GetFilteredItemCount(IEnumerable<Filter> filters)
+        {
+            const string baseCommandText = "SELECT COUNT(Id) FROM MediaInfo WHERE 1 = 1 {0};";
+
+            using (var conn = GetConnection())
+            using (var command = GetCommand(conn))
+            {
+                var conditions = new StringBuilder();
+                foreach (var filter in filters)
+                {
+                    TranslateFilter(filter, conditions, command);
+                }
+
+                command.CommandText = string.Format(baseCommandText, conditions);
+                conn.Open();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if (!reader.HasRows)
+                        return 0;
+                    reader.Read();
+                    return reader.GetInt32(0);
+                }
+            }
+        }
+
+        private void TranslateFilter(Filter filter, StringBuilder conditions, SQLiteCommand command)
+        {
+            if (filter is DateTakenFilter dateTakenFilter)
+            {
+                conditions.Append(" AND DateTaken >= @dateTakenFrom AND DateTaken <= @dateTakenTo");
+                command.Parameters.AddWithValue("@dateTakenFrom", dateTakenFilter.From);
+                command.Parameters.AddWithValue("@dateTakenTo", dateTakenFilter.Until);
+            }
+            else if (filter is DateAddedFilter dateAddedFilter)
+            {
+                conditions.Append(" AND DateAdded >= @dateAddedFrom AND DateAdded <= @dateAddedTo");
+                command.Parameters.AddWithValue("@dateAddedFrom", dateAddedFilter.From);
+                command.Parameters.AddWithValue("@dateAddedTo", dateAddedFilter.Until);
+            }
+            else if (filter is FavoriteFilter favoriteFilter)
+            {
+                switch (favoriteFilter.FavoriteSetting)
+                {
+                    case FavoriteFilter.FavoriteOption.OnlyFavorite:
+                        conditions.Append(" AND Favorite = 1");
+                        break;
+                    case FavoriteFilter.FavoriteOption.NoFavorite:
+                        conditions.Append(" AND Favorite = 0");
+                        break;
+                    case FavoriteFilter.FavoriteOption.All:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            else if(filter is PrivateFilter privateFilter)
+            {
+                switch (privateFilter.PrivateSetting)
+                {
+                    case PrivateFilter.PrivateOption.NoPrivate:
+                        conditions.Append(" AND Private = 0");
+                        break;
+                    case PrivateFilter.PrivateOption.OnlyPrivate:
+                        conditions.Append(" AND Private = 1");
+                        break;
+                    case PrivateFilter.PrivateOption.All:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            else if(filter is MediaTypeFilter mediaTypeFilter)
+            {
+                conditions.Append(" AND Type = @mediaType");
+                command.Parameters.AddWithValue("@mediaType", mediaTypeFilter.MediaType);
+            }
         }
     }
 }

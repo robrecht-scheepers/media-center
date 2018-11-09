@@ -34,9 +34,9 @@ namespace MediaCenter.Repository
 
         private void UpdateRepositoryValues()
         {
-            ImageItemCount = _repository.Catalog.Count(x => x.MediaType == MediaType.Image);
-            VideoItemCount = _repository.Catalog.Count(x => x.MediaType == MediaType.Video);
-            ItemCount = ImageItemCount + VideoItemCount;            
+            //ImageItemCount = _repository.Catalog.Count(x => x.MediaType == MediaType.Image);
+            //VideoItemCount = _repository.Catalog.Count(x => x.MediaType == MediaType.Video);
+            //ItemCount = ImageItemCount + VideoItemCount;            
         }
 
         public int ItemCount

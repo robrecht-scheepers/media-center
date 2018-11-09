@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediaCenter.Helpers;
 using MediaCenter.Media;
+using MediaCenter.Sessions.Filters;
 using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter.Repository
@@ -233,5 +234,15 @@ namespace MediaCenter.Repository
         }
 
         public string StatusMessage { get; private set; }
+
+        public async Task<List<MediaItem>> GetQueryItems(IEnumerable<Filter> filters)
+        {
+            return await _database.GetFilteredItemList(filters);
+        }
+
+        public async Task<int> GetQueryCount(IEnumerable<Filter> filters)
+        {
+            return await _database.GetFilteredItemCount(filters);
+        }
     }
 }

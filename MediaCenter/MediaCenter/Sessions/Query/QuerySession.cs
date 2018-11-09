@@ -32,7 +32,7 @@ namespace MediaCenter.Sessions.Query
                 tmpFiltersList.Add(new PrivateFilter { PrivateSetting = PrivateFilter.PrivateOption.NoPrivate });
             }
 
-            var items = tmpFiltersList.Aggregate(Repository.Catalog, (current, filter) => filter.Apply(current)).ToList();   
+            var items = await Repository.GetQueryItems(tmpFiltersList);   
             items.Sort((x,y) => DateTime.Compare(x.DateTaken,y.DateTaken));
 
             QueryResult.Clear();
@@ -42,14 +42,15 @@ namespace MediaCenter.Sessions.Query
             }
         }
 
-        public int CalculateMatchCount()
+        public async Task<int> CalculateMatchCount()
         {
             var tmpFiltersList = Filters.ToList();
             if (!tmpFiltersList.Any(x => x is PrivateFilter))
             {
                 tmpFiltersList.Add(new PrivateFilter { PrivateSetting = PrivateFilter.PrivateOption.NoPrivate });
             }
-            return tmpFiltersList.Aggregate(Repository.Catalog, (current, filter) => filter.Apply(current)).Count();
+
+            return await Repository.GetQueryCount(tmpFiltersList);
         }        
 
         public async Task DeleteItem(MediaItem item)
