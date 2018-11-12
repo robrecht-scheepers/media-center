@@ -126,6 +126,11 @@ namespace MediaCenter.Repository
             return Path.Combine(_thumbnailFolderPath, item.Name + "_T.jpg");
         }
 
+        private Uri GetContentUri(MediaItem item)
+        {
+            return new Uri(GetMediaPath(item));
+        }
+
         public async Task DeleteItem(MediaItem item)
         {
             try
@@ -237,8 +242,16 @@ namespace MediaCenter.Repository
 
         public async Task<List<MediaItem>> GetQueryItems(IEnumerable<Filter> filters)
         {
-            return await _database.GetFilteredItemList(filters);
+            var items = await _database.GetFilteredItemList(filters);
+            foreach (var mediaItem in items)
+            {
+                mediaItem.ContentUri = GetContentUri(mediaItem);
+            }
+
+            return items;
         }
+
+        
 
         public async Task<int> GetQueryCount(IEnumerable<Filter> filters)
         {
