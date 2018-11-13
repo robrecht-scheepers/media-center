@@ -13,7 +13,7 @@ namespace MediaCenter.Repository
         event EventHandler StatusChanged;
 
         //IEnumerable<MediaItem> Catalog { get; }
-        IEnumerable<string> Tags { get; }
+        List<string> Tags { get; }
         Task Initialize();
         Task<List<MediaItem>> GetQueryItems(IEnumerable<Filter> filters);
         Task<int> GetQueryCount(IEnumerable<Filter> filters);

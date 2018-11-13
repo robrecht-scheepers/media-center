@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MediaCenter.Helpers;
@@ -43,10 +42,11 @@ namespace MediaCenter.Repository
         public event EventHandler StatusChanged;
 
         public IEnumerable<MediaItem> Catalog => new List<MediaItem>();
-        public IEnumerable<string> Tags => new List<string>();
-        public Task Initialize()
+        public List<string> Tags { get; set; }
+
+        public async Task Initialize()
         {
-            return Task.CompletedTask;
+            Tags = (await _database.GetAllTags()).ToList();
         }
 
         public async Task SaveNewItems(IEnumerable<StagedItem> newItems)
@@ -84,6 +84,11 @@ namespace MediaCenter.Repository
                     await IOHelper.SaveBytes(newItem.Thumbnail, GetThumbnailPath(newItem));
                     await _database.AddMediaInfo(newItem);
                     newItem.Status = MediaItemStatus.Saved;
+                    foreach (var newTag in newItem.Tags.Where(x => !Tags.Contains(x)))
+                    {
+                        Tags.Add(newTag);
+                    }
+
                 }
                 catch (Exception e)
                 {
@@ -222,6 +227,10 @@ namespace MediaCenter.Repository
         public async Task SaveItem(MediaItem item)
         {
             await _database.UpdateMediaInfo(item);
+            foreach (var newTag in item.Tags.Where(x => !Tags.Contains(x)))
+            {
+                Tags.Add(newTag);
+            }
         }
 
         public Uri Location => default(Uri);
@@ -250,8 +259,6 @@ namespace MediaCenter.Repository
 
             return items;
         }
-
-        
 
         public async Task<int> GetQueryCount(IEnumerable<Filter> filters)
         {
