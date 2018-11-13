@@ -10,7 +10,7 @@ namespace MediaCenter.Media
 {
     public class EditMediaInfoViewModel : PropertyChangedNotifier
     {
-        private List<MediaItem> _items;
+        private readonly List<MediaItem> _items;
         private readonly IRepository _repository;
         private readonly bool _saveChangesToRepository;
 
@@ -22,8 +22,7 @@ namespace MediaCenter.Media
 
         private EditTagsViewModel _tagsViewModel;
         private List<string> _originalTagsIntersect;
-        private string _name;
-
+        
         public EditMediaInfoViewModel(List<MediaItem> items, IRepository repository, bool saveChangesToRepository)
         {
             _items = items;

@@ -62,10 +62,10 @@
                                      Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}" Background="{StaticResource MainWindowBackground}"
                                      Height="{StaticResource TextButtonHeight}"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <controls:ImageToggleButton x:Name="detailView" IsChecked="{Binding SelectedResultViewMode, Converter={StaticResource ViewModeBoolConverter}, Mode=TwoWay}" 
+                    <controls:ImageToggleButton x:Name="detailView" IsChecked="{Binding SelectedViewMode, Converter={StaticResource ViewModeBoolConverter}, Mode=TwoWay}" 
                                             CheckedImage="/Resources/Icons/Image-filled.png" UncheckedImage="/Resources/Icons/Image.png" 
                                             IsEnabled="{Binding ElementName=listView, Path=IsChecked}"/>
-                    <controls:ImageToggleButton x:Name="listView" IsChecked="{Binding SelectedResultViewMode, Converter={StaticResource InvertedViewModeBoolConverter}, Mode=TwoWay}" 
+                    <controls:ImageToggleButton x:Name="listView" IsChecked="{Binding SelectedViewMode, Converter={StaticResource InvertedViewModeBoolConverter}, Mode=TwoWay}" 
                                     CheckedImage="/Resources/Icons/Tiles-filled.png" UncheckedImage="/Resources/Icons/Tiles.png" IsEnabled="{Binding ElementName=detailView, Path=IsChecked}"/>
                 </StackPanel>
             </StackPanel>

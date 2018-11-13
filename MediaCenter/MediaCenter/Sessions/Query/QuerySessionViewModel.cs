@@ -20,18 +20,20 @@ namespace MediaCenter.Sessions.Query
     {
         public enum ViewMode { List, Detail, SlideShow }
     
-        private SlideShowViewModel _slideShowViewModel;
         private QueryResultViewModel _queryResultViewModel;
         private EditMediaInfoViewModel _editMediaInfoViewModel;
-        private ViewMode _selectedResultViewMode;
+        private ViewMode _selectedViewMode;
         private RelayCommand _startSlideShowCommand;
         private int _matchCount;
         private RelayCommand _closeSlideShowCommand;
-        private ViewMode _viewModeBeforeSlideshow;
+        private ViewMode _viewModeBeforeSlideShow;
+        private AsyncRelayCommand _deleteCurrentSelectionCommand;
+        private AsyncRelayCommand _saveCurrentSelectionToFileCommand;
+        private AsyncRelayCommand _executeQueryCommand;
 
         public QuerySessionViewModel(SessionBase session, IWindowService windowService) : base(session, windowService)
         {
-            InitializeResultViewModesList();
+            InitializeViewModesList();
             InitializeFilterCollectionViewModel();
             UpdateMatchCount().Wait();
         }
@@ -41,25 +43,23 @@ namespace MediaCenter.Sessions.Query
         public QuerySession QuerySession => (QuerySession) Session;
 
         public IRepository Repository => Session.Repository;
-
-        public int MatchCount
-        {
-            get => _matchCount;
-            set => SetValue(ref _matchCount, value);
-        }
-
         public FilterCollectionViewModel FilterCollectionViewModel { get; private set; }
         private void InitializeFilterCollectionViewModel()
         {
             FilterCollectionViewModel = new FilterCollectionViewModel(QuerySession.Filters, Repository.Tags);
             FilterCollectionViewModel.FilterChanged += async (sender, args) => await UpdateMatchCount();
         }
-        
+
+        public int MatchCount
+        {
+            get => _matchCount;
+            set => SetValue(ref _matchCount, value);
+        }
         private async Task UpdateMatchCount()
         {
             MatchCount = await QuerySession.CalculateMatchCount();
         }
-
+        
         public EditMediaInfoViewModel EditMediaInfoViewModel
         {
             get => _editMediaInfoViewModel;
@@ -67,19 +67,14 @@ namespace MediaCenter.Sessions.Query
         }
 
         public List<ViewMode> ViewModesList { get; private set; }
-        private void InitializeResultViewModesList()
+        private void InitializeViewModesList()
         {
             ViewModesList = new List<ViewMode> { ViewMode.Detail, ViewMode.List };
         }
-        public ViewMode SelectedResultViewMode
+        public ViewMode SelectedViewMode
         {
-            get => _selectedResultViewMode;
-            set => SetValue(ref _selectedResultViewMode, value, SelectedResultViewModeChanged);
-        }
-        private void SelectedResultViewModeChanged()
-        {
-            if(QueryResultViewModel != null)
-                InitializeQueryResultViewModel();
+            get => _selectedViewMode;
+            set => SetValue(ref _selectedViewMode, value, InitializeQueryResultViewModel);
         }
 
         public QueryResultViewModel QueryResultViewModel
@@ -87,6 +82,7 @@ namespace MediaCenter.Sessions.Query
             get => _queryResultViewModel;
             set => SetValue(ref _queryResultViewModel, value);
         }
+
         private void InitializeQueryResultViewModel()
         {
             MediaItem selectedElement = null;
@@ -97,7 +93,7 @@ namespace MediaCenter.Sessions.Query
                 selectedElement = QueryResultViewModel?.SelectedItems.FirstOrDefault();
             }
 
-            switch (SelectedResultViewMode)
+            switch (SelectedViewMode)
             {
                 case ViewMode.List:
                     QueryResultViewModel = new QueryResultListViewModel(QuerySession.QueryResult, selectedElement);
@@ -115,7 +111,7 @@ namespace MediaCenter.Sessions.Query
 
             QueryResultViewModel.SelectionChanged += QueryResultViewModelOnSelectionChanged;
         }
-        private async void QueryResultViewModelOnSelectionChanged(object sender, SelectionChangedEventArgs args)
+        private void QueryResultViewModelOnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             EditMediaInfoViewModel = QueryResultViewModel.SelectedItems.Count > 0
                 ? new EditMediaInfoViewModel(QueryResultViewModel.SelectedItems.ToList(), Repository,true)
@@ -128,11 +124,9 @@ namespace MediaCenter.Sessions.Query
             (_selectForDetailViewCommand = new RelayCommand<MediaItem>(SelectForDetailView));
         private void SelectForDetailView(MediaItem item)
         {
-            SelectedResultViewMode = ViewMode.Detail;
+            SelectedViewMode = ViewMode.Detail;
         }
 
-        #region Command: delete current selection
-        private AsyncRelayCommand _deleteCurrentSelectionCommand;
         public AsyncRelayCommand DeleteCurrentSelectionCommand
             => _deleteCurrentSelectionCommand ?? (_deleteCurrentSelectionCommand = new AsyncRelayCommand(DeleteCurrentSelection, CanExecuteDeleteCurrentSelection));
         private async Task DeleteCurrentSelection()
@@ -150,10 +144,8 @@ namespace MediaCenter.Sessions.Query
         {
             return (QueryResultViewModel != null && QueryResultViewModel.SelectedItems.Count > 0);
         }
-        #endregion
+        
 
-        #region Command: save current selection to file
-        private AsyncRelayCommand _saveCurrentSelectionToFileCommand;
         public AsyncRelayCommand SaveCurrentSelectionToFileCommand
             => _saveCurrentSelectionToFileCommand ?? (_saveCurrentSelectionToFileCommand = new AsyncRelayCommand(SaveCurrentSelectionToFile, CanExecuteSaveCurrentSelectionToFile));
         private async Task SaveCurrentSelectionToFile()
@@ -195,10 +187,7 @@ namespace MediaCenter.Sessions.Query
         {
             return (QueryResultViewModel != null && QueryResultViewModel.SelectedItems.Count > 0);
         }
-        #endregion
-
-        #region Command: execute query
-        private AsyncRelayCommand _executeQueryCommand;
+        
         public AsyncRelayCommand ExecuteQueryCommand => _executeQueryCommand ?? (_executeQueryCommand = new AsyncRelayCommand(ExecuteQuery));
         private async Task ExecuteQuery()
         {
@@ -209,38 +198,27 @@ namespace MediaCenter.Sessions.Query
                 item.Thumbnail = await Repository.GetThumbnail(item);
             }
         }
-        #endregion
-
-        #region Slideshow
-
+       
+        
         public SlideShowViewModel SlideShowViewModel => QueryResultViewModel as SlideShowViewModel;
 
-        public RelayCommand StartSlideShowCommand
-            => _startSlideShowCommand ?? (_startSlideShowCommand = new RelayCommand(StartSlideShow));
+        public RelayCommand StartSlideShowCommand => _startSlideShowCommand ?? (_startSlideShowCommand = new RelayCommand(StartSlideShow));
         public void StartSlideShow()
         {
-            if (SelectedResultViewMode == ViewMode.SlideShow)
-            {
-                CloseSlideShow();
-            }
-
-            _viewModeBeforeSlideshow = SelectedResultViewMode;
-            SelectedResultViewMode = ViewMode.SlideShow;
+            _viewModeBeforeSlideShow = SelectedViewMode;
+            SelectedViewMode = ViewMode.SlideShow;
             InitializeQueryResultViewModel();
             WindowService.OpenWindow(this,false);
             ((SlideShowViewModel)QueryResultViewModel).Start();
         }
 
-        public RelayCommand CloseSlideShowCommand =>
-            _closeSlideShowCommand ?? (_closeSlideShowCommand = new RelayCommand(CloseSlideShow));
-
+        public RelayCommand CloseSlideShowCommand => _closeSlideShowCommand ?? (_closeSlideShowCommand = new RelayCommand(CloseSlideShow));
         private void CloseSlideShow()
         {
             ((SlideShowViewModel)QueryResultViewModel).Stop();
-            SelectedResultViewMode = _viewModeBeforeSlideshow;
+            SelectedViewMode = _viewModeBeforeSlideShow;
             InitializeQueryResultViewModel();
         }
         
-        #endregion
     }
 }
