@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using MediaCenter.MVVM;
+using MediaCenter.Sessions.Query;
 using MediaCenter.Sessions.Slideshow;
 
 namespace MediaCenter.Helpers
@@ -18,17 +19,23 @@ namespace MediaCenter.Helpers
             _ownerWindow = ownerWindow;
         }
 
-        public void OpenDialogWindow(PropertyChangedNotifier dataContext)
+        public void OpenWindow(PropertyChangedNotifier dataContext, bool dialog)
         {
-            if (dataContext is SlideShowViewModel)
+            Window window = null;
+            if (dataContext is QuerySessionViewModel)
             {
-                var window = new SlideShowWindow
-                {
-                    DataContext = dataContext,
-                    Owner = _ownerWindow
-                };
-                window.ShowDialog();
+                window = new SlideShowWindow();
             }
+
+            if(window == null)
+                return;
+
+            window.DataContext = dataContext;
+            window.Owner = _ownerWindow;
+            if(dialog)
+                window.ShowDialog();
+            else
+                window.Show();
         }
 
         public void ShowMessage(string message, string caption)

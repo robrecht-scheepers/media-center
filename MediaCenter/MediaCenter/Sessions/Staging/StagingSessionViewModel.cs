@@ -8,6 +8,7 @@ using MediaCenter.Media;
 using MediaCenter.MVVM;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using System.Configuration;
+using MediaCenter.Helpers;
 
 namespace MediaCenter.Sessions.Staging
 {
@@ -15,7 +16,7 @@ namespace MediaCenter.Sessions.Staging
     {
         private EditMediaInfoViewModel _editMediaInfoViewModel;
 
-        public StagingSessionViewModel(StagingSession session) : base(session)
+        public StagingSessionViewModel(StagingSession session, IWindowService windowService) : base(session, windowService)
         {
             SelectedItems = new BatchObservableCollection<MediaItem>();
             SelectedItems.CollectionChanged += SelectedItemsOnCollectionChanged;

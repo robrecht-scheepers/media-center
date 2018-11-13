@@ -12,19 +12,24 @@ using MessageBox = System.Windows.MessageBox;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 using System.Collections.Generic;
 using System.IO;
+using MediaCenter.Helpers;
 
 namespace MediaCenter.Sessions.Query
 {
     public class QuerySessionViewModel : SessionViewModelBase
     {
-        public enum ViewMode { List, Detail }
+        public enum ViewMode { List, Detail, SlideShow }
     
         private SlideShowViewModel _slideShowViewModel;
         private QueryResultViewModel _queryResultViewModel;
         private EditMediaInfoViewModel _editMediaInfoViewModel;
         private ViewMode _selectedResultViewMode;
+        private RelayCommand _startSlideShowCommand;
+        private int _matchCount;
+        private RelayCommand _closeSlideShowCommand;
+        private ViewMode _viewModeBeforeSlideshow;
 
-        public QuerySessionViewModel(SessionBase session) : base(session)
+        public QuerySessionViewModel(SessionBase session, IWindowService windowService) : base(session, windowService)
         {
             InitializeResultViewModesList();
             InitializeFilterCollectionViewModel();
@@ -92,9 +97,22 @@ namespace MediaCenter.Sessions.Query
                 selectedElement = QueryResultViewModel?.SelectedItems.FirstOrDefault();
             }
 
-            QueryResultViewModel = SelectedResultViewMode == ViewMode.Detail 
-                ? (QueryResultViewModel)new QueryResultDetailViewModel(QuerySession.QueryResult, Repository, selectedElement)
-                : (QueryResultViewModel)new QueryResultListViewModel(QuerySession.QueryResult, selectedElement);
+            switch (SelectedResultViewMode)
+            {
+                case ViewMode.List:
+                    QueryResultViewModel = new QueryResultListViewModel(QuerySession.QueryResult, selectedElement);
+                    break;
+                case ViewMode.Detail:
+                    QueryResultViewModel =
+                        new QueryResultDetailViewModel(QuerySession.QueryResult, Repository, selectedElement);
+                    break;
+                case ViewMode.SlideShow:
+                    QueryResultViewModel = new SlideShowViewModel(QuerySession.QueryResult, Repository, selectedElement);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
             QueryResultViewModel.SelectionChanged += QueryResultViewModelOnSelectionChanged;
         }
         private async void QueryResultViewModelOnSelectionChanged(object sender, SelectionChangedEventArgs args)
@@ -194,54 +212,33 @@ namespace MediaCenter.Sessions.Query
         #endregion
 
         #region Slideshow
-        public SlideShowViewModel SlideShowViewModel
-        {
-            get => _slideShowViewModel;
-            set => SetValue(ref _slideShowViewModel, value);
-        }
 
-        private bool _slideShowActive;
-        public bool SlideShowActive
-        {
-            get => _slideShowActive;
-            set => SetValue(ref _slideShowActive, value);
-        }
-
-        private RelayCommand _startSlideShowCommand;
-        private int _matchCount;
+        public SlideShowViewModel SlideShowViewModel => QueryResultViewModel as SlideShowViewModel;
 
         public RelayCommand StartSlideShowCommand
             => _startSlideShowCommand ?? (_startSlideShowCommand = new RelayCommand(StartSlideShow));
         public void StartSlideShow()
         {
-            // no multiple slideshows at the same time
-            if (SlideShowActive)
+            if (SelectedResultViewMode == ViewMode.SlideShow)
             {
                 CloseSlideShow();
             }
 
-            var startIndex = 0;
-            if (QueryResultViewModel != null && QueryResultViewModel.SelectedItems.Any())
-            {
-                startIndex = QuerySession.QueryResult.IndexOf(QueryResultViewModel.SelectedItems.First());
-            }
-            SlideShowViewModel = new SlideShowViewModel(QuerySession.QueryResult, Repository, startIndex);
-            SlideShowViewModel.CloseRequested += SlideShowViewModelOnCloseRequested;
-            SlideShowActive = true;
-            SlideShowViewModel.Start();
+            _viewModeBeforeSlideshow = SelectedResultViewMode;
+            SelectedResultViewMode = ViewMode.SlideShow;
+            InitializeQueryResultViewModel();
+            WindowService.OpenWindow(this,false);
+            ((SlideShowViewModel)QueryResultViewModel).Start();
         }
 
-        private void SlideShowViewModelOnCloseRequested(object sender, EventArgs eventArgs)
-        {
-            CloseSlideShow();
-        }
+        public RelayCommand CloseSlideShowCommand =>
+            _closeSlideShowCommand ?? (_closeSlideShowCommand = new RelayCommand(CloseSlideShow));
 
         private void CloseSlideShow()
         {
-            SlideShowViewModel.Stop();
-            SlideShowViewModel.CloseRequested -= SlideShowViewModelOnCloseRequested;
-            SlideShowActive = false;
-            SlideShowViewModel = null;
+            ((SlideShowViewModel)QueryResultViewModel).Stop();
+            SelectedResultViewMode = _viewModeBeforeSlideshow;
+            InitializeQueryResultViewModel();
         }
         
         #endregion

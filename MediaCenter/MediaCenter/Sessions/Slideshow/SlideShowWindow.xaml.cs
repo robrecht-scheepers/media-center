@@ -11,5 +11,10 @@ namespace MediaCenter.Sessions.Slideshow
         {
             InitializeComponent();
         }
+
+        private void Close_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

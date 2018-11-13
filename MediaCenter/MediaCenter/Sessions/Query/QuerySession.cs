@@ -15,7 +15,7 @@ namespace MediaCenter.Sessions.Query
     {
         private readonly int PrefetchBufferSize = int.Parse(ConfigurationManager.AppSettings["PrefetchBufferSize"]);
 
-        public QuerySession(IRepository repository, IWindowService windowService) : base(repository, windowService)
+        public QuerySession(IRepository repository) : base(repository)
         {
             Filters = new List<Filter>();
             QueryResult = new ObservableCollection<MediaItem>();

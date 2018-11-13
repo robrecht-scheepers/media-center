@@ -7,10 +7,11 @@
         xmlns:local="clr-namespace:MediaCenter.Sessions.Slideshow"
         xmlns:media="clr-namespace:MediaCenter.Media"
         xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
+        xmlns:query="clr-namespace:MediaCenter.Sessions.Query"
         mc:Ignorable="d"
         Title="SlideShowWindow" Height="300" Width="300"
         WindowState="Maximized" WindowStyle="None"
-        d:DataContext="{d:DesignInstance local:SlideShowViewModel}">
+        d:DataContext="{d:DesignInstance query:QuerySessionViewModel}">
     <Window.Resources>
         <ResourceDictionary>
             <DataTemplate DataType="{x:Type media:ImageItemViewModel}">
@@ -23,17 +24,17 @@
             <DataTemplate DataType="{x:Type media:VideoItemViewModel}">
                 <media:VideoItemView HideControls="True"/>
             </DataTemplate>
-            <media:PlayStateVisibilityConverter x:Key="VisibleWhenPlayingConverer" PlayingVisibility="Visible" NotPlayingVisibility="Collapsed"/>
-            <media:PlayStateVisibilityConverter x:Key="CollapsedWhenPlayingConverer" PlayingVisibility="Collapsed" NotPlayingVisibility="Visible"/>
+            <media:PlayStateVisibilityConverter x:Key="VisibleWhenPlayingConverter" PlayingVisibility="Visible" NotPlayingVisibility="Collapsed"/>
+            <media:PlayStateVisibilityConverter x:Key="CollapsedWhenPlayingConverter" PlayingVisibility="Collapsed" NotPlayingVisibility="Visible"/>
         </ResourceDictionary>
     </Window.Resources>
     
     <Window.InputBindings>
-        <KeyBinding Key="Escape" Command="{Binding CloseCOmmand}"/>
+        <KeyBinding Key="Escape" Command="{Binding CloseSlideShowCommand}"/>
     </Window.InputBindings>
 
     <interactivity:Interaction.Behaviors>
-        <local:HideOnIdleMouseBehavior Interval="00:00:02"/>
+        <local:HideOnIdleMouseBehavior Interval="00:00:03"/>
     </interactivity:Interaction.Behaviors>
 
     <Grid Background="Black">
@@ -43,7 +44,7 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
-        <ContentControl Grid.Row="0" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{Binding SelectedItemViewModel}"/>
+        <ContentControl Grid.Row="0" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{Binding SlideShowViewModel.SelectedItemViewModel}"/>
         <Border x:Name="Controls" Grid.Row="1" Background="{StaticResource AppDarkColor}" Opacity="0.75" Margin="70 0 70 30">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -51,14 +52,14 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding SelectedItemViewModel.MediaItem.DateTaken}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" FontSize="24"/>
+                <TextBlock Grid.Column="0" Text="{Binding SlideShowViewModel.SelectedItemViewModel.MediaItem.DateTaken}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" FontSize="24"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <controls:ImageButton ImageSource="/Resources/Icons/previous.png" Command="{Binding SelectPreviousItemCommand}" Width="64" Height="64"/>
-                    <controls:ImageButton ImageSource="/Resources/Icons/pause.png" Command="{Binding PauseCommand}" Width="64" Height="64"
-                                          Visibility="{Binding Path=Status, Converter={StaticResource VisibleWhenPlayingConverer}}"/>
-                    <controls:ImageButton ImageSource="/Resources/Icons/play.png" Command="{Binding PlayCommand}" Width="64" Height="64"
-                                          Visibility="{Binding Path=Status, Converter={StaticResource CollapsedWhenPlayingConverer}}"/>
-                    <controls:ImageButton ImageSource="/Resources/Icons/next.png" Command="{Binding SelectNextItemCommand}" Width="64" Height="64"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/previous.png" Command="{Binding SlideShowViewModel.SelectPreviousItemCommand}" Width="64" Height="64"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/pause.png" Command="{Binding SlideShowViewModel.PauseCommand}" Width="64" Height="64"
+                                          Visibility="{Binding Path=SlideShowViewModel.Status, Converter={StaticResource VisibleWhenPlayingConverter}}"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/play.png" Command="{Binding SlideShowViewModel.PlayCommand}" Width="64" Height="64"
+                                          Visibility="{Binding Path=SlideShowViewModel.Status, Converter={StaticResource CollapsedWhenPlayingConverter}}"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/next.png" Command="{Binding SlideShowViewModel.SelectNextItemCommand}" Width="64" Height="64"/>
                 </StackPanel>
                 <Grid Grid.Column="2">
                     <Grid.ColumnDefinitions>
@@ -69,11 +70,11 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <controls:ImageToggleButton Grid.Column="0" x:Name="ShowIntervalSlider" CheckedImage="/Resources/Icons/timer.png" UncheckedImage="/Resources/Icons/timer.png" Width="64" Height="64"/>
-                    <Slider Grid.Column="1" Value="{Binding Interval, Mode=TwoWay}" Minimum="2" Maximum="10" TickFrequency="1" IsSnapToTickEnabled="True" 
+                    <Slider Grid.Column="1" Value="{Binding SlideShowViewModel.Interval, Mode=TwoWay}" Minimum="2" Maximum="10" TickFrequency="1" IsSnapToTickEnabled="True" 
                             Visibility="{Binding ElementName=ShowIntervalSlider, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" VerticalAlignment="Center" />
-                    <TextBlock Grid.Column="2" Text="{Binding Path=Interval, StringFormat={}{0}s}" Foreground="White" FontSize="20"
+                    <TextBlock Grid.Column="2" Text="{Binding Path=SlideShowViewModel.Interval, StringFormat={}{0}s}" Foreground="White" FontSize="20"
                                Visibility="{Binding ElementName=ShowIntervalSlider, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" VerticalAlignment="Center" />
-                    <controls:ImageButton Grid.Column="4" ImageSource="/Resources/Icons/close_circle.png" Command="{Binding CloseCOmmand}" Width="64" Height="64" HorizontalAlignment="Right"/>
+                    <controls:ImageButton Grid.Column="4" ImageSource="/Resources/Icons/close_circle.png" Command="{Binding CloseSlideShowCommand}" Click="Close_OnClick" Width="64" Height="64" HorizontalAlignment="Right"/>
                 </Grid>
             </Grid>
         </Border>
