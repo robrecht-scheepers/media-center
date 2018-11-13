@@ -4,7 +4,7 @@ namespace MediaCenter.Helpers
 {
     public interface IWindowService
     {
-        void OpenDialogWindow(PropertyChangedNotifier dataContext);
+        void OpenWindow(PropertyChangedNotifier dataContext, bool dialog);
 
         void ShowMessage(string message, string caption);
 
