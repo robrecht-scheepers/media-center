@@ -280,13 +280,16 @@ namespace MediaCenter.Repository
             const string cmdTxt = "SELECT Tags FROM MediaInfo";
             using (var conn = GetConnection())
             using (var command = GetCommand(conn, cmdTxt))
-            using (var reader = await command.ExecuteReaderAsync())
-            { 
-                if(!reader.HasRows)
-                    return new List<string>();
+            {
+                conn.Open();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if (!reader.HasRows)
+                        return new List<string>();
 
-                while(reader.Read())
-                    tagEntries.Add(reader.GetString(0));
+                    while (reader.Read())
+                        tagEntries.Add(reader.GetString(0));
+                }
             }
 
             return tagEntries.SelectMany(SeparateTags).Distinct().Where(x => !string.IsNullOrEmpty(x));

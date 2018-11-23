@@ -36,7 +36,7 @@ namespace MediaCenter.Repository
         public IEnumerable<MediaItem> Catalog => _catalog;
 
         // TODO: straightforward approach, might need optimization
-        public IEnumerable<string> Tags => _catalog.SelectMany(x => x.Tags).Distinct();
+        public List<string> Tags => _catalog.SelectMany(x => x.Tags).Distinct().ToList();
 
         public Uri Location => new System.Uri(_remoteStore);
 
