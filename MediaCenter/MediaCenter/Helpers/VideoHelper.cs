@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.WindowsAPICodePack.Shell;
 
@@ -20,7 +21,7 @@ namespace MediaCenter.Helpers
             // file and delete it afterwards
             var firstFrameFile = @"C:\TEMP\thumbnail.jpg";
 
-            if (IOHelper.FileExists(firstFrameFile))
+            if (File.Exists(firstFrameFile))
                 await IOHelper.DeleteFile(firstFrameFile);
 
             var ffmpeg = new Process

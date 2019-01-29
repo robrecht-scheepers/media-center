@@ -84,11 +84,6 @@ namespace MediaCenter.Helpers
             await Task.Run(() => File.Delete(filePath));
         }
 
-        public static bool FileExists(string filePath)
-        {
-            return File.Exists(filePath);
-        }
-
         public static async Task<FileInfo[]> GetFiles(string directoryPath, string searchPattern)
         {
             return await Task.Run(() => new DirectoryInfo(directoryPath).GetFiles(searchPattern));

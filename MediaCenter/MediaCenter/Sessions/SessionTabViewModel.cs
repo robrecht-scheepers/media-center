@@ -1,4 +1,5 @@
 ﻿using System;
+using MediaCenter.Helpers;
 using MediaCenter.MVVM;
 using MediaCenter.Repository;
 using MediaCenter.Sessions.Query;
@@ -9,19 +10,21 @@ namespace MediaCenter.Sessions
     public class SessionTabViewModel : PropertyChangedNotifier
     {
         private IRepository _repository;
+        private readonly IWindowService _windowService;
         private SessionViewModelBase _sessionViewModel;
         private RelayCommand _createQuerySessionCommand;
         private RelayCommand _createStagingSessionCommand;
 
-        public SessionTabViewModel(IRepository repository)
+        public SessionTabViewModel(IRepository repository, IWindowService windowService)
         {
             _repository = repository;
+            _windowService = windowService;
         }
 
         public SessionViewModelBase SessionViewModel
         {
-            get { return _sessionViewModel; }
-            set { SetValue(ref _sessionViewModel, value); }
+            get => _sessionViewModel;
+            set => SetValue(ref _sessionViewModel, value);
         }
 
         public string Name => SessionViewModel?.Name ?? "...";
@@ -29,7 +32,7 @@ namespace MediaCenter.Sessions
         public RelayCommand CreateQuerySessionCommand => _createQuerySessionCommand ?? (_createQuerySessionCommand = new RelayCommand(CreateQuerySession));
         private void CreateQuerySession()
         {
-            SessionViewModel = new QuerySessionViewModel(new QuerySession(_repository));
+            SessionViewModel = new QuerySessionViewModel(new QuerySession(_repository), _windowService);
             SessionCreated?.Invoke(this, EventArgs.Empty);
             RaisePropertyChanged("Name");
         }
@@ -38,7 +41,7 @@ namespace MediaCenter.Sessions
 
         private void CreateStagingSession()
         {
-            SessionViewModel = new StagingSessionViewModel(new StagingSession(_repository));
+            SessionViewModel = new StagingSessionViewModel(new StagingSession(_repository), _windowService);
             SessionCreated?.Invoke(this, EventArgs.Empty);
             RaisePropertyChanged("Name");
         }

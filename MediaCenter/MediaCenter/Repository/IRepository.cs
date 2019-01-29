@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediaCenter.Media;
+using MediaCenter.Sessions.Filters;
 using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter.Repository
@@ -11,17 +12,19 @@ namespace MediaCenter.Repository
         event EventHandler CollectionChanged;
         event EventHandler StatusChanged;
 
-        IEnumerable<MediaItem> Catalog { get; }
-        IEnumerable<string> Tags { get; }
+        //IEnumerable<MediaItem> Catalog { get; }
+        List<string> Tags { get; }
         Task Initialize();
+        Task<List<MediaItem>> GetQueryItems(IEnumerable<Filter> filters);
+        Task<int> GetQueryCount(IEnumerable<Filter> filters);
         Task SaveNewItems(IEnumerable<StagedItem> newItems); 
-        Task DeleteItem(string name);
-        Task<byte[]> GetThumbnail(string name);
-        Task<byte[]> GetFullImage(string name, IEnumerable<string> prefetch);
-        Task SaveItem(string name);
+        Task DeleteItem(MediaItem item);
+        Task<byte[]> GetThumbnail(MediaItem item);
+        Task<byte[]> GetFullImage(MediaItem item, IEnumerable<MediaItem> prefetch);
+        Task SaveItem(MediaItem item);
         System.Uri Location { get; }
         Task SaveContentToFile(MediaItem item, string filePath);
-        Task SaveContentToFolder(List<MediaItem> items, string folderPath);
+        Task SaveMultipleContentToFolder(List<MediaItem> items, string folderPath);
         string StatusMessage { get; }
     }
 }

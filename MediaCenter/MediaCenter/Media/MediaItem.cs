@@ -19,6 +19,8 @@ namespace MediaCenter.Media
 
         public bool IsDirty => IsInfoDirty || IsContentDirty || IsThumbnailDirty;
 
+        public int Id { get; set; }
+
         private string _name;
         public string Name
         {
@@ -33,6 +35,12 @@ namespace MediaCenter.Media
         {
             get { return _status; }
             set { SetValue(ref _status,  value); }
+        }
+
+        public string StatusMessage
+        {
+            get => _statusMessage;
+            set => SetValue(ref _statusMessage, value);
         }
 
         private DateTime _dateTaken;
@@ -91,6 +99,8 @@ namespace MediaCenter.Media
         }
 
         private int _rotation;
+        private string _statusMessage;
+
         public int Rotation
         {
             get { return _rotation; }

@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediaCenter.Helpers;
 using MediaCenter.Media;
+using MediaCenter.Sessions.Filters;
 using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter.Repository
@@ -35,7 +36,7 @@ namespace MediaCenter.Repository
         public IEnumerable<MediaItem> Catalog => _catalog;
 
         // TODO: straightforward approach, might need optimization
-        public IEnumerable<string> Tags => _catalog.SelectMany(x => x.Tags).Distinct();
+        public List<string> Tags => _catalog.SelectMany(x => x.Tags).Distinct().ToList();
 
         public Uri Location => new System.Uri(_remoteStore);
 
@@ -69,7 +70,17 @@ namespace MediaCenter.Repository
             await SynchronizeFromRemoteStore();
             RaiseCollectionChangedEvent();
             StatusMessage = "";
-        }        
+        }
+
+        public Task<List<MediaItem>> GetQueryItems(IEnumerable<Filter> filters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> GetQueryCount(IEnumerable<Filter> filters)
+        {
+            throw new NotImplementedException();
+        }
 
         private async Task ReadLocalStore()
         {
@@ -113,7 +124,7 @@ namespace MediaCenter.Repository
             }
             else
             {
-               return DateTime.MaxValue.AddDays(-1);
+                return DateTime.MaxValue.AddDays(-1);
             }
         }
 
@@ -125,12 +136,12 @@ namespace MediaCenter.Repository
         public async Task SynchronizeFromRemoteStore()
         {
             var remoteLastUpdate = await ReadLastRemoteUpdate();
-            if(_lastSyncFromRemote >= remoteLastUpdate)
+            if (_lastSyncFromRemote >= remoteLastUpdate)
                 return;
 
             var newLastSyncedDate = DateTime.Now;
             var remoteStoreMediaFiles = await IOHelper.GetFiles(_remoteStore, "*" + MediaFileExtension);
-            
+
             // dele all items from the catalog that are not in teh remote list anymore (have been deleted since the last sync)
             var deleteList = Catalog.Select(x => x.Name).Except(remoteStoreMediaFiles.Select(x => Path.GetFileNameWithoutExtension(x.Name))).ToList();
             foreach (var name in deleteList)
@@ -169,9 +180,9 @@ namespace MediaCenter.Repository
             {
                 StatusMessage = $"Saving item {i++} of {count}";
                 var originalName = newItem.Name;
-                
+
                 try
-                {                    
+                {
                     if (string.IsNullOrEmpty(newItem.FilePath) || string.IsNullOrEmpty(newItem.Name))
                     {
                         newItem.Status = MediaItemStatus.Error;
@@ -184,14 +195,14 @@ namespace MediaCenter.Repository
 
                     // save in remote store
                     var mediaItemFilePath = Path.Combine(_remoteStore, newItem.ContentFileName);
-                     
+
                     await IOHelper.SaveObject(new MediaInfo(newItem), ItemNameToInfoFilePath(newItem.Name));
                     await IOHelper.CopyFile(newItem.FilePath, mediaItemFilePath);
                     await IOHelper.SaveBytes(newItem.Thumbnail, ItemNameToThumbnailFilePath(newItem.Name));
                     saveCount++;
 
                     newItem.ContentUri = new Uri(mediaItemFilePath);
-                    newItem.Status = MediaItemStatus.Saved;                    
+                    newItem.Status = MediaItemStatus.Saved;
                 }
                 catch (Exception e)
                 {
@@ -216,7 +227,7 @@ namespace MediaCenter.Repository
         private string CreateUniqueName(string originalName)
         {
             var name = originalName;
-            
+
             // if the name was already altered for uniqueness during staging, to avid getting ..._1_1 situations
             // we strip down the previous changes and start again from teh base name to create uniqueness in the catalog
             if (name.Contains("_"))
@@ -234,15 +245,14 @@ namespace MediaCenter.Repository
             return newName;
         }
 
-        public async Task DeleteItem(string name)
+        public async Task DeleteItem(MediaItem item)
         {
-            StatusMessage = "Deleting item";            
+            StatusMessage = "Deleting item";
             try
             {
-                var item = _catalog.First(x => x.Name == name);
                 var contentFilePath = FileNameToRemoteFilePath(item.ContentFileName);
-                var thumbnailFilePath = ItemNameToThumbnailFilePath(name);
-                var infoFileName = ItemNameToInfoFilePath(name);
+                var thumbnailFilePath = ItemNameToThumbnailFilePath(item.Name);
+                var infoFileName = ItemNameToInfoFilePath(item.Name);
 
                 _catalog.Remove(item);
                 await IOHelper.DeleteFile(contentFilePath);
@@ -265,25 +275,24 @@ namespace MediaCenter.Repository
             }
         }
 
-        public async Task<byte[]> GetThumbnail(string name)
+        public async Task<byte[]> GetThumbnail(MediaItem item)
         {
-            var thumbnailFilename = Path.Combine(_remoteStore, name + "_T.jpg");
+            var thumbnailFilename = Path.Combine(_remoteStore, item.Name + "_T.jpg");
             return await IOHelper.OpenBytes(thumbnailFilename);
         }
 
-        public async Task<byte[]> GetFullImage(string name, IEnumerable<string> prefetch)
+        public async Task<byte[]> GetFullImage(MediaItem item, IEnumerable<MediaItem> prefetch)
         {
             Task<byte[]> imageLoadingTask = null;
             byte[] result = null;
 
-            var item = GetItem(name);
             if (item == null)
                 return null;
 
-            if (_buffer.ContainsKey(name))
+            if (_buffer.ContainsKey(item.Name))
             {
-                Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss tt ss.fff")} | Image {name} was in prefetch buffer");
-                result = _buffer[name];
+                Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss tt ss.fff")} | Image {item.Name} was in prefetch buffer");
+                result = _buffer[item.Name];
             }
             else
             {
@@ -294,12 +303,12 @@ namespace MediaCenter.Repository
 
             // clean up buffer and decide which images need to be fetched
             var prefetchList = prefetch.ToList();
-            var deleteFromBufferList = _buffer.Keys.Where(x => x != name && !prefetchList.Contains(x));
+            var deleteFromBufferList = _buffer.Keys.Where(x => x != item.Name && !prefetchList.Select(y => y.Name).Contains(x));
             foreach (var deleteItem in deleteFromBufferList)
             {
                 _buffer.TryRemove(deleteItem, out var value);
             }
-            var itemsToBeFetched = prefetchList.Where(itemToBeBuffered => !_buffer.ContainsKey(itemToBeBuffered)).ToList();
+            var itemsToBeFetched = prefetchList.Where(itemToBeBuffered => !_buffer.ContainsKey(itemToBeBuffered.Name)).ToList();
 
             // start prefetch sequence
             if (itemsToBeFetched.Any())
@@ -314,18 +323,18 @@ namespace MediaCenter.Repository
                 async (observer, token) =>
                 {
                     _prefetchingInProgress = true;
-                    foreach (var bufferItemName in itemsToBeFetched)
+                    foreach (var bufferItem in itemsToBeFetched)
                     {
                         // before fetching each item, check if cancellation was requested
                         token.ThrowIfCancellationRequested();
 
-                        var file = ItemNameToRemoteFilePath(bufferItemName);
+                        var file = ItemNameToRemoteFilePath(bufferItem.Name);
                         if (string.IsNullOrEmpty(file))
                             continue;
 
                         var bytes = await IOHelper.OpenBytes(file);
                         token.ThrowIfCancellationRequested();
-                        observer.OnNext(new KeyValuePair<string, byte[]>(bufferItemName, bytes));
+                        observer.OnNext(new KeyValuePair<string, byte[]>(bufferItem.Name, bytes));
                     }
                 });
                 _bufferCancellationTokenSource = new CancellationTokenSource();
@@ -346,22 +355,8 @@ namespace MediaCenter.Repository
             return result;
         }
 
-        public async Task LoadImageToCache(string name)
+        public async Task SaveItem(MediaItem item)
         {
-            var imagePath = Directory.GetFiles(_remoteStore, $"{name}.*").FirstOrDefault();
-            if (string.IsNullOrEmpty(imagePath))
-                return;
-
-            // check if image is present in cache, if not, copy to cache
-            var imageCachePath = Path.Combine(_localCachePath, Path.GetFileName(imagePath));
-            if (!File.Exists(imageCachePath))
-                await IOHelper.CopyFile(imagePath, imageCachePath);
-            // TODO: cache cleanup
-        }
-
-        public async Task SaveItem(string name)
-        {
-            var item = GetItem(name);
             if (item == null)
                 return;
 
@@ -394,7 +389,7 @@ namespace MediaCenter.Repository
         }
 
         public async Task SaveItemContent(MediaItem item)
-        {   
+        {
             await IOHelper.SaveBytes(item.Content, FileNameToRemoteFilePath(item.ContentFileName));
             // make sure that any buffered version of the content is also updated 
             if (_buffer.ContainsKey(item.Name))
@@ -447,7 +442,7 @@ namespace MediaCenter.Repository
 
         private void RaiseStatusChanged()
         {
-            StatusChanged?.Invoke(this, EventArgs.Empty);     
+            StatusChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public async Task SaveContentToFile(MediaItem item, string filePath)
@@ -455,7 +450,7 @@ namespace MediaCenter.Repository
             await IOHelper.CopyFile(FileNameToRemoteFilePath(item.ContentFileName), filePath);
         }
 
-        public async Task SaveContentToFolder(List<MediaItem> items, string folderPath)
+        public async Task SaveMultipleContentToFolder(List<MediaItem> items, string folderPath)
         {
             foreach (var item in items)
             {

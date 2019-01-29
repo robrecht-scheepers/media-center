@@ -12,7 +12,7 @@ namespace MediaCenter.Sessions.Filters
 
         public TagFilter(IEnumerable<string> tags)
         {
-            Tags = tags?.ToList();
+            Tags = tags?.OrderBy(x => x).ToList();
         }
 
         public string Tag

@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Configuration;
+using System.IO;
 using System.Windows;
+using MediaCenter.Helpers;
 using MediaCenter.Properties;
+using MediaCenter.Repository;
 
 namespace MediaCenter
 {
@@ -9,22 +13,28 @@ namespace MediaCenter
     /// </summary>
     public partial class App : Application
     {
-        private Bootstrapper _bootstrapper;
-
-        public App() : this(new Bootstrapper()) { }
-        public App(Bootstrapper bootstrapper)
-        {
-            _bootstrapper = bootstrapper ?? throw new ArgumentNullException(nameof(bootstrapper));
-        }
+        private IRepository _repository;
 
         private async void ApplicationStartup(object sender, StartupEventArgs e)
         {
-            await _bootstrapper.Run();
+            var repoPath = ConfigurationManager.AppSettings["RepositoryPath"];
+            var dbPath = Path.Combine(repoPath, "db", "mc.db3");
+            var mediaPath = Path.Combine(repoPath, "media");
+            var thumbnailPath = Path.Combine(repoPath, "thumbnails");
+            _repository = new DbRepository(dbPath, mediaPath, thumbnailPath);
+            var repositoryTask = _repository.Initialize();
+
+            var mainView = new MainWindow();
+            var windowService = new WindowService(mainView); 
+            var mainViewModel = new MainWindowViewModel(_repository,windowService);
+            mainView.DataContext = mainViewModel;
+            mainView.Show();
+
+            await repositoryTask;
         }
 
         private void ApplicationExit(object sender, ExitEventArgs e)
         {
-            _bootstrapper.Exit();
             Settings.Default.Save();
         }
     }

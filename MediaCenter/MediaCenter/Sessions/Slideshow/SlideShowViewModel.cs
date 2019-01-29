@@ -14,13 +14,10 @@ namespace MediaCenter.Sessions.Slideshow
     {
         private Timer _timer;
         
-        public SlideShowViewModel(ObservableCollection<MediaItem> queryResultItems, IRepository repository, int startIndex = 0) : base(queryResultItems, repository)
+        public SlideShowViewModel(ObservableCollection<MediaItem> queryResultItems, IRepository repository, MediaItem selectedItem) : base(queryResultItems, repository, selectedItem)
         {
             Interval = Properties.Settings.Default.SlideshowInterval;
             Status = PlayState.Stopped;
-
-            if (startIndex > 0)
-                SelectedItem = QueryResultItems[startIndex];
         }
 
         private PlayState _status;
