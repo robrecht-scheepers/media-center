@@ -88,7 +88,6 @@ namespace MediaCenter.Repository
                     {
                         Tags.Add(newTag);
                     }
-
                 }
                 catch (Exception e)
                 {

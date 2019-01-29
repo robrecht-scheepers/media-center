@@ -88,7 +88,7 @@ namespace MediaCenter.Repository
         public async Task DeleteMediaInfo(MediaItem item)
         {
             const string cmdTxt =
-                "DELETE FROM MediaInfo WHENE Id = @Id;";
+                "DELETE FROM MediaInfo WHERE Id = @Id;";
             using (var conn = GetConnection())
             using (var command = GetCommand(conn, cmdTxt))
             {
