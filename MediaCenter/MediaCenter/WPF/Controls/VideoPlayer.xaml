@@ -6,6 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
              xmlns:media="clr-namespace:MediaCenter.Media"
+             xmlns:wpf="clr-namespace:Vlc.DotNet.Wpf;assembly=Vlc.DotNet.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -20,8 +21,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <MediaElement Grid.Row="0"  Name="MediaElement" LoadedBehavior="Manual" 
-                      MediaOpened="MediaElement_OnMediaOpened" MediaEnded="MediaElement_OnMediaEnded" />
+        <wpf:VlcControl Grid.Row="0"  Name="VlcWpfControl" />
         <Grid Grid.Row="1" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
