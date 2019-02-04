@@ -18,6 +18,13 @@ namespace MediaCenter.WPF.Controls
         private bool _isDragging = false;
         private Uri _currentUri = default(Uri);
         private DispatcherTimer _timer;
+
+        private long _mediaLength = 0;
+
+        private DateTime _lastSliderUpdateTimestamp;
+        private double _lastPositionNotified;
+        private DateTime _lastPositionNotificationTimestamp;
+        private bool _newPositionAvailable;
         
         private Vlc.DotNet.Forms.VlcControl MediaPlayer => VlcWpfControl.MediaPlayer;    
         
@@ -27,7 +34,7 @@ namespace MediaCenter.WPF.Controls
             InitVlcPlayer();
             PlayState = PlayState.Stopped;
 
-            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
+            _timer = new DispatcherTimer(DispatcherPriority.Render) { Interval = TimeSpan.FromMilliseconds(500) };
             _timer.Tick += TimerOnTick;
         }
         
@@ -47,7 +54,9 @@ namespace MediaCenter.WPF.Controls
 
             MediaPlayer.LengthChanged += MediaPlayerOnLengthChanged;
             MediaPlayer.EndReached += VlcPlayerOnEndReached;
+            MediaPlayer.PositionChanged += MediaPlayerOnPositionChanged;
         }
+
         
         public bool HideControls { get { return (bool)GetValue(HideControlsProperty); } set { SetValue(HideControlsProperty, value); } }
         public static readonly DependencyProperty HideControlsProperty = DependencyProperty.Register("HideControls", typeof(bool), typeof(VideoPlayer), new PropertyMetadata(false));
@@ -100,26 +109,55 @@ namespace MediaCenter.WPF.Controls
         #region SeekBar
         private void TimerOnTick(object sender, EventArgs e)
         {
+            var now = DateTime.Now;
+            // position property is updated irregularly so to make the slider smooth, use interval times when no new value is available
+            double newPosition;
+            if (_newPositionAvailable)
+            {
+                newPosition = _lastPositionNotified + now.Subtract(_lastPositionNotificationTimestamp).TotalMilliseconds/_mediaLength;
+                CurrentTime.Text = TimeSpan.FromMilliseconds(MediaPlayer.Time).ToString("mm\\:ss");
+                _newPositionAvailable = false;
+            }
+            else
+            {
+                var timeInterval = now.Subtract(_lastSliderUpdateTimestamp).TotalMilliseconds;
+                newPosition = SeekSlider.Value + (timeInterval / _mediaLength);
+            }
+
+            _lastSliderUpdateTimestamp = now;
+
+            Console.WriteLine($@"S;{DateTime.Now:ss.fff};{ newPosition}");
+
             if (!_isDragging)
             {
-                SeekSlider.Value = MediaPlayer.Position;
-                Console.WriteLine($@"{DateTime.Now:HH:mm:ss.fff} - Position: {MediaPlayer.VlcMediaPlayer.Position} - Time: {MediaPlayer.VlcMediaPlayer.Time}");
+                SeekSlider.Value = newPosition;
             }
-            CurrentTime.Text = TimeSpan.FromMilliseconds(MediaPlayer.Time).ToString("mm\\:ss");
         }
+
+        private void MediaPlayerOnPositionChanged(object sender, VlcMediaPlayerPositionChangedEventArgs e)
+        {
+            _lastPositionNotified = e.NewPosition;
+            _lastPositionNotificationTimestamp = DateTime.Now;
+            _newPositionAvailable = true;
+            Console.WriteLine($@"P;{DateTime.Now:ss.fff};{_lastPositionNotified}");
+        }
+
 
         private void MediaPlayerOnLengthChanged(object sender, VlcMediaPlayerLengthChangedEventArgs e)
         {
             Dispatcher.Invoke(() =>
             {
+                _mediaLength = MediaPlayer.Length;
                 SeekSlider.Value = 0;
+                _lastSliderUpdateTimestamp = DateTime.Now;
                 CurrentTime.Text = "00:00";
-                TotalTime.Text = TimeSpan.FromMilliseconds(MediaPlayer.Length).ToString("mm\\:ss");
+                TotalTime.Text = TimeSpan.FromMilliseconds(_mediaLength).ToString("mm\\:ss");
 
+                _lastSliderUpdateTimestamp = DateTime.Now;
                 _timer.Start();
-
                 if(StartOnLoad)
                     Play();
+                
             });
         }
 
