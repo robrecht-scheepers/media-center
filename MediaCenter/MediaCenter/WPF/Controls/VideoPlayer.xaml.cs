@@ -72,6 +72,7 @@ namespace MediaCenter.WPF.Controls
         
         public PlayState PlayState{ get { return (PlayState)GetValue(PlayStateProperty); } set { SetValue(PlayStateProperty, value); } }
         public static readonly DependencyProperty PlayStateProperty = DependencyProperty.Register("PlayState", typeof(PlayState), typeof(VideoPlayer), new PropertyMetadata(PlayState.Stopped, OnPlayStateChanged));
+        private bool _updatingPosition;
 
         private static void OnPlayStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -130,7 +131,9 @@ namespace MediaCenter.WPF.Controls
 
             if (!_isDragging)
             {
+                _updatingPosition = true;
                 SeekSlider.Value = newPosition;
+                _updatingPosition = false;
             }
         }
 
@@ -232,8 +235,11 @@ namespace MediaCenter.WPF.Controls
 
         private void SeekSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            //if(!_isDragging)
-            //    MediaPlayer.Position = (int)SeekSlider.Value * 1000;
+            if (!_isDragging && !_updatingPosition)
+            {
+                _newPositionAvailable = false;
+                MediaPlayer.Position = (float)SeekSlider.Value;
+            }
         }
     }
 }
