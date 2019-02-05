@@ -141,6 +141,7 @@
       <DependentUpon>StagedItemPreviewWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Media\PlayStateVisibilityConverter.cs" />
+    <Compile Include="WPF\Controls\SeekBar.cs" />
     <Compile Include="WPF\Converters\BoolVisibilityConverter.cs" />
     <Compile Include="WPF\Controls\HideableColumnDefinition.cs" />
     <Compile Include="WPF\Controls\HideableRowDefinition.cs" />

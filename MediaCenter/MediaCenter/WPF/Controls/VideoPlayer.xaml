@@ -29,9 +29,9 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Name="CurrentTime" Foreground="White"/>
-            <Slider Grid.Column="1" Name="SeekSlider" Margin="5" HorizontalAlignment="Stretch" Minimum="0" Maximum="1" TickFrequency="0.01"
-                    Thumb.DragStarted="SeekSlider_OnDragStarted" Thumb.DragCompleted="SeekSlider_OnDragCompleted" ValueChanged="SeekSlider_OnValueChanged" 
-                    IsMoveToPointEnabled="True"/>
+            <controls:SeekBar Grid.Column="1" x:Name="SeekSlider" 
+                              Margin="5" HorizontalAlignment="Stretch" Height="20" Foreground="{StaticResource AppAccentColor}"
+                              DragStarted="SeekSlider_DragStarted" DragCompleted="SeekSlider_OnDragCompleted" ValueChanged="SeekSlider_OnValueChanged" />
             <TextBlock Grid.Column="2" Name="TotalTime" Foreground="White"/>
         </Grid>
         <StackPanel Grid.Row="2"  Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ElementName=Root, Path=HideControls, Converter={StaticResource CollapseWhenTrueConverter}}">
