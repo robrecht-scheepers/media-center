@@ -130,6 +130,9 @@ namespace MediaCenter.WPF.Controls
 
         private void TimerOnTick(object sender, EventArgs e)
         {
+            if(PlayState == PlayState.Finished)
+                Stop();
+
             var now = DateTime.Now;
             // position property is updated irregularly so to make the slider smooth, use interval times when no new value is available
             double newPosition;
@@ -175,14 +178,14 @@ namespace MediaCenter.WPF.Controls
         private void SeekSlider_DragStarted(object sender, EventArgs e)
         {
             _isDragging = true;
-            MediaPlayer.Pause();
+            Pause();
         }
 
         private void SeekSlider_OnDragCompleted(object sender, EventArgs e)
         {
             MediaPlayer.Position = (float)SeekSlider.Value;
             _isDragging = false;
-            MediaPlayer.Play();
+            Play();
         }
         
         private void ApplyPlayStateChange(PlayState oldPlayState, PlayState newPlayState)
@@ -195,6 +198,7 @@ namespace MediaCenter.WPF.Controls
                 case PlayState.Stopped:
                     MediaPlayer.Stop();
                     _timer.Stop();
+                    SeekSlider.Value = SeekSlider.Minimum;
                     break;
                 case PlayState.Paused:
                     MediaPlayer.Pause();
@@ -205,7 +209,7 @@ namespace MediaCenter.WPF.Controls
                     _timer.Start();
                     break;
                 case PlayState.Finished:
-                    _timer.Stop();
+                    SeekSlider.Value = SeekSlider.Maximum;
                     break;
             }
         }
@@ -242,7 +246,6 @@ namespace MediaCenter.WPF.Controls
         {
             Dispatcher.Invoke(() =>
             {
-                SeekSlider.Value = SeekSlider.Maximum;
                 PlayState = PlayState.Finished;
             });
         }
