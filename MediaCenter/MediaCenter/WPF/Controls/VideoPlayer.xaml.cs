@@ -16,8 +16,10 @@ namespace MediaCenter.WPF.Controls
     public partial class VideoPlayer : UserControl
     {
         private bool _isDragging = false;
+        private PlayState _playstateBeforeDragging;
+
         private Uri _currentUri = default(Uri);
-        private DispatcherTimer _timer;
+        private readonly DispatcherTimer _timer;
 
         private long _mediaLength = 0;
 
@@ -104,8 +106,10 @@ namespace MediaCenter.WPF.Controls
         {
             if(_currentUri == videoUri)
                 return;
-
             Stop();
+
+            if (videoUri == null) return;
+            
             MediaPlayer.SetMedia(videoUri);
             _currentUri = videoUri;
         }
@@ -115,23 +119,24 @@ namespace MediaCenter.WPF.Controls
             Dispatcher.Invoke(() =>
             {
                 _mediaLength = MediaPlayer.Length;
-                SeekSlider.Value = 0;
                 _lastSliderUpdateTimestamp = DateTime.Now;
+
+                SeekSlider.Value = 0;
                 CurrentTime.Text = "00:00";
                 TotalTime.Text = TimeSpan.FromMilliseconds(_mediaLength).ToString("mm\\:ss");
 
-                _lastSliderUpdateTimestamp = DateTime.Now;
-                _timer.Start();
                 if (StartOnLoad)
                     Play();
-
             });
         }
 
         private void TimerOnTick(object sender, EventArgs e)
         {
-            if(PlayState == PlayState.Finished)
+            if (PlayState == PlayState.Finished)
+            {
                 Stop();
+                return;
+            }
 
             var now = DateTime.Now;
             // position property is updated irregularly so to make the slider smooth, use interval times when no new value is available
@@ -160,10 +165,20 @@ namespace MediaCenter.WPF.Controls
 
         private void MediaPlayerOnPositionChanged(object sender, VlcMediaPlayerPositionChangedEventArgs e)
         {
-            _lastPositionNotified = e.NewPosition;
-            _lastPositionNotificationTimestamp = DateTime.Now;
-            _newPositionAvailable = true;
-            Console.WriteLine($@"P;{DateTime.Now:ss.fff};{_lastPositionNotified}");
+            Dispatcher.Invoke(() =>
+            {
+                _lastPositionNotified = e.NewPosition;
+                _lastPositionNotificationTimestamp = DateTime.Now;
+                _newPositionAvailable = true;
+            });
+        }
+
+        private void VlcPlayerOnEndReached(object sender, VlcMediaPlayerEndReachedEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                PlayState = PlayState.Finished;
+            });
         }
 
         private void SeekSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -177,6 +192,7 @@ namespace MediaCenter.WPF.Controls
 
         private void SeekSlider_DragStarted(object sender, EventArgs e)
         {
+            _playstateBeforeDragging = PlayState;
             _isDragging = true;
             Pause();
         }
@@ -185,7 +201,7 @@ namespace MediaCenter.WPF.Controls
         {
             MediaPlayer.Position = (float)SeekSlider.Value;
             _isDragging = false;
-            Play();
+            PlayState = _playstateBeforeDragging;
         }
         
         private void ApplyPlayStateChange(PlayState oldPlayState, PlayState newPlayState)
@@ -199,6 +215,7 @@ namespace MediaCenter.WPF.Controls
                     MediaPlayer.Stop();
                     _timer.Stop();
                     SeekSlider.Value = SeekSlider.Minimum;
+                    CurrentTime.Text = "00:00";
                     break;
                 case PlayState.Paused:
                     MediaPlayer.Pause();
@@ -210,6 +227,8 @@ namespace MediaCenter.WPF.Controls
                     break;
                 case PlayState.Finished:
                     SeekSlider.Value = SeekSlider.Maximum;
+                    // keep timer running. In the next timer tick, the video will be stopped.
+                    // Stopping the player in the EndReached event handler causes the app to hang
                     break;
             }
         }
@@ -242,14 +261,6 @@ namespace MediaCenter.WPF.Controls
             Stop();
         }
 
-        private void VlcPlayerOnEndReached(object sender, VlcMediaPlayerEndReachedEventArgs e)
-        {
-            Dispatcher.Invoke(() =>
-            {
-                PlayState = PlayState.Finished;
-            });
-        }
-        
         
         
     }
