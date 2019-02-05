@@ -22,6 +22,7 @@ namespace MediaCenter.WPF.Controls
         private readonly DispatcherTimer _timer;
 
         private long _mediaLength = 0;
+        private bool _endReached = false;
 
         private DateTime _lastSliderUpdateTimestamp;
         private double _lastPositionNotified;
@@ -104,14 +105,14 @@ namespace MediaCenter.WPF.Controls
 
         public void LoadVideo(Uri videoUri)
         {
-            if(_currentUri == videoUri)
-                return;
-            Stop();
-
-            if (videoUri == null) return;
-            
-            MediaPlayer.SetMedia(videoUri);
+            if(_currentUri == videoUri) return;
             _currentUri = videoUri;
+
+            if (PlayState != PlayState.Stopped)
+                Stop();
+
+            if (videoUri != null)
+                MediaPlayer.SetMedia(videoUri);
         }
         
         private void MediaPlayerOnLengthChanged(object sender, VlcMediaPlayerLengthChangedEventArgs e)
@@ -132,9 +133,10 @@ namespace MediaCenter.WPF.Controls
 
         private void TimerOnTick(object sender, EventArgs e)
         {
-            if (PlayState == PlayState.Finished)
+            if (_endReached)
             {
-                Stop();
+                PlayState = PlayState.Finished;
+                _endReached = false;
                 return;
             }
 
@@ -175,10 +177,9 @@ namespace MediaCenter.WPF.Controls
 
         private void VlcPlayerOnEndReached(object sender, VlcMediaPlayerEndReachedEventArgs e)
         {
-            Dispatcher.Invoke(() =>
-            {
-                PlayState = PlayState.Finished;
-            });
+            // only set a flag and postpone the handling to the next timer tick, 
+            // because any interaction with the payer in this event handler causes the app to hang
+            Dispatcher.Invoke(() => { _endReached = true; });
         }
 
         private void SeekSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -226,9 +227,7 @@ namespace MediaCenter.WPF.Controls
                     _timer.Start();
                     break;
                 case PlayState.Finished:
-                    SeekSlider.Value = SeekSlider.Maximum;
-                    // keep timer running. In the next timer tick, the video will be stopped.
-                    // Stopping the player in the EndReached event handler causes the app to hang
+                    Stop();
                     break;
             }
         }

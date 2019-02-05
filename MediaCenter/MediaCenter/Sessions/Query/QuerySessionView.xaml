@@ -17,6 +17,9 @@
              Background="{StaticResource AppStandardBackground}">
     <UserControl.Resources>
         <ResourceDictionary>
+            <DataTemplate DataType="{x:Type slideshow:SlideShowViewModel}">
+                <Grid/>
+            </DataTemplate>
             <DataTemplate DataType="{x:Type local:QueryResultDetailViewModel}">
                 <local:QueryResultDetailView/>
             </DataTemplate>
