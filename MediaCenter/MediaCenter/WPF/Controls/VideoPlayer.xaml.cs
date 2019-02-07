@@ -35,7 +35,7 @@ namespace MediaCenter.WPF.Controls
         {
             InitializeComponent();
             
-            _timer = new DispatcherTimer(DispatcherPriority.Render) { Interval = TimeSpan.FromMilliseconds(100) };
+            _timer = new DispatcherTimer(DispatcherPriority.Render) { Interval = TimeSpan.FromMilliseconds(500) };
             _timer.Tick += TimerOnTick;
 
             InitVlcPlayer();
