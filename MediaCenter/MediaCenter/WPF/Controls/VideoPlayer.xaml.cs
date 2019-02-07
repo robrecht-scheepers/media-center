@@ -29,13 +29,13 @@ namespace MediaCenter.WPF.Controls
 
         private bool _seekBarUpdateInProgress;
 
-        private Vlc.DotNet.Forms.VlcControl MediaPlayer => VlcWpfControl.MediaPlayer;
+        private Vlc.DotNet.Forms.VlcControl MediaPlayer => VlcWpfControl.MediaPlayer; // shortcut for code readability
         
         public VideoPlayer()
         {
             InitializeComponent();
             
-            _timer = new DispatcherTimer(DispatcherPriority.Render) { Interval = TimeSpan.FromMilliseconds(500) };
+            _timer = new DispatcherTimer(DispatcherPriority.Render) { Interval = TimeSpan.FromMilliseconds(100) };
             _timer.Tick += TimerOnTick;
 
             InitVlcPlayer();
@@ -55,8 +55,6 @@ namespace MediaCenter.WPF.Controls
             MediaPlayer.PositionChanged += MediaPlayerOnPositionChanged;
         }
 
-        
-
         #region Dependency Properties
 
         public bool HideControls { get { return (bool)GetValue(HideControlsProperty); } set { SetValue(HideControlsProperty, value); } }
@@ -74,11 +72,9 @@ namespace MediaCenter.WPF.Controls
         public PlayState PlayState{ get { return (PlayState)GetValue(PlayStateProperty); } set { SetValue(PlayStateProperty, value); } }
         public static readonly DependencyProperty PlayStateProperty = DependencyProperty.Register("PlayState", typeof(PlayState), typeof(VideoPlayer), new PropertyMetadata(PlayState.Stopped));
         
-
         private static void RotationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var me = d as VideoPlayer;
-            me?.Rotate((int)e.NewValue);
+            // no rotation needed, as VLC is capable of reading the orientation tag of the video
         }
 
         private static void VideoUriChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -88,11 +84,6 @@ namespace MediaCenter.WPF.Controls
         }
 
         #endregion
-
-        public void Rotate(int angle)
-        {
-            // no rotation needed, as VLC is capable of reading the orientation tag of the video
-        }
 
         public void LoadVideo(Uri videoUri)
         {
@@ -111,6 +102,7 @@ namespace MediaCenter.WPF.Controls
         {
             Dispatcher.Invoke(() =>
             {
+                SetSeekBarPosition(SeekBar.Minimum);
                 if (StartOnLoad)
                     Play();
             });
@@ -120,10 +112,9 @@ namespace MediaCenter.WPF.Controls
         {
             Dispatcher.Invoke(() =>
             {
-                _mediaLength = (long)e.NewLength;
+                _mediaLength = (long)e.NewLength/10000; // e.NewLength expressed in ticks (0,1 microseconds)
                 _timeLastSeekBarUpdate = DateTime.Now;
-
-                SeekSlider.Value = 0;
+                SetSeekBarPosition(SeekBar.Minimum);
                 CurrentTime.Text = "00:00";
                 TotalTime.Text = TimeSpan.FromMilliseconds(_mediaLength).ToString("mm\\:ss");
             });
@@ -142,29 +133,28 @@ namespace MediaCenter.WPF.Controls
         {
             if(_mediaLength == 0) // media length not known yet 
                 return;
-
             if (_isDragging)
                 return;
-
+            
             var now = DateTime.Now;
             double newPosition;
             if (_newPositionAvailable)
             {
                 newPosition = _lastNotifiedPosition +
                               now.Subtract(_timeLastNotifiedPosition).TotalMilliseconds / _mediaLength;
+                Console.WriteLine($@"N {DateTime.Now:HH:mm:ss.fff} | New position: {newPosition}");
                 CurrentTime.Text = TimeSpan.FromMilliseconds(MediaPlayer.Time).ToString("mm\\:ss");
                 _newPositionAvailable = false;
             }
             else // to make the slider move smoothly, when no new position is available we estimate the position base on elapsed time 
             {
                 var timeInterval = now.Subtract(_timeLastSeekBarUpdate).TotalMilliseconds;
-                newPosition = SeekSlider.Value + (timeInterval / _mediaLength);
+                newPosition = SeekBar.Value + (timeInterval / _mediaLength);
+                Console.WriteLine($@"I {DateTime.Now:HH:mm:ss.fff} | New position: {newPosition}");
             }
 
             _timeLastSeekBarUpdate = now;
-            _seekBarUpdateInProgress = true;
-            SeekSlider.Value = newPosition;
-            _seekBarUpdateInProgress = false;
+            SetSeekBarPosition(newPosition);
         }
 
         private void VlcPlayerOnEndReached(object sender, VlcMediaPlayerEndReachedEventArgs e)
@@ -174,15 +164,6 @@ namespace MediaCenter.WPF.Controls
             {
                 PlayState = PlayState.Finished;
             });
-        }
-
-        private void SeekSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (!_seekBarUpdateInProgress)
-            {
-                _newPositionAvailable = false;
-                MediaPlayer.Position = (float)SeekSlider.Value;
-            }
         }
 
         private void SeekSlider_DragStarted(object sender, EventArgs e)
@@ -198,6 +179,22 @@ namespace MediaCenter.WPF.Controls
 
             if (_playStateBeforeDragging == PlayState.Playing)
                 Play();
+        }
+
+        private void SeekSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!_seekBarUpdateInProgress)
+            {
+                _newPositionAvailable = false;
+                MediaPlayer.Position = (float)SeekBar.Value;
+            }
+        }
+
+        private void SetSeekBarPosition(double newPosition)
+        {
+            _seekBarUpdateInProgress = true;
+            SeekBar.Value = newPosition;
+            _seekBarUpdateInProgress = false;
         }
 
         private void Play()
@@ -216,11 +213,7 @@ namespace MediaCenter.WPF.Controls
             Dispatcher.Invoke(() =>
             {
                 _timer.Stop();
-
-                _seekBarUpdateInProgress = true;
-                SeekSlider.Value = SeekSlider.Minimum;
-                _seekBarUpdateInProgress = false;
-
+                SetSeekBarPosition(SeekBar.Minimum);
                 CurrentTime.Text = "00:00";
                 PlayState = PlayState.Stopped;
             });
