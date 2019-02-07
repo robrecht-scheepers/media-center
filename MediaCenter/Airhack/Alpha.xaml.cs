@@ -52,6 +52,8 @@ namespace Airhack
 
         private void Bckgnd_Loaded(object sender, RoutedEventArgs e)
         {
+            this.DataContext = bckgnd.DataContext;
+
             wndhost = Window.GetWindow(bckgnd);
             this.Owner = wndhost;
             wndhost.Closing += Wndhost_Closing;

@@ -39,12 +39,12 @@
     </interactivity:Interaction.Behaviors>
 
     <Grid>
-        <airhack:AirControl x:Name="AirControl">
+        <airhack:AirControl x:Name="AirControl" DataContext="{Binding }">
             <airhack:AirControl.Back>
                 <ContentControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{Binding SlideShowViewModel.SelectedItemViewModel}"/>
             </airhack:AirControl.Back>
             <airhack:AirControl.Front>
-                <local:SlideShowControls DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext}"/>
+                <local:SlideShowControls DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext}" Margin="50"/>
             </airhack:AirControl.Front>
         </airhack:AirControl>
     </Grid>
