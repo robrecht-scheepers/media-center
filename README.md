@@ -5,3 +5,4 @@ Technology stack:
 
 Third party tools and libs:
 - ffmpeg
+- I use a workaround for Airspace issues that I found here: [https://github.com/kolorowezworki/Airhack]
