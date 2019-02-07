@@ -6,6 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
              xmlns:media="clr-namespace:MediaCenter.Media"
+             xmlns:wpf="clr-namespace:Vlc.DotNet.Wpf;assembly=Vlc.DotNet.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -20,8 +21,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <MediaElement Grid.Row="0"  Name="MediaElement" LoadedBehavior="Manual" 
-                      MediaOpened="MediaElement_OnMediaOpened" MediaEnded="MediaElement_OnMediaEnded" />
+        <wpf:VlcControl Grid.Row="0"  Name="VlcWpfControl" />
         <Grid Grid.Row="1" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -29,15 +29,15 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Name="CurrentTime" Foreground="White"/>
-            <Slider Grid.Column="1" Name="SeekSlider" Margin="5" HorizontalAlignment="Stretch" 
-                    Thumb.DragStarted="SeekSlider_OnDragStarted" Thumb.DragCompleted="SeekSlider_OnDragCompleted" ValueChanged="SeekSlider_OnValueChanged" 
-                    IsMoveToPointEnabled="True"/>
+            <controls:SeekBar Grid.Column="1" x:Name="SeekBar" 
+                              Margin="5" HorizontalAlignment="Stretch" Height="10" Background="White" Foreground="{StaticResource MainWindowBackground}"
+                              DragStarted="SeekSlider_DragStarted" DragCompleted="SeekSlider_OnDragCompleted" ValueChanged="SeekSlider_OnValueChanged" />
             <TextBlock Grid.Column="2" Name="TotalTime" Foreground="White"/>
         </Grid>
         <StackPanel Grid.Row="2"  Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ElementName=Root, Path=HideControls, Converter={StaticResource CollapseWhenTrueConverter}}">
-            <controls:ImageButton ImageSource="/Resources/Icons/pause.png" Click="PlayPause_OnClick"
+            <controls:ImageButton ImageSource="/Resources/Icons/pause.png" Click="Pause_OnClick"
                                   Visibility="{Binding ElementName=Root, Path=PlayState, Converter={StaticResource VisibleWhenPlayingConverer}}"/>
-            <controls:ImageButton ImageSource="/Resources/Icons/play.png" Click="PlayPause_OnClick"
+            <controls:ImageButton ImageSource="/Resources/Icons/play.png" Click="Play_OnClick"
                                   Visibility="{Binding ElementName=Root, Path=PlayState, Converter={StaticResource CollapsedWhenPlayingConverer}}"/>
             <controls:ImageButton ImageSource="/Resources/Icons/stop.png" Click="Stop_OnClick" />
         </StackPanel>

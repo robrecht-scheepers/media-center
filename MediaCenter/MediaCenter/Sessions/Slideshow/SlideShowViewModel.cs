@@ -71,7 +71,10 @@ namespace MediaCenter.Sessions.Slideshow
             if (SelectedItemViewModel.MediaItem.MediaType == MediaType.Image)
                 _timer.Start();
             else // video
+            {
+                ((VideoItemViewModel)SelectedItemViewModel).VideoPlayFinished += SelectedVideoPlayFinished;
                 ((VideoItemViewModel)SelectedItemViewModel).VideoPlayState = PlayState.Playing;
+            }
 
             Status = PlayState.Playing;
         }

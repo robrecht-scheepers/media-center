@@ -11,6 +11,6 @@
              d:DataContext="{d:DesignInstance Type=local:VideoItemViewModel}">
     <Grid>
         <controls:VideoPlayer VideoUri="{Binding MediaItem.ContentUri}" StartOnLoad="True" HideControls="{Binding ElementName=Root, Path=HideControls}"
-                              Rotation="{Binding MediaItem.Rotation}" PlayState="{Binding VideoPlayState, Mode=TwoWay}"/>
+                              Rotation="{Binding MediaItem.Rotation}" PlayState="{Binding VideoPlayState, Mode=OneWayToSource}"/>
     </Grid>
 </UserControl>

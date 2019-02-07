@@ -1,10 +1,12 @@
 ﻿using MediaCenter.Media;
 using System;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Media;
 using System.Windows.Threading;
+using Vlc.DotNet.Core;
+using Vlc.DotNet.Core.Interops.Signatures;
 
 namespace MediaCenter.WPF.Controls
 {
@@ -13,36 +15,54 @@ namespace MediaCenter.WPF.Controls
     /// </summary>
     public partial class VideoPlayer : UserControl
     {
-        private int _milisecondPerSliderTick = 200;
-        private DispatcherTimer _timer;
-        private bool _isDragging = false;
-        private bool _sliderlengthSet = false;
+        private bool _isDragging;
+        private PlayState _playStateBeforeDragging;
+
+        private Uri _currentUri;
+        private readonly DispatcherTimer _timer;
+
+        private long _mediaLength;
+        private DateTime _timeLastSeekBarUpdate;
+        private double _lastNotifiedPosition;
+        private DateTime _timeLastNotifiedPosition;
+        private bool _newPositionAvailable;
+
+        private bool _seekBarUpdateInProgress;
+
+        private Vlc.DotNet.Forms.VlcControl MediaPlayer => VlcWpfControl.MediaPlayer; // shortcut for code readability
         
         public VideoPlayer()
         {
             InitializeComponent();
-            PlayState = PlayState.Stopped;
-            _timer = new DispatcherTimer()
-            {
-                Interval = TimeSpan.FromMilliseconds(100)
-            };
-            _timer.Tick += new EventHandler(TimerTick);
-        }
+            
+            _timer = new DispatcherTimer(DispatcherPriority.Render) { Interval = TimeSpan.FromMilliseconds(500) };
+            _timer.Tick += TimerOnTick;
 
-        public bool HideControls
-        {
-            get { return (bool)GetValue(HideControlsProperty); }
-            set { SetValue(HideControlsProperty, value); }
+            InitVlcPlayer();
         }
-
-        // Using a DependencyProperty as the backing store for HideControls.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty HideControlsProperty =
-            DependencyProperty.Register("HideControls", typeof(bool), typeof(VideoPlayer), new PropertyMetadata(false));
         
+        private void InitVlcPlayer()
+        {
+            MediaPlayer.BeginInit();
+            MediaPlayer.VlcLibDirectory = new DirectoryInfo(
+                Path.Combine(Directory.GetCurrentDirectory(), "libvlc", IntPtr.Size == 4 ? "win-x86" : "win-x64"));
+            MediaPlayer.VlcMediaplayerOptions = new string[] { };
+            MediaPlayer.EndInit();
+
+            MediaPlayer.MediaChanged += MediaPlayerOnMediaChanged;
+            MediaPlayer.LengthChanged += MediaPlayerOnLengthChanged;
+            MediaPlayer.EndReached += VlcPlayerOnEndReached;
+            MediaPlayer.PositionChanged += MediaPlayerOnPositionChanged;
+        }
+
+        #region Dependency Properties
+
+        public bool HideControls { get { return (bool)GetValue(HideControlsProperty); } set { SetValue(HideControlsProperty, value); } }
+        public static readonly DependencyProperty HideControlsProperty = DependencyProperty.Register("HideControls", typeof(bool), typeof(VideoPlayer), new PropertyMetadata(false));
 
         public bool StartOnLoad { get { return (bool)GetValue(StartOnLoadProperty); } set { SetValue(StartOnLoadProperty, value); } }
         public static readonly DependencyProperty StartOnLoadProperty = DependencyProperty.Register("StartOnLoad", typeof(bool), typeof(VideoPlayer), new PropertyMetadata(false));
-
+        
         public Uri VideoUri { get { return (Uri)GetValue(VideoUriProperty); } set { SetValue(VideoUriProperty, value); } }
         public static readonly DependencyProperty VideoUriProperty = DependencyProperty.Register("VideoUri", typeof(System.Uri), typeof(VideoPlayer), new PropertyMetadata(default(Uri), VideoUriChanged));
 
@@ -50,168 +70,177 @@ namespace MediaCenter.WPF.Controls
         public static readonly DependencyProperty RotationProperty = DependencyProperty.Register("Rotation", typeof(int), typeof(VideoPlayer), new PropertyMetadata(0, RotationChanged));
         
         public PlayState PlayState{ get { return (PlayState)GetValue(PlayStateProperty); } set { SetValue(PlayStateProperty, value); } }
-        public static readonly DependencyProperty PlayStateProperty = DependencyProperty.Register("PlayState", typeof(PlayState), typeof(VideoPlayer), new PropertyMetadata(PlayState.Stopped, OnPlayStateChanged));
-
-        private static void OnPlayStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var me = (VideoPlayer) d;
-
-            me.ApplyPlayStateChange((PlayState)e.OldValue, (PlayState)e.NewValue);
-        }
-
+        public static readonly DependencyProperty PlayStateProperty = DependencyProperty.Register("PlayState", typeof(PlayState), typeof(VideoPlayer), new PropertyMetadata(PlayState.Stopped));
+        
         private static void RotationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var me = d as VideoPlayer;
-            if (me == null) return;
-
-            me.Rotate((int)e.NewValue);
+            // no rotation needed, as VLC is capable of reading the orientation tag of the video
         }
 
         private static void VideoUriChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var me = d as VideoPlayer;
-            if (me == null) return;
-
-            me.LoadVideo((Uri)e.NewValue);
+            me?.LoadVideo((Uri)e.NewValue);
         }
+
+        #endregion
 
         public void LoadVideo(Uri videoUri)
         {
-            if(MediaElement.Source == videoUri)
-                return;
+            if(_currentUri == videoUri) return;
+            _currentUri = videoUri;
+            
+            if (MediaPlayer.State == MediaStates.Playing)
+                    MediaPlayer.Stop();
 
-            Stop();
-            MediaElement.Source = videoUri;
-        }
-
-        public void Rotate(int angle)
-        {
-            if (angle == 0)
+            if (videoUri != null)
             {
-                MediaElement.LayoutTransform = null;
-            }
-            else
-            {
-                MediaElement.LayoutTransform = new RotateTransform(angle);
+                Task.Run(() => MediaPlayer.SetMedia(videoUri));
             }
         }
-
-        #region SeekBar
-        private void TimerTick(object sender, EventArgs eventArgs)
+        private void MediaPlayerOnMediaChanged(object sender, VlcMediaPlayerMediaChangedEventArgs e)
         {
-            if (!_sliderlengthSet && MediaElement.NaturalDuration.HasTimeSpan)
+            Dispatcher.Invoke(() =>
             {
-                SeekSlider.Maximum = MediaElement.NaturalDuration.TimeSpan.TotalMilliseconds / _milisecondPerSliderTick;
-                TotalTime.Text = MediaElement.NaturalDuration.TimeSpan.ToString("mm\\:ss");
-                _sliderlengthSet = true;
-            }
-
-            if (!_isDragging)
-            {
-                SeekSlider.Value = MediaElement.Position.TotalMilliseconds / _milisecondPerSliderTick;
-            }
-            CurrentTime.Text = MediaElement.Position.ToString("mm\\:ss");
+                SetSeekBarPosition(SeekBar.Minimum);
+                if (StartOnLoad)
+                    Play();
+            });
         }
 
-        private void MediaElement_OnMediaOpened(object sender, RoutedEventArgs e)
+        private void MediaPlayerOnLengthChanged(object sender, VlcMediaPlayerLengthChangedEventArgs e)
         {
-            SeekSlider.Minimum = 0;
-            SeekSlider.Value = 0;
-
-            if (MediaElement.NaturalDuration.HasTimeSpan)
+            Dispatcher.Invoke(() =>
             {
-                SeekSlider.Maximum = MediaElement.NaturalDuration.TimeSpan.TotalMilliseconds / _milisecondPerSliderTick;
+                _mediaLength = (long)e.NewLength/10000; // e.NewLength expressed in ticks (0,1 microseconds)
+                _timeLastSeekBarUpdate = DateTime.Now;
+                SetSeekBarPosition(SeekBar.Minimum);
                 CurrentTime.Text = "00:00";
-                TotalTime.Text = MediaElement.NaturalDuration.TimeSpan.ToString("mm\\:ss");
-                _sliderlengthSet = true;
-            }
-            else
+                TotalTime.Text = TimeSpan.FromMilliseconds(_mediaLength).ToString("mm\\:ss");
+            });
+        }
+        private void MediaPlayerOnPositionChanged(object sender, VlcMediaPlayerPositionChangedEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
             {
-                SeekSlider.Maximum = 0;
-                _sliderlengthSet = false;
-            }
-
-            _timer.Start();
-
-            if(StartOnLoad)
-                Play(); 
+                _lastNotifiedPosition = e.NewPosition;
+                _timeLastNotifiedPosition = DateTime.Now;
+                _newPositionAvailable = true;
+            });
         }
 
-        private void SeekSlider_OnDragStarted(object sender, DragStartedEventArgs e)
+        private void TimerOnTick(object sender, EventArgs e)
         {
-            _isDragging = true;
-        }
-
-        private void SeekSlider_OnDragCompleted(object sender, DragCompletedEventArgs e)
-        {
-            MediaElement.Position = TimeSpan.FromMilliseconds(SeekSlider.Value * _milisecondPerSliderTick);
-            _isDragging = false;
-        }
-        #endregion
-
-        #region Control
-        
-        private void ApplyPlayStateChange(PlayState oldPlayState, PlayState newPlayState)
-        { 
-            if (oldPlayState == newPlayState)
+            if(_mediaLength == 0) // media length not known yet 
                 return;
-
-            switch (newPlayState)
+            if (_isDragging)
+                return;
+            
+            var now = DateTime.Now;
+            double newPosition;
+            if (_newPositionAvailable)
             {
-                case PlayState.Stopped:
-                    MediaElement.Stop();
-                    break;
-                case PlayState.Paused:
-                    MediaElement.Pause();
-                    break;
-                case PlayState.Playing:
-                    MediaElement.Play();
-                    break;
-                case PlayState.Finished:
-                    // do nothing, the media element has stopped by itself. 
-                    // The state is set to finished, notify anyone who needs to know this (for instance the slide show)
-                    break;
+                newPosition = _lastNotifiedPosition +
+                              now.Subtract(_timeLastNotifiedPosition).TotalMilliseconds / _mediaLength;
+                CurrentTime.Text = TimeSpan.FromMilliseconds(MediaPlayer.Time).ToString("mm\\:ss");
+                _newPositionAvailable = false;
+            }
+            else // to make the slider move smoothly, when no new position is available we estimate the position base on elapsed time 
+            {
+                var timeInterval = now.Subtract(_timeLastSeekBarUpdate).TotalMilliseconds;
+                newPosition = SeekBar.Value + (timeInterval / _mediaLength);
+            }
+
+            _timeLastSeekBarUpdate = now;
+            SetSeekBarPosition(newPosition);
+        }
+
+        private void VlcPlayerOnEndReached(object sender, VlcMediaPlayerEndReachedEventArgs e)
+        {
+            Stop();
+            Dispatcher.Invoke(() =>
+            {
+                PlayState = PlayState.Finished;
+            });
+        }
+
+        private void SeekSlider_DragStarted(object sender, EventArgs e)
+        {
+            _playStateBeforeDragging = PlayState;
+            _isDragging = true;
+            Pause();
+        }
+
+        private void SeekSlider_OnDragCompleted(object sender, EventArgs e)
+        {
+            _isDragging = false;
+
+            if (_playStateBeforeDragging == PlayState.Playing)
+                Play();
+        }
+
+        private void SeekSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!_seekBarUpdateInProgress)
+            {
+                _newPositionAvailable = false;
+                MediaPlayer.Position = (float)SeekBar.Value;
             }
         }
 
-        private void Stop()
+        private void SetSeekBarPosition(double newPosition)
         {
-            PlayState = PlayState.Stopped;
-        }
-
-        private void Pause()
-        {
-            PlayState = PlayState.Paused;
+            _seekBarUpdateInProgress = true;
+            SeekBar.Value = newPosition;
+            _seekBarUpdateInProgress = false;
         }
 
         private void Play()
         {
-            PlayState = PlayState.Playing;
+            Task.Run(() => MediaPlayer.Play());
+            Dispatcher.Invoke(() =>
+            {
+                _timer.Start();
+                PlayState = PlayState.Playing;
+            });
         }
 
-        private void PlayPause_OnClick(object sender, RoutedEventArgs e)
+        private void Stop()
         {
-            if (PlayState == PlayState.Playing)
-                Pause();
-            else
-                Play();
+            Task.Run(() => MediaPlayer.Stop());
+            Dispatcher.Invoke(() =>
+            {
+                _timer.Stop();
+                SetSeekBarPosition(SeekBar.Minimum);
+                CurrentTime.Text = "00:00";
+                PlayState = PlayState.Stopped;
+            });
+        }
+
+        private void Pause()
+        {
+            Task.Run(() => MediaPlayer.Pause());
+            Dispatcher.Invoke(() =>
+            {
+                _timer.Stop();
+                PlayState = PlayState.Paused;
+            });
+        }
+
+        private void Play_OnClick(object sender, RoutedEventArgs e)
+        {
+            Play();
+        }
+
+        private void Pause_OnClick(object sender, RoutedEventArgs e)
+        {
+            Pause();
         }
 
         private void Stop_OnClick(object sender, RoutedEventArgs e)
         {
             Stop();
         }
-
-        private void MediaElement_OnMediaEnded(object sender, RoutedEventArgs e)
-        {
-            PlayState = PlayState.Finished; 
-        }
-        #endregion
-
-        private void SeekSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if(!_isDragging)
-                MediaElement.Position = TimeSpan.FromMilliseconds(SeekSlider.Value * _milisecondPerSliderTick);
-        }
+        
     }
 }

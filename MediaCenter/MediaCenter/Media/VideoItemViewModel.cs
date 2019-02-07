@@ -5,8 +5,7 @@ namespace MediaCenter.Media
     public class VideoItemViewModel : MediaItemViewModel
     {
         private PlayState _videoPlayState;
-        private PlayState _previousPlayState = PlayState.Stopped;
-
+        
         public VideoItemViewModel(MediaItem item)
         {
             if (item.MediaType != MediaType.Video)
