@@ -33,17 +33,18 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    
+
+    <!--
     <interactivity:Interaction.Behaviors>
         <behaviors:OpenCloseWindowBehavior WindowType="slideshow:SlideShowWindow" Trigger="{Binding SlideShowActive}" WindowDataContext="{Binding Path=SlideShowViewModel}" 
                                        OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" />
     </interactivity:Interaction.Behaviors>
     
     <UserControl.InputBindings>
-        <KeyBinding Key="Right" Modifiers="Control" Command="{Binding SelectNextImageCommand}"/>
-        <KeyBinding Key="Left" Modifiers="Control" Command="{Binding SelectPreviousImageCommand}"/>
+        <KeyBinding Key="Right" Modifiers="Control" Command="{Binding QueryResultViewModel.SelectNextItemCommand}"/>
+        <KeyBinding Key="Left" Modifiers="Control" Command="{Binding QueryResultViewModel.SelectPreviousItemCommand}"/>
     </UserControl.InputBindings>
-    
+    -->
     <Grid>
         <Grid.ColumnDefinitions>
             <controls:HideableColumnDefinition Width="*" Visible="{Binding ElementName=ShowFilter, Path=IsChecked }"/>

@@ -137,6 +137,9 @@
     </Compile>
     <Compile Include="Sessions\Query\ViewModeBoolConverter.cs" />
     <Compile Include="Sessions\SessionTabViewModel.cs" />
+    <Compile Include="Sessions\Slideshow\SlideShowControls.xaml.cs">
+      <DependentUpon>SlideShowControls.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Sessions\Staging\StagedItemPreviewWindow.xaml.cs">
       <DependentUpon>StagedItemPreviewWindow.xaml</DependentUpon>
     </Compile>
@@ -253,6 +256,10 @@
     <Compile Include="Media\EditTagsViewModel.cs" />
     <Compile Include="WPF\Behaviors\ScrollIntoViewBehavior.cs" />
     <Page Include="Sessions\Filters\FilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sessions\Slideshow\SlideShowControls.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

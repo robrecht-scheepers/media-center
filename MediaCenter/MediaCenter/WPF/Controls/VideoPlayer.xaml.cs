@@ -142,7 +142,6 @@ namespace MediaCenter.WPF.Controls
             {
                 newPosition = _lastNotifiedPosition +
                               now.Subtract(_timeLastNotifiedPosition).TotalMilliseconds / _mediaLength;
-                Console.WriteLine($@"N {DateTime.Now:HH:mm:ss.fff} | New position: {newPosition}");
                 CurrentTime.Text = TimeSpan.FromMilliseconds(MediaPlayer.Time).ToString("mm\\:ss");
                 _newPositionAvailable = false;
             }
@@ -150,7 +149,6 @@ namespace MediaCenter.WPF.Controls
             {
                 var timeInterval = now.Subtract(_timeLastSeekBarUpdate).TotalMilliseconds;
                 newPosition = SeekBar.Value + (timeInterval / _mediaLength);
-                Console.WriteLine($@"I {DateTime.Now:HH:mm:ss.fff} | New position: {newPosition}");
             }
 
             _timeLastSeekBarUpdate = now;

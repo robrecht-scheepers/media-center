@@ -62,8 +62,8 @@ namespace MediaCenter.Sessions.Slideshow
         {
             _hiddenCursor = AssociatedObject.Cursor;
             AssociatedObject.Cursor = Cursors.None;
-            if(AssociatedObject.Controls != null)
-                AssociatedObject.Controls.Visibility = Visibility.Hidden;
+            if(AssociatedObject.AirControl != null)
+                AssociatedObject.AirControl.Front.Visibility = Visibility.Hidden;
             _isHidden = true;
 
         }
@@ -71,8 +71,8 @@ namespace MediaCenter.Sessions.Slideshow
         private void Show()
         {
             AssociatedObject.Cursor = _hiddenCursor;
-            if (AssociatedObject.Controls != null)
-                AssociatedObject.Controls.Visibility = Visibility.Visible;
+            if (AssociatedObject.AirControl != null)
+                AssociatedObject.AirControl.Front.Visibility = Visibility.Visible;
             _isHidden = false;
         }
     }
