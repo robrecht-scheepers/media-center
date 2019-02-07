@@ -44,7 +44,7 @@
                 <ContentControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{Binding SlideShowViewModel.SelectedItemViewModel}"/>
             </airhack:AirControl.Back>
             <airhack:AirControl.Front>
-                <local:SlideShowControls DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext}" Margin="50"/>
+                <local:SlideShowControls DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext}" />
             </airhack:AirControl.Front>
         </airhack:AirControl>
     </Grid>
