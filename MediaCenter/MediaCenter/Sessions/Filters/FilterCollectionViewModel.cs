@@ -31,20 +31,24 @@ namespace MediaCenter.Sessions.Filters
             InitializeEmptyFilter();
         }
 
-        private void OnFilterChanged(object sender, EventArgs e)
+        public List<Filter> Filters
         {
-            UpdateFilters();
-            InitializeEmptyFilter();
-            RaiseFilterChanged();
+            get
+            {
+                var filtersList = FilterViewModels.Where(x => x.Filter != null).Select(x => x.Filter).ToList();
+                if (!filtersList.Any(x => x is PrivateFilter))
+                {
+                    filtersList.Add(new PrivateFilter { PrivateSetting = PrivateFilter.PrivateOption.NoPrivate });
+                }
+
+                return filtersList;
+            }
         }
 
-        private void UpdateFilters()
+        private void OnFilterChanged(object sender, EventArgs e)
         {
-            _filters.Clear();
-            foreach (var filterViewModel in FilterViewModels.Where(x => x.Filter != null))
-            {
-                _filters.Add(filterViewModel.Filter);
-            }
+            InitializeEmptyFilter();
+            RaiseFilterChanged();
         }
 
         #region Command: Remove filter

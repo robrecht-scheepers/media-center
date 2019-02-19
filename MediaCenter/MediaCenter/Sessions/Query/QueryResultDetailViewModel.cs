@@ -16,7 +16,7 @@ namespace MediaCenter.Sessions.Query
         private MediaItem _previousSelectedItem = null;
         private IRepository _repository;
 
-        public QueryResultDetailViewModel(ObservableCollection<MediaItem> items, IRepository repository, MediaItem selectedItem = null) : base(items, repository)
+        public QueryResultDetailViewModel(ObservableCollection<MediaItem> items, IRepository repository, MediaItem selectedItem = null) : base(repository)
         {
             _repository = repository;
             if (selectedItem != null && Items.Contains(selectedItem))

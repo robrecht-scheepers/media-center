@@ -19,7 +19,6 @@ namespace MediaCenter.Sessions.Query
     {
         public enum ViewMode { List, Detail, SlideShow }
     
-        private QueryResultViewModel _queryResultViewModel;
         private EditMediaInfoViewModel _editMediaInfoViewModel;
         private ViewMode _selectedViewMode;
         private RelayCommand _startSlideShowCommand;
@@ -35,7 +34,9 @@ namespace MediaCenter.Sessions.Query
         {
             _repository = repository;
             InitializeViewModesList();
-            InitializeFilterCollectionViewModel();
+            
+            FilterCollection = new FilterCollectionViewModel(_repository.Tags);
+            FilterCollection.FilterChanged += async (sender, args) => await UpdateMatchCount();
             UpdateMatchCount().Wait();
 
             QueryResultViewModel = new QueryResultViewModel(_repository);
@@ -44,13 +45,9 @@ namespace MediaCenter.Sessions.Query
 
         public override string Name => "View media";
 
-        public FilterCollectionViewModel Filters { get; private set; }
+        public FilterCollectionViewModel FilterCollection { get; }
 
-        private void InitializeFilterCollectionViewModel()
-        {
-            Filters = new FilterCollectionViewModel(_repository.Tags);
-            Filters.FilterChanged += async (sender, args) => await UpdateMatchCount();
-        }
+        public QueryResultViewModel QueryResultViewModel { get; }
 
         public int MatchCount
         {
@@ -59,13 +56,7 @@ namespace MediaCenter.Sessions.Query
         }
         private async Task UpdateMatchCount()
         {
-            var tmpFiltersList = Filters.FilterViewModels.Select(x => x.Filter).ToList();
-            if (!tmpFiltersList.Any(x => x is PrivateFilter))
-            {
-                tmpFiltersList.Add(new PrivateFilter { PrivateSetting = PrivateFilter.PrivateOption.NoPrivate });
-            }
-
-            MatchCount = await _repository.GetQueryCount(tmpFiltersList);
+            MatchCount = await _repository.GetQueryCount(FilterCollection.Filters);
         }
         
         public EditMediaInfoViewModel EditMediaInfoViewModel
@@ -85,11 +76,7 @@ namespace MediaCenter.Sessions.Query
             set => SetValue(ref _selectedViewMode, value);
         }
 
-        public QueryResultViewModel QueryResultViewModel
-        {
-            get => _queryResultViewModel;
-            set => SetValue(ref _queryResultViewModel, value);
-        }
+        
         
         private void QueryResultViewModelOnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
@@ -172,13 +159,7 @@ namespace MediaCenter.Sessions.Query
         public AsyncRelayCommand ExecuteQueryCommand => _executeQueryCommand ?? (_executeQueryCommand = new AsyncRelayCommand(ExecuteQuery));
         private async Task ExecuteQuery()
         {
-            var tmpFiltersList = Filters.FilterViewModels.Select(x => x.Filter).ToList();
-            if (!tmpFiltersList.Any(x => x is PrivateFilter))
-            {
-                tmpFiltersList.Add(new PrivateFilter { PrivateSetting = PrivateFilter.PrivateOption.NoPrivate });
-            }
-
-            await QueryResultViewModel.LoadQueryResult(await _repository.GetQueryItems(tmpFiltersList));
+            await QueryResultViewModel.LoadQueryResult(await _repository.GetQueryItems(FilterCollection.Filters));
         }
        
         
