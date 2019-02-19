@@ -16,6 +16,7 @@
         d:DataContext="{d:DesignInstance query:QuerySessionViewModel}">
     <Window.Resources>
         <ResourceDictionary>
+            <!--
             <DataTemplate DataType="{x:Type media:ImageItemViewModel}">
                 <Image Source="{Binding Path=MediaItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Image.LayoutTransform>
@@ -23,10 +24,11 @@
                     </Image.LayoutTransform>
                 </Image>
             </DataTemplate>
+          
             <DataTemplate DataType="{x:Type media:VideoItemViewModel}">
                 <media:VideoItemView HideControls="True"/>
             </DataTemplate>
-            
+              -->
         </ResourceDictionary>
     </Window.Resources>
     

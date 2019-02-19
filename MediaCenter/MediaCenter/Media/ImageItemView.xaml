@@ -7,17 +7,19 @@
              xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance Type=local:ImageItemViewModel}">
+             d:DataContext="{d:DesignInstance Type=local:MediaItemViewModel}">
     
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <controls:ZoomImage Grid.Row="0" Grid.RowSpan="2" ImageContent="{Binding Path=MediaItem.Content}" Rotation="{Binding Path=MediaItem.Rotation}" ShowSlider="False" />
+        <controls:ZoomImage Grid.Row="0" Grid.RowSpan="2" ImageContent="{Binding Path=ContentBytes}" Rotation="{Binding Path=MediaItem.Rotation}" ShowSlider="False" />
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <!--
             <controls:ImageButton ImageSource="/Resources/Icons/arrow-circle-315-rev.png" Width="32" Height="32" Command="{Binding RotateCounterclockwiseCommand}"/>
             <controls:ImageButton ImageSource="/Resources/Icons/arrow-circle-315.png" Width="32" Height="32" Command="{Binding RotateClockwiseCommand}"/>
+            -->
         </StackPanel>
     </Grid>
 </UserControl>

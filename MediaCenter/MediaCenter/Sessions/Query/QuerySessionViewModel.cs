@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MediaCenter.MVVM;
 using MediaCenter.Sessions.Filters;
@@ -17,8 +18,6 @@ namespace MediaCenter.Sessions.Query
 {
     public class QuerySessionViewModel : SessionViewModelBase
     {
-        public enum ViewMode { List, Detail, SlideShow }
-    
         private EditMediaInfoViewModel _editMediaInfoViewModel;
         private ViewMode _selectedViewMode;
         private RelayCommand _startSlideShowCommand;
@@ -29,6 +28,8 @@ namespace MediaCenter.Sessions.Query
         private AsyncRelayCommand _saveCurrentSelectionToFileCommand;
         private AsyncRelayCommand _executeQueryCommand;
         private readonly IRepository _repository;
+        private RelayCommand<MediaItem> _selectForDetailViewCommand;
+        private MediaItemViewModel _detailItem;
 
         public QuerySessionViewModel(IWindowService windowService, IRepository repository) : base(null, windowService)
         {
@@ -39,8 +40,13 @@ namespace MediaCenter.Sessions.Query
             FilterCollection.FilterChanged += async (sender, args) => await UpdateMatchCount();
             UpdateMatchCount().Wait();
 
+            DetailItem = new MediaItemViewModel(_repository);
+
             QueryResultViewModel = new QueryResultViewModel(_repository);
-            QueryResultViewModel.SelectionChanged += QueryResultViewModelOnSelectionChanged;
+            QueryResultViewModel.SelectionChanged += async (s,a) =>
+            {
+                await QueryResultViewModelOnSelectionChanged(s,a);
+            };
         }
 
         public override string Name => "View media";
@@ -48,6 +54,12 @@ namespace MediaCenter.Sessions.Query
         public FilterCollectionViewModel FilterCollection { get; }
 
         public QueryResultViewModel QueryResultViewModel { get; }
+
+        public MediaItemViewModel DetailItem
+        {
+            get => _detailItem;
+            set => SetValue(ref _detailItem, value);
+        }
 
         public int MatchCount
         {
@@ -73,19 +85,29 @@ namespace MediaCenter.Sessions.Query
         public ViewMode SelectedViewMode
         {
             get => _selectedViewMode;
-            set => SetValue(ref _selectedViewMode, value);
+            set => SetValue(ref _selectedViewMode, value, SelectedViewModeChanged);
         }
 
-        
-        
-        private void QueryResultViewModelOnSelectionChanged(object sender, SelectionChangedEventArgs args)
+        private void SelectedViewModeChanged()
+        {
+            if (SelectedViewMode == ViewMode.List)
+                DetailItem.Load(null).Wait();
+            else
+                DetailItem.Load(QueryResultViewModel.SelectedItems.FirstOrDefault()).Wait();
+        }
+
+        private async Task QueryResultViewModelOnSelectionChanged(object sender, EventArgs args)
         {
             EditMediaInfoViewModel = QueryResultViewModel.SelectedItems.Count > 0
                 ? new EditMediaInfoViewModel(QueryResultViewModel.SelectedItems.ToList(), _repository, true)
-                : null;            
+                : null;
+
+            if (SelectedViewMode != ViewMode.List)
+                await DetailItem.Load(QueryResultViewModel.SelectedItems.FirstOrDefault());
         }
 
-        private RelayCommand<MediaItem> _selectForDetailViewCommand;
+
+
         public RelayCommand<MediaItem> SelectForDetailViewCommand =>
             _selectForDetailViewCommand ??
             (_selectForDetailViewCommand = new RelayCommand<MediaItem>(SelectForDetailView));

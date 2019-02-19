@@ -77,8 +77,39 @@
 
         <controls:ImageToggleButton Grid.Column="1" x:Name="ShowFilter" Style="{StaticResource ColumnToggleButtonStyle}" Margin="0 5" IsChecked="True"
                                      CheckedImage="/Resources/Icons/control-180.png" UncheckedImage="/Resources/Icons/control.png"/>
-        
-        <ContentControl Grid.Column="2" Content="{Binding QueryResultViewModel}"/>
+
+        <ContentControl Grid.Column="2" Content="{Binding}">
+            <ContentControl.Style>
+                <Style TargetType="ContentControl">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedViewMode}">
+                            <DataTrigger.Value>
+                                <local:ViewMode>Detail</local:ViewMode>
+                            </DataTrigger.Value>
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate DataType="{x:Type local:QuerySessionViewModel}">
+                                        <local:QueryResultDetailView/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectedViewMode}">
+                            <DataTrigger.Value>
+                                <local:ViewMode>List</local:ViewMode>
+                            </DataTrigger.Value>
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate DataType="{x:Type local:QuerySessionViewModel}">
+                                        <local:QueryResultListView/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
 
         <controls:ImageToggleButton Grid.Column="3" x:Name="ShowEdit" Style="{StaticResource ColumnToggleButtonStyle}"  Margin="5" IsChecked="True"
                                      CheckedImage="/Resources/Icons/control.png" UncheckedImage="/Resources/Icons/control-180.png"/>

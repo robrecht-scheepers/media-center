@@ -72,8 +72,8 @@ namespace MediaCenter.Sessions.Slideshow
                 _timer.Start();
             else // video
             {
-                ((VideoItemViewModel)SelectedItemViewModel).VideoPlayFinished += SelectedVideoPlayFinished;
-                ((VideoItemViewModel)SelectedItemViewModel).VideoPlayState = PlayState.Playing;
+                //((VideoItemViewModel)SelectedItemViewModel).VideoPlayFinished += SelectedVideoPlayFinished;
+                //((VideoItemViewModel)SelectedItemViewModel).VideoPlayState = PlayState.Playing;
             }
 
             Status = PlayState.Playing;
@@ -87,8 +87,8 @@ namespace MediaCenter.Sessions.Slideshow
             {
                 if (SelectedItemViewModel.MediaItem.MediaType == MediaType.Image)
                     _timer.Stop();
-                else // video
-                    ((VideoItemViewModel) SelectedItemViewModel).VideoPlayState = PlayState.Paused;
+                //else // video
+                //    ((VideoItemViewModel) SelectedItemViewModel).VideoPlayState = PlayState.Paused;
 
                 Status = PlayState.Paused;
             }
@@ -108,8 +108,8 @@ namespace MediaCenter.Sessions.Slideshow
                 case PlayState.Playing:
                 case PlayState.Paused:
                     Status = PlayState.Stopped;
-                    if (SelectedItemViewModel.MediaItem.MediaType == MediaType.Video)
-                        ((VideoItemViewModel)SelectedItemViewModel).VideoPlayState = PlayState.Stopped;
+                    //if (SelectedItemViewModel.MediaItem.MediaType == MediaType.Video)
+                    //    ((VideoItemViewModel)SelectedItemViewModel).VideoPlayState = PlayState.Stopped;
                     _timer.Stop();
                     _timer.Dispose();
                     break;
@@ -124,7 +124,7 @@ namespace MediaCenter.Sessions.Slideshow
         {
             if (SelectedItem != null && SelectedItem.MediaType == MediaType.Video)
             {
-                ((VideoItemViewModel)SelectedItemViewModel).VideoPlayFinished -= SelectedVideoPlayFinished;
+                //((VideoItemViewModel)SelectedItemViewModel).VideoPlayFinished -= SelectedVideoPlayFinished;
             }
             if (SelectedItem == Items.Last())
             {
@@ -136,7 +136,7 @@ namespace MediaCenter.Sessions.Slideshow
             SelectNextItem();
             if (SelectedItem.MediaType == MediaType.Video)
             {
-                ((VideoItemViewModel)SelectedItemViewModel).VideoPlayFinished += SelectedVideoPlayFinished;
+                //((VideoItemViewModel)SelectedItemViewModel).VideoPlayFinished += SelectedVideoPlayFinished;
             }
             else
             {

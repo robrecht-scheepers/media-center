@@ -10,12 +10,12 @@
              xmlns:behaviors="clr-namespace:MediaCenter.WPF.Behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance local:QueryResultListViewModel}">
+             d:DataContext="{d:DesignInstance local:QuerySessionViewModel}">
     <Grid>
-        <ListBox Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding Items}" 
+        <ListBox Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding QueryResultViewModel.Items}" 
                  SelectionMode="Extended" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
             <interactivity:Interaction.Behaviors>
-                <behaviors:BindableListboxSelectionBehavior SelectedItems="{Binding SelectedItems}"/>
+                <behaviors:BindableListboxSelectionBehavior SelectedItems="{Binding QueryResultViewModel.SelectedItems}"/>
             </interactivity:Interaction.Behaviors>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -27,7 +27,7 @@
                     <media:ThumbnailView DataContext="{Binding}" Margin="5">
                         <media:ThumbnailView.InputBindings>
                             <MouseBinding MouseAction="LeftDoubleClick" 
-                                          Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:QuerySessionView}, Path=DataContext.SelectForDetailViewCommand}"
+                                          Command="{Binding SelectForDetailViewCommand}"
                                           CommandParameter="{Binding}"/>
                         </media:ThumbnailView.InputBindings>
                     </media:ThumbnailView>

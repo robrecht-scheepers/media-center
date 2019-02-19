@@ -130,7 +130,7 @@ namespace MediaCenter.Repository
             return Path.Combine(_thumbnailFolderPath, item.Name + "_T.jpg");
         }
 
-        private Uri GetContentUri(MediaItem item)
+        public Uri GetContentUri(MediaItem item)
         {
             return new Uri(GetMediaPath(item));
         }
@@ -155,7 +155,7 @@ namespace MediaCenter.Repository
             return await IOHelper.OpenBytes(GetThumbnailPath(item));
         }
 
-        public async Task<byte[]> GetFullImage(MediaItem item, IEnumerable<MediaItem> prefetch)
+        public async Task<byte[]> GetFullImage(MediaItem item, IEnumerable<MediaItem> prefetch = null)
         {
             Task<byte[]> imageLoadingTask = null;
             byte[] result = null;
@@ -175,47 +175,47 @@ namespace MediaCenter.Repository
                     imageLoadingTask = IOHelper.OpenBytes(imagePath);
             }
 
-            // clean up buffer and decide which images need to be fetched
-            var prefetchList = prefetch.ToList();
-            var deleteFromBufferList = _buffer.Keys.Where(x => x != item.Name && !prefetchList.Select(y => y.Name).Contains(x));
-            foreach (var deleteItem in deleteFromBufferList)
-            {
-                _buffer.TryRemove(deleteItem, out var value);
-            }
-            var itemsToBeFetched = prefetchList.Where(x => !_buffer.ContainsKey(x.Name)).ToList();
+            //// clean up buffer and decide which images need to be fetched
+            //var prefetchList = prefetch.ToList();
+            //var deleteFromBufferList = _buffer.Keys.Where(x => x != item.Name && !prefetchList.Select(y => y.Name).Contains(x));
+            //foreach (var deleteItem in deleteFromBufferList)
+            //{
+            //    _buffer.TryRemove(deleteItem, out var value);
+            //}
+            //var itemsToBeFetched = prefetchList.Where(x => !_buffer.ContainsKey(x.Name)).ToList();
 
-            // start prefetch sequence
-            if (itemsToBeFetched.Any())
-            {
-                // cancel any prefetch action still in progress
-                if (_prefetchInProgress)
-                {
-                    _bufferCancellationTokenSource?.Cancel();
-                }
+            //// start prefetch sequence
+            //if (itemsToBeFetched.Any())
+            //{
+            //    // cancel any prefetch action still in progress
+            //    if (_prefetchInProgress)
+            //    {
+            //        _bufferCancellationTokenSource?.Cancel();
+            //    }
 
-                var prefetchSequence = Observable.Create<KeyValuePair<string, byte[]>>(
-                async (observer, token) =>
-                {
-                    _prefetchInProgress = true;
-                    foreach (var bufferItem in itemsToBeFetched)
-                    {
-                        // before fetching each item, check if cancellation was requested
-                        token.ThrowIfCancellationRequested();
-                        var bytes = await IOHelper.OpenBytes(GetMediaPath(bufferItem));
-                        token.ThrowIfCancellationRequested();
-                        observer.OnNext(new KeyValuePair<string, byte[]>(bufferItem.Name, bytes));
-                    }
-                });
-                _bufferCancellationTokenSource = new CancellationTokenSource();
-                prefetchSequence.Subscribe(
-                    pair =>
-                    {
-                        _buffer[pair.Key] = pair.Value;
-                        Debug.WriteLine($"{DateTime.Now:HH:mm:ss tt ss.fff} | Prefetched { pair.Key}");
-                    },
-                    () => { _prefetchInProgress = false; },
-                    _bufferCancellationTokenSource.Token);
-            }
+            //    var prefetchSequence = Observable.Create<KeyValuePair<string, byte[]>>(
+            //    async (observer, token) =>
+            //    {
+            //        _prefetchInProgress = true;
+            //        foreach (var bufferItem in itemsToBeFetched)
+            //        {
+            //            // before fetching each item, check if cancellation was requested
+            //            token.ThrowIfCancellationRequested();
+            //            var bytes = await IOHelper.OpenBytes(GetMediaPath(bufferItem));
+            //            token.ThrowIfCancellationRequested();
+            //            observer.OnNext(new KeyValuePair<string, byte[]>(bufferItem.Name, bytes));
+            //        }
+            //    });
+            //    _bufferCancellationTokenSource = new CancellationTokenSource();
+            //    prefetchSequence.Subscribe(
+            //        pair =>
+            //        {
+            //            _buffer[pair.Key] = pair.Value;
+            //            Debug.WriteLine($"{DateTime.Now:HH:mm:ss tt ss.fff} | Prefetched { pair.Key}");
+            //        },
+            //        () => { _prefetchInProgress = false; },
+            //        _bufferCancellationTokenSource.Token);
+            //}
 
             if (imageLoadingTask != null)
                 result = await imageLoadingTask;
@@ -250,13 +250,7 @@ namespace MediaCenter.Repository
 
         public async Task<List<MediaItem>> GetQueryItems(IEnumerable<Filter> filters)
         {
-            var items = await _database.GetFilteredItemList(filters);
-            foreach (var mediaItem in items)
-            {
-                mediaItem.ContentUri = GetContentUri(mediaItem);
-            }
-
-            return items;
+            return await _database.GetFilteredItemList(filters); ;
         }
 
         public async Task<int> GetQueryCount(IEnumerable<Filter> filters)

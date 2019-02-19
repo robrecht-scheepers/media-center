@@ -55,7 +55,7 @@ namespace MediaCenter.Sessions.Query
             //    _previousSelectedItem == null ? new List<MediaItem>() : new List<MediaItem>{_previousSelectedItem}, 
             //    SelectedItem == null ? new List<MediaItem>() : new List<MediaItem>{SelectedItem});
 
-            SelectedItemViewModel = CreateItemViewModel(SelectedItem);
+            //SelectedItemViewModel = CreateItemViewModel(SelectedItem);
 
             // fetch the new content
             if (SelectedItem != null && SelectedItem.MediaType == MediaType.Image)
@@ -91,20 +91,20 @@ namespace MediaCenter.Sessions.Query
                 item.Content = await _repository.GetFullImage(item, prefetchList);
         }
 
-        private MediaItemViewModel CreateItemViewModel(MediaItem selectedItem)
-        {
-            if (selectedItem == null)
-                return null;
-            switch (selectedItem.MediaType)
-            {
-                case MediaType.Image:
-                    return new ImageItemViewModel(selectedItem);
-                case MediaType.Video:
-                    return new VideoItemViewModel(selectedItem);
-                default:
-                    return null;
-            }
-        }
+        //private MediaItemViewModel CreateItemViewModel(MediaItem selectedItem)
+        //{
+        //    if (selectedItem == null)
+        //        return null;
+        //    switch (selectedItem.MediaType)
+        //    {
+        //        case MediaType.Image:
+        //            return new ImageItemViewModel(selectedItem);
+        //        case MediaType.Video:
+        //            return new VideoItemViewModel(selectedItem);
+        //        default:
+        //            return null;
+        //    }
+        //}
 
         #region Command: Select next item
         private RelayCommand _selectNextItemCommand;

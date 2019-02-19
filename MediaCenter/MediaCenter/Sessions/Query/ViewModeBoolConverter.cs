@@ -14,8 +14,8 @@ namespace MediaCenter.Sessions.Query
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var mode = (QuerySessionViewModel.ViewMode) value;
-            return Invert ? mode == QuerySessionViewModel.ViewMode.List : mode == QuerySessionViewModel.ViewMode.Detail;
+            var mode = (ViewMode) value;
+            return Invert ? mode == ViewMode.List : mode == ViewMode.Detail;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -23,9 +23,9 @@ namespace MediaCenter.Sessions.Query
             var input = (bool) value;
 
             if(Invert)
-                return input ? QuerySessionViewModel.ViewMode.List : QuerySessionViewModel.ViewMode.Detail;
+                return input ? ViewMode.List : ViewMode.Detail;
 
-            return input ? QuerySessionViewModel.ViewMode.Detail : QuerySessionViewModel.ViewMode.List;
+            return input ? ViewMode.Detail : ViewMode.List;
         }
 
         public bool Invert { get; set; }

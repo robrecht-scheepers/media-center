@@ -28,12 +28,18 @@ namespace MediaCenter.Sessions.Query
 
         public BatchObservableCollection<MediaItem> SelectedItems { get; }
 
-        public event SelectionChangedEventHandler SelectionChanged;
+        public MediaItem SelectedItem
+        {
+            get => SelectedItems.FirstOrDefault();
+            set => SelectedItems.ReplaceAllItems(new List<MediaItem>{value});
+        } 
+
+        public event EventHandler SelectionChanged;
 
         protected void SelectedItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
         {
-            SelectionChanged?.Invoke(this, 
-                new SelectionChangedEventArgs(args.OldItems.Cast<MediaItem>().ToList(), args.NewItems.Cast<MediaItem>().ToList()));
+            SelectionChanged?.Invoke(this, EventArgs.Empty);
+            RaisePropertyChanged("SelectedItem");
         }
 
         public async Task LoadQueryResult(List<MediaItem> queryResult)

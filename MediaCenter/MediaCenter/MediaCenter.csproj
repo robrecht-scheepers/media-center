@@ -135,6 +135,7 @@
     <Compile Include="Sessions\Filters\FilterView.xaml.cs">
       <DependentUpon>FilterView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Sessions\Query\ViewMode.cs" />
     <Compile Include="Sessions\Query\ViewModeBoolConverter.cs" />
     <Compile Include="Sessions\SessionTabViewModel.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowControls.xaml.cs">
@@ -191,7 +192,6 @@
     <Compile Include="MVVM\RelayCommandBase.cs" />
     <Compile Include="Media\MediaItem.cs" />
     <Compile Include="Media\MediaType.cs" />
-    <Compile Include="Repository\RemoteRepository.cs" />
     <Compile Include="Repository\RepositoryStatusView.xaml.cs">
       <DependentUpon>RepositoryStatusView.xaml</DependentUpon>
     </Compile>
