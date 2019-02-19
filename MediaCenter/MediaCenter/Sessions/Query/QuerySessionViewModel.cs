@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using MediaCenter.MVVM;
 using MediaCenter.Sessions.Filters;
@@ -11,7 +10,6 @@ using MediaCenter.Repository;
 using MessageBox = System.Windows.MessageBox;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using MediaCenter.Helpers;
 
@@ -31,7 +29,7 @@ namespace MediaCenter.Sessions.Query
         private AsyncRelayCommand _deleteCurrentSelectionCommand;
         private AsyncRelayCommand _saveCurrentSelectionToFileCommand;
         private AsyncRelayCommand _executeQueryCommand;
-        public readonly IRepository _repository;
+        private readonly IRepository _repository;
 
         public QuerySessionViewModel(IWindowService windowService, IRepository repository) : base(null, windowService)
         {
@@ -39,16 +37,14 @@ namespace MediaCenter.Sessions.Query
             InitializeViewModesList();
             InitializeFilterCollectionViewModel();
             UpdateMatchCount().Wait();
+
+            QueryResultViewModel = new QueryResultViewModel(_repository);
+            QueryResultViewModel.SelectionChanged += QueryResultViewModelOnSelectionChanged;
         }
 
         public override string Name => "View media";
 
-        //public QuerySession QuerySession => (QuerySession) Session;
-        
-
         public FilterCollectionViewModel Filters { get; private set; }
-
-        //public ObservableCollection<MediaItem> QueryResult { get; private set; }
 
         private void InitializeFilterCollectionViewModel()
         {
@@ -94,35 +90,7 @@ namespace MediaCenter.Sessions.Query
             get => _queryResultViewModel;
             set => SetValue(ref _queryResultViewModel, value);
         }
-
-        //private void InitializeQueryResultViewModel()
-        //{
-        //    MediaItem selectedElement = null;
-
-        //    if (QueryResultViewModel != null)
-        //    {
-        //        QueryResultViewModel.SelectionChanged -= QueryResultViewModelOnSelectionChanged;
-        //        selectedElement = QueryResultViewModel?.SelectedItems.FirstOrDefault();
-        //    }
-
-        //    switch (SelectedViewMode)
-        //    {
-        //        case ViewMode.List:
-        //            QueryResultViewModel = new QueryResultListViewModel(QueryResult, selectedElement);
-        //            break;
-        //        case ViewMode.Detail:
-        //            QueryResultViewModel =
-        //                new QueryResultDetailViewModel(QueryResult, _repository, selectedElement);
-        //            break;
-        //        case ViewMode.SlideShow:
-        //            QueryResultViewModel = new SlideShowViewModel(QueryResult, _repository, selectedElement);
-        //            break;
-        //        default:
-        //            throw new ArgumentOutOfRangeException();
-        //    }
-
-        //    QueryResultViewModel.SelectionChanged += QueryResultViewModelOnSelectionChanged;
-        //}
+        
         private void QueryResultViewModelOnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             EditMediaInfoViewModel = QueryResultViewModel.SelectedItems.Count > 0

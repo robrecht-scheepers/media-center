@@ -16,10 +16,10 @@ namespace MediaCenter.Sessions.Query
         private RelayCommand _selectNextItemCommand;
         private RelayCommand _selectPreviousItemCommand;
 
-        public QueryResultViewModel(ObservableCollection<MediaItem> items, IRepository repository)
+        public QueryResultViewModel(IRepository repository)
         {
-            Items = items;
             _repository = repository;
+            Items = new ObservableCollection<MediaItem>();
             SelectedItems = new BatchObservableCollection<MediaItem>();
             SelectedItems.CollectionChanged += SelectedItemsOnCollectionChanged;
         }
