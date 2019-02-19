@@ -9,12 +9,12 @@ namespace MediaCenter.Sessions.Filters
     public class FilterCollectionViewModel : PropertyChangedNotifier
     {
         private IEnumerable<string> _tags;
-        private List<Filter> _filters;
+        private readonly List<Filter> _filters;
 
-        public FilterCollectionViewModel(List<Filter> filters, IEnumerable<string> tags)
+        public FilterCollectionViewModel(IEnumerable<string> tags)
         {
             _tags = tags;
-            _filters = filters;
+            _filters = new List<Filter>();
             InitializeFilterViewModels();
         }
 

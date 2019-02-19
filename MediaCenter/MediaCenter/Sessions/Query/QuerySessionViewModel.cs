@@ -11,6 +11,7 @@ using MediaCenter.Repository;
 using MessageBox = System.Windows.MessageBox;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using MediaCenter.Helpers;
 
@@ -30,9 +31,11 @@ namespace MediaCenter.Sessions.Query
         private AsyncRelayCommand _deleteCurrentSelectionCommand;
         private AsyncRelayCommand _saveCurrentSelectionToFileCommand;
         private AsyncRelayCommand _executeQueryCommand;
+        public readonly IRepository _repository;
 
-        public QuerySessionViewModel(SessionBase session, IWindowService windowService) : base(session, windowService)
+        public QuerySessionViewModel(IWindowService windowService, IRepository repository) : base(null, windowService)
         {
+            _repository = repository;
             InitializeViewModesList();
             InitializeFilterCollectionViewModel();
             UpdateMatchCount().Wait();
@@ -40,14 +43,17 @@ namespace MediaCenter.Sessions.Query
 
         public override string Name => "View media";
 
-        public QuerySession QuerySession => (QuerySession) Session;
+        //public QuerySession QuerySession => (QuerySession) Session;
+        
 
-        public IRepository Repository => Session.Repository;
-        public FilterCollectionViewModel FilterCollectionViewModel { get; private set; }
+        public FilterCollectionViewModel Filters { get; private set; }
+
+        public ObservableCollection<MediaItem> QueryResult { get; private set; }
+
         private void InitializeFilterCollectionViewModel()
         {
-            FilterCollectionViewModel = new FilterCollectionViewModel(QuerySession.Filters, Repository.Tags);
-            FilterCollectionViewModel.FilterChanged += async (sender, args) => await UpdateMatchCount();
+            Filters = new FilterCollectionViewModel(_repository.Tags);
+            Filters.FilterChanged += async (sender, args) => await UpdateMatchCount();
         }
 
         public int MatchCount
@@ -57,7 +63,13 @@ namespace MediaCenter.Sessions.Query
         }
         private async Task UpdateMatchCount()
         {
-            MatchCount = await QuerySession.CalculateMatchCount();
+            var tmpFiltersList = Filters.FilterViewModels.Select(x => x.Filter).ToList();
+            if (!tmpFiltersList.Any(x => x is PrivateFilter))
+            {
+                tmpFiltersList.Add(new PrivateFilter { PrivateSetting = PrivateFilter.PrivateOption.NoPrivate });
+            }
+
+            MatchCount = await _repository.GetQueryCount(tmpFiltersList);
         }
         
         public EditMediaInfoViewModel EditMediaInfoViewModel
@@ -96,14 +108,14 @@ namespace MediaCenter.Sessions.Query
             switch (SelectedViewMode)
             {
                 case ViewMode.List:
-                    QueryResultViewModel = new QueryResultListViewModel(QuerySession.QueryResult, selectedElement);
+                    QueryResultViewModel = new QueryResultListViewModel(QueryResult, selectedElement);
                     break;
                 case ViewMode.Detail:
                     QueryResultViewModel =
-                        new QueryResultDetailViewModel(QuerySession.QueryResult, Repository, selectedElement);
+                        new QueryResultDetailViewModel(QueryResult, _repository, selectedElement);
                     break;
                 case ViewMode.SlideShow:
-                    QueryResultViewModel = new SlideShowViewModel(QuerySession.QueryResult, Repository, selectedElement);
+                    QueryResultViewModel = new SlideShowViewModel(QueryResult, _repository, selectedElement);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -114,7 +126,7 @@ namespace MediaCenter.Sessions.Query
         private void QueryResultViewModelOnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             EditMediaInfoViewModel = QueryResultViewModel.SelectedItems.Count > 0
-                ? new EditMediaInfoViewModel(QueryResultViewModel.SelectedItems.ToList(), Repository,true)
+                ? new EditMediaInfoViewModel(QueryResultViewModel.SelectedItems.ToList(), _repository, true)
                 : null;            
         }
 
@@ -136,7 +148,8 @@ namespace MediaCenter.Sessions.Query
             {
                 foreach (var item in QueryResultViewModel.SelectedItems.ToList())
                 {
-                    await QuerySession.DeleteItem(item);
+                    QueryResult.Remove(item);
+                    await _repository.DeleteItem(item);
                 }    
             }
         }
@@ -164,7 +177,7 @@ namespace MediaCenter.Sessions.Query
                 if (!dialogResult.HasValue || !dialogResult.Value || string.IsNullOrEmpty(dialog.FileName))
                     return;
                 
-                await Repository.SaveContentToFile(item, dialog.FileName);
+                await _repository.SaveContentToFile(item, dialog.FileName);
                 message = $"File {Path.GetFileName(dialog.FileName)} was saved successfully.";
             }
             else
@@ -177,7 +190,7 @@ namespace MediaCenter.Sessions.Query
                     return;
 
                 var selectedFolder = dialog.SelectedPath;
-                await Repository.SaveMultipleContentToFolder(QueryResultViewModel.SelectedItems.ToList(), selectedFolder);
+                await _repository.SaveMultipleContentToFolder(QueryResultViewModel.SelectedItems.ToList(), selectedFolder);
                 message = $"{QueryResultViewModel.SelectedItems.Count} files were saved successfully";
             }
 
@@ -191,11 +204,25 @@ namespace MediaCenter.Sessions.Query
         public AsyncRelayCommand ExecuteQueryCommand => _executeQueryCommand ?? (_executeQueryCommand = new AsyncRelayCommand(ExecuteQuery));
         private async Task ExecuteQuery()
         {
-            await QuerySession.ExecuteQuery();
-            InitializeQueryResultViewModel();
-            foreach (var item in QuerySession.QueryResult)
+            var tmpFiltersList = Filters.FilterViewModels.Select(x => x.Filter).ToList();
+            if (!tmpFiltersList.Any(x => x is PrivateFilter))
             {
-                item.Thumbnail = await Repository.GetThumbnail(item);
+                tmpFiltersList.Add(new PrivateFilter { PrivateSetting = PrivateFilter.PrivateOption.NoPrivate });
+            }
+
+            var items = await _repository.GetQueryItems(tmpFiltersList);
+            items.Sort((x, y) => DateTime.Compare(x.DateTaken, y.DateTaken));
+
+            QueryResult.Clear();
+            foreach (var item in items)
+            {
+                QueryResult.Add(item);
+            }
+            
+            InitializeQueryResultViewModel();
+            foreach (var item in QueryResult)
+            {
+                item.Thumbnail = await _repository.GetThumbnail(item);
             }
         }
        

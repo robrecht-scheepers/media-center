@@ -60,7 +60,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollectionViewModel}" Margin="{StaticResource CommonMargin}"/>
+            <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=Filters}" Margin="{StaticResource CommonMargin}"/>
             <StackPanel Grid.Row="1" Orientation="Vertical">
                 <controls:TextButton Text="{Binding MatchCount, StringFormat='Load {0} matching items'}" Command="{Binding ExecuteQueryCommand}"
                                      Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}" Background="{StaticResource MainWindowBackground}"
