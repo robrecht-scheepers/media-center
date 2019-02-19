@@ -1,27 +1,108 @@
-﻿using MediaCenter.Media;
+﻿using System;
+using MediaCenter.Media;
 using MediaCenter.MVVM;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Threading.Tasks;
+using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions.Query
 {
-    public abstract class QueryResultViewModel : PropertyChangedNotifier
+    public class QueryResultViewModel : PropertyChangedNotifier
     {
-        public QueryResultViewModel(ObservableCollection<MediaItem> queryResultItems)
+        private readonly IRepository _repository;
+        private RelayCommand _selectNextItemCommand;
+        private RelayCommand _selectPreviousItemCommand;
+
+        public QueryResultViewModel(ObservableCollection<MediaItem> items, IRepository repository)
         {
-            QueryResultItems = queryResultItems;
+            Items = items;
+            _repository = repository;
             SelectedItems = new BatchObservableCollection<MediaItem>();
+            SelectedItems.CollectionChanged += SelectedItemsOnCollectionChanged;
         }
 
-        public ObservableCollection<MediaItem> QueryResultItems { get; }
+        public ObservableCollection<MediaItem> Items { get; }
 
         public BatchObservableCollection<MediaItem> SelectedItems { get; }
 
         public event SelectionChangedEventHandler SelectionChanged;
 
-        protected void RaiseSelectionChanged(List<MediaItem> itemsRemoved, List<MediaItem> itemsAdded)
+        protected void SelectedItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
         {
-            SelectionChanged?.Invoke(this, new SelectionChangedEventArgs(itemsRemoved, itemsAdded));
+            SelectionChanged?.Invoke(this, 
+                new SelectionChangedEventArgs(args.OldItems.Cast<MediaItem>().ToList(), args.NewItems.Cast<MediaItem>().ToList()));
         }
+
+        public async Task LoadQueryResult(List<MediaItem> queryResult)
+        {
+            SelectedItems.ReplaceAllItems(new List<MediaItem>());
+            Items.Clear();
+
+            queryResult.Sort((x, y) => DateTime.Compare(x.DateTaken, y.DateTaken));
+            foreach (var mediaItem in queryResult)
+            {
+                Items.Add(mediaItem);
+            }
+
+            foreach (var mediaItem in Items)
+            {
+                mediaItem.Thumbnail = await _repository.GetThumbnail(mediaItem);
+            }
+        }
+
+        public void RemoveItem(MediaItem item)
+        {
+            SelectedItems.Remove(item);
+            Items.Remove(item);
+        }
+
+        #region Command: Select next item
+        public RelayCommand SelectNextItemCommand
+            => _selectNextItemCommand ?? (_selectNextItemCommand = new RelayCommand(SelectNextItem, CanExecuteSelectNextItem));
+        protected void SelectNextItem()
+        {
+            if(!Items.Any())
+                return;
+
+            var nextIndex = SelectedItems.Any()
+                ? Items.IndexOf(SelectedItems.First()) + 1
+                : 0;
+
+            if(nextIndex >= Items.Count)
+                return;
+            
+            SelectedItems.ReplaceAllItems(new List<MediaItem>{Items[nextIndex]});
+        }
+        private bool CanExecuteSelectNextItem()
+        {
+            return Items.Any() 
+                   && (!SelectedItems.Any() || Items.IndexOf(SelectedItems.First()) + 1 < Items.Count);
+        }
+        #endregion
+
+        #region Command: Select previous item
+        public RelayCommand SelectPreviousItemCommand
+            => _selectPreviousItemCommand ?? (_selectPreviousItemCommand = new RelayCommand(SelectPreviousItem, CanExecuteSelectPreviousItem));
+        protected void SelectPreviousItem()
+        {
+            if (!Items.Any() || !SelectedItems.Any())
+                return;
+
+            var nextIndex = Items.IndexOf(SelectedItems.First()) - 1;
+                
+            if (nextIndex < 0)
+                return;
+
+            SelectedItems.ReplaceAllItems(new List<MediaItem> { Items[nextIndex] });
+        }
+        private bool CanExecuteSelectPreviousItem()
+        {
+            return Items.Any() && SelectedItems.Any() && Items.IndexOf(SelectedItems.First()) > 0;
+        }
+        #endregion
+
     }
 }

@@ -16,13 +16,13 @@ namespace MediaCenter.Sessions.Query
         private MediaItem _previousSelectedItem = null;
         private IRepository _repository;
 
-        public QueryResultDetailViewModel(ObservableCollection<MediaItem> queryResultItems, IRepository repository, MediaItem selectedItem = null) : base(queryResultItems)
+        public QueryResultDetailViewModel(ObservableCollection<MediaItem> items, IRepository repository, MediaItem selectedItem = null) : base(items, repository)
         {
             _repository = repository;
-            if (selectedItem != null && QueryResultItems.Contains(selectedItem))
+            if (selectedItem != null && Items.Contains(selectedItem))
                 SelectedItem = selectedItem;
-            else if (QueryResultItems.Any())
-                SelectedItem = QueryResultItems.First();
+            else if (Items.Any())
+                SelectedItem = Items.First();
         }
 
         private MediaItem _selectedItem;
@@ -51,9 +51,9 @@ namespace MediaCenter.Sessions.Query
             if(SelectedItem != null)
                 SelectedItems.Add(SelectedItem);
 
-            RaiseSelectionChanged(
-                _previousSelectedItem == null ? new List<MediaItem>() : new List<MediaItem>{_previousSelectedItem}, 
-                SelectedItem == null ? new List<MediaItem>() : new List<MediaItem>{SelectedItem});
+            //RaiseSelectionChanged(
+            //    _previousSelectedItem == null ? new List<MediaItem>() : new List<MediaItem>{_previousSelectedItem}, 
+            //    SelectedItem == null ? new List<MediaItem>() : new List<MediaItem>{SelectedItem});
 
             SelectedItemViewModel = CreateItemViewModel(SelectedItem);
 
@@ -70,22 +70,22 @@ namespace MediaCenter.Sessions.Query
         {
             // decide other prefetch items
             var prefetchList = new List<MediaItem>();
-            var index = QueryResultItems.IndexOf(item);
+            var index = Items.IndexOf(item);
             var prefetchCount = 0;
-            if (index < QueryResultItems.Count - 1)
+            if (index < Items.Count - 1)
             {
-                for (int i = 1; index + i < QueryResultItems.Count && prefetchCount < PrefetchBufferSize; i++)
+                for (int i = 1; index + i < Items.Count && prefetchCount < PrefetchBufferSize; i++)
                 {
-                    if (QueryResultItems[index + i].MediaType == MediaType.Image)
+                    if (Items[index + i].MediaType == MediaType.Image)
                     {
-                        prefetchList.Add(QueryResultItems[index + i]);
+                        prefetchList.Add(Items[index + i]);
                         prefetchCount++;
                     }
                 }
             }
-            if (index > 0 && QueryResultItems[index - 1].MediaType == MediaType.Image)
+            if (index > 0 && Items[index - 1].MediaType == MediaType.Image)
             {
-                prefetchList.Add(QueryResultItems[index - 1]);
+                prefetchList.Add(Items[index - 1]);
             }
             if (item.MediaType == MediaType.Image)
                 item.Content = await _repository.GetFullImage(item, prefetchList);
@@ -113,13 +113,13 @@ namespace MediaCenter.Sessions.Query
         protected void SelectNextItem()
         {
             if (CanExecuteSelectNextItem())
-                SelectedItem = QueryResultItems[QueryResultItems.IndexOf(SelectedItem) + 1];
+                SelectedItem = Items[Items.IndexOf(SelectedItem) + 1];
         }
         private bool CanExecuteSelectNextItem()
         {
             if (SelectedItem == null)
                 return false;
-            return QueryResultItems.IndexOf(SelectedItem) < QueryResultItems.Count - 1;
+            return Items.IndexOf(SelectedItem) < Items.Count - 1;
         }
         #endregion
 
@@ -129,13 +129,13 @@ namespace MediaCenter.Sessions.Query
             => _selectPreviousItemCommand ?? (_selectPreviousItemCommand = new RelayCommand(SelectPreviousItem, CanExecuteSelectPreviousItem));
         protected void SelectPreviousItem()
         {
-            SelectedItem = QueryResultItems[QueryResultItems.IndexOf(SelectedItem) - 1];
+            SelectedItem = Items[Items.IndexOf(SelectedItem) - 1];
         }
         private bool CanExecuteSelectPreviousItem()
         {
             if (SelectedItem == null)
                 return false;
-            return QueryResultItems.IndexOf(SelectedItem) > 0;
+            return Items.IndexOf(SelectedItem) > 0;
         }
         #endregion
 

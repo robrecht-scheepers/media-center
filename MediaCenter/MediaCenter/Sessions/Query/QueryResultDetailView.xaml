@@ -36,7 +36,7 @@
         <controls:ImageToggleButton Grid.Row="1" x:Name="ShowList" Style="{StaticResource RowToggleButtonStyle}" IsChecked="True"
                                     CheckedImage="/Resources/Icons/control-90.png" UncheckedImage="/Resources/Icons/control-270.png" />
 
-        <ListBox Grid.Row="2" Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding QueryResultItems}" 
+        <ListBox Grid.Row="2" Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding Items}" 
                  SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
             <interactivity:Interaction.Behaviors>
                 <behaviors:ScrollIntoViewBehavior/>

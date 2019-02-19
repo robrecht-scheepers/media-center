@@ -12,7 +12,7 @@
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:QueryResultListViewModel}">
     <Grid>
-        <ListBox Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding QueryResultItems}" 
+        <ListBox Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding Items}" 
                  SelectionMode="Extended" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
             <interactivity:Interaction.Behaviors>
                 <behaviors:BindableListboxSelectionBehavior SelectedItems="{Binding SelectedItems}"/>

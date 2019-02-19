@@ -14,7 +14,7 @@ namespace MediaCenter.Sessions.Slideshow
     {
         private Timer _timer;
         
-        public SlideShowViewModel(ObservableCollection<MediaItem> queryResultItems, IRepository repository, MediaItem selectedItem) : base(queryResultItems, repository, selectedItem)
+        public SlideShowViewModel(ObservableCollection<MediaItem> items, IRepository repository, MediaItem selectedItem) : base(items, repository, selectedItem)
         {
             Interval = Properties.Settings.Default.SlideshowInterval;
             Status = PlayState.Stopped;
@@ -126,7 +126,7 @@ namespace MediaCenter.Sessions.Slideshow
             {
                 ((VideoItemViewModel)SelectedItemViewModel).VideoPlayFinished -= SelectedVideoPlayFinished;
             }
-            if (SelectedItem == QueryResultItems.Last())
+            if (SelectedItem == Items.Last())
             {
                 Stop();
                 Close();

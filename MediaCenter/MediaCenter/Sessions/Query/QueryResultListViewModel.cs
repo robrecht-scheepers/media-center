@@ -7,16 +7,16 @@ namespace MediaCenter.Sessions.Query
 {
     public class QueryResultListViewModel : QueryResultViewModel
     {
-        public QueryResultListViewModel(ObservableCollection<MediaItem> queryResultItems, MediaItem selectedItem = null) : base(queryResultItems)
+        public QueryResultListViewModel(ObservableCollection<MediaItem> items, MediaItem selectedItem = null) : base(items, null)
         {
-            if(selectedItem != null && QueryResultItems.Contains(selectedItem))
+            if(selectedItem != null && Items.Contains(selectedItem))
                 SelectedItems.Add(selectedItem);
             SelectedItems.CollectionChanged += SelectedItemsOnCollectionChanged;
         }
 
         protected void SelectedItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
         {
-            RaiseSelectionChanged(args.OldItems.Cast<MediaItem>().ToList(), args.NewItems.Cast<MediaItem>().ToList());
+            //RaiseSelectionChanged(args.OldItems.Cast<MediaItem>().ToList(), args.NewItems.Cast<MediaItem>().ToList());
         }
     }
 }

@@ -48,7 +48,7 @@ namespace MediaCenter.Sessions.Query
 
         public FilterCollectionViewModel Filters { get; private set; }
 
-        public ObservableCollection<MediaItem> QueryResult { get; private set; }
+        //public ObservableCollection<MediaItem> QueryResult { get; private set; }
 
         private void InitializeFilterCollectionViewModel()
         {
@@ -86,7 +86,7 @@ namespace MediaCenter.Sessions.Query
         public ViewMode SelectedViewMode
         {
             get => _selectedViewMode;
-            set => SetValue(ref _selectedViewMode, value, InitializeQueryResultViewModel);
+            set => SetValue(ref _selectedViewMode, value);
         }
 
         public QueryResultViewModel QueryResultViewModel
@@ -95,34 +95,34 @@ namespace MediaCenter.Sessions.Query
             set => SetValue(ref _queryResultViewModel, value);
         }
 
-        private void InitializeQueryResultViewModel()
-        {
-            MediaItem selectedElement = null;
+        //private void InitializeQueryResultViewModel()
+        //{
+        //    MediaItem selectedElement = null;
 
-            if (QueryResultViewModel != null)
-            {
-                QueryResultViewModel.SelectionChanged -= QueryResultViewModelOnSelectionChanged;
-                selectedElement = QueryResultViewModel?.SelectedItems.FirstOrDefault();
-            }
+        //    if (QueryResultViewModel != null)
+        //    {
+        //        QueryResultViewModel.SelectionChanged -= QueryResultViewModelOnSelectionChanged;
+        //        selectedElement = QueryResultViewModel?.SelectedItems.FirstOrDefault();
+        //    }
 
-            switch (SelectedViewMode)
-            {
-                case ViewMode.List:
-                    QueryResultViewModel = new QueryResultListViewModel(QueryResult, selectedElement);
-                    break;
-                case ViewMode.Detail:
-                    QueryResultViewModel =
-                        new QueryResultDetailViewModel(QueryResult, _repository, selectedElement);
-                    break;
-                case ViewMode.SlideShow:
-                    QueryResultViewModel = new SlideShowViewModel(QueryResult, _repository, selectedElement);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+        //    switch (SelectedViewMode)
+        //    {
+        //        case ViewMode.List:
+        //            QueryResultViewModel = new QueryResultListViewModel(QueryResult, selectedElement);
+        //            break;
+        //        case ViewMode.Detail:
+        //            QueryResultViewModel =
+        //                new QueryResultDetailViewModel(QueryResult, _repository, selectedElement);
+        //            break;
+        //        case ViewMode.SlideShow:
+        //            QueryResultViewModel = new SlideShowViewModel(QueryResult, _repository, selectedElement);
+        //            break;
+        //        default:
+        //            throw new ArgumentOutOfRangeException();
+        //    }
 
-            QueryResultViewModel.SelectionChanged += QueryResultViewModelOnSelectionChanged;
-        }
+        //    QueryResultViewModel.SelectionChanged += QueryResultViewModelOnSelectionChanged;
+        //}
         private void QueryResultViewModelOnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             EditMediaInfoViewModel = QueryResultViewModel.SelectedItems.Count > 0
@@ -148,7 +148,7 @@ namespace MediaCenter.Sessions.Query
             {
                 foreach (var item in QueryResultViewModel.SelectedItems.ToList())
                 {
-                    QueryResult.Remove(item);
+                    QueryResultViewModel.RemoveItem(item);
                     await _repository.DeleteItem(item);
                 }    
             }
@@ -210,20 +210,7 @@ namespace MediaCenter.Sessions.Query
                 tmpFiltersList.Add(new PrivateFilter { PrivateSetting = PrivateFilter.PrivateOption.NoPrivate });
             }
 
-            var items = await _repository.GetQueryItems(tmpFiltersList);
-            items.Sort((x, y) => DateTime.Compare(x.DateTaken, y.DateTaken));
-
-            QueryResult.Clear();
-            foreach (var item in items)
-            {
-                QueryResult.Add(item);
-            }
-            
-            InitializeQueryResultViewModel();
-            foreach (var item in QueryResult)
-            {
-                item.Thumbnail = await _repository.GetThumbnail(item);
-            }
+            await QueryResultViewModel.LoadQueryResult(await _repository.GetQueryItems(tmpFiltersList));
         }
        
         
@@ -234,7 +221,6 @@ namespace MediaCenter.Sessions.Query
         {
             _viewModeBeforeSlideShow = SelectedViewMode;
             SelectedViewMode = ViewMode.SlideShow;
-            InitializeQueryResultViewModel();
             WindowService.OpenWindow(this,false);
             ((SlideShowViewModel)QueryResultViewModel).Start();
         }
@@ -244,7 +230,6 @@ namespace MediaCenter.Sessions.Query
         {
             ((SlideShowViewModel)QueryResultViewModel).Stop();
             SelectedViewMode = _viewModeBeforeSlideShow;
-            InitializeQueryResultViewModel();
         }
         
     }
