@@ -130,6 +130,7 @@
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
     <Compile Include="Media\PlayState.cs" />
+    <Compile Include="Sessions\Query\MediaTypeVisibilityConverter.cs" />
     <Compile Include="Repository\Database.cs" />
     <Compile Include="Repository\DbRepository.cs" />
     <Compile Include="Sessions\Filters\FilterView.xaml.cs">

@@ -10,13 +10,18 @@ namespace MediaCenter.Media
         private readonly IRepository _repository;
         private Uri _contentUri;
         private byte[] _contentBytes;
+        private MediaItem _mediaItem;
 
         public MediaItemViewModel(IRepository repository)
         {
             _repository = repository;
         }
 
-        public MediaItem MediaItem { get; protected set; }
+        public MediaItem MediaItem
+        {
+            get => _mediaItem;
+            set => SetValue(ref _mediaItem, value);
+        }
 
         public Uri ContentUri
         {

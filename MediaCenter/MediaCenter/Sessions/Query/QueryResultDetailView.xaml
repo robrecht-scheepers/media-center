@@ -15,6 +15,8 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
+            <local:MediaTypeVisibilityConverter x:Key="ShowIfImage" ImageVisibility="Visible" VideoVisibility="Collapsed" />
+            <local:MediaTypeVisibilityConverter x:Key="ShowIfVideo" ImageVisibility="Collapsed" VideoVisibility="Visible" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Media/MediaItemViews.xaml"/>
                 <ResourceDictionary Source="/WPF/Controls/RowColumnToggleButton.xaml"/>
@@ -29,65 +31,8 @@
             <controls:HideableRowDefinition Height="Auto" Visible="{Binding ElementName=ShowList, Path=IsChecked}"/>
         </Grid.RowDefinitions>
 
-        <ContentControl Grid.Row="0" Content="{Binding DetailItem}">
-            <ContentControl.ContentTemplate>
-                <DataTemplate DataType="media:MediaItemViewModel">
-                    <Grid>
-                        <media:ImageItemView x:Name="ImageItemView" DataContext="{Binding}" />
-                        <media:VideoItemView x:Name="VideoItemView" DataContext="{Binding}" />
-                    </Grid>
-                    <DataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding MediaItem.MediaType}">
-                            <DataTrigger.Value>
-                                <media:MediaType>Image</media:MediaType>
-                            </DataTrigger.Value>
-                            <Setter TargetName="ImageItemView" Property="Visibility" Value="Visible"/>
-                            <Setter TargetName="VideoItemView" Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding MediaItem.MediaType}">
-                            <DataTrigger.Value>
-                                <media:MediaType>Video</media:MediaType>
-                            </DataTrigger.Value>
-                            <Setter TargetName="ImageItemView" Property="Visibility" Value="Collapsed"/>
-                            <Setter TargetName="VideoItemView" Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </DataTemplate.Triggers>
-                </DataTemplate>
-                
-            </ContentControl.ContentTemplate>
-            <!--
-            <ContentControl.Style>
-                <Style TargetType="ContentControl">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding DetailItem.MediaItem.MediaType}">
-                            <DataTrigger.Value>
-                                <media:MediaType>Image</media:MediaType>
-                            </DataTrigger.Value>
-                            <Setter Property="ContentTemplate">
-                                <Setter.Value>
-                                    <DataTemplate DataType="media:MediaItemViewModel">
-                                        <media:ImageItemView/>
-                                    </DataTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding DetailItem.MediaItem.MediaType}">
-                            <DataTrigger.Value>
-                                <media:MediaType>Video</media:MediaType>
-                            </DataTrigger.Value>
-                            <Setter Property="ContentTemplate">
-                                <Setter.Value>
-                                    <DataTemplate DataType="media:MediaItemViewModel">
-                                        <media:VideoItemView/>
-                                    </DataTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </ContentControl.Style>
-            -->
-        </ContentControl>
+        <media:ImageItemView Grid.Row="0" DataContext="{Binding DetailItem}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfImage}}" />
+        <media:VideoItemView Grid.Row="0" DataContext="{Binding DetailItem}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfVideo}}" />
         
         <controls:ImageButton Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding QueryResultViewModel.SelectPreviousItemCommand}" ImageSource="/Resources/Icons/arrow-180.png" Height="32" Width="32"/>
         <controls:ImageButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding QueryResultViewModel.SelectNextItemCommand}" ImageSource="/Resources/Icons/arrow.png" Height="32" Width="32"/>
