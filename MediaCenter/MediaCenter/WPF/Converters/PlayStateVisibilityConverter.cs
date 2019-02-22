@@ -2,8 +2,9 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using MediaCenter.Media;
 
-namespace MediaCenter.Media
+namespace MediaCenter.WPF.Converters
 {
     public class PlayStateVisibilityConverter : IValueConverter
     {

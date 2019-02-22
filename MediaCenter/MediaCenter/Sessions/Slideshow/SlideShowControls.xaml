@@ -7,13 +7,14 @@
              xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
              xmlns:media="clr-namespace:MediaCenter.Media"
              xmlns:query="clr-namespace:MediaCenter.Sessions.Query"
+             xmlns:converters="clr-namespace:MediaCenter.WPF.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance query:QuerySessionViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <media:PlayStateVisibilityConverter x:Key="VisibleWhenPlayingConverter" PlayingVisibility="Visible" NotPlayingVisibility="Collapsed"/>
-            <media:PlayStateVisibilityConverter x:Key="CollapsedWhenPlayingConverter" PlayingVisibility="Collapsed" NotPlayingVisibility="Visible"/>
+            <converters:PlayStateVisibilityConverter x:Key="VisibleWhenPlayingConverter" PlayingVisibility="Visible" NotPlayingVisibility="Collapsed"/>
+            <converters:PlayStateVisibilityConverter x:Key="CollapsedWhenPlayingConverter" PlayingVisibility="Collapsed" NotPlayingVisibility="Visible"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>

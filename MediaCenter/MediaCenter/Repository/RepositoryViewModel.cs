@@ -7,7 +7,7 @@ namespace MediaCenter.Repository
 {
     public class RepositoryViewModel : PropertyChangedNotifier
     {
-        private IRepository _repository;
+        private readonly IRepository _repository;
         private int _imageItemCount;
         private int _videoItemCount;
         private int _itemCount;

@@ -130,7 +130,13 @@
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
     <Compile Include="Media\PlayState.cs" />
-    <Compile Include="Sessions\Query\MediaTypeVisibilityConverter.cs" />
+    <Compile Include="WPF\Controls\AirControl\AirControl.xaml.cs">
+      <DependentUpon>AirControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WPF\Controls\AirControl\Alpha.xaml.cs">
+      <DependentUpon>Alpha.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WPF\Converters\MediaTypeVisibilityConverter.cs" />
     <Compile Include="Repository\Database.cs" />
     <Compile Include="Repository\DbRepository.cs" />
     <Compile Include="Sessions\Filters\FilterView.xaml.cs">
@@ -145,7 +151,7 @@
     <Compile Include="Sessions\Staging\StagedItemPreviewWindow.xaml.cs">
       <DependentUpon>StagedItemPreviewWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Media\PlayStateVisibilityConverter.cs" />
+    <Compile Include="WPF\Converters\PlayStateVisibilityConverter.cs" />
     <Compile Include="WPF\Controls\SeekBar.cs" />
     <Compile Include="WPF\Converters\BoolVisibilityConverter.cs" />
     <Compile Include="WPF\Controls\HideableColumnDefinition.cs" />
@@ -165,7 +171,6 @@
     <Compile Include="Media\EditMediaInfoView.xaml.cs">
       <DependentUpon>EditMediaInfoView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Media\ImageItemViewModel.cs" />
     <Compile Include="Media\ImageItemView.xaml.cs">
       <DependentUpon>ImageItemView.xaml</DependentUpon>
     </Compile>
@@ -177,7 +182,6 @@
     <Compile Include="Media\VideoItemView.xaml.cs">
       <DependentUpon>VideoItemView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Media\VideoItemViewModel.cs" />
     <Compile Include="WPF\Controls\VideoPlayer.xaml.cs">
       <DependentUpon>VideoPlayer.xaml</DependentUpon>
     </Compile>
@@ -235,7 +239,6 @@
     <Compile Include="WPF\Behaviors\BindableListboxSelectionBehavior.cs" />
     <Compile Include="WPF\Converters\NullVisibilityConverter.cs" />
     <Compile Include="WPF\Converters\ObjectBoolConverter.cs" />
-    <Compile Include="WPF\Behaviors\OpenCloseWindowBehavior.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowViewModel.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowWindow.xaml.cs">
       <DependentUpon>SlideShowWindow.xaml</DependentUpon>
@@ -266,6 +269,14 @@
     <Page Include="Sessions\Staging\StagedItemPreviewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WPF\Controls\AirControl\AirControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WPF\Controls\AirControl\Alpha.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="WPF\Controls\RowColumnToggleButton.xaml">
       <SubType>Designer</SubType>
@@ -308,10 +319,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Media\ImageItemView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Media\MediaItemViews.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -478,12 +485,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Airhack\Airhack.csproj">
-      <Project>{dae7b03b-a48f-4291-8777-597634a331c6}</Project>
-      <Name>Airhack</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.109.2\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.109.2\build\net46\System.Data.SQLite.Core.targets')" />

@@ -10,11 +10,11 @@ using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions.Slideshow
 {
-    public class SlideShowViewModel : QueryResultDetailViewModel
+    public class SlideShowViewModel : QueryResultViewModel
     {
         private Timer _timer;
         
-        public SlideShowViewModel(ObservableCollection<MediaItem> items, IRepository repository, MediaItem selectedItem) : base(items, repository, selectedItem)
+        public SlideShowViewModel(ObservableCollection<MediaItem> items, IRepository repository, MediaItem selectedItem) : base(repository)
         {
             Interval = Properties.Settings.Default.SlideshowInterval;
             Status = PlayState.Stopped;
@@ -62,36 +62,36 @@ namespace MediaCenter.Sessions.Slideshow
 
         public void Start()
         {
-            if(Status == PlayState.Playing)
-                return;
+            //if(Status == PlayState.Playing)
+            //    return;
 
-            if(Status == PlayState.Stopped)
-                InitializeTimer();
+            //if(Status == PlayState.Stopped)
+            //    InitializeTimer();
 
-            if (SelectedItemViewModel.MediaItem.MediaType == MediaType.Image)
-                _timer.Start();
-            else // video
-            {
-                //((VideoItemViewModel)SelectedItemViewModel).VideoPlayFinished += SelectedVideoPlayFinished;
-                //((VideoItemViewModel)SelectedItemViewModel).VideoPlayState = PlayState.Playing;
-            }
+            //if (.MediaItem.MediaType == MediaType.Image)
+            //    _timer.Start();
+            //else // video
+            //{
+            //    //((VideoItemViewModel)SelectedItemViewModel).VideoPlayFinished += SelectedVideoPlayFinished;
+            //    //((VideoItemViewModel)SelectedItemViewModel).VideoPlayState = PlayState.Playing;
+            //}
 
-            Status = PlayState.Playing;
+            //Status = PlayState.Playing;
         }
 
         private RelayCommand _pauseCommand;
         public RelayCommand PauseCommand => _pauseCommand ?? (_pauseCommand = new RelayCommand(Pause));
         public void Pause()
         {
-            if (Status == PlayState.Playing)
-            {
-                if (SelectedItemViewModel.MediaItem.MediaType == MediaType.Image)
-                    _timer.Stop();
-                //else // video
-                //    ((VideoItemViewModel) SelectedItemViewModel).VideoPlayState = PlayState.Paused;
+            //if (Status == PlayState.Playing)
+            //{
+            //    if (SelectedItemViewModel.MediaItem.MediaType == MediaType.Image)
+            //        _timer.Stop();
+            //    //else // video
+            //    //    ((VideoItemViewModel) SelectedItemViewModel).VideoPlayState = PlayState.Paused;
 
-                Status = PlayState.Paused;
-            }
+            //    Status = PlayState.Paused;
+            //}
         }
 
         private RelayCommand _playCommand;

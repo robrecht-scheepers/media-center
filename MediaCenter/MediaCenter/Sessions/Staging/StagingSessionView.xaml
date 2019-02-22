@@ -14,12 +14,6 @@
              d:DesignHeight="300" d:DesignWidth="300"
              Background="{StaticResource AppStandardBackground}">
     
-    <i:Interaction.Behaviors>
-        <behaviors:OpenCloseWindowBehavior WindowDataContext="{Binding PreviewItem}" WindowType="local:StagedItemPreviewWindow"   
-                                     Trigger="{Binding PreviewItem, Converter={StaticResource FalseWhenNullConverter}, Mode=TwoWay}"
-                                     OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
-    </i:Interaction.Behaviors>
-    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

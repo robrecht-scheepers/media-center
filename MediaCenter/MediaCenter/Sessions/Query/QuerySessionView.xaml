@@ -17,15 +17,6 @@
              Background="{StaticResource AppStandardBackground}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <DataTemplate DataType="{x:Type slideshow:SlideShowViewModel}">
-                <Grid/>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type local:QueryResultDetailViewModel}">
-                <local:QueryResultDetailView/>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type local:QueryResultListViewModel}">
-                <local:QueryResultListView/>
-            </DataTemplate>
             <local:ViewModeBoolConverter x:Key="ViewModeBoolConverter"/>
             <local:ViewModeBoolConverter Invert="True" x:Key="InvertedViewModeBoolConverter"/>
             <ResourceDictionary.MergedDictionaries>
@@ -35,10 +26,7 @@
     </UserControl.Resources>
 
     <!--
-    <interactivity:Interaction.Behaviors>
-        <behaviors:OpenCloseWindowBehavior WindowType="slideshow:SlideShowWindow" Trigger="{Binding SlideShowActive}" WindowDataContext="{Binding Path=SlideShowViewModel}" 
-                                       OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" />
-    </interactivity:Interaction.Behaviors>
+    
     
     <UserControl.InputBindings>
         <KeyBinding Key="Right" Modifiers="Control" Command="{Binding QueryResultViewModel.SelectNextItemCommand}"/>

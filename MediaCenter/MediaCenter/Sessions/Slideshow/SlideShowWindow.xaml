@@ -8,7 +8,7 @@
         xmlns:media="clr-namespace:MediaCenter.Media"
         xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
         xmlns:query="clr-namespace:MediaCenter.Sessions.Query"
-        xmlns:airhack="clr-namespace:Airhack;assembly=Airhack"
+        xmlns:airControl="clr-namespace:MediaCenter.WPF.Controls.AirControl"
         mc:Ignorable="d"
         Title="SlideShowWindow" Height="300" Width="300"
         Background="Black"
@@ -41,14 +41,14 @@
     </interactivity:Interaction.Behaviors>
 
     <Grid>
-        <airhack:AirControl x:Name="AirControl" DataContext="{Binding }">
-            <airhack:AirControl.Back>
+        <airControl:AirControl x:Name="AirControl" DataContext="{Binding }">
+            <airControl:AirControl.Back>
                 <ContentControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{Binding SlideShowViewModel.SelectedItemViewModel}"/>
-            </airhack:AirControl.Back>
-            <airhack:AirControl.Front>
+            </airControl:AirControl.Back>
+            <airControl:AirControl.Front>
                 <local:SlideShowControls DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext}" />
-            </airhack:AirControl.Front>
-        </airhack:AirControl>
+            </airControl:AirControl.Front>
+        </airControl:AirControl>
     </Grid>
     
 </Window>

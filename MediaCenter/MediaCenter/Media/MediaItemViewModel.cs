@@ -11,6 +11,9 @@ namespace MediaCenter.Media
         private Uri _contentUri;
         private byte[] _contentBytes;
         private MediaItem _mediaItem;
+        private AsyncRelayCommand _rotateClockwiseCommand;
+        private AsyncRelayCommand _rotateCounterclockwiseCommand;
+
 
         public MediaItemViewModel(IRepository repository)
         {
@@ -59,6 +62,31 @@ namespace MediaCenter.Media
                 ContentBytes = null;
                 ContentUri = _repository.GetContentUri(MediaItem);
             }
+        }
+
+        public async Task Rotate(int angle)
+        {
+            MediaItem.Rotation = (MediaItem.Rotation + angle) % 360;
+            await _repository.SaveItem(MediaItem);
+        }
+
+        public AsyncRelayCommand RotateClockwiseCommand
+            => _rotateClockwiseCommand ?? (_rotateClockwiseCommand = new AsyncRelayCommand(RotateClockwise, CanExecuteRotate));
+        private async Task RotateClockwise()
+        {
+            await Rotate(90);
+        }
+
+        public AsyncRelayCommand RotateCounterclockwiseCommand
+            => _rotateCounterclockwiseCommand ?? (_rotateCounterclockwiseCommand = new AsyncRelayCommand(RotateCounterClockwise));
+        private async Task RotateCounterClockwise()
+        {
+            await Rotate(270);
+        }
+
+        private bool CanExecuteRotate()
+        {
+            return MediaItem != null;
         }
     }
 }

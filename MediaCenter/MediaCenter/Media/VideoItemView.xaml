@@ -8,9 +8,9 @@
              xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance Type=local:VideoItemViewModel}">
+             d:DataContext="{d:DesignInstance Type=local:MediaItemViewModel}">
     <Grid>
-        <controls:VideoPlayer VideoUri="{Binding MediaItem.ContentUri}" StartOnLoad="True" HideControls="{Binding ElementName=Root, Path=HideControls}"
+        <controls:VideoPlayer VideoUri="{Binding ContentUri}" StartOnLoad="True" HideControls="{Binding ElementName=Root, Path=HideControls}"
                               Rotation="{Binding MediaItem.Rotation}" PlayState="{Binding VideoPlayState, Mode=OneWayToSource}"/>
     </Grid>
 </UserControl>

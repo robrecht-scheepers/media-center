@@ -9,16 +9,16 @@
              xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
              xmlns:wpf="clr-namespace:MediaCenter.WPF"
              xmlns:behaviors="clr-namespace:MediaCenter.WPF.Behaviors"
+             xmlns:converters="clr-namespace:MediaCenter.WPF.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:QuerySessionViewModel}">
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <local:MediaTypeVisibilityConverter x:Key="ShowIfImage" ImageVisibility="Visible" VideoVisibility="Collapsed" />
-            <local:MediaTypeVisibilityConverter x:Key="ShowIfVideo" ImageVisibility="Collapsed" VideoVisibility="Visible" />
+            <converters:MediaTypeVisibilityConverter x:Key="ShowIfImage" ImageVisibility="Visible" VideoVisibility="Collapsed" />
+            <converters:MediaTypeVisibilityConverter x:Key="ShowIfVideo" ImageVisibility="Collapsed" VideoVisibility="Visible" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Media/MediaItemViews.xaml"/>
                 <ResourceDictionary Source="/WPF/Controls/RowColumnToggleButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -30,6 +30,7 @@
             <RowDefinition Height="Auto"/>
             <controls:HideableRowDefinition Height="Auto" Visible="{Binding ElementName=ShowList, Path=IsChecked}"/>
         </Grid.RowDefinitions>
+
 
         <media:ImageItemView Grid.Row="0" DataContext="{Binding DetailItem}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfImage}}" />
         <media:VideoItemView Grid.Row="0" DataContext="{Binding DetailItem}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfVideo}}" />

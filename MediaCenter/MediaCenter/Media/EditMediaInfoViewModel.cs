@@ -36,7 +36,7 @@ namespace MediaCenter.Media
             InitializePrivate();
             InitializeDateTaken();
             InitializeDateAdded();
-            InitializeTagsViewModel(repository.Tags);
+            InitializeTagsViewModel(_repository.Tags);
         }
 
         private void PublishToItems()
@@ -89,7 +89,6 @@ namespace MediaCenter.Media
                         }
                         updated = true;
                     }
-                    updated = true;
                 }
 
                 if (updated && _saveChangesToRepository)

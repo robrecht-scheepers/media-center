@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using MediaCenter.Media;
 
-namespace MediaCenter.Sessions.Query
+namespace MediaCenter.WPF.Converters
 {
     public class MediaTypeVisibilityConverter : IValueConverter
     {

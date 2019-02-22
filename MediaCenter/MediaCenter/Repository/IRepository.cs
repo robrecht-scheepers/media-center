@@ -12,7 +12,6 @@ namespace MediaCenter.Repository
         event EventHandler CollectionChanged;
         event EventHandler StatusChanged;
 
-        //IEnumerable<MediaItem> Catalog { get; }
         List<string> Tags { get; }
         Task Initialize();
         Task<List<MediaItem>> GetQueryItems(IEnumerable<Filter> filters);

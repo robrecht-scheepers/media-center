@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace MediaCenter.WPF
+namespace MediaCenter.WPF.Converters
 {
     public class NullVisibilityConverter : IValueConverter
     {
