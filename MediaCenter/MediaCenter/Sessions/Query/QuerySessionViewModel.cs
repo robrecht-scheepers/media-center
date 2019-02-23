@@ -4,11 +4,9 @@ using System.Threading.Tasks;
 using MediaCenter.MVVM;
 using MediaCenter.Sessions.Filters;
 using MediaCenter.Sessions.Slideshow;
-using System.Windows;
 using System.Windows.Forms;
 using MediaCenter.Media;
 using MediaCenter.Repository;
-using MessageBox = System.Windows.MessageBox;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +20,6 @@ namespace MediaCenter.Sessions.Query
         private ViewMode _selectedViewMode;
         private RelayCommand _startSlideShowCommand;
         private int _matchCount;
-        private RelayCommand _closeSlideShowCommand;
         private ViewMode _viewModeBeforeSlideShow;
         private AsyncRelayCommand _deleteCurrentSelectionCommand;
         private AsyncRelayCommand _saveCurrentSelectionToFileCommand;
@@ -124,8 +121,7 @@ namespace MediaCenter.Sessions.Query
             => _deleteCurrentSelectionCommand ?? (_deleteCurrentSelectionCommand = new AsyncRelayCommand(DeleteCurrentSelection, CanExecuteDeleteCurrentSelection));
         private async Task DeleteCurrentSelection()
         {
-            var confirmationResult = MessageBox.Show("Are you sure you want to delete the selected items from the repository? This action cannot be undone.", "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            if (confirmationResult == MessageBoxResult.Yes)
+            if (WindowService.AskConfirmation("Are you sure you want to delete the selected items? This action cannot be undone."))
             {
                 foreach (var item in QueryResultViewModel.SelectedItems.ToList())
                 {
@@ -175,7 +171,7 @@ namespace MediaCenter.Sessions.Query
                 message = $"{QueryResultViewModel.SelectedItems.Count} files were saved successfully";
             }
 
-            MessageBox.Show(message,"Save success", MessageBoxButton.OK, MessageBoxImage.Information);
+            WindowService.ShowMessage(message,"Save success");
         }
         private bool CanExecuteSaveCurrentSelectionToFile()
         {
@@ -196,8 +192,7 @@ namespace MediaCenter.Sessions.Query
             SlideShowViewModel.WindowId = WindowService.OpenWindow(SlideShowViewModel,false, OnSlideShowClosed);
             SlideShowViewModel.Start();
         }
-
-        public void OnSlideShowClosed()
+        private void OnSlideShowClosed()
         {
             SlideShowViewModel.Stop();
             SelectedViewMode = _viewModeBeforeSlideShow;

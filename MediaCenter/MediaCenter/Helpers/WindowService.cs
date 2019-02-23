@@ -58,6 +58,7 @@ namespace MediaCenter.Helpers
             var window = (Window) sender;
             window.Closed -= WindowOnClosed;
             _windows.FirstOrDefault(x => x.Item2 == window).Item3?.Invoke();
+            _windows.RemoveAll(x => x.Item2 == window);
         }
 
 
