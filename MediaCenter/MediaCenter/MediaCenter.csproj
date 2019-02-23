@@ -233,7 +233,7 @@
       <DependentUpon>EditStagedItemView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Staging\StagedItem.cs" />
-    <Compile Include="WPF\Behaviors\BindableListboxSelectionBehavior.cs" />
+    <Compile Include="WPF\Behaviors\BindSelectionBehavior.cs" />
     <Compile Include="WPF\Converters\NullVisibilityConverter.cs" />
     <Compile Include="WPF\Converters\ObjectBoolConverter.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowViewModel.cs" />

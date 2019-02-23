@@ -38,7 +38,7 @@
                  ItemsSource="{Binding StagingSession.StagedItems}" SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <i:Interaction.Behaviors>
-                <behaviors:BindableListboxSelectionBehavior SelectedItems="{Binding SelectedItems}"/>
+                <behaviors:BindSelectionBehavior SelectedItems="{Binding SelectedItems}"/>
             </i:Interaction.Behaviors>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

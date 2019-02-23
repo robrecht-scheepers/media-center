@@ -15,7 +15,7 @@
         <ListBox Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding QueryResultViewModel.Items}" 
                  SelectionMode="Extended" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
             <interactivity:Interaction.Behaviors>
-                <behaviors:BindableListboxSelectionBehavior SelectedItems="{Binding QueryResultViewModel.SelectedItems}"/>
+                <behaviors:BindSelectionBehavior SelectedItems="{Binding QueryResultViewModel.SelectedItems}"/>
             </interactivity:Interaction.Behaviors>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
