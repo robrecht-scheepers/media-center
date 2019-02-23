@@ -19,6 +19,8 @@
             <converters:BoolVisibilityConverter x:Key="CollapseWhenFalseConverter" TrueVisibility="Visible" FalseVisibility="Collapsed"/>
             <converters:BoolVisibilityConverter x:Key="CollapseWhenTrueConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
             <converters:ObjectBoolConverter x:Key="FalseWhenNullConverter" Invert="False"/>
-        </ResourceDictionary>
+            <converters:MediaTypeVisibilityConverter x:Key="ShowIfImage" ImageVisibility="Visible" VideoVisibility="Collapsed" />
+            <converters:MediaTypeVisibilityConverter x:Key="ShowIfVideo" ImageVisibility="Collapsed" VideoVisibility="Visible" />
+</ResourceDictionary>
     </Application.Resources>
 </Application>

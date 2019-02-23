@@ -1,39 +1,49 @@
 ﻿using System;
-using System.Linq;
 using System.Timers;
 using MediaCenter.MVVM;
 using MediaCenter.Sessions.Query;
-using System.Collections.ObjectModel;
-using System.Configuration;
+using MediaCenter.Helpers;
 using MediaCenter.Media;
-using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions.Slideshow
 {
-    public class SlideShowViewModel : QueryResultViewModel
+    public class SlideShowViewModel : PropertyChangedNotifier
     {
+        private readonly QuerySessionViewModel _querySessionViewModel;
+        private readonly IWindowService _windowService;
         private Timer _timer;
-        
-        public SlideShowViewModel(ObservableCollection<MediaItem> items, IRepository repository, MediaItem selectedItem) : base(repository)
+        private PlayState _status;
+        private int _interval;
+
+        public SlideShowViewModel(QuerySessionViewModel querySessionViewModel, IWindowService windowService)
         {
+            _querySessionViewModel = querySessionViewModel;
+            _windowService = windowService;
             Interval = Properties.Settings.Default.SlideshowInterval;
             Status = PlayState.Stopped;
+            MediaItemViewModel.VideoPlayFinished += OnVideoFinished;
         }
 
-        private PlayState _status;
+        public QueryResultViewModel QueryResultViewModel => _querySessionViewModel.QueryResultViewModel;
+        public MediaItemViewModel MediaItemViewModel => _querySessionViewModel.DetailItem;
+        public EditMediaInfoViewModel EditMediaInfoViewModel => _querySessionViewModel.EditMediaInfoViewModel;
 
+        public RelayCommand SelectNextItemCommand => QueryResultViewModel.SelectNextItemCommand;
+        public RelayCommand SelectPreviousItemCommand => QueryResultViewModel.SelectPreviousItemCommand;
+        
         public PlayState Status
         {
-            get { return _status; }
-            set { SetValue(ref _status, value); }
+            get => _status;
+            set => SetValue(ref _status, value);
         }
-
-        private int _interval;
+        
         public int Interval
         {
-            get { return _interval; }
-            set { SetValue(ref _interval, value, IntervalChanged); }
+            get => _interval;
+            set => SetValue(ref _interval, value, IntervalChanged);
         }
+
+        public Guid WindowId { get; set; }
 
         private void IntervalChanged()
         {
@@ -62,36 +72,31 @@ namespace MediaCenter.Sessions.Slideshow
 
         public void Start()
         {
-            //if(Status == PlayState.Playing)
-            //    return;
+            if (Status == PlayState.Playing)
+                return;
 
-            //if(Status == PlayState.Stopped)
-            //    InitializeTimer();
+            if (Status == PlayState.Stopped)
+                InitializeTimer();
 
-            //if (.MediaItem.MediaType == MediaType.Image)
-            //    _timer.Start();
-            //else // video
-            //{
-            //    //((VideoItemViewModel)SelectedItemViewModel).VideoPlayFinished += SelectedVideoPlayFinished;
-            //    //((VideoItemViewModel)SelectedItemViewModel).VideoPlayState = PlayState.Playing;
-            //}
+            if (MediaItemViewModel.MediaItem.MediaType == MediaType.Image)
+                _timer.Start();
 
-            //Status = PlayState.Playing;
+            Status = PlayState.Playing;
         }
 
         private RelayCommand _pauseCommand;
         public RelayCommand PauseCommand => _pauseCommand ?? (_pauseCommand = new RelayCommand(Pause));
         public void Pause()
         {
-            //if (Status == PlayState.Playing)
-            //{
-            //    if (SelectedItemViewModel.MediaItem.MediaType == MediaType.Image)
-            //        _timer.Stop();
-            //    //else // video
-            //    //    ((VideoItemViewModel) SelectedItemViewModel).VideoPlayState = PlayState.Paused;
+            if (Status == PlayState.Playing)
+            {
+                if (MediaItemViewModel.MediaItem.MediaType == MediaType.Image)
+                    _timer.Stop();
+                else // video
+                    MediaItemViewModel.VideoPlayState = PlayState.Paused;
 
-            //    Status = PlayState.Paused;
-            //}
+                Status = PlayState.Paused;
+            }
         }
 
         private RelayCommand _playCommand;
@@ -108,8 +113,8 @@ namespace MediaCenter.Sessions.Slideshow
                 case PlayState.Playing:
                 case PlayState.Paused:
                     Status = PlayState.Stopped;
-                    //if (SelectedItemViewModel.MediaItem.MediaType == MediaType.Video)
-                    //    ((VideoItemViewModel)SelectedItemViewModel).VideoPlayState = PlayState.Stopped;
+                    if (MediaItemViewModel.MediaItem.MediaType == MediaType.Video)
+                        MediaItemViewModel.VideoPlayState = PlayState.Stopped;
                     _timer.Stop();
                     _timer.Dispose();
                     break;
@@ -122,23 +127,15 @@ namespace MediaCenter.Sessions.Slideshow
 
         private void Next()
         {
-            if (SelectedItem != null && SelectedItem.MediaType == MediaType.Video)
-            {
-                //((VideoItemViewModel)SelectedItemViewModel).VideoPlayFinished -= SelectedVideoPlayFinished;
-            }
-            if (SelectedItem == Items.Last())
+            if (!QueryResultViewModel.CanExecuteSelectNextItem())
             {
                 Stop();
                 Close();
                 return;
             }
 
-            SelectNextItem();
-            if (SelectedItem.MediaType == MediaType.Video)
-            {
-                //((VideoItemViewModel)SelectedItemViewModel).VideoPlayFinished += SelectedVideoPlayFinished;
-            }
-            else
+            QueryResultViewModel.SelectNextItem();
+            if (MediaItemViewModel.MediaItem.MediaType == MediaType.Image)
             {
                 _timer.Start();
             }
@@ -149,19 +146,18 @@ namespace MediaCenter.Sessions.Slideshow
             Next();
         }
 
-        private void SelectedVideoPlayFinished(object sender, EventArgs e)
+        private void OnVideoFinished(object sender, EventArgs e)
         {
             Next();
         }
         
 
         private RelayCommand _closeCommand;
-        public RelayCommand CloseCOmmand => _closeCommand ?? (_closeCommand = new RelayCommand(Close));
+        public RelayCommand CloseCommand => _closeCommand ?? (_closeCommand = new RelayCommand(Close));
         private void Close()
         {
-            CloseRequested?.Invoke(this, EventArgs.Empty);
+            _windowService.CloseWindow(WindowId);
         }
-        public event EventHandler CloseRequested;
         
     }
 }

@@ -47,6 +47,8 @@ namespace MediaCenter.Sessions.Query
             {
                 await QueryResultViewModelOnSelectionChanged(s,a);
             };
+
+            SlideShowViewModel = new SlideShowViewModel(this, WindowService);
         }
 
         public override string Name => "View media";
@@ -55,6 +57,9 @@ namespace MediaCenter.Sessions.Query
 
         public QueryResultViewModel QueryResultViewModel { get; }
 
+        public SlideShowViewModel SlideShowViewModel {get; }
+
+        
         public MediaItemViewModel DetailItem
         {
             get => _detailItem;
@@ -105,8 +110,7 @@ namespace MediaCenter.Sessions.Query
             if (SelectedViewMode != ViewMode.List)
                 await DetailItem.Load(QueryResultViewModel.SelectedItems.FirstOrDefault());
         }
-
-
+        
 
         public RelayCommand<MediaItem> SelectForDetailViewCommand =>
             _selectForDetailViewCommand ??
@@ -183,25 +187,20 @@ namespace MediaCenter.Sessions.Query
         {
             await QueryResultViewModel.LoadQueryResult(await _repository.GetQueryItems(FilterCollection.Filters));
         }
-       
-        
-        public SlideShowViewModel SlideShowViewModel => QueryResultViewModel as SlideShowViewModel;
 
         public RelayCommand StartSlideShowCommand => _startSlideShowCommand ?? (_startSlideShowCommand = new RelayCommand(StartSlideShow));
         public void StartSlideShow()
         {
             _viewModeBeforeSlideShow = SelectedViewMode;
             SelectedViewMode = ViewMode.SlideShow;
-            WindowService.OpenWindow(this,false);
-            ((SlideShowViewModel)QueryResultViewModel).Start();
+            SlideShowViewModel.WindowId = WindowService.OpenWindow(SlideShowViewModel,false, OnSlideShowClosed);
+            SlideShowViewModel.Start();
         }
 
-        public RelayCommand CloseSlideShowCommand => _closeSlideShowCommand ?? (_closeSlideShowCommand = new RelayCommand(CloseSlideShow));
-        private void CloseSlideShow()
+        public void OnSlideShowClosed()
         {
-            ((SlideShowViewModel)QueryResultViewModel).Stop();
+            SlideShowViewModel.Stop();
             SelectedViewMode = _viewModeBeforeSlideShow;
         }
-        
     }
 }

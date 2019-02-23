@@ -4,21 +4,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MediaCenter.Sessions.Query"
-             xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:slideshow="clr-namespace:MediaCenter.Sessions.Slideshow"
              xmlns:filters="clr-namespace:MediaCenter.Sessions.Filters"
              xmlns:media="clr-namespace:MediaCenter.Media"
              xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
-             xmlns:wpf="clr-namespace:MediaCenter.WPF"
-             xmlns:behaviors="clr-namespace:MediaCenter.WPF.Behaviors"
+             xmlns:converters="clr-namespace:MediaCenter.WPF.Converters"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:QuerySessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300"
              Background="{StaticResource AppStandardBackground}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <local:ViewModeBoolConverter x:Key="ViewModeBoolConverter"/>
-            <local:ViewModeBoolConverter Invert="True" x:Key="InvertedViewModeBoolConverter"/>
+            <converters:ViewModeBoolConverter x:Key="ViewModeBoolConverter"/>
+            <converters:ViewModeBoolConverter Invert="True" x:Key="InvertedViewModeBoolConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/WPF/Controls/RowColumnToggleButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -26,8 +23,6 @@
     </UserControl.Resources>
 
     <!--
-    
-    
     <UserControl.InputBindings>
         <KeyBinding Key="Right" Modifiers="Control" Command="{Binding QueryResultViewModel.SelectNextItemCommand}"/>
         <KeyBinding Key="Left" Modifiers="Control" Command="{Binding QueryResultViewModel.SelectPreviousItemCommand}"/>
@@ -89,7 +84,19 @@
                             <Setter Property="ContentTemplate">
                                 <Setter.Value>
                                     <DataTemplate DataType="{x:Type local:QuerySessionViewModel}">
-                                        <local:QueryResultListView/>
+                                        <local:QueryResultGridView/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectedViewMode}">
+                            <DataTrigger.Value>
+                                <local:ViewMode>SlideShow</local:ViewMode>
+                            </DataTrigger.Value>
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate DataType="{x:Type local:QuerySessionViewModel}">
+                                        <Grid/>
                                     </DataTemplate>
                                 </Setter.Value>
                             </Setter>

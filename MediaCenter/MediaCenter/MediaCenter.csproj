@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MediaCenter</RootNamespace>
     <AssemblyName>MediaCenter</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -143,7 +143,7 @@
       <DependentUpon>FilterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Query\ViewMode.cs" />
-    <Compile Include="Sessions\Query\ViewModeBoolConverter.cs" />
+    <Compile Include="WPF\Converters\ViewModeBoolConverter.cs" />
     <Compile Include="Sessions\SessionTabViewModel.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowControls.xaml.cs">
       <DependentUpon>SlideShowControls.xaml</DependentUpon>
@@ -219,17 +219,14 @@
     <Compile Include="Sessions\Query\QueryResultDetailView.xaml.cs">
       <DependentUpon>QueryResultDetailView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sessions\Query\QueryResultDetailViewModel.cs" />
-    <Compile Include="Sessions\Query\QueryResultListView.xaml.cs">
-      <DependentUpon>QueryResultListView.xaml</DependentUpon>
+    <Compile Include="Sessions\Query\QueryResultGridView.xaml.cs">
+      <DependentUpon>QueryResultGridView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sessions\Query\QueryResultListViewModel.cs" />
     <Compile Include="Sessions\Query\QueryResultViewModel.cs" />
     <Compile Include="Sessions\Query\QuerySessionView.xaml.cs">
       <DependentUpon>QuerySessionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Query\QuerySessionViewModel.cs" />
-    <Compile Include="Sessions\Query\SelectionChangedEventArgs.cs" />
     <Compile Include="Sessions\SessionViewModelBase.cs" />
     <Compile Include="Sessions\Slideshow\HideOnIdleMouseBehavior.cs" />
     <Compile Include="Sessions\Staging\EditStagedItemView.xaml.cs">
@@ -350,7 +347,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Sessions\Query\QueryResultListView.xaml">
+    <Page Include="Sessions\Query\QueryResultGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

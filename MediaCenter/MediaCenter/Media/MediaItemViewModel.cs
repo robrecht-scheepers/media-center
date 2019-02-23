@@ -13,8 +13,10 @@ namespace MediaCenter.Media
         private MediaItem _mediaItem;
         private AsyncRelayCommand _rotateClockwiseCommand;
         private AsyncRelayCommand _rotateCounterclockwiseCommand;
+        private PlayState _videoPlayState;
 
-
+        public event EventHandler VideoPlayFinished;
+        
         public MediaItemViewModel(IRepository repository)
         {
             _repository = repository;
@@ -36,6 +38,12 @@ namespace MediaCenter.Media
         {
             get => _contentBytes;
             set => SetValue(ref _contentBytes, value);
+        }
+
+        public PlayState VideoPlayState
+        {
+            get => _videoPlayState;
+            set => SetValue(ref _videoPlayState, value, PlayStateChanged);
         }
 
         public async Task Load(MediaItem item)
@@ -88,5 +96,12 @@ namespace MediaCenter.Media
         {
             return MediaItem != null;
         }
+
+        private void PlayStateChanged()
+        {
+            if(VideoPlayState == PlayState.Finished)
+                VideoPlayFinished?.Invoke(this,EventArgs.Empty);
+        }
+
     }
 }

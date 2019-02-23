@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using System.Windows.Forms;
+using MediaCenter.Sessions.Query;
 
-namespace MediaCenter.Sessions.Query
+namespace MediaCenter.WPF.Converters
 {
     public class ViewModeBoolConverter : IValueConverter
     {

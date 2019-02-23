@@ -53,6 +53,9 @@ namespace MediaCenter.Sessions.Query
                 Items.Add(mediaItem);
             }
 
+            if(Items.Any())
+                SelectedItems.Add(Items.First());
+
             foreach (var mediaItem in Items)
             {
                 mediaItem.Thumbnail = await _repository.GetThumbnail(mediaItem);
@@ -68,7 +71,7 @@ namespace MediaCenter.Sessions.Query
         #region Command: Select next item
         public RelayCommand SelectNextItemCommand
             => _selectNextItemCommand ?? (_selectNextItemCommand = new RelayCommand(SelectNextItem, CanExecuteSelectNextItem));
-        protected void SelectNextItem()
+        public void SelectNextItem()
         {
             if(!Items.Any())
                 return;
@@ -82,7 +85,7 @@ namespace MediaCenter.Sessions.Query
             
             SelectedItems.ReplaceAllItems(new List<MediaItem>{Items[nextIndex]});
         }
-        private bool CanExecuteSelectNextItem()
+        public bool CanExecuteSelectNextItem()
         {
             return Items.Any() 
                    && (!SelectedItems.Any() || Items.IndexOf(SelectedItems.First()) + 1 < Items.Count);
@@ -92,7 +95,7 @@ namespace MediaCenter.Sessions.Query
         #region Command: Select previous item
         public RelayCommand SelectPreviousItemCommand
             => _selectPreviousItemCommand ?? (_selectPreviousItemCommand = new RelayCommand(SelectPreviousItem, CanExecuteSelectPreviousItem));
-        protected void SelectPreviousItem()
+        public void SelectPreviousItem()
         {
             if (!Items.Any() || !SelectedItems.Any())
                 return;
@@ -104,7 +107,7 @@ namespace MediaCenter.Sessions.Query
 
             SelectedItems.ReplaceAllItems(new List<MediaItem> { Items[nextIndex] });
         }
-        private bool CanExecuteSelectPreviousItem()
+        public bool CanExecuteSelectPreviousItem()
         {
             return Items.Any() && SelectedItems.Any() && Items.IndexOf(SelectedItems.First()) > 0;
         }

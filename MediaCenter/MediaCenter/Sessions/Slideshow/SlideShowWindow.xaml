@@ -13,7 +13,7 @@
         Title="SlideShowWindow" Height="300" Width="300"
         Background="Black"
         WindowState="Maximized" WindowStyle="None"
-        d:DataContext="{d:DesignInstance query:QuerySessionViewModel}">
+        d:DataContext="{d:DesignInstance local:SlideShowViewModel}">
     <Window.Resources>
         <ResourceDictionary>
             <!--
@@ -33,7 +33,7 @@
     </Window.Resources>
     
     <Window.InputBindings>
-        <KeyBinding Key="Escape" Command="{Binding CloseSlideShowCommand}"/>
+        <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
     </Window.InputBindings>
 
     <interactivity:Interaction.Behaviors>
@@ -43,7 +43,15 @@
     <Grid>
         <airControl:AirControl x:Name="AirControl" DataContext="{Binding }">
             <airControl:AirControl.Back>
-                <ContentControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{Binding SlideShowViewModel.SelectedItemViewModel}"/>
+                <Grid>
+                    <Image Source="{Binding Path=MediaItemViewModel.ContentBytes}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                           Visibility="{Binding MediaItemViewModel.MediaItem.MediaType, Converter={StaticResource ShowIfImage}}" >
+                        <Image.LayoutTransform>
+                            <RotateTransform Angle="{Binding Path=MediaItemViewModel.MediaItem.Rotation}"/>
+                        </Image.LayoutTransform>
+                    </Image>
+                    <media:VideoItemView HideControls="True" Visibility="{Binding MediaItemViewModel.MediaItem.MediaType, Converter={StaticResource ShowIfVideo}}"/>
+                </Grid>
             </airControl:AirControl.Back>
             <airControl:AirControl.Front>
                 <local:SlideShowControls DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext}" />
