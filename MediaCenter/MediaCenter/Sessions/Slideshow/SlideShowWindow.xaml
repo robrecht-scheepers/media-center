@@ -14,24 +14,6 @@
         Background="Black"
         WindowState="Maximized" WindowStyle="None"
         d:DataContext="{d:DesignInstance local:SlideShowViewModel}">
-    <Window.Resources>
-        <ResourceDictionary>
-            <!--
-            <DataTemplate DataType="{x:Type media:ImageItemViewModel}">
-                <Image Source="{Binding Path=MediaItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    <Image.LayoutTransform>
-                        <RotateTransform Angle="{Binding Path=MediaItem.Rotation}"/>
-                    </Image.LayoutTransform>
-                </Image>
-            </DataTemplate>
-          
-            <DataTemplate DataType="{x:Type media:VideoItemViewModel}">
-                <media:VideoItemView HideControls="True"/>
-            </DataTemplate>
-              -->
-        </ResourceDictionary>
-    </Window.Resources>
-    
     <Window.InputBindings>
         <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
     </Window.InputBindings>
@@ -50,7 +32,7 @@
                             <RotateTransform Angle="{Binding Path=MediaItemViewModel.MediaItem.Rotation}"/>
                         </Image.LayoutTransform>
                     </Image>
-                    <media:VideoItemView HideControls="True" Visibility="{Binding MediaItemViewModel.MediaItem.MediaType, Converter={StaticResource ShowIfVideo}}"/>
+                    <media:VideoItemView HideControls="True" DataContext="{Binding MediaItemViewModel}" Visibility="{Binding MediaItemViewModel.MediaItem.MediaType, Converter={StaticResource ShowIfVideo}}" />
                 </Grid>
             </airControl:AirControl.Back>
             <airControl:AirControl.Front>

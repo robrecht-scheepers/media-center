@@ -18,7 +18,7 @@ namespace MediaCenter.Sessions.Query
     {
         private EditMediaInfoViewModel _editMediaInfoViewModel;
         private ViewMode _selectedViewMode;
-        private RelayCommand _startSlideShowCommand;
+        private AsyncRelayCommand _startSlideShowCommand;
         private int _matchCount;
         private ViewMode _viewModeBeforeSlideShow;
         private AsyncRelayCommand _deleteCurrentSelectionCommand;
@@ -202,10 +202,12 @@ namespace MediaCenter.Sessions.Query
             await QueryResultViewModel.LoadQueryResult(await _repository.GetQueryItems(FilterCollection.Filters));
         }
 
-        public RelayCommand StartSlideShowCommand => _startSlideShowCommand ?? (_startSlideShowCommand = new RelayCommand(StartSlideShow));
-        public void StartSlideShow()
+        public AsyncRelayCommand StartSlideShowCommand => _startSlideShowCommand ?? (_startSlideShowCommand = new AsyncRelayCommand(StartSlideShow));
+        public async Task StartSlideShow()
         {
             _viewModeBeforeSlideShow = SelectedViewMode;
+            if(SelectedViewMode == ViewMode.Grid)
+                await SwitchViewModeToDetail();
             SelectedViewMode = ViewMode.SlideShow;
             SlideShowViewModel = new SlideShowViewModel(this, WindowService);
             SlideShowViewModel.WindowId = WindowService.OpenWindow(SlideShowViewModel,false, OnSlideShowClosed);
@@ -215,7 +217,8 @@ namespace MediaCenter.Sessions.Query
         {
             SlideShowViewModel.Stop();
             SlideShowViewModel = null;
-            SelectedViewMode = _viewModeBeforeSlideShow;
+            if (_viewModeBeforeSlideShow == ViewMode.Grid)
+                SwitchViewModeToGrid().Wait();
         }
     }
 }
