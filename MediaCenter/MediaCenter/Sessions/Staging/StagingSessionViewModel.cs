@@ -20,6 +20,7 @@ namespace MediaCenter.Sessions.Staging
         {
             SelectedItems = new BatchObservableCollection<MediaItem>();
             SelectedItems.CollectionChanged += SelectedItemsOnCollectionChanged;
+            EditMediaInfoViewModel = new EditMediaInfoViewModel(StagingSession.Repository, false);
         }
 
         public override string Name => "Add media";
@@ -29,9 +30,7 @@ namespace MediaCenter.Sessions.Staging
         public BatchObservableCollection<MediaItem> SelectedItems { get; }
         private void SelectedItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
-            EditMediaInfoViewModel = SelectedItems.Any() 
-                ? new EditMediaInfoViewModel(SelectedItems.ToList(), StagingSession.Repository, false) 
-                : null;
+            EditMediaInfoViewModel.LoadItems(SelectedItems.ToList());
         }
 
         public EditMediaInfoViewModel EditMediaInfoViewModel

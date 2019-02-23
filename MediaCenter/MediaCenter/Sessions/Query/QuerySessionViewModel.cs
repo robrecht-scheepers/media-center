@@ -45,6 +45,8 @@ namespace MediaCenter.Sessions.Query
                 await QueryResultViewModelOnSelectionChanged(s,a);
             };
 
+            EditMediaInfoViewModel = new EditMediaInfoViewModel(_repository, true);
+
             SlideShowViewModel = new SlideShowViewModel(this, WindowService);
         }
 
@@ -100,9 +102,7 @@ namespace MediaCenter.Sessions.Query
 
         private async Task QueryResultViewModelOnSelectionChanged(object sender, EventArgs args)
         {
-            EditMediaInfoViewModel = QueryResultViewModel.SelectedItems.Count > 0
-                ? new EditMediaInfoViewModel(QueryResultViewModel.SelectedItems.ToList(), _repository, true)
-                : null;
+            EditMediaInfoViewModel.LoadItems(QueryResultViewModel.SelectedItems.ToList());
 
             if (SelectedViewMode != ViewMode.List)
                 await DetailItem.Load(QueryResultViewModel.SelectedItems.FirstOrDefault());

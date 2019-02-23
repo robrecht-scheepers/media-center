@@ -10,10 +10,10 @@ namespace MediaCenter.Media
 {
     public class EditMediaInfoViewModel : PropertyChangedNotifier
     {
-        private readonly List<MediaItem> _items;
         private readonly IRepository _repository;
         private readonly bool _saveChangesToRepository;
 
+        private List<MediaItem> _items;
         private bool? _favorite;
         private bool? _private;
         private DateTime? _dateTaken;
@@ -22,25 +22,33 @@ namespace MediaCenter.Media
 
         private EditTagsViewModel _tagsViewModel;
         private List<string> _originalTagsIntersect;
+        private bool _initInProgress;
         
-        public EditMediaInfoViewModel(List<MediaItem> items, IRepository repository, bool saveChangesToRepository)
+        public EditMediaInfoViewModel(IRepository repository, bool saveChangesToRepository)
         {
-            _items = items;
             _repository = repository;
             _saveChangesToRepository = saveChangesToRepository;
+            _items = new List<MediaItem>();
+        }
 
-            if(_items == null || _items.Count == 0)
-                return;
+        public void LoadItems(List<MediaItem> items)
+        {
+            _items = items;
 
+            _initInProgress = true;
             InitializeFavorite();
             InitializePrivate();
             InitializeDateTaken();
             InitializeDateAdded();
             InitializeTagsViewModel(_repository.Tags);
+            _initInProgress = false;
         }
 
         private void PublishToItems()
         {
+            if(_initInProgress)
+                return;
+
             var tasks = new List<Task>();
             foreach (var item in _items)
             {
@@ -107,6 +115,8 @@ namespace MediaCenter.Media
 
         public bool MultipleItems => _items.Count > 1;
 
+        public bool Empty => !_items.Any();
+
         public bool? Favorite
         {
             get => _favorite;
@@ -115,11 +125,11 @@ namespace MediaCenter.Media
         private void InitializeFavorite()
         {
             if (_items.All(x => x.Favorite))
-                _favorite = true;
+                Favorite = true;
             else if (_items.All(x => !x.Favorite))
-                _favorite = false;
+                Favorite = false;
             else
-                _favorite = null;
+                Favorite = null;
         }
 
         public bool? Private
@@ -130,11 +140,11 @@ namespace MediaCenter.Media
         private void InitializePrivate()
         {
             if (_items.All(x => x.Private))
-                _private = true;
+                Private = true;
             else if (_items.All(x => !x.Private))
-                _private = false;
+                Private = false;
             else
-                _private = null;
+                Private = null;
         }
 
         public DateTime? DateTaken
@@ -150,17 +160,21 @@ namespace MediaCenter.Media
         }
         private void InitializeDateTaken()
         {
-            if (MultipleItems)
+            if (Empty)
+            {
+                DateTaken = null;
+                MultipleDateTaken = null;
+            }
+            else if (MultipleItems)
             {
                 string dateFormat = "dd.MM.yyyy";
                 DateTaken = null;
                 var firstDate = _items.OrderBy(x => x.DateTaken).First().DateTaken.Date;
                 var lastDate = _items.OrderBy(x => x.DateTaken).Last().DateTaken.Date;
 
-                if (firstDate == lastDate)
-                    MultipleDateTaken = firstDate.ToString(dateFormat);
-                else
-                    MultipleDateTaken = $"{firstDate.ToString(dateFormat)} - {lastDate.ToString(dateFormat)}";
+                MultipleDateTaken = firstDate == lastDate 
+                    ? firstDate.ToString(dateFormat) 
+                    : $"{firstDate.ToString(dateFormat)} - {lastDate.ToString(dateFormat)}";
             }
             else
             {
@@ -176,7 +190,7 @@ namespace MediaCenter.Media
         }
         private void InitializeDateAdded()
         {
-            DateAdded = MultipleItems ? null : (DateTime?)_items.First().DateAdded;
+            DateAdded = MultipleItems ? null : (DateTime?)_items.FirstOrDefault()?.DateAdded;
         }
 
         public EditTagsViewModel TagsViewModel
@@ -189,7 +203,7 @@ namespace MediaCenter.Media
             // in case of multiple items, edit only the tags that are shared by all items
             var tags = MultipleItems
                 ? (_originalTagsIntersect = _items.Select(x => x.Tags).Cast<IEnumerable<string>>().Aggregate((x, y) => x.Intersect(y)).ToList())
-                : _items.First().Tags.ToList();
+                : Empty ? new List<string>() : _items.First().Tags.ToList();
             TagsViewModel = new EditTagsViewModel(allTags, tags);
             TagsViewModel.SelectedTags.CollectionChanged += (s, a) => PublishToItems();
         }
