@@ -49,11 +49,8 @@
                                      Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}" Background="{StaticResource MainWindowBackground}"
                                      Height="{StaticResource TextButtonHeight}"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <controls:ImageToggleButton x:Name="detailView" IsChecked="{Binding SelectedViewMode, Converter={StaticResource ViewModeBoolConverter}, Mode=TwoWay}" 
-                                            CheckedImage="/Resources/Icons/Image-filled.png" UncheckedImage="/Resources/Icons/Image.png" 
-                                            IsEnabled="{Binding ElementName=listView, Path=IsChecked}"/>
-                    <controls:ImageToggleButton x:Name="listView" IsChecked="{Binding SelectedViewMode, Converter={StaticResource InvertedViewModeBoolConverter}, Mode=TwoWay}" 
-                                    CheckedImage="/Resources/Icons/Tiles-filled.png" UncheckedImage="/Resources/Icons/Tiles.png" IsEnabled="{Binding ElementName=detailView, Path=IsChecked}"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/Image-filled.png" Command="{Binding SwitchViewModeToDetailCommand}" />
+                    <controls:ImageButton ImageSource="/Resources/Icons/Tiles-filled.png" Command="{Binding SwitchViewModeToGridCommand}" />
                 </StackPanel>
             </StackPanel>
         </Grid>
@@ -79,7 +76,7 @@
                         </DataTrigger>
                         <DataTrigger Binding="{Binding SelectedViewMode}">
                             <DataTrigger.Value>
-                                <local:ViewMode>List</local:ViewMode>
+                                <local:ViewMode>Grid</local:ViewMode>
                             </DataTrigger.Value>
                             <Setter Property="ContentTemplate">
                                 <Setter.Value>

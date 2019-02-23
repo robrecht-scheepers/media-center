@@ -15,7 +15,7 @@ namespace MediaCenter.WPF.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var mode = (ViewMode) value;
-            return Invert ? mode == ViewMode.List : mode == ViewMode.Detail;
+            return Invert ? mode == ViewMode.Grid : mode == ViewMode.Detail;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -23,9 +23,9 @@ namespace MediaCenter.WPF.Converters
             var input = (bool) value;
 
             if(Invert)
-                return input ? ViewMode.List : ViewMode.Detail;
+                return input ? ViewMode.Grid : ViewMode.Detail;
 
-            return input ? ViewMode.Detail : ViewMode.List;
+            return input ? ViewMode.Detail : ViewMode.Grid;
         }
 
         public bool Invert { get; set; }

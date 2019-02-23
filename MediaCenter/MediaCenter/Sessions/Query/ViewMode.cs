@@ -8,7 +8,7 @@ namespace MediaCenter.Sessions.Query
 {
     public enum  ViewMode
     {
-        List,
+        Grid,
         Detail,
         SlideShow
     }

@@ -27,6 +27,8 @@ namespace MediaCenter.Sessions.Query
         private readonly IRepository _repository;
         private RelayCommand<MediaItem> _selectForDetailViewCommand;
         private MediaItemViewModel _detailItem;
+        private AsyncRelayCommand _switchViewModeToDetailCommand;
+        private AsyncRelayCommand _switchViewModeToGridCommand;
 
         public QuerySessionViewModel(IWindowService windowService, IRepository repository) : base(null, windowService)
         {
@@ -84,27 +86,45 @@ namespace MediaCenter.Sessions.Query
         public List<ViewMode> ViewModesList { get; private set; }
         private void InitializeViewModesList()
         {
-            ViewModesList = new List<ViewMode> { ViewMode.Detail, ViewMode.List };
+            ViewModesList = new List<ViewMode> { ViewMode.Detail, ViewMode.Grid };
         }
         public ViewMode SelectedViewMode
         {
             get => _selectedViewMode;
-            set => SetValue(ref _selectedViewMode, value, SelectedViewModeChanged);
+            set => SetValue(ref _selectedViewMode, value);
         }
 
-        private void SelectedViewModeChanged()
+        public AsyncRelayCommand SwitchViewModeToDetailCommand =>
+            _switchViewModeToDetailCommand ?? (_switchViewModeToDetailCommand =
+                new AsyncRelayCommand(SwitchViewModeToDetail, CanExecuteSwitchViewModeToDetail));
+        private bool CanExecuteSwitchViewModeToDetail()
         {
-            if (SelectedViewMode == ViewMode.List)
-                DetailItem.Load(null).Wait();
-            else
-                DetailItem.Load(QueryResultViewModel.SelectedItems.FirstOrDefault()).Wait();
+            return SelectedViewMode != ViewMode.Detail;
+        }
+        private async Task SwitchViewModeToDetail()
+        {
+            SelectedViewMode = ViewMode.Detail;
+            await DetailItem.Load(QueryResultViewModel.SelectedItems.FirstOrDefault());
+        }
+
+        public AsyncRelayCommand SwitchViewModeToGridCommand =>
+            _switchViewModeToGridCommand ?? (_switchViewModeToGridCommand =
+                new AsyncRelayCommand(SwitchViewModeToGrid, CanExecuteSwitchViewModeToGrid));
+        private bool CanExecuteSwitchViewModeToGrid()
+        {
+            return SelectedViewMode != ViewMode.Grid;
+        }
+        private async Task SwitchViewModeToGrid()
+        {
+            SelectedViewMode = ViewMode.Grid;
+            await DetailItem.Load(null);
         }
 
         private async Task QueryResultViewModelOnSelectionChanged(object sender, EventArgs args)
         {
             EditMediaInfoViewModel.LoadItems(QueryResultViewModel.SelectedItems.ToList());
 
-            if (SelectedViewMode != ViewMode.List)
+            if (SelectedViewMode != ViewMode.Grid)
                 await DetailItem.Load(QueryResultViewModel.SelectedItems.FirstOrDefault());
         }
         
