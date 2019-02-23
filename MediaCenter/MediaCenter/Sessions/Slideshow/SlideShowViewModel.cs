@@ -113,6 +113,7 @@ namespace MediaCenter.Sessions.Slideshow
                 case PlayState.Playing:
                 case PlayState.Paused:
                     Status = PlayState.Stopped;
+                    MediaItemViewModel.VideoPlayFinished -= OnVideoFinished;
                     if (MediaItemViewModel.MediaItem.MediaType == MediaType.Video)
                         MediaItemViewModel.VideoPlayState = PlayState.Stopped;
                     _timer.Stop();

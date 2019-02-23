@@ -48,8 +48,6 @@ namespace MediaCenter.Sessions.Query
             };
 
             EditMediaInfoViewModel = new EditMediaInfoViewModel(_repository, true);
-
-            SlideShowViewModel = new SlideShowViewModel(this, WindowService);
         }
 
         public override string Name => "View media";
@@ -58,7 +56,7 @@ namespace MediaCenter.Sessions.Query
 
         public QueryResultViewModel QueryResultViewModel { get; }
 
-        public SlideShowViewModel SlideShowViewModel {get; }
+        public SlideShowViewModel SlideShowViewModel {get; set; }
 
         
         public MediaItemViewModel DetailItem
@@ -209,12 +207,14 @@ namespace MediaCenter.Sessions.Query
         {
             _viewModeBeforeSlideShow = SelectedViewMode;
             SelectedViewMode = ViewMode.SlideShow;
+            SlideShowViewModel = new SlideShowViewModel(this, WindowService);
             SlideShowViewModel.WindowId = WindowService.OpenWindow(SlideShowViewModel,false, OnSlideShowClosed);
             SlideShowViewModel.Start();
         }
         private void OnSlideShowClosed()
         {
             SlideShowViewModel.Stop();
+            SlideShowViewModel = null;
             SelectedViewMode = _viewModeBeforeSlideShow;
         }
     }
