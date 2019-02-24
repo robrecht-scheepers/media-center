@@ -42,6 +42,8 @@ namespace MediaCenter.Media
             InitializeDateAdded();
             InitializeTagsViewModel(_repository.Tags);
             _initInProgress = false;
+
+            RaisePropertyChanged("Name");
         }
 
         private void PublishToItems()
