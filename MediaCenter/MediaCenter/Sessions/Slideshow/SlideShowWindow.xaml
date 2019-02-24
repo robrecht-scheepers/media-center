@@ -32,7 +32,7 @@
                             <RotateTransform Angle="{Binding Path=MediaItemViewModel.MediaItem.Rotation}"/>
                         </Image.LayoutTransform>
                     </Image>
-                    <media:VideoItemView HideControls="True" DataContext="{Binding MediaItemViewModel}" Visibility="{Binding MediaItemViewModel.MediaItem.MediaType, Converter={StaticResource ShowIfVideo}}" />
+                    <media:VideoItemView HideControls="True" DataContext="{Binding MediaItemViewModel}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfVideo}}" />
                 </Grid>
             </airControl:AirControl.Back>
             <airControl:AirControl.Front>
