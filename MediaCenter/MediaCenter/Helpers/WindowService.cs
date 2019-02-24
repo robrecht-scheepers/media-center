@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Threading;
 using MediaCenter.MVVM;
 using MediaCenter.Sessions.Query;
 using MediaCenter.Sessions.Slideshow;
+using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 
 namespace MediaCenter.Helpers
@@ -50,7 +52,10 @@ namespace MediaCenter.Helpers
 
         public void CloseWindow(Guid windowId)
         {
-            _windows.FirstOrDefault(x => x.Item1 == windowId).Item2?.Close();
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                _windows.FirstOrDefault(x => x.Item1 == windowId).Item2?.Close();
+            });
         }
 
         private void WindowOnClosed(object sender, EventArgs e)
