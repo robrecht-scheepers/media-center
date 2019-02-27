@@ -6,6 +6,11 @@ namespace MediaCenter.Media
 {
     public class MediaItem : PropertyChangedNotifier
     {
+        public MediaItem(MediaType type) : this("", type)
+        {
+            
+        }
+
         public MediaItem(string name, MediaType type)
         {
             Name = name;

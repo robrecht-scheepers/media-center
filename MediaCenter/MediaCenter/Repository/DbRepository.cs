@@ -65,15 +65,9 @@ namespace MediaCenter.Repository
                     newItem.StatusMessage = "File path is missing";
                     continue;
                 }
-                if (string.IsNullOrEmpty(newItem.Name))
-                {
-                    newItem.Status = MediaItemStatus.Error;
-                    newItem.StatusMessage = "Name is missing";
-                    continue;
-                }
-
+                
                 var originalName = newItem.Name;
-                newItem.Name = await CreateUniqueName(originalName);
+                newItem.Name = await CreateUniqueName(newItem);
                 newItem.ContentFileName = newItem.Name + Path.GetExtension(newItem.FilePath);
                 var mediaItemFilePath = GetMediaPath(newItem);
                 var thumbnailFilePath = GetThumbnailPath(newItem);
@@ -101,23 +95,18 @@ namespace MediaCenter.Repository
                 }
             }
         }
-        
-        private async Task<string> CreateUniqueName(string originalName)
-        {
-            string newName = originalName;
-            // if the name was already altered for uniqueness during staging, to avid getting ..._1_1 situations
-            // we strip down the previous changes and start again from teh base name to create uniqueness in the catalog
-            if (originalName.Contains("_"))
-            {
-                newName = originalName.Substring(0, originalName.IndexOf("_", StringComparison.InvariantCulture));
-            }
 
-            var nameClashes = await _database.GetNameClashes(newName);
+        private async Task<string> CreateUniqueName(MediaItem item)
+        {
+            var baseName = item.DateTaken.ToString("yyyyMMddHHmmss");
+            
+            var nameClashes = await _database.GetNameClashes(baseName);
             if (!nameClashes.Any())
-                return originalName;
+                return baseName;
 
             var cnt = 1;
-            while (nameClashes.Contains(newName = $"{originalName}_{cnt++}")) { }
+            string newName;
+            while (nameClashes.Contains(newName = $"{baseName}_{cnt++}")) { }
             return newName;
         }
 

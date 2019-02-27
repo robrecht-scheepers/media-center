@@ -41,7 +41,7 @@ namespace MediaCenter.Sessions
 
         private void CreateStagingSession()
         {
-            SessionViewModel = new StagingSessionViewModel(new StagingSession(_repository), _windowService);
+            SessionViewModel = new StagingSessionViewModel(_repository, _windowService);
             SessionCreated?.Invoke(this, EventArgs.Empty);
             RaisePropertyChanged("Name");
         }

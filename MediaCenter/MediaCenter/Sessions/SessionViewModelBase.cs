@@ -1,16 +1,17 @@
 ﻿using MediaCenter.Helpers;
 using MediaCenter.MVVM;
+using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions
 {
     public abstract class SessionViewModelBase : PropertyChangedNotifier
     {
-        protected readonly SessionBase Session;
+        protected readonly IRepository Repository;
         protected readonly IWindowService WindowService;
 
-        protected SessionViewModelBase(SessionBase session, IWindowService windowService)
+        protected SessionViewModelBase(IRepository repository, IWindowService windowService)
         {
-            Session = session;
+            Repository = repository;
             WindowService = windowService;
         }
 

@@ -28,14 +28,14 @@
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
                 <controls:TextButton Command="{Binding AddMediaCommand}" Text="Select media files" Height="{StaticResource TextButtonHeight}" Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}"/>
                 <controls:TextButton Command="{Binding AddDirectoryCommand}" Text="Select folder" Height="{StaticResource TextButtonHeight}" Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}"/>
-                <TextBlock Text="{Binding StagingSession.StatusMessage}" Foreground="{StaticResource AppBrightColor}" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource AppBrightColor}" VerticalAlignment="Center"/>
             </StackPanel>
-            <controls:TextButton DockPanel.Dock="Right" Command="{Binding SaveToRepositoryCommand}" Text="{Binding Path=StagingSession.StagedItems.Count, StringFormat='{}Save {0} staged items'}" 
+            <controls:TextButton DockPanel.Dock="Right" Command="{Binding SaveToRepositoryCommand}" Text="{Binding Path=StagedItems.Count, StringFormat='{}Save {0} staged items'}" 
                                  Visibility="{Binding ElementName=stagedItemsList, Path=HasItems, Converter={StaticResource CollapseWhenFalseConverter}}" 
                                  Foreground="{StaticResource AppBrightColor}" HorizontalAlignment="Right" Margin="{StaticResource CommonMargin}"/>
         </DockPanel>
         <ListBox x:Name="stagedItemsList" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Style="{StaticResource ThumbnailListStyle}" Margin="{StaticResource CommonMargin}"
-                 ItemsSource="{Binding StagingSession.StagedItems}" SelectionMode="Extended"
+                 ItemsSource="{Binding StagedItems}" SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <i:Interaction.Behaviors>
                 <behaviors:BindSelectionBehavior SelectedItems="{Binding SelectedItems}"/>

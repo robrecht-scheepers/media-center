@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
@@ -8,24 +10,41 @@ using MediaCenter.Media;
 using MediaCenter.MVVM;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using System.Configuration;
+using System.Text;
 using MediaCenter.Helpers;
+using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions.Staging
 {
     public class StagingSessionViewModel : SessionViewModelBase
     {
-        private EditMediaInfoViewModel _editMediaInfoViewModel;
+        private readonly string[] _supportedImageExtensions = { ".jpg", ".jpeg", ".png", ".bmp" };
+        private readonly string[] _supportedVideoExtensions = { ".mp4", ".avi", ".mts", ".m4v" };
 
-        public StagingSessionViewModel(StagingSession session, IWindowService windowService) : base(session, windowService)
+
+        private EditMediaInfoViewModel _editMediaInfoViewModel;
+        private AsyncRelayCommand _saveToRepositoryCommand;
+        private RelayCommand<StagedItem> _showPreviewCommand;
+        private StagedItem _previewItem;
+        private string _statusMessage;
+
+        public StagingSessionViewModel(IRepository repository, IWindowService windowService) : base(repository, windowService)
         {
+            StagedItems = new ObservableCollection<StagedItem>();
             SelectedItems = new BatchObservableCollection<MediaItem>();
             SelectedItems.CollectionChanged += SelectedItemsOnCollectionChanged;
-            EditMediaInfoViewModel = new EditMediaInfoViewModel(StagingSession.Repository, false);
+            EditMediaInfoViewModel = new EditMediaInfoViewModel(Repository, false);
         }
 
         public override string Name => "Add media";
+        
+        public ObservableCollection<StagedItem> StagedItems { get; }
 
-        public StagingSession StagingSession => (StagingSession)Session;
+        public string StatusMessage
+        {
+            get { return _statusMessage; }
+            set { SetValue(ref _statusMessage, value); }
+        }
 
         public BatchObservableCollection<MediaItem> SelectedItems { get; }
         private void SelectedItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
@@ -47,7 +66,7 @@ namespace MediaCenter.Sessions.Staging
 
         #region Command: Show preview
 
-        private RelayCommand<StagedItem> _showPreviewCommand;
+        
         public RelayCommand<StagedItem> ShowPreviewCommand => _showPreviewCommand ?? (_showPreviewCommand = new RelayCommand<StagedItem>(ShowPreview));
         private void ShowPreview(StagedItem item)
         {
@@ -96,7 +115,7 @@ namespace MediaCenter.Sessions.Staging
                 foreach (var item in editViewModel.Items)
                 {
                     var newDate = editViewModel.NewDateTaken.AddSeconds(i++);
-                    StagingSession.EditStagedItemDate(item, newDate);
+                    //StagingSession.EditStagedItemDate(item, newDate);
                 }
             }
             EditViewModel.CloseRequested -= EditViewModelOnCloseRequested;
@@ -121,7 +140,7 @@ namespace MediaCenter.Sessions.Staging
             var selectedImages = dialog.FileNames;
             if (!selectedImages.Any())
                 return;
-            await StagingSession.AddMediaItems(selectedImages);
+            await AddMediaItems(selectedImages);
         }
         #endregion
 
@@ -142,7 +161,7 @@ namespace MediaCenter.Sessions.Staging
             if (ConfigurationManager.AppSettings["LoadSubDirs"].ToLower() == "false")
                 searchOption = SearchOption.TopDirectoryOnly;
 
-            await StagingSession.AddMediaItems(Directory.GetFiles(selectedFolder, "*.*", searchOption));
+            await AddMediaItems(Directory.GetFiles(selectedFolder, "*.*", searchOption));
         }
         #endregion
         
@@ -155,23 +174,123 @@ namespace MediaCenter.Sessions.Staging
         {
             foreach (var item in SelectedItems.Cast<StagedItem>().ToList())
             {
-                StagingSession.RemoveStagedItem(item);
+                StagedItems.Remove(item);
             }
         }
         #endregion
 
         #region Command: save staged images to repository
-        private AsyncRelayCommand _saveToRepositoryCommand;
-        private StagedItem _previewItem;
+        
         public AsyncRelayCommand SaveToRepositoryCommand => _saveToRepositoryCommand ?? (_saveToRepositoryCommand = new AsyncRelayCommand(SaveToRepository,CanExecuteSaveToRepository));
         private bool CanExecuteSaveToRepository()
         {
-            return StagingSession.StagedItems.Any();
+            return StagedItems.Any();
         }
-        private async Task SaveToRepository()
+        public async Task SaveToRepository()
         {
-            await StagingSession.SaveToRepository();
+            StatusMessage = $"Saving {StagedItems.Count} items...";
+            // retry error items
+            foreach (var stagedItem in StagedItems.Where(x => x.Status == MediaItemStatus.Error))
+            {
+                stagedItem.Status = MediaItemStatus.Staged;
+            }
+            await Repository.SaveNewItems(StagedItems);
+            ClearSavedItems();
+            StatusMessage = "";
         }
+
         #endregion
+
+        public async Task AddMediaItems(IEnumerable<string> newItems)
+        {
+            var newItemsList = newItems.ToList();
+            var total = newItemsList.Count();
+            var cnt = 1;
+
+            var errors = new StringBuilder();
+
+            foreach (var filePath in newItemsList)
+            {
+                StatusMessage = $"Loading item {cnt++} of {total}.";
+                if (string.IsNullOrEmpty(filePath))
+                    continue;
+                var extension = Path.GetExtension(filePath).ToLower();
+                
+                try
+                {
+                    if (_supportedImageExtensions.Contains(extension))
+                    {
+                        using (var image = await IOHelper.OpenImage(filePath))
+                        {
+                            if (image == null)
+                            {
+                                // TODO: error handling, create list of failed files
+                                errors.AppendLine($"Error with file { filePath}: failed to load image.");
+                                continue;
+                            }
+
+                            var dateTaken = ImageHelper.ReadCreationDate(image);
+                            //var name = CreateUniqueItemName(dateTaken);
+                            var thumbnail = ImageHelper.CreateThumbnail(image, 100);
+                            var rotation = ImageHelper.ReadRotation(image);
+                            //if (rotation > 0)
+                            //    thumbnail = ImageHelper.Rotate(thumbnail, rotation);
+
+                            StagedItems.Add(new StagedItem(MediaType.Image)
+                            {
+                                FilePath = filePath,
+                                Status = MediaItemStatus.Staged,
+                                DateTaken = dateTaken,
+                                DateAdded = DateTime.Now,
+                                Thumbnail = thumbnail,
+                                Rotation = rotation
+                            });
+                        }
+                    }
+                    else if (_supportedVideoExtensions.Contains(extension))
+                    {
+                        var dateTaken = VideoHelper.ReadCreationDate(filePath);
+                        //var name = CreateUniqueItemName(dateTaken);
+                        var thumbnail = await VideoHelper.CreateThumbnail(filePath, 100);
+                        var rotation = VideoHelper.ReadRotation(filePath);
+
+                        StagedItems.Add(new StagedItem(MediaType.Video)
+                        {
+                            FilePath = filePath,
+                            Status = MediaItemStatus.Staged,
+                            DateTaken = dateTaken,
+                            DateAdded = DateTime.Now,
+                            Thumbnail = thumbnail,
+                            Rotation = rotation
+                        });
+                        //_filePaths[name] = filePath;
+                    }
+                    else
+                    {
+                        errors.AppendLine($"Error with file {filePath}: unsupported extension");
+                    }
+                }
+                catch (Exception e)
+                {
+                    errors.AppendLine($"Error with file {filePath}: {e.Message}");
+                }
+            }
+            StatusMessage = "";
+            if (errors.Length > 0)
+                WindowService.ShowMessage(errors.ToString(), "Fehler");
+        }
+
+        
+
+        
+
+        private void ClearSavedItems()
+        {
+            var savedList = StagedItems.Where(x => x.Status == MediaItemStatus.Saved).ToList();
+            foreach (var mediaItem in savedList)
+            {
+                StagedItems.Remove(mediaItem);
+            }
+        }
     }
 }
