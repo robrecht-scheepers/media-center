@@ -229,9 +229,6 @@
     <Compile Include="Sessions\Query\QuerySessionViewModel.cs" />
     <Compile Include="Sessions\SessionViewModelBase.cs" />
     <Compile Include="Sessions\Slideshow\HideOnIdleMouseBehavior.cs" />
-    <Compile Include="Sessions\Staging\EditStagedItemView.xaml.cs">
-      <DependentUpon>EditStagedItemView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Sessions\Staging\StagedItem.cs" />
     <Compile Include="WPF\Behaviors\BindSelectionBehavior.cs" />
     <Compile Include="WPF\Converters\NullVisibilityConverter.cs" />
@@ -240,11 +237,9 @@
     <Compile Include="Sessions\Slideshow\SlideShowWindow.xaml.cs">
       <DependentUpon>SlideShowWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sessions\Staging\EditStagedItemViewModel.cs" />
     <Compile Include="Sessions\Staging\StagedItemView.xaml.cs">
       <DependentUpon>StagedItemView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sessions\Staging\StagingSession.cs" />
     <Compile Include="Sessions\SessionBase.cs" />
     <Compile Include="Sessions\Staging\StagingSessionView.xaml.cs">
       <DependentUpon>StagingSessionView.xaml</DependentUpon>
@@ -356,10 +351,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Sessions\Slideshow\SlideShowWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Sessions\Staging\EditStagedItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

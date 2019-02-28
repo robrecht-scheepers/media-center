@@ -25,6 +25,7 @@ namespace MediaCenter.Sessions.Staging
         private EditMediaInfoViewModel _editMediaInfoViewModel;
         private AsyncRelayCommand _saveToRepositoryCommand;
         private RelayCommand<StagedItem> _showPreviewCommand;
+        private AsyncRelayCommand _addDirectoryCommand;
         private StagedItem _previewItem;
         private string _statusMessage;
 
@@ -54,77 +55,23 @@ namespace MediaCenter.Sessions.Staging
 
         public EditMediaInfoViewModel EditMediaInfoViewModel
         {
-            get { return _editMediaInfoViewModel; }
-            set { SetValue(ref _editMediaInfoViewModel, value); }
+            get => _editMediaInfoViewModel;
+            set => SetValue(ref _editMediaInfoViewModel, value);
         }
 
         public StagedItem PreviewItem
         {
-            get { return _previewItem; }
-            set { SetValue(ref _previewItem, value); }
+            get => _previewItem;
+            set => SetValue(ref _previewItem, value);
         }
 
-        #region Command: Show preview
-
-        
         public RelayCommand<StagedItem> ShowPreviewCommand => _showPreviewCommand ?? (_showPreviewCommand = new RelayCommand<StagedItem>(ShowPreview));
         private void ShowPreview(StagedItem item)
         {
             PreviewItem = item;
         }
+        
 
-        #endregion
-
-        #region Edit item
-        private EditStagedItemViewModel _editViewModel;
-        public EditStagedItemViewModel EditViewModel
-        {
-            get { return _editViewModel; }
-            set { SetValue(ref _editViewModel, value); }
-        }
-
-        private bool _showEditViewModel;
-        public bool ShowEditViewModel
-        {
-            get { return _showEditViewModel; }
-            set { SetValue(ref _showEditViewModel, value); }
-        }
-
-        private RelayCommand<object> _beginEditItemCommand;
-        public RelayCommand<object> BeginEditItemCommand
-        {
-            get { return _beginEditItemCommand ?? (_beginEditItemCommand = new RelayCommand<object>(BeginEditStagedItem)); }
-        }
-        public void BeginEditStagedItem(object items)
-        {
-            var list = ((System.Collections.IList)items).Cast<StagedItem>().ToList();
-
-            if(list.Count == 0)
-                return;
-
-            EditViewModel = new EditStagedItemViewModel(list);
-            EditViewModel.CloseRequested += EditViewModelOnCloseRequested;
-            ShowEditViewModel = true;
-        }
-        private void EditViewModelOnCloseRequested(object sender, CloseEditViewModelEventArgs args)
-        {
-            if (args.CloseType == EditViewModelCloseType.Save)
-            {
-                var editViewModel = (EditStagedItemViewModel)sender;
-                var i = 0;
-                foreach (var item in editViewModel.Items)
-                {
-                    var newDate = editViewModel.NewDateTaken.AddSeconds(i++);
-                    //StagingSession.EditStagedItemDate(item, newDate);
-                }
-            }
-            EditViewModel.CloseRequested -= EditViewModelOnCloseRequested;
-            EditViewModel = null;
-            ShowEditViewModel = false;
-        }
-        #endregion
-
-        #region Command: Add items
         private AsyncRelayCommand _addMediaCommand;
         public AsyncRelayCommand AddMediaCommand => _addMediaCommand ?? (_addMediaCommand = new AsyncRelayCommand(AddMedia));
         private async Task AddMedia()
@@ -142,10 +89,8 @@ namespace MediaCenter.Sessions.Staging
                 return;
             await AddMediaItems(selectedImages);
         }
-        #endregion
-
-        #region Command: add folder
-        private AsyncRelayCommand _addDirectoryCommand;
+        
+        
         public AsyncRelayCommand AddDirectoryCommand => _addDirectoryCommand ?? (_addDirectoryCommand = new AsyncRelayCommand(AddDirectory));
         private async Task AddDirectory()
         {
@@ -163,9 +108,7 @@ namespace MediaCenter.Sessions.Staging
 
             await AddMediaItems(Directory.GetFiles(selectedFolder, "*.*", searchOption));
         }
-        #endregion
         
-        #region Command: Remove selected items
         
         private RelayCommand _removeItemsCommand;
         public RelayCommand RemoveItemsCommand => _removeItemsCommand ?? (_removeItemsCommand = new RelayCommand(RemoveItems));
@@ -177,9 +120,6 @@ namespace MediaCenter.Sessions.Staging
                 StagedItems.Remove(item);
             }
         }
-        #endregion
-
-        #region Command: save staged images to repository
         
         public AsyncRelayCommand SaveToRepositoryCommand => _saveToRepositoryCommand ?? (_saveToRepositoryCommand = new AsyncRelayCommand(SaveToRepository,CanExecuteSaveToRepository));
         private bool CanExecuteSaveToRepository()
@@ -199,7 +139,6 @@ namespace MediaCenter.Sessions.Staging
             StatusMessage = "";
         }
 
-        #endregion
 
         public async Task AddMediaItems(IEnumerable<string> newItems)
         {
@@ -224,18 +163,14 @@ namespace MediaCenter.Sessions.Staging
                         {
                             if (image == null)
                             {
-                                // TODO: error handling, create list of failed files
                                 errors.AppendLine($"Error with file { filePath}: failed to load image.");
                                 continue;
                             }
 
                             var dateTaken = ImageHelper.ReadCreationDate(image);
-                            //var name = CreateUniqueItemName(dateTaken);
                             var thumbnail = ImageHelper.CreateThumbnail(image, 100);
                             var rotation = ImageHelper.ReadRotation(image);
-                            //if (rotation > 0)
-                            //    thumbnail = ImageHelper.Rotate(thumbnail, rotation);
-
+                            
                             StagedItems.Add(new StagedItem(MediaType.Image)
                             {
                                 FilePath = filePath,
@@ -250,7 +185,6 @@ namespace MediaCenter.Sessions.Staging
                     else if (_supportedVideoExtensions.Contains(extension))
                     {
                         var dateTaken = VideoHelper.ReadCreationDate(filePath);
-                        //var name = CreateUniqueItemName(dateTaken);
                         var thumbnail = await VideoHelper.CreateThumbnail(filePath, 100);
                         var rotation = VideoHelper.ReadRotation(filePath);
 
@@ -263,11 +197,6 @@ namespace MediaCenter.Sessions.Staging
                             Thumbnail = thumbnail,
                             Rotation = rotation
                         });
-                        //_filePaths[name] = filePath;
-                    }
-                    else
-                    {
-                        errors.AppendLine($"Error with file {filePath}: unsupported extension");
                     }
                 }
                 catch (Exception e)
@@ -279,10 +208,6 @@ namespace MediaCenter.Sessions.Staging
             if (errors.Length > 0)
                 WindowService.ShowMessage(errors.ToString(), "Fehler");
         }
-
-        
-
-        
 
         private void ClearSavedItems()
         {

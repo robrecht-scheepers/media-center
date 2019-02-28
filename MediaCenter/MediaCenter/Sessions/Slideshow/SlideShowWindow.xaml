@@ -6,7 +6,6 @@
         xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:MediaCenter.Sessions.Slideshow"
         xmlns:media="clr-namespace:MediaCenter.Media"
-        xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
         xmlns:query="clr-namespace:MediaCenter.Sessions.Query"
         xmlns:airControl="clr-namespace:MediaCenter.WPF.Controls.AirControl"
         mc:Ignorable="d"
