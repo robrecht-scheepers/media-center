@@ -8,7 +8,9 @@
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:MediaItem}">
     <Grid>
-        <Image Source="{Binding Thumbnail}" Height="100" Width="100"/>
+        <Image Source="{Binding Thumbnail}" Height="100" Width="100">
+            <Image.LayoutTransform><RotateTransform Angle="{Binding Rotation}"></RotateTransform></Image.LayoutTransform>
+        </Image>
         <Image Grid.Row="0" Stretch="UniformToFill" Source="/Resources/Images/film-strip.png" Height="100" Width="100">
             <Image.Style>
                 <Style TargetType="Image">
