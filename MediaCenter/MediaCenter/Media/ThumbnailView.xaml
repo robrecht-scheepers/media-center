@@ -11,22 +11,7 @@
         <Image Source="{Binding Thumbnail}" Height="100" Width="100">
             <Image.LayoutTransform><RotateTransform Angle="{Binding Rotation}"></RotateTransform></Image.LayoutTransform>
         </Image>
-        <Image Grid.Row="0" Stretch="UniformToFill" Source="/Resources/Images/film-strip.png" Height="100" Width="100">
-            <Image.Style>
-                <Style TargetType="Image">
-                    <Setter Property="Visibility" Value="Hidden"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding MediaType}">
-                            <DataTrigger.Value>
-                                <local:MediaType>Video</local:MediaType>
-                            </DataTrigger.Value>
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Image.Style>
-        </Image>
-
+        <Image Grid.Row="0" Stretch="UniformToFill" Source="/Resources/Images/film-strip.png" Height="100" Width="100" Visibility="{Binding MediaType, Converter={StaticResource ShowIfVideo}}"/>
     </Grid>
 </UserControl>
 
