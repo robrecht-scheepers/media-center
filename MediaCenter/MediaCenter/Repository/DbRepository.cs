@@ -20,11 +20,13 @@ namespace MediaCenter.Repository
         private readonly string _thumbnailFolderPath;
         private readonly Database _database;
 
+        private readonly string _oldRepositoryPath;
+
         private readonly ConcurrentDictionary<string, byte[]> _buffer;
         private CancellationTokenSource _bufferCancellationTokenSource;
         private bool _prefetchInProgress;
 
-        public DbRepository(string dbPath, string mediaFolderPath, string thumbnailFolderPath)
+        public DbRepository(string dbPath, string mediaFolderPath, string thumbnailFolderPath, string oldRepositoryPath = null)
         {
             _database = new Database(dbPath);
             _mediaFolderPath = mediaFolderPath;
@@ -32,6 +34,7 @@ namespace MediaCenter.Repository
                 Directory.CreateDirectory(mediaFolderPath);
 
             _thumbnailFolderPath = thumbnailFolderPath;
+            _oldRepositoryPath = oldRepositoryPath;
             if (!Directory.Exists(thumbnailFolderPath))
                 Directory.CreateDirectory(thumbnailFolderPath);
 
@@ -47,6 +50,53 @@ namespace MediaCenter.Repository
         public async Task Initialize()
         {
             Tags = (await _database.GetAllTags()).ToList();
+
+            if (!string.IsNullOrEmpty(_oldRepositoryPath))
+            {
+                var backupDirPath = Path.Combine(_oldRepositoryPath, "Archive");
+                if (!Directory.Exists(backupDirPath))
+                    Directory.CreateDirectory(backupDirPath);
+
+                var files = await IOHelper.GetFiles(_oldRepositoryPath, "*.mcd");
+                var cnt = files.Length;
+                var i = 1;
+                foreach (var file in files)
+                {
+                    Console.WriteLine($@"MIGRATION | {i++} of {cnt}");
+                    MediaInfo mediaInfo = null;
+                    try
+                    {
+                        mediaInfo = await IOHelper.OpenObject<MediaInfo>(file.FullName);
+                        var thumbnailPath = Path.Combine(_oldRepositoryPath, mediaInfo.Name + "_T.jpg");
+                        var mediaPath = Path.Combine(_oldRepositoryPath, mediaInfo.ContentFileName);
+
+                        if (!File.Exists(thumbnailPath) || !File.Exists(mediaPath))
+                        {
+                            Console.WriteLine($@"MIGRATION | FILE ERROR {thumbnailPath}, {mediaPath}");
+                            continue;
+                        }
+
+                        var mediaItem = mediaInfo.ToMediaItem();
+
+                        File.Copy(thumbnailPath, GetThumbnailPath(mediaItem));
+                        if (mediaItem.Rotation != 0)
+                        {
+                            var thumbnail = await IOHelper.OpenBytes(GetThumbnailPath(mediaItem));
+                            var newThumbnail = ImageHelper.Rotate(thumbnail, 360 - mediaItem.Rotation);
+                            await IOHelper.SaveBytes(newThumbnail, GetThumbnailPath(mediaItem));
+                        }
+
+                        File.Move(mediaPath, GetMediaPath(mediaItem));
+                        await _database.AddMediaInfo(mediaInfo.ToMediaItem());
+                        File.Move(file.FullName, Path.Combine(backupDirPath, file.Name));
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($@"MIGRATION | ERROR {mediaInfo?.Name ?? ""}: {e.Message}");
+                        continue;
+                    }
+                }
+            }
         }
 
         public async Task SaveNewItems(IEnumerable<StagedItem> newItems)

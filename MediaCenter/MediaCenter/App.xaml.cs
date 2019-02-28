@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
+using System.Net.Mime;
 using System.Windows;
 using MediaCenter.Helpers;
 using MediaCenter.Properties;
@@ -21,7 +22,7 @@ namespace MediaCenter
             var dbPath = Path.Combine(repoPath, "db", "mc.db3");
             var mediaPath = Path.Combine(repoPath, "media");
             var thumbnailPath = Path.Combine(repoPath, "thumbnails");
-            _repository = new DbRepository(dbPath, mediaPath, thumbnailPath);
+            _repository = new DbRepository(dbPath, mediaPath, thumbnailPath, @"c:\TEMP\MC\TEST\Repo\");
             var repositoryTask = _repository.Initialize();
 
             var mainView = new MainWindow();
