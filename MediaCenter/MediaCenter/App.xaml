@@ -1,8 +1,6 @@
 ﻿<Application x:Class="MediaCenter.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:MediaCenter"
-             xmlns:wpf="clr-namespace:MediaCenter.WPF"
              xmlns:converters="clr-namespace:MediaCenter.WPF.Converters"
              Startup="ApplicationStartup" Exit="ApplicationExit">
     <Application.Resources>
