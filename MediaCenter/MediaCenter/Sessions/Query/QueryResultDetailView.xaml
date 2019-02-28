@@ -9,14 +9,16 @@
              xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
              xmlns:wpf="clr-namespace:MediaCenter.WPF"
              xmlns:behaviors="clr-namespace:MediaCenter.WPF.Behaviors"
+             xmlns:converters="clr-namespace:MediaCenter.WPF.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance local:QueryResultDetailViewModel}">
+             d:DataContext="{d:DesignInstance local:QuerySessionViewModel}">
 
     <UserControl.Resources>
         <ResourceDictionary>
+            <converters:MediaTypeVisibilityConverter x:Key="ShowIfImage" ImageVisibility="Visible" VideoVisibility="Collapsed" />
+            <converters:MediaTypeVisibilityConverter x:Key="ShowIfVideo" ImageVisibility="Collapsed" VideoVisibility="Visible" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Media/MediaItemViews.xaml"/>
                 <ResourceDictionary Source="/WPF/Controls/RowColumnToggleButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -29,15 +31,18 @@
             <controls:HideableRowDefinition Height="Auto" Visible="{Binding ElementName=ShowList, Path=IsChecked}"/>
         </Grid.RowDefinitions>
 
-        <ContentControl Grid.Row="0" Content="{Binding SelectedItemViewModel}" />
-        <controls:ImageButton Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding SelectPreviousItemCommand}" ImageSource="/Resources/Icons/arrow-180.png" Height="32" Width="32"/>
-        <controls:ImageButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding SelectNextItemCommand}" ImageSource="/Resources/Icons/arrow.png" Height="32" Width="32"/>
+
+        <media:ImageItemView Grid.Row="0" DataContext="{Binding DetailItem}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfImage}}" />
+        <media:VideoItemView Grid.Row="0" DataContext="{Binding DetailItem}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfVideo}}" />
+        
+        <controls:ImageButton Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding QueryResultViewModel.SelectPreviousItemCommand}" ImageSource="/Resources/Icons/arrow-180.png" Height="32" Width="32"/>
+        <controls:ImageButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding QueryResultViewModel.SelectNextItemCommand}" ImageSource="/Resources/Icons/arrow.png" Height="32" Width="32"/>
 
         <controls:ImageToggleButton Grid.Row="1" x:Name="ShowList" Style="{StaticResource RowToggleButtonStyle}" IsChecked="True"
                                     CheckedImage="/Resources/Icons/control-90.png" UncheckedImage="/Resources/Icons/control-270.png" />
 
-        <ListBox Grid.Row="2" Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding QueryResultItems}" 
-                 SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
+        <ListBox Grid.Row="2" Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding QueryResultViewModel.Items}" 
+                 SelectedItem="{Binding Path=QueryResultViewModel.SelectedItem, Mode=TwoWay}" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
             <interactivity:Interaction.Behaviors>
                 <behaviors:ScrollIntoViewBehavior/>
             </interactivity:Interaction.Behaviors>

@@ -9,12 +9,12 @@ namespace MediaCenter.Sessions.Filters
     public class FilterCollectionViewModel : PropertyChangedNotifier
     {
         private IEnumerable<string> _tags;
-        private List<Filter> _filters;
+        private readonly List<Filter> _filters;
 
-        public FilterCollectionViewModel(List<Filter> filters, IEnumerable<string> tags)
+        public FilterCollectionViewModel(IEnumerable<string> tags)
         {
             _tags = tags;
-            _filters = filters;
+            _filters = new List<Filter>();
             InitializeFilterViewModels();
         }
 
@@ -31,20 +31,24 @@ namespace MediaCenter.Sessions.Filters
             InitializeEmptyFilter();
         }
 
-        private void OnFilterChanged(object sender, EventArgs e)
+        public List<Filter> Filters
         {
-            UpdateFilters();
-            InitializeEmptyFilter();
-            RaiseFilterChanged();
+            get
+            {
+                var filtersList = FilterViewModels.Where(x => x.Filter != null).Select(x => x.Filter).ToList();
+                if (!filtersList.Any(x => x is PrivateFilter))
+                {
+                    filtersList.Add(new PrivateFilter { PrivateSetting = PrivateFilter.PrivateOption.NoPrivate });
+                }
+
+                return filtersList;
+            }
         }
 
-        private void UpdateFilters()
+        private void OnFilterChanged(object sender, EventArgs e)
         {
-            _filters.Clear();
-            foreach (var filterViewModel in FilterViewModels.Where(x => x.Filter != null))
-            {
-                _filters.Add(filterViewModel.Filter);
-            }
+            InitializeEmptyFilter();
+            RaiseFilterChanged();
         }
 
         #region Command: Remove filter

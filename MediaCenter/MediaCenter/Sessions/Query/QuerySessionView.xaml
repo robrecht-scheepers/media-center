@@ -4,30 +4,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MediaCenter.Sessions.Query"
-             xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:slideshow="clr-namespace:MediaCenter.Sessions.Slideshow"
              xmlns:filters="clr-namespace:MediaCenter.Sessions.Filters"
              xmlns:media="clr-namespace:MediaCenter.Media"
              xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
-             xmlns:wpf="clr-namespace:MediaCenter.WPF"
-             xmlns:behaviors="clr-namespace:MediaCenter.WPF.Behaviors"
+             xmlns:converters="clr-namespace:MediaCenter.WPF.Converters"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:QuerySessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300"
              Background="{StaticResource AppStandardBackground}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <DataTemplate DataType="{x:Type slideshow:SlideShowViewModel}">
-                <Grid/>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type local:QueryResultDetailViewModel}">
-                <local:QueryResultDetailView/>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type local:QueryResultListViewModel}">
-                <local:QueryResultListView/>
-            </DataTemplate>
-            <local:ViewModeBoolConverter x:Key="ViewModeBoolConverter"/>
-            <local:ViewModeBoolConverter Invert="True" x:Key="InvertedViewModeBoolConverter"/>
+            <converters:ViewModeBoolConverter x:Key="ViewModeBoolConverter"/>
+            <converters:ViewModeBoolConverter Invert="True" x:Key="InvertedViewModeBoolConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/WPF/Controls/RowColumnToggleButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -35,11 +23,6 @@
     </UserControl.Resources>
 
     <!--
-    <interactivity:Interaction.Behaviors>
-        <behaviors:OpenCloseWindowBehavior WindowType="slideshow:SlideShowWindow" Trigger="{Binding SlideShowActive}" WindowDataContext="{Binding Path=SlideShowViewModel}" 
-                                       OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" />
-    </interactivity:Interaction.Behaviors>
-    
     <UserControl.InputBindings>
         <KeyBinding Key="Right" Modifiers="Control" Command="{Binding QueryResultViewModel.SelectNextItemCommand}"/>
         <KeyBinding Key="Left" Modifiers="Control" Command="{Binding QueryResultViewModel.SelectPreviousItemCommand}"/>
@@ -60,25 +43,65 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollectionViewModel}" Margin="{StaticResource CommonMargin}"/>
+            <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollection}" Margin="{StaticResource CommonMargin}"/>
             <StackPanel Grid.Row="1" Orientation="Vertical">
                 <controls:TextButton Text="{Binding MatchCount, StringFormat='Load {0} matching items'}" Command="{Binding ExecuteQueryCommand}"
                                      Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}" Background="{StaticResource MainWindowBackground}"
                                      Height="{StaticResource TextButtonHeight}"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <controls:ImageToggleButton x:Name="detailView" IsChecked="{Binding SelectedViewMode, Converter={StaticResource ViewModeBoolConverter}, Mode=TwoWay}" 
-                                            CheckedImage="/Resources/Icons/Image-filled.png" UncheckedImage="/Resources/Icons/Image.png" 
-                                            IsEnabled="{Binding ElementName=listView, Path=IsChecked}"/>
-                    <controls:ImageToggleButton x:Name="listView" IsChecked="{Binding SelectedViewMode, Converter={StaticResource InvertedViewModeBoolConverter}, Mode=TwoWay}" 
-                                    CheckedImage="/Resources/Icons/Tiles-filled.png" UncheckedImage="/Resources/Icons/Tiles.png" IsEnabled="{Binding ElementName=detailView, Path=IsChecked}"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/Image-filled.png" Command="{Binding SwitchViewModeToDetailCommand}" />
+                    <controls:ImageButton ImageSource="/Resources/Icons/Tiles-filled.png" Command="{Binding SwitchViewModeToGridCommand}" />
                 </StackPanel>
             </StackPanel>
         </Grid>
 
         <controls:ImageToggleButton Grid.Column="1" x:Name="ShowFilter" Style="{StaticResource ColumnToggleButtonStyle}" Margin="0 5" IsChecked="True"
                                      CheckedImage="/Resources/Icons/control-180.png" UncheckedImage="/Resources/Icons/control.png"/>
-        
-        <ContentControl Grid.Column="2" Content="{Binding QueryResultViewModel}"/>
+
+        <ContentControl Grid.Column="2" Content="{Binding}">
+            <ContentControl.Style>
+                <Style TargetType="ContentControl">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedViewMode}">
+                            <DataTrigger.Value>
+                                <local:ViewMode>Detail</local:ViewMode>
+                            </DataTrigger.Value>
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate DataType="{x:Type local:QuerySessionViewModel}">
+                                        <local:QueryResultDetailView/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectedViewMode}">
+                            <DataTrigger.Value>
+                                <local:ViewMode>Grid</local:ViewMode>
+                            </DataTrigger.Value>
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate DataType="{x:Type local:QuerySessionViewModel}">
+                                        <local:QueryResultGridView/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectedViewMode}">
+                            <DataTrigger.Value>
+                                <local:ViewMode>SlideShow</local:ViewMode>
+                            </DataTrigger.Value>
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate DataType="{x:Type local:QuerySessionViewModel}">
+                                        <Grid/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
 
         <controls:ImageToggleButton Grid.Column="3" x:Name="ShowEdit" Style="{StaticResource ColumnToggleButtonStyle}"  Margin="5" IsChecked="True"
                                      CheckedImage="/Resources/Icons/control.png" UncheckedImage="/Resources/Icons/control-180.png"/>

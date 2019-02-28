@@ -6,7 +6,7 @@ namespace MediaCenter.Sessions.Staging
     {
         private string _filePath;
 
-        public StagedItem(string name, MediaType type) : base(name, type)
+        public StagedItem(MediaType type) : base(type)
         { }
 
         public string FilePath

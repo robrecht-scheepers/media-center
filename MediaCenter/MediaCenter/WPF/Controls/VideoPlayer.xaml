@@ -7,12 +7,13 @@
              xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
              xmlns:media="clr-namespace:MediaCenter.Media"
              xmlns:wpf="clr-namespace:Vlc.DotNet.Wpf;assembly=Vlc.DotNet.Wpf"
+             xmlns:converters="clr-namespace:MediaCenter.WPF.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
-            <media:PlayStateVisibilityConverter x:Key="VisibleWhenPlayingConverer" PlayingVisibility="Visible" NotPlayingVisibility="Collapsed"/>
-            <media:PlayStateVisibilityConverter x:Key="CollapsedWhenPlayingConverer" PlayingVisibility="Collapsed" NotPlayingVisibility="Visible"/>
+            <converters:PlayStateVisibilityConverter x:Key="VisibleWhenPlayingConverer" PlayingVisibility="Visible" NotPlayingVisibility="Collapsed"/>
+            <converters:PlayStateVisibilityConverter x:Key="CollapsedWhenPlayingConverer" PlayingVisibility="Collapsed" NotPlayingVisibility="Visible"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Name="Grid1">

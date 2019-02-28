@@ -5,15 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MediaCenter.Sessions.Slideshow"
              xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
-             xmlns:media="clr-namespace:MediaCenter.Media"
-             xmlns:query="clr-namespace:MediaCenter.Sessions.Query"
+             xmlns:converters="clr-namespace:MediaCenter.WPF.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance query:QuerySessionViewModel}">
+             d:DataContext="{d:DesignInstance local:SlideShowViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <media:PlayStateVisibilityConverter x:Key="VisibleWhenPlayingConverter" PlayingVisibility="Visible" NotPlayingVisibility="Collapsed"/>
-            <media:PlayStateVisibilityConverter x:Key="CollapsedWhenPlayingConverter" PlayingVisibility="Collapsed" NotPlayingVisibility="Visible"/>
+            <converters:PlayStateVisibilityConverter x:Key="VisibleWhenPlayingConverter" PlayingVisibility="Visible" NotPlayingVisibility="Collapsed"/>
+            <converters:PlayStateVisibilityConverter x:Key="CollapsedWhenPlayingConverter" PlayingVisibility="Collapsed" NotPlayingVisibility="Visible"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -46,14 +45,14 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding SlideShowViewModel.SelectedItemViewModel.MediaItem.DateTaken}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" FontSize="24"/>
+                <TextBlock Grid.Column="0" Text="{Binding MediaItemViewModel.MediaItem.DateTaken}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" FontSize="24"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <controls:ImageButton ImageSource="/Resources/Icons/previous.png" Command="{Binding SlideShowViewModel.SelectPreviousItemCommand}" Width="64" Height="64"/>
-                    <controls:ImageButton ImageSource="/Resources/Icons/pause.png" Command="{Binding SlideShowViewModel.PauseCommand}" Width="64" Height="64"
-                                          Visibility="{Binding Path=SlideShowViewModel.Status, Converter={StaticResource VisibleWhenPlayingConverter}}"/>
-                    <controls:ImageButton ImageSource="/Resources/Icons/play.png" Command="{Binding SlideShowViewModel.PlayCommand}" Width="64" Height="64"
-                                          Visibility="{Binding Path=SlideShowViewModel.Status, Converter={StaticResource CollapsedWhenPlayingConverter}}"/>
-                    <controls:ImageButton ImageSource="/Resources/Icons/next.png" Command="{Binding SlideShowViewModel.SelectNextItemCommand}" Width="64" Height="64"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/previous.png" Command="{Binding SelectPreviousItemCommand}" Width="64" Height="64"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/pause.png" Command="{Binding PauseCommand}" Width="64" Height="64"
+                                          Visibility="{Binding Path=Status, Converter={StaticResource VisibleWhenPlayingConverter}}"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/play.png" Command="{Binding PlayCommand}" Width="64" Height="64"
+                                          Visibility="{Binding Path=Status, Converter={StaticResource CollapsedWhenPlayingConverter}}"/>
+                    <controls:ImageButton ImageSource="/Resources/Icons/next.png" Command="{Binding SelectNextItemCommand}" Width="64" Height="64"/>
                 </StackPanel>
                 <Grid Grid.Column="2">
                     <Grid.ColumnDefinitions>
@@ -64,11 +63,11 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <controls:ImageToggleButton Grid.Column="0" x:Name="ShowIntervalSlider" CheckedImage="/Resources/Icons/timer.png" UncheckedImage="/Resources/Icons/timer.png" Width="64" Height="64"/>
-                    <Slider Grid.Column="1" Value="{Binding SlideShowViewModel.Interval, Mode=TwoWay}" Minimum="2" Maximum="10" TickFrequency="1" IsSnapToTickEnabled="True" 
+                    <Slider Grid.Column="1" Value="{Binding Interval, Mode=TwoWay}" Minimum="2" Maximum="10" TickFrequency="1" IsSnapToTickEnabled="True" 
                             Visibility="{Binding ElementName=ShowIntervalSlider, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" VerticalAlignment="Center" />
-                    <TextBlock Grid.Column="2" Text="{Binding Path=SlideShowViewModel.Interval, StringFormat={}{0}s}" Foreground="White" FontSize="20"
+                    <TextBlock Grid.Column="2" Text="{Binding Path=Interval, StringFormat={}{0}s}" Foreground="White" FontSize="20"
                                Visibility="{Binding ElementName=ShowIntervalSlider, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" VerticalAlignment="Center" />
-                    <controls:ImageButton Grid.Column="4" ImageSource="/Resources/Icons/close_circle.png" Command="{Binding CloseSlideShowCommand}"  Width="64" Height="64" HorizontalAlignment="Right"/>
+                    <controls:ImageButton Grid.Column="4" ImageSource="/Resources/Icons/close_circle.png" Command="{Binding CloseCommand}"  Width="64" Height="64" HorizontalAlignment="Right"/>
                 </Grid>
             </Grid>
         </Border>

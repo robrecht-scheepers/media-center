@@ -65,15 +65,9 @@ namespace MediaCenter.Repository
                     newItem.StatusMessage = "File path is missing";
                     continue;
                 }
-                if (string.IsNullOrEmpty(newItem.Name))
-                {
-                    newItem.Status = MediaItemStatus.Error;
-                    newItem.StatusMessage = "Name is missing";
-                    continue;
-                }
-
+                
                 var originalName = newItem.Name;
-                newItem.Name = await CreateUniqueName(originalName);
+                newItem.Name = await CreateUniqueName(newItem);
                 newItem.ContentFileName = newItem.Name + Path.GetExtension(newItem.FilePath);
                 var mediaItemFilePath = GetMediaPath(newItem);
                 var thumbnailFilePath = GetThumbnailPath(newItem);
@@ -101,23 +95,18 @@ namespace MediaCenter.Repository
                 }
             }
         }
-        
-        private async Task<string> CreateUniqueName(string originalName)
-        {
-            string newName = originalName;
-            // if the name was already altered for uniqueness during staging, to avid getting ..._1_1 situations
-            // we strip down the previous changes and start again from teh base name to create uniqueness in the catalog
-            if (originalName.Contains("_"))
-            {
-                newName = originalName.Substring(0, originalName.IndexOf("_", StringComparison.InvariantCulture));
-            }
 
-            var nameClashes = await _database.GetNameClashes(newName);
+        private async Task<string> CreateUniqueName(MediaItem item)
+        {
+            var baseName = item.DateTaken.ToString("yyyyMMddHHmmss");
+            
+            var nameClashes = await _database.GetNameClashes(baseName);
             if (!nameClashes.Any())
-                return originalName;
+                return baseName;
 
             var cnt = 1;
-            while (nameClashes.Contains(newName = $"{originalName}_{cnt++}")) { }
+            string newName;
+            while (nameClashes.Contains(newName = $"{baseName}_{cnt++}")) { }
             return newName;
         }
 
@@ -130,7 +119,7 @@ namespace MediaCenter.Repository
             return Path.Combine(_thumbnailFolderPath, item.Name + "_T.jpg");
         }
 
-        private Uri GetContentUri(MediaItem item)
+        public Uri GetContentUri(MediaItem item)
         {
             return new Uri(GetMediaPath(item));
         }
@@ -155,7 +144,7 @@ namespace MediaCenter.Repository
             return await IOHelper.OpenBytes(GetThumbnailPath(item));
         }
 
-        public async Task<byte[]> GetFullImage(MediaItem item, IEnumerable<MediaItem> prefetch)
+        public async Task<byte[]> GetFullImage(MediaItem item, IEnumerable<MediaItem> prefetch = null)
         {
             Task<byte[]> imageLoadingTask = null;
             byte[] result = null;
@@ -175,47 +164,47 @@ namespace MediaCenter.Repository
                     imageLoadingTask = IOHelper.OpenBytes(imagePath);
             }
 
-            // clean up buffer and decide which images need to be fetched
-            var prefetchList = prefetch.ToList();
-            var deleteFromBufferList = _buffer.Keys.Where(x => x != item.Name && !prefetchList.Select(y => y.Name).Contains(x));
-            foreach (var deleteItem in deleteFromBufferList)
-            {
-                _buffer.TryRemove(deleteItem, out var value);
-            }
-            var itemsToBeFetched = prefetchList.Where(x => !_buffer.ContainsKey(x.Name)).ToList();
+            //// clean up buffer and decide which images need to be fetched
+            //var prefetchList = prefetch.ToList();
+            //var deleteFromBufferList = _buffer.Keys.Where(x => x != item.Name && !prefetchList.Select(y => y.Name).Contains(x));
+            //foreach (var deleteItem in deleteFromBufferList)
+            //{
+            //    _buffer.TryRemove(deleteItem, out var value);
+            //}
+            //var itemsToBeFetched = prefetchList.Where(x => !_buffer.ContainsKey(x.Name)).ToList();
 
-            // start prefetch sequence
-            if (itemsToBeFetched.Any())
-            {
-                // cancel any prefetch action still in progress
-                if (_prefetchInProgress)
-                {
-                    _bufferCancellationTokenSource?.Cancel();
-                }
+            //// start prefetch sequence
+            //if (itemsToBeFetched.Any())
+            //{
+            //    // cancel any prefetch action still in progress
+            //    if (_prefetchInProgress)
+            //    {
+            //        _bufferCancellationTokenSource?.Cancel();
+            //    }
 
-                var prefetchSequence = Observable.Create<KeyValuePair<string, byte[]>>(
-                async (observer, token) =>
-                {
-                    _prefetchInProgress = true;
-                    foreach (var bufferItem in itemsToBeFetched)
-                    {
-                        // before fetching each item, check if cancellation was requested
-                        token.ThrowIfCancellationRequested();
-                        var bytes = await IOHelper.OpenBytes(GetMediaPath(bufferItem));
-                        token.ThrowIfCancellationRequested();
-                        observer.OnNext(new KeyValuePair<string, byte[]>(bufferItem.Name, bytes));
-                    }
-                });
-                _bufferCancellationTokenSource = new CancellationTokenSource();
-                prefetchSequence.Subscribe(
-                    pair =>
-                    {
-                        _buffer[pair.Key] = pair.Value;
-                        Debug.WriteLine($"{DateTime.Now:HH:mm:ss tt ss.fff} | Prefetched { pair.Key}");
-                    },
-                    () => { _prefetchInProgress = false; },
-                    _bufferCancellationTokenSource.Token);
-            }
+            //    var prefetchSequence = Observable.Create<KeyValuePair<string, byte[]>>(
+            //    async (observer, token) =>
+            //    {
+            //        _prefetchInProgress = true;
+            //        foreach (var bufferItem in itemsToBeFetched)
+            //        {
+            //            // before fetching each item, check if cancellation was requested
+            //            token.ThrowIfCancellationRequested();
+            //            var bytes = await IOHelper.OpenBytes(GetMediaPath(bufferItem));
+            //            token.ThrowIfCancellationRequested();
+            //            observer.OnNext(new KeyValuePair<string, byte[]>(bufferItem.Name, bytes));
+            //        }
+            //    });
+            //    _bufferCancellationTokenSource = new CancellationTokenSource();
+            //    prefetchSequence.Subscribe(
+            //        pair =>
+            //        {
+            //            _buffer[pair.Key] = pair.Value;
+            //            Debug.WriteLine($"{DateTime.Now:HH:mm:ss tt ss.fff} | Prefetched { pair.Key}");
+            //        },
+            //        () => { _prefetchInProgress = false; },
+            //        _bufferCancellationTokenSource.Token);
+            //}
 
             if (imageLoadingTask != null)
                 result = await imageLoadingTask;
@@ -250,13 +239,7 @@ namespace MediaCenter.Repository
 
         public async Task<List<MediaItem>> GetQueryItems(IEnumerable<Filter> filters)
         {
-            var items = await _database.GetFilteredItemList(filters);
-            foreach (var mediaItem in items)
-            {
-                mediaItem.ContentUri = GetContentUri(mediaItem);
-            }
-
-            return items;
+            return await _database.GetFilteredItemList(filters); ;
         }
 
         public async Task<int> GetQueryCount(IEnumerable<Filter> filters)

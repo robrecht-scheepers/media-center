@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MediaCenter</RootNamespace>
     <AssemblyName>MediaCenter</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -130,12 +130,20 @@
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
     <Compile Include="Media\PlayState.cs" />
+    <Compile Include="WPF\Controls\AirControl\AirControl.xaml.cs">
+      <DependentUpon>AirControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WPF\Controls\AirControl\Alpha.xaml.cs">
+      <DependentUpon>Alpha.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WPF\Converters\MediaTypeVisibilityConverter.cs" />
     <Compile Include="Repository\Database.cs" />
     <Compile Include="Repository\DbRepository.cs" />
     <Compile Include="Sessions\Filters\FilterView.xaml.cs">
       <DependentUpon>FilterView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sessions\Query\ViewModeBoolConverter.cs" />
+    <Compile Include="Sessions\Query\ViewMode.cs" />
+    <Compile Include="WPF\Converters\ViewModeBoolConverter.cs" />
     <Compile Include="Sessions\SessionTabViewModel.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowControls.xaml.cs">
       <DependentUpon>SlideShowControls.xaml</DependentUpon>
@@ -143,7 +151,7 @@
     <Compile Include="Sessions\Staging\StagedItemPreviewWindow.xaml.cs">
       <DependentUpon>StagedItemPreviewWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Media\PlayStateVisibilityConverter.cs" />
+    <Compile Include="WPF\Converters\PlayStateVisibilityConverter.cs" />
     <Compile Include="WPF\Controls\SeekBar.cs" />
     <Compile Include="WPF\Converters\BoolVisibilityConverter.cs" />
     <Compile Include="WPF\Controls\HideableColumnDefinition.cs" />
@@ -163,7 +171,6 @@
     <Compile Include="Media\EditMediaInfoView.xaml.cs">
       <DependentUpon>EditMediaInfoView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Media\ImageItemViewModel.cs" />
     <Compile Include="Media\ImageItemView.xaml.cs">
       <DependentUpon>ImageItemView.xaml</DependentUpon>
     </Compile>
@@ -175,7 +182,6 @@
     <Compile Include="Media\VideoItemView.xaml.cs">
       <DependentUpon>VideoItemView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Media\VideoItemViewModel.cs" />
     <Compile Include="WPF\Controls\VideoPlayer.xaml.cs">
       <DependentUpon>VideoPlayer.xaml</DependentUpon>
     </Compile>
@@ -191,7 +197,6 @@
     <Compile Include="MVVM\RelayCommandBase.cs" />
     <Compile Include="Media\MediaItem.cs" />
     <Compile Include="Media\MediaType.cs" />
-    <Compile Include="Repository\RemoteRepository.cs" />
     <Compile Include="Repository\RepositoryStatusView.xaml.cs">
       <DependentUpon>RepositoryStatusView.xaml</DependentUpon>
     </Compile>
@@ -214,37 +219,27 @@
     <Compile Include="Sessions\Query\QueryResultDetailView.xaml.cs">
       <DependentUpon>QueryResultDetailView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sessions\Query\QueryResultDetailViewModel.cs" />
-    <Compile Include="Sessions\Query\QueryResultListView.xaml.cs">
-      <DependentUpon>QueryResultListView.xaml</DependentUpon>
+    <Compile Include="Sessions\Query\QueryResultGridView.xaml.cs">
+      <DependentUpon>QueryResultGridView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sessions\Query\QueryResultListViewModel.cs" />
     <Compile Include="Sessions\Query\QueryResultViewModel.cs" />
     <Compile Include="Sessions\Query\QuerySessionView.xaml.cs">
       <DependentUpon>QuerySessionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Query\QuerySessionViewModel.cs" />
-    <Compile Include="Sessions\Query\SelectionChangedEventArgs.cs" />
     <Compile Include="Sessions\SessionViewModelBase.cs" />
     <Compile Include="Sessions\Slideshow\HideOnIdleMouseBehavior.cs" />
-    <Compile Include="Sessions\Staging\EditStagedItemView.xaml.cs">
-      <DependentUpon>EditStagedItemView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Sessions\Staging\StagedItem.cs" />
-    <Compile Include="WPF\Behaviors\BindableListboxSelectionBehavior.cs" />
+    <Compile Include="WPF\Behaviors\BindSelectionBehavior.cs" />
     <Compile Include="WPF\Converters\NullVisibilityConverter.cs" />
     <Compile Include="WPF\Converters\ObjectBoolConverter.cs" />
-    <Compile Include="WPF\Behaviors\OpenCloseWindowBehavior.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowViewModel.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowWindow.xaml.cs">
       <DependentUpon>SlideShowWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sessions\Staging\EditStagedItemViewModel.cs" />
     <Compile Include="Sessions\Staging\StagedItemView.xaml.cs">
       <DependentUpon>StagedItemView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sessions\Staging\StagingSession.cs" />
-    <Compile Include="Sessions\Query\QuerySession.cs" />
     <Compile Include="Sessions\SessionBase.cs" />
     <Compile Include="Sessions\Staging\StagingSessionView.xaml.cs">
       <DependentUpon>StagingSessionView.xaml</DependentUpon>
@@ -266,6 +261,14 @@
     <Page Include="Sessions\Staging\StagedItemPreviewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WPF\Controls\AirControl\AirControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WPF\Controls\AirControl\Alpha.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="WPF\Controls\RowColumnToggleButton.xaml">
       <SubType>Designer</SubType>
@@ -311,10 +314,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Media\MediaItemViews.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Media\ThumbnailListStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -343,7 +342,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Sessions\Query\QueryResultListView.xaml">
+    <Page Include="Sessions\Query\QueryResultGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -352,10 +351,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Sessions\Slideshow\SlideShowWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Sessions\Staging\EditStagedItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -478,12 +473,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Airhack\Airhack.csproj">
-      <Project>{dae7b03b-a48f-4291-8777-597634a331c6}</Project>
-      <Name>Airhack</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.109.2\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.109.2\build\net46\System.Data.SQLite.Core.targets')" />

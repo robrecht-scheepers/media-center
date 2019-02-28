@@ -1,8 +1,7 @@
 ﻿<Application x:Class="MediaCenter.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:MediaCenter"
-             xmlns:wpf="clr-namespace:MediaCenter.WPF"
+             xmlns:converters="clr-namespace:MediaCenter.WPF.Converters"
              Startup="ApplicationStartup" Exit="ApplicationExit">
     <Application.Resources>
         <ResourceDictionary>
@@ -11,13 +10,15 @@
                 <ResourceDictionary Source="WPF/Style.xaml"/>
                 <ResourceDictionary Source="Media/ThumbnailListStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <wpf:NullVisibilityConverter x:Key="HideWhenNullConverter" NotNullVisibility="Visible" NullVisibility="Hidden"/>
-            <wpf:NullVisibilityConverter x:Key="HideWhenNotNullConverter" NotNullVisibility="Hidden" NullVisibility="Visible"/>
-            <wpf:NullVisibilityConverter x:Key="CollapseWhenNullConverter" NotNullVisibility="Visible" NullVisibility="Collapsed"/>
-            <wpf:NullVisibilityConverter x:Key="CollapseWhenNotNullConverter" NotNullVisibility="Collapsed" NullVisibility="Visible"/>
-            <wpf:BoolVisibilityConverter x:Key="CollapseWhenFalseConverter" TrueVisibility="Visible" FalseVisibility="Collapsed"/>
-            <wpf:BoolVisibilityConverter x:Key="CollapseWhenTrueConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
-            <wpf:ObjectBoolConverter x:Key="FalseWhenNullConverter" Invert="False"/>
-        </ResourceDictionary>
+            <converters:NullVisibilityConverter x:Key="HideWhenNullConverter" NotNullVisibility="Visible" NullVisibility="Hidden"/>
+            <converters:NullVisibilityConverter x:Key="HideWhenNotNullConverter" NotNullVisibility="Hidden" NullVisibility="Visible"/>
+            <converters:NullVisibilityConverter x:Key="CollapseWhenNullConverter" NotNullVisibility="Visible" NullVisibility="Collapsed"/>
+            <converters:NullVisibilityConverter x:Key="CollapseWhenNotNullConverter" NotNullVisibility="Collapsed" NullVisibility="Visible"/>
+            <converters:BoolVisibilityConverter x:Key="CollapseWhenFalseConverter" TrueVisibility="Visible" FalseVisibility="Collapsed"/>
+            <converters:BoolVisibilityConverter x:Key="CollapseWhenTrueConverter" TrueVisibility="Collapsed" FalseVisibility="Visible"/>
+            <converters:ObjectBoolConverter x:Key="FalseWhenNullConverter" Invert="False"/>
+            <converters:MediaTypeVisibilityConverter x:Key="ShowIfImage" ImageVisibility="Visible" VideoVisibility="Collapsed" />
+            <converters:MediaTypeVisibilityConverter x:Key="ShowIfVideo" ImageVisibility="Collapsed" VideoVisibility="Visible" />
+</ResourceDictionary>
     </Application.Resources>
 </Application>

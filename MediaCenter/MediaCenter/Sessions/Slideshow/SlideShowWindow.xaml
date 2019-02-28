@@ -6,32 +6,15 @@
         xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:MediaCenter.Sessions.Slideshow"
         xmlns:media="clr-namespace:MediaCenter.Media"
-        xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
         xmlns:query="clr-namespace:MediaCenter.Sessions.Query"
-        xmlns:airhack="clr-namespace:Airhack;assembly=Airhack"
+        xmlns:airControl="clr-namespace:MediaCenter.WPF.Controls.AirControl"
         mc:Ignorable="d"
         Title="SlideShowWindow" Height="300" Width="300"
         Background="Black"
         WindowState="Maximized" WindowStyle="None"
-        d:DataContext="{d:DesignInstance query:QuerySessionViewModel}">
-    <Window.Resources>
-        <ResourceDictionary>
-            <DataTemplate DataType="{x:Type media:ImageItemViewModel}">
-                <Image Source="{Binding Path=MediaItem.Content}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    <Image.LayoutTransform>
-                        <RotateTransform Angle="{Binding Path=MediaItem.Rotation}"/>
-                    </Image.LayoutTransform>
-                </Image>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type media:VideoItemViewModel}">
-                <media:VideoItemView HideControls="True"/>
-            </DataTemplate>
-            
-        </ResourceDictionary>
-    </Window.Resources>
-    
+        d:DataContext="{d:DesignInstance local:SlideShowViewModel}">
     <Window.InputBindings>
-        <KeyBinding Key="Escape" Command="{Binding CloseSlideShowCommand}"/>
+        <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
     </Window.InputBindings>
 
     <interactivity:Interaction.Behaviors>
@@ -39,14 +22,22 @@
     </interactivity:Interaction.Behaviors>
 
     <Grid>
-        <airhack:AirControl x:Name="AirControl" DataContext="{Binding }">
-            <airhack:AirControl.Back>
-                <ContentControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{Binding SlideShowViewModel.SelectedItemViewModel}"/>
-            </airhack:AirControl.Back>
-            <airhack:AirControl.Front>
+        <airControl:AirControl x:Name="AirControl" DataContext="{Binding }">
+            <airControl:AirControl.Back>
+                <Grid>
+                    <Image Source="{Binding Path=MediaItemViewModel.ContentBytes}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                           Visibility="{Binding MediaItemViewModel.MediaItem.MediaType, Converter={StaticResource ShowIfImage}}" >
+                        <Image.LayoutTransform>
+                            <RotateTransform Angle="{Binding Path=MediaItemViewModel.MediaItem.Rotation}"/>
+                        </Image.LayoutTransform>
+                    </Image>
+                    <media:VideoItemView HideControls="True" DataContext="{Binding MediaItemViewModel}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfVideo}}" />
+                </Grid>
+            </airControl:AirControl.Back>
+            <airControl:AirControl.Front>
                 <local:SlideShowControls DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext}" />
-            </airhack:AirControl.Front>
-        </airhack:AirControl>
+            </airControl:AirControl.Front>
+        </airControl:AirControl>
     </Grid>
     
 </Window>

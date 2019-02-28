@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using System.Windows.Forms;
+using MediaCenter.Sessions.Query;
 
-namespace MediaCenter.Sessions.Query
+namespace MediaCenter.WPF.Converters
 {
     public class ViewModeBoolConverter : IValueConverter
     {
@@ -14,8 +14,8 @@ namespace MediaCenter.Sessions.Query
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var mode = (QuerySessionViewModel.ViewMode) value;
-            return Invert ? mode == QuerySessionViewModel.ViewMode.List : mode == QuerySessionViewModel.ViewMode.Detail;
+            var mode = (ViewMode) value;
+            return Invert ? mode == ViewMode.Grid : mode == ViewMode.Detail;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -23,9 +23,9 @@ namespace MediaCenter.Sessions.Query
             var input = (bool) value;
 
             if(Invert)
-                return input ? QuerySessionViewModel.ViewMode.List : QuerySessionViewModel.ViewMode.Detail;
+                return input ? ViewMode.Grid : ViewMode.Detail;
 
-            return input ? QuerySessionViewModel.ViewMode.Detail : QuerySessionViewModel.ViewMode.List;
+            return input ? ViewMode.Detail : ViewMode.Grid;
         }
 
         public bool Invert { get; set; }

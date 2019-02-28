@@ -14,23 +14,26 @@ namespace MediaCenter
     public class MainWindowViewModel : PropertyChangedNotifier
     {
         private readonly IWindowService _windowService;
+        private readonly IRepository _repository;
+        private RelayCommand<SessionTabViewModel> _closeSessionCommand;
+        private SessionTabViewModel _selectedSessionTab;
+
 
         public MainWindowViewModel(IRepository repository, IWindowService windowService)
         {
             _windowService = windowService;
+            _repository = repository;
+
             Sessions = new ObservableCollection<SessionTabViewModel>();
-            Repository = repository;
-            RepositoryViewModel = new RepositoryViewModel(Repository);
-            CreateNewSessionTab();
+            RepositoryViewModel = new RepositoryViewModel(_repository);
+            CreateEmptySessionTab();
             SelectedSessionTab = Sessions.First();
         }
 
 
         public string AppVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
-        public IRepository Repository { get; }
         public RepositoryViewModel RepositoryViewModel { get; }
-        
-        public ObservableCollection<SessionTabViewModel> Sessions { get; private set; }
+        public ObservableCollection<SessionTabViewModel> Sessions { get; }
 
         public SessionTabViewModel SelectedSessionTab
         {
@@ -38,9 +41,7 @@ namespace MediaCenter
             set => SetValue(ref _selectedSessionTab, value);
         }
 
-        private RelayCommand<SessionTabViewModel> _closeSessionCommand;
-        private SessionTabViewModel _selectedSessionTab;
-
+        
         public RelayCommand<SessionTabViewModel> CloseSessionCommand =>
             _closeSessionCommand ?? (_closeSessionCommand = new RelayCommand<SessionTabViewModel>(CloseSession));
         public void CloseSession(SessionTabViewModel session)
@@ -48,9 +49,9 @@ namespace MediaCenter
             Sessions.Remove(session);
         }
 
-        private void CreateNewSessionTab()
+        private void CreateEmptySessionTab()
         {
-            var newSessionTab = new SessionTabViewModel(Repository,_windowService);
+            var newSessionTab = new SessionTabViewModel(_repository,_windowService);
             newSessionTab.SessionCreated += NewSessionTabOnSessionCreated;
             Sessions.Add(newSessionTab);
         }
@@ -58,7 +59,7 @@ namespace MediaCenter
         private void NewSessionTabOnSessionCreated(object sender, EventArgs eventArgs)
         {
             ((SessionTabViewModel)sender).SessionCreated -= NewSessionTabOnSessionCreated;
-            CreateNewSessionTab();
+            CreateEmptySessionTab();
         }
     }
 }
