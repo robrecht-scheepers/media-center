@@ -22,7 +22,7 @@ namespace MediaCenter
             var dbPath = Path.Combine(repoPath, "db", "mc.db3");
             var mediaPath = Path.Combine(repoPath, "media");
             var thumbnailPath = Path.Combine(repoPath, "thumbnails");
-            _repository = new DbRepository(dbPath, mediaPath, thumbnailPath, @"c:\TEMP\MC\TEST\Repo\");
+            _repository = new DbRepository(dbPath, mediaPath, thumbnailPath, @"e:\MediaCenter\");
             var repositoryTask = _repository.Initialize();
 
             var mainView = new MainWindow();
