@@ -17,7 +17,8 @@
                 <Grid.LayoutTransform>
                     <ScaleTransform x:Name="scaleTransform"/>
                 </Grid.LayoutTransform>
-                <Image x:Name="image" Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ZoomImage}}, Path=ImageContent}" Stretch="Uniform" Width="{Binding ElementName=scrollViewer, Path=ActualWidth}" Height="{Binding ElementName=scrollViewer, Path=ActualHeight}">
+                <Image x:Name="image" Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ZoomImage}}, Path=ImageContent}" Stretch="Uniform" 
+                       Width="{Binding ElementName=scrollViewer, Path=ActualWidth}" Height="{Binding ElementName=scrollViewer, Path=ActualHeight}">
                     <Image.LayoutTransform>
                         <RotateTransform x:Name="rotateTransform" Angle="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ZoomImage}}, Path=Rotation}"/>
                     </Image.LayoutTransform>

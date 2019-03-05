@@ -157,8 +157,8 @@ namespace MediaCenter.WPF.Controls
 
         public byte[] ImageContent
         {
-            get { return (byte[])GetValue(ImageContentProperty); }
-            set { SetValue(ImageContentProperty, value); }
+            get => (byte[])GetValue(ImageContentProperty);
+            set => SetValue(ImageContentProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for ImageContent.  This enables animation, styling, binding, etc...
@@ -171,17 +171,19 @@ namespace MediaCenter.WPF.Controls
             me.Reset();
         }
 
-        public int Rotation { get { return (int)GetValue(RotationProperty); } set { SetValue(RotationProperty, value); } }
+        public int Rotation
+        {
+            get => (int) GetValue(RotationProperty);
+            set => SetValue(RotationProperty, value);
+        }
         public static readonly DependencyProperty RotationProperty = DependencyProperty.Register("Rotation", typeof(int), typeof(ZoomImage), new PropertyMetadata(0));
-
-
+        
 
         public bool ShowSlider
         {
-            get { return (bool)GetValue(ShowSliderProperty); }
-            set { SetValue(ShowSliderProperty, value); }
+            get => (bool)GetValue(ShowSliderProperty);
+            set => SetValue(ShowSliderProperty, value);
         }
-
         // Using a DependencyProperty as the backing store for ShowSlider.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ShowSliderProperty =
             DependencyProperty.Register("ShowSlider", typeof(bool), typeof(ZoomImage), new PropertyMetadata(true, ShowSliderChanged));
