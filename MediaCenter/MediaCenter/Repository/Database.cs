@@ -272,7 +272,7 @@ namespace MediaCenter.Repository
                     : " AND Type <> @mediaType");
                 command.Parameters.AddWithValue("@mediaType", mediaTypeFilter.MediaType);
             }
-            else if (filter is TagFilter tagFilter)
+            else if (filter is TagFilter tagFilter && !string.IsNullOrEmpty(tagFilter.Tag))
             {
                 conditions.Append(!filter.Invert
                     ? " AND Tags LIKE "
