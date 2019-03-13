@@ -10,7 +10,8 @@ namespace MediaCenter.WPF.Controls
     /// </summary>
     public partial class ZoomImage : UserControl
     {
-        private const int ZoomLevel = 5;
+        private const int DefaultZoom = 5;
+        private const int MaxZoom = 10;
 
         private Point? _lastCenterPositionOnTarget;
         private Point? _lastMousePositionOnTarget;
@@ -21,6 +22,8 @@ namespace MediaCenter.WPF.Controls
         private bool _zoomingIn;
         private bool _zoomingOut;
 
+        private int _zoomLevel = 1;
+
         public ZoomImage()
         {
             InitializeComponent();
@@ -29,19 +32,30 @@ namespace MediaCenter.WPF.Controls
             scaleTransform.CenterY = 0.5;
 
             scrollViewer.ScrollChanged += OnScrollViewerScrollChanged;
-            //scrollViewer.PreviewMouseWheel += OnPreviewMouseWheel;
             scrollViewer.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
+            scrollViewer.PreviewMouseWheel += OnPreviewMouseWheel;
             scrollViewer.MouseMove += OnMouseMove;
             scrollViewer.MouseLeftButtonUp += OnMouseLeftButtonUp;
             scrollViewer.MouseDoubleClick += OnMouseDoubleClick;
         }
 
+        private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                AdjustZoom(Math.Min(_zoomLevel + 1, MaxZoom), e.GetPosition(scrollViewer));
+            }
+            else if (e.Delta < 0)
+            {
+                AdjustZoom(Math.Max(1, _zoomLevel - 1), e.GetPosition(scrollViewer));
+            }
+
+            e.Handled = true;
+        }
+
         private void OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if(_zoomedIn)
-                ZoomOut(); 
-            else
-                ZoomIn(e.GetPosition(scrollViewer));
+            AdjustZoom(_zoomLevel > 1 ? 1 : DefaultZoom, e.GetPosition(scrollViewer));
         }
 
         void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -75,27 +89,24 @@ namespace MediaCenter.WPF.Controls
             _lastDragPoint = null;
         }
 
-        private void ZoomIn(Point position)
+        private void AdjustZoom(int zoomLevel, Point position = default(Point))
         {
-            _zoomingIn = true;
-            scaleTransform.ScaleX = ZoomLevel;
-            scaleTransform.ScaleY = ZoomLevel;
-            
+            if(zoomLevel == _zoomLevel)
+                return;
+
+            _zoomLevel = zoomLevel;
             _relativeZoomPoint = new Point(position.X / scrollViewer.ViewportWidth, position.Y / scrollViewer.ViewportHeight);
-            _zoomedIn = true;
-        }
 
-        private void ZoomOut()
-        {
-            scaleTransform.ScaleX = 1;
-            scaleTransform.ScaleY = 1;
-
-            _zoomedIn = false;
+            scaleTransform.ScaleX = zoomLevel;
+            scaleTransform.ScaleY = zoomLevel;
         }
 
         void OnScrollViewerScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if ((e.ExtentHeightChange != 0 || e.ExtentWidthChange != 0) && _zoomingIn)
+            if(_zoomLevel == 1)
+                return;
+
+            if (e.ExtentHeightChange != 0 || e.ExtentWidthChange != 0)
             {
                 var targetPoint = new Point(_relativeZoomPoint.X * scrollViewer.ExtentWidth, _relativeZoomPoint.Y * scrollViewer.ExtentHeight);
 
@@ -104,7 +115,6 @@ namespace MediaCenter.WPF.Controls
 
                 scrollViewer.ScrollToHorizontalOffset(offsetX);
                 scrollViewer.ScrollToVerticalOffset(offsetY);
-                _zoomingIn = false;
             }
         }
 
@@ -135,7 +145,7 @@ namespace MediaCenter.WPF.Controls
 
         private void Reset()
         {
-            ZoomOut();
+            AdjustZoom(1);
         }
     }
 }
