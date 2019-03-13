@@ -117,12 +117,12 @@ namespace MediaCenter.Repository
             if (tags == null || !tags.Any())
                 return "";
 
-            return  tags.Aggregate((a, n) => a + (string.IsNullOrEmpty(a) ? "" : "#") + n);
+            return "#" + tags.Aggregate((a, n) => a + "#" + n) + "#";
         }
 
         private List<string> SeparateTags(string aggregatedTags)
         {
-            return aggregatedTags.Split('#').ToList();
+            return aggregatedTags.Split('#').Where(x => !string.IsNullOrEmpty(x)).ToList();
         }
 
         public async Task<List<string>> GetNameClashes(string name)
@@ -272,6 +272,13 @@ namespace MediaCenter.Repository
                     : " AND Type <> @mediaType");
                 command.Parameters.AddWithValue("@mediaType", mediaTypeFilter.MediaType);
             }
+            else if (filter is TagFilter tagFilter && !string.IsNullOrEmpty(tagFilter.Tag))
+            {
+                conditions.Append(!filter.Invert
+                    ? " AND Tags LIKE "
+                    : " AND Tags NOT LIKE ");
+                conditions.Append($"'%#{tagFilter.Tag}#%'");
+            }
         }
 
         public async Task<IEnumerable<string>> GetAllTags()
@@ -292,7 +299,7 @@ namespace MediaCenter.Repository
                 }
             }
 
-            return tagEntries.SelectMany(SeparateTags).Distinct().Where(x => !string.IsNullOrEmpty(x));
+            return tagEntries.SelectMany(SeparateTags).Distinct();
         }
     }
 }
