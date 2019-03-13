@@ -219,6 +219,8 @@ namespace MediaCenter.Sessions.Query
             SlideShowViewModel = null;
             if (_viewModeBeforeSlideShow == ViewMode.Grid)
                 SwitchViewModeToGrid().Wait();
+            else
+                SwitchViewModeToDetail().Wait();
         }
     }
 }
