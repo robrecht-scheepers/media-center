@@ -13,14 +13,9 @@ namespace MediaCenter.WPF.Controls
         private const int DefaultZoom = 5;
         private const int MaxZoom = 10;
 
-        private Point? _lastCenterPositionOnTarget;
-        private Point? _lastMousePositionOnTarget;
         private Point? _lastDragPoint;
-        private Point _relativeZoomPoint;
+        private Point _zoomPoint;
 
-        private bool _zoomedIn;
-        private bool _zoomingIn;
-        private bool _zoomingOut;
 
         private int _zoomLevel = 1;
 
@@ -60,7 +55,7 @@ namespace MediaCenter.WPF.Controls
 
         void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (!_zoomedIn)
+            if (_zoomLevel == 1)
                 return;
 
             var mousePos = e.GetPosition(scrollViewer);
@@ -95,7 +90,8 @@ namespace MediaCenter.WPF.Controls
                 return;
 
             _zoomLevel = zoomLevel;
-            _relativeZoomPoint = new Point(position.X / scrollViewer.ViewportWidth, position.Y / scrollViewer.ViewportHeight);
+            _zoomPoint = position;
+            
 
             scaleTransform.ScaleX = zoomLevel;
             scaleTransform.ScaleY = zoomLevel;
@@ -108,10 +104,12 @@ namespace MediaCenter.WPF.Controls
 
             if (e.ExtentHeightChange != 0 || e.ExtentWidthChange != 0)
             {
-                var targetPoint = new Point(_relativeZoomPoint.X * scrollViewer.ExtentWidth, _relativeZoomPoint.Y * scrollViewer.ExtentHeight);
+                var relativeZoomPoint = new Point(_zoomPoint.X / scrollViewer.ViewportWidth, _zoomPoint.Y / scrollViewer.ViewportHeight);
+                //var targetPoint = new Point(relativeZoomPoint.X * scrollViewer.ExtentWidth, relativeZoomPoint.Y * scrollViewer.ExtentHeight);
+                var targetPoint = scrollViewer.TranslatePoint(_zoomPoint, Grid);
 
-                var offsetX = Math.Max(targetPoint.X - scrollViewer.ViewportWidth / 2, 0);
-                var offsetY = Math.Max(targetPoint.Y - scrollViewer.ViewportHeight / 2, 0);
+                var offsetX = Math.Max(targetPoint.X - _zoomPoint.X, 0);
+                var offsetY = Math.Max(targetPoint.Y - _zoomPoint.Y, 0);
 
                 scrollViewer.ScrollToHorizontalOffset(offsetX);
                 scrollViewer.ScrollToVerticalOffset(offsetY);
