@@ -59,17 +59,18 @@ namespace MediaCenter.Media
                 return;
             }
 
-            MediaItem = item;
-            if (MediaItem.MediaType == MediaType.Image)
+            // fetch the content before assigning the MediaItem property, to avoid the new rotation to be applied to the old content
+            if (item.MediaType == MediaType.Image)
             {
-                ContentBytes = await _repository.GetFullImage(MediaItem);
+                ContentBytes = await _repository.GetFullImage(item);
                 ContentUri = null;
             }
             else // video
             {
                 ContentBytes = null;
-                ContentUri = _repository.GetContentUri(MediaItem);
+                ContentUri = _repository.GetContentUri(item);
             }
+            MediaItem = item;
         }
 
         public async Task Rotate(int angle)
