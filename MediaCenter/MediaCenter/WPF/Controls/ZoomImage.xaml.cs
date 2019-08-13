@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -9,9 +10,15 @@ namespace MediaCenter.WPF.Controls
     /// </summary>
     public partial class ZoomImage : UserControl
     {
-        private Point? _lastCenterPositionOnTarget;
-        private Point? _lastMousePositionOnTarget;
+        private const int DefaultZoom = 5;
+        private const int MaxZoom = 10;
+
         private Point? _lastDragPoint;
+        private Point _zoomMousePoint;
+
+
+        private int _zoomLevel = 1;
+        private int _previousZoomLevel = 1;
 
         public ZoomImage()
         {
@@ -21,43 +28,88 @@ namespace MediaCenter.WPF.Controls
             scaleTransform.CenterY = 0.5;
 
             scrollViewer.ScrollChanged += OnScrollViewerScrollChanged;
-            scrollViewer.PreviewMouseWheel += OnPreviewMouseWheel;
             scrollViewer.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
+            scrollViewer.PreviewMouseWheel += OnPreviewMouseWheel;
             scrollViewer.MouseMove += OnMouseMove;
             scrollViewer.MouseLeftButtonUp += OnMouseLeftButtonUp;
+            scrollViewer.MouseDoubleClick += OnMouseDoubleClick;
+        }
 
-            slider.ValueChanged += OnSliderValueChanged;
-            slider.Value = 1;
+        private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                AdjustZoom(Math.Min(_zoomLevel + 1, MaxZoom), e.GetPosition(scrollViewer));
+            }
+            else if (e.Delta < 0)
+            {
+                AdjustZoom(Math.Max(1, _zoomLevel - 1), e.GetPosition(scrollViewer));
+            }
+
+            e.Handled = true;
+        }
+
+        private void OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            AdjustZoom(_zoomLevel > 1 ? 1 : DefaultZoom, e.GetPosition(scrollViewer));
+        }
+
+        private void AdjustZoom(int newZoomLevel, Point position = default(Point))
+        {
+            if(newZoomLevel == _zoomLevel)
+                return;
+
+            _previousZoomLevel = _zoomLevel;
+            _zoomLevel = newZoomLevel;
+            _zoomMousePoint = position;
+
+            // handle the zooming here, the panning will be done in the scrollChanged event handler 
+            scaleTransform.ScaleX = newZoomLevel;
+            scaleTransform.ScaleY = newZoomLevel;
+        }
+
+        void OnScrollViewerScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if(_zoomLevel == 1)
+                return;
+
+            if (e.ExtentHeightChange != 0 || e.ExtentWidthChange != 0)
+            {
+                var scaleFactor = ((double)_zoomLevel)/((double)_previousZoomLevel);
+                var targetPoint = new Point((scrollViewer.HorizontalOffset + _zoomMousePoint.X)*scaleFactor,
+                    (scrollViewer.VerticalOffset + _zoomMousePoint.Y) * scaleFactor);
+                
+                var offsetX = Math.Max(targetPoint.X - _zoomMousePoint.X, 0);
+                var offsetY = Math.Max(targetPoint.Y - _zoomMousePoint.Y, 0);
+
+                scrollViewer.ScrollToHorizontalOffset(offsetX);
+                scrollViewer.ScrollToVerticalOffset(offsetY);
+            }
         }
 
         void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if(slider.Value == 1)
+            if (_zoomLevel == 1)
                 return;
 
             var mousePos = e.GetPosition(scrollViewer);
-            if (mousePos.X <= scrollViewer.ViewportWidth
-                && mousePos.Y < scrollViewer.ViewportHeight) //make sure we still can use the scrollbars
-            {
-                scrollViewer.Cursor = Cursors.SizeAll;
-                _lastDragPoint = mousePos;
-                Mouse.Capture(scrollViewer);
-            }
+            scrollViewer.Cursor = Cursors.SizeAll;
+            _lastDragPoint = mousePos;
+            Mouse.Capture(scrollViewer);
         }
+
         void OnMouseMove(object sender, MouseEventArgs e)
         {
-            if (_lastDragPoint.HasValue)
-            {
-                Point posNow = e.GetPosition(scrollViewer);
+            if (!_lastDragPoint.HasValue) return;
 
-                double dX = posNow.X - _lastDragPoint.Value.X;
-                double dY = posNow.Y - _lastDragPoint.Value.Y;
+            var posNow = e.GetPosition(scrollViewer);
+            var dX = posNow.X - _lastDragPoint.Value.X;
+            var dY = posNow.Y - _lastDragPoint.Value.Y;
 
-                _lastDragPoint = posNow;
+            _lastDragPoint = posNow;
 
-                scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - dX);
-                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - dY);
-            }
+            scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - dX);
+            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - dY);
         }
         void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -66,99 +118,10 @@ namespace MediaCenter.WPF.Controls
             _lastDragPoint = null;
         }
 
-
-        void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            _lastMousePositionOnTarget = Mouse.GetPosition(scrollViewer);
-
-            if (e.Delta > 0)
-            {
-                slider.Value += 0.5;
-            }
-            if (e.Delta < 0)
-            {
-                slider.Value -= 0.5;
-            }
-
-            e.Handled = true;
-        }
-
-        void OnSliderValueChanged(object sender,
-            RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (e.NewValue == 1)
-            {
-                scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
-                scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
-            }
-            else
-            {
-                scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
-                scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
-            }
-            scaleTransform.ScaleX = e.NewValue;
-            scaleTransform.ScaleY = e.NewValue;
-
-            var centerOfViewport = new Point(scrollViewer.ViewportWidth / 2, scrollViewer.ViewportHeight / 2);
-            _lastCenterPositionOnTarget = scrollViewer.TranslatePoint(centerOfViewport, Grid);
-        }
-
-        void OnScrollViewerScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            if (e.ExtentHeightChange != 0 || e.ExtentWidthChange != 0)
-            {
-                Point? targetBefore = null;
-                Point? targetNow = null;
-
-                if (!_lastMousePositionOnTarget.HasValue)
-                {
-                    if (_lastCenterPositionOnTarget.HasValue)
-                    {
-                        var centerOfViewport = new Point(scrollViewer.ViewportWidth / 2,
-                                                         scrollViewer.ViewportHeight / 2);
-                        Point centerOfTargetNow =
-                              scrollViewer.TranslatePoint(centerOfViewport, Grid);
-
-                        targetBefore = _lastCenterPositionOnTarget;
-                        targetNow = centerOfTargetNow;
-                    }
-                }
-                else
-                {
-                    targetBefore = _lastMousePositionOnTarget;
-                    targetNow = Mouse.GetPosition(Grid);
-
-                    _lastMousePositionOnTarget = null;
-                }
-
-                if (targetBefore.HasValue)
-                {
-                    double dXInTargetPixels = targetNow.Value.X - targetBefore.Value.X;
-                    double dYInTargetPixels = targetNow.Value.Y - targetBefore.Value.Y;
-
-                    double multiplicatorX = e.ExtentWidth / Grid.ActualWidth;
-                    double multiplicatorY = e.ExtentHeight / Grid.ActualHeight;
-
-                    double newOffsetX = scrollViewer.HorizontalOffset -
-                                        dXInTargetPixels * multiplicatorX;
-                    double newOffsetY = scrollViewer.VerticalOffset -
-                                        dYInTargetPixels * multiplicatorY;
-
-                    if (double.IsNaN(newOffsetX) || double.IsNaN(newOffsetY))
-                    {
-                        return;
-                    }
-
-                    scrollViewer.ScrollToHorizontalOffset(newOffsetX);
-                    scrollViewer.ScrollToVerticalOffset(newOffsetY);
-                }
-            }
-        }
-
         public byte[] ImageContent
         {
-            get { return (byte[])GetValue(ImageContentProperty); }
-            set { SetValue(ImageContentProperty, value); }
+            get => (byte[])GetValue(ImageContentProperty);
+            set => SetValue(ImageContentProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for ImageContent.  This enables animation, styling, binding, etc...
@@ -171,30 +134,18 @@ namespace MediaCenter.WPF.Controls
             me.Reset();
         }
 
-        public int Rotation { get { return (int)GetValue(RotationProperty); } set { SetValue(RotationProperty, value); } }
+        public int Rotation
+        {
+            get => (int) GetValue(RotationProperty);
+            set => SetValue(RotationProperty, value);
+        }
         public static readonly DependencyProperty RotationProperty = DependencyProperty.Register("Rotation", typeof(int), typeof(ZoomImage), new PropertyMetadata(0));
+        
 
-
-
-        public bool ShowSlider
-        {
-            get { return (bool)GetValue(ShowSliderProperty); }
-            set { SetValue(ShowSliderProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for ShowSlider.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ShowSliderProperty =
-            DependencyProperty.Register("ShowSlider", typeof(bool), typeof(ZoomImage), new PropertyMetadata(true, ShowSliderChanged));
-
-        private static void ShowSliderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var me = (ZoomImage)d;
-            me.slider.Visibility = Visibility.Collapsed;
-        }
 
         private void Reset()
         {
-            slider.Value = 1;
+            AdjustZoom(1);
         }
     }
 }
