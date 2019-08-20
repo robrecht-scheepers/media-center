@@ -24,7 +24,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <media:ThumbnailView DataContext="{Binding}" Margin="5">
+                    <media:ThumbnailView DataContext="{Binding}" Margin="5,5,5,1">
                         <media:ThumbnailView.InputBindings>
                             <MouseBinding MouseAction="LeftDoubleClick" 
                                           Command="{Binding SelectForDetailViewCommand}"
