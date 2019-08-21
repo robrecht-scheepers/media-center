@@ -40,8 +40,8 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Orientation="Vertical">
-                <ToggleButton IsChecked="{Binding FilterWindowIsVisible}">F</ToggleButton>
-                <ToggleButton IsChecked="{Binding PropertyWindowIsVisible}">P</ToggleButton>
+                <controls:SingleImageToggleButton IsChecked="{Binding FilterWindowIsVisible}" Image="/Resources/Icons/ic_search.png" CheckedBackground="{StaticResource AppBrightColor}" />
+                <controls:SingleImageToggleButton IsChecked="{Binding PropertyWindowIsVisible}" Image="/Resources/Icons/ic_properties.png" CheckedBackground="{StaticResource AppBrightColor}"/>
             </StackPanel>
             <StackPanel Grid.Row="1" Orientation="Vertical"/>
             <StackPanel Grid.Row="2" Orientation="Vertical"/>
