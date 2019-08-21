@@ -29,6 +29,10 @@ namespace MediaCenter.Sessions.Query
         private MediaItemViewModel _detailItem;
         private AsyncRelayCommand _switchViewModeToDetailCommand;
         private AsyncRelayCommand _switchViewModeToGridCommand;
+        private QueryToolWindowState _toolWindowState;
+        private bool _filterWindowIsVisible;
+        private bool _propertyWindowIsVisible;
+        private bool _toolWindowStateProcessingInProgress;
 
         public QuerySessionViewModel(IWindowService windowService, IRepository repository) : base(null, windowService)
         {
@@ -48,6 +52,8 @@ namespace MediaCenter.Sessions.Query
             };
 
             EditMediaInfoViewModel = new EditMediaInfoViewModel(_repository, true);
+
+            ToolWindowState = QueryToolWindowState.Filters;
         }
 
         public override string Name => "View media";
@@ -79,6 +85,24 @@ namespace MediaCenter.Sessions.Query
         {
             get => _editMediaInfoViewModel;
             set => SetValue(ref _editMediaInfoViewModel, value);
+        }
+
+        public QueryToolWindowState ToolWindowState
+        {
+            get => _toolWindowState;
+            set => SetValue(ref _toolWindowState, value, ToolWindowStateChanged);
+        }
+
+        public bool FilterWindowIsVisible
+        {
+            get => _filterWindowIsVisible;
+            set => SetValue(ref _filterWindowIsVisible, value, FilterVisibilityChanged);
+        }
+
+        public bool PropertyWindowIsVisible
+        {
+            get => _propertyWindowIsVisible;
+            set => SetValue(ref _propertyWindowIsVisible, value, PropertyVisibilityChanged);
         }
 
         public List<ViewMode> ViewModesList { get; private set; }
@@ -221,6 +245,44 @@ namespace MediaCenter.Sessions.Query
                 SwitchViewModeToGrid().Wait();
             else
                 SwitchViewModeToDetail().Wait();
+        }
+
+        private void FilterVisibilityChanged()
+        {
+            if(_toolWindowStateProcessingInProgress)
+                return;
+            ToolWindowState = FilterWindowIsVisible ? QueryToolWindowState.Filters : QueryToolWindowState.Hidden;
+            
+        }
+
+        private void PropertyVisibilityChanged()
+        {
+            if (_toolWindowStateProcessingInProgress)
+                return;
+            ToolWindowState = PropertyWindowIsVisible ? QueryToolWindowState.Properties : QueryToolWindowState.Hidden;
+        }
+
+        private void ToolWindowStateChanged()
+        {
+            _toolWindowStateProcessingInProgress = true;
+            switch (ToolWindowState)
+            {
+                case QueryToolWindowState.Hidden:
+                    FilterWindowIsVisible = false;
+                    PropertyWindowIsVisible = false;
+                    break;
+                case QueryToolWindowState.Filters:
+                    FilterWindowIsVisible = true;
+                    PropertyWindowIsVisible = false;
+                    break;
+                case QueryToolWindowState.Properties:
+                    FilterWindowIsVisible = false;
+                    PropertyWindowIsVisible = true;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            _toolWindowStateProcessingInProgress = false;
         }
     }
 }
