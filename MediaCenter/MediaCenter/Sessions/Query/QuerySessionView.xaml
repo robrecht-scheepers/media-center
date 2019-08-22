@@ -45,7 +45,11 @@
             <StackPanel Grid.Row="1" Orientation="Vertical">
                 <controls:ImageToggleButton IsThreeState="True" IsChecked="{Binding SelectedViewMode, Mode=TwoWay, Converter={StaticResource ViewModeToBoolConverter}}" CheckedImage="/Resources/Icons/ic_grid.png" UncheckedImage="/resources/Icons/ic_image.png" />
             </StackPanel>
-            <StackPanel Grid.Row="2" Orientation="Vertical"/>
+            <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Bottom">
+                <controls:ImageButton Command="{Binding StartSlideShowCommand}" ImageSource="/Resources/Icons/screen.png" Margin="5" />
+                <controls:ImageButton Command="{Binding SaveCurrentSelectionToFileCommand}" ImageSource="/Resources/Icons/content-download.png" Margin="5" />
+                <controls:ImageButton Command="{Binding DeleteCurrentSelectionCommand}" ImageSource="/Resources/Icons/trash-can.png" Margin="5" />
+            </StackPanel>
         </Grid>
 
         <Grid Grid.Column ="1" Visibility="{Binding ToolWindowState, Converter={StaticResource FilterWindowVisibilityConverter}}"> <!-- filter tool window -->
@@ -73,9 +77,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <controls:ImageButton Grid.Column="0" HorizontalAlignment="Center" Command="{Binding StartSlideShowCommand}" ImageSource="/Resources/Icons/screen.png" Margin="5" HoverBackground="{StaticResource AppBrightColor}" />
-                <controls:ImageButton Grid.Column="1" HorizontalAlignment="Center" Command="{Binding SaveCurrentSelectionToFileCommand}" ImageSource="/Resources/Icons/content-download.png" Margin="5" />
-                <controls:ImageButton Grid.Column="2" HorizontalAlignment="Center" Command="{Binding DeleteCurrentSelectionCommand}" ImageSource="/Resources/Icons/trash-can.png" Margin="5" />
+                
             </Grid>
         </Grid>
 
