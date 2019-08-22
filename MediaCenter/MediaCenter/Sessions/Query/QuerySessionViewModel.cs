@@ -224,6 +224,7 @@ namespace MediaCenter.Sessions.Query
         private async Task ExecuteQuery()
         {
             await QueryResultViewModel.LoadQueryResult(await _repository.GetQueryItems(FilterCollection.Filters));
+            ToolWindowState = QueryToolWindowState.Hidden;
         }
 
         public AsyncRelayCommand StartSlideShowCommand => _startSlideShowCommand ?? (_startSlideShowCommand = new AsyncRelayCommand(StartSlideShow));
