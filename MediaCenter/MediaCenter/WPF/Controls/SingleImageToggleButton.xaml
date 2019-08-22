@@ -15,6 +15,9 @@
                 <Setter TargetName="Background" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CheckedBackground}"/>
                 <Setter TargetName="Background" Property="Opacity" Value="0.3"/>
             </Trigger>
+            <Trigger Property="IsChecked" Value="x:Null">
+                <Setter TargetName="ButtonImage" Property="Opacity" Value="0.5"/>
+            </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter TargetName="Background" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=HoverBackground}"/>
                 <Setter TargetName="Background" Property="Opacity" Value="0.5"/>
