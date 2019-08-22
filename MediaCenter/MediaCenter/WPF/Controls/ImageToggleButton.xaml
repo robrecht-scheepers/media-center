@@ -20,6 +20,15 @@
             <Trigger Property="IsChecked" Value="False">
                 <Setter TargetName="ButtonImage" Property="Source" Value="{Binding UncheckedImage, RelativeSource={RelativeSource TemplatedParent}}"/>
             </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsThreeState" Value="true"/>
+                    <Condition Property="IsChecked" Value="{x:Null}"/>
+                </MultiTrigger.Conditions>
+                <MultiTrigger.Setters>
+                    <Setter TargetName="ButtonImage" Property="Opacity" Value="0.5"/>
+                </MultiTrigger.Setters>
+            </MultiTrigger>
             <Trigger Property="IsPressed" Value="True">
                 <Setter TargetName="ButtonImage" Property="Margin" Value="4"/>
             </Trigger>

@@ -14,11 +14,10 @@
              Background="{StaticResource AppStandardBackground}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <converters:ViewModeBoolConverter x:Key="ViewModeBoolConverter"/>
-            <converters:ViewModeBoolConverter Invert="True" x:Key="InvertedViewModeBoolConverter"/>
             <local:ToolWindoStateToBoolConverter x:Key="ToolWindowVisibilityConverter"/>
             <local:ToolWindoStateToVisibilityConverter x:Key="FilterWindowVisibilityConverter" TargetWindowState="Filters" />
             <local:ToolWindoStateToVisibilityConverter x:Key="PropertiesWindowVisibilityConverter" TargetWindowState="Properties" />
+            <local:ViewModeToBoolConverter x:Key="ViewModeToBoolConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/WPF/Controls/RowColumnToggleButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -43,7 +42,9 @@
                 <controls:SingleImageToggleButton IsChecked="{Binding FilterWindowIsVisible}" Image="/Resources/Icons/ic_search.png" CheckedBackground="{StaticResource AppBrightColor}" />
                 <controls:SingleImageToggleButton IsChecked="{Binding PropertyWindowIsVisible}" Image="/Resources/Icons/ic_properties.png" CheckedBackground="{StaticResource AppBrightColor}"/>
             </StackPanel>
-            <StackPanel Grid.Row="1" Orientation="Vertical"/>
+            <StackPanel Grid.Row="1" Orientation="Vertical">
+                <controls:ImageToggleButton IsThreeState="True" IsChecked="{Binding SelectedViewMode, Mode=TwoWay, Converter={StaticResource ViewModeToBoolConverter}}" CheckedImage="/Resources/Icons/ic_grid.png" UncheckedImage="/resources/Icons/ic_image.png" />
+            </StackPanel>
             <StackPanel Grid.Row="2" Orientation="Vertical"/>
         </Grid>
 
@@ -54,18 +55,12 @@
             </Grid.RowDefinitions>
 
             <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollection}" Margin="{StaticResource CommonMargin}"/>
-            <StackPanel Grid.Row="1" Orientation="Vertical">
-                <controls:TextButton Text="{Binding MatchCount, StringFormat='Load {0} matching items'}" Command="{Binding ExecuteQueryCommand}"
+            <controls:TextButton Grid.Row="1" Text="{Binding MatchCount, StringFormat='Load {0} matching items'}" Command="{Binding ExecuteQueryCommand}"
                                      Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}" Background="{StaticResource MainWindowBackground}"
                                      Height="{StaticResource TextButtonHeight}"/>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <controls:ImageButton ImageSource="/Resources/Icons/Image-filled.png" Command="{Binding SwitchViewModeToDetailCommand}" />
-                    <controls:ImageButton ImageSource="/Resources/Icons/Tiles-filled.png" Command="{Binding SwitchViewModeToGridCommand}" />
-                </StackPanel>
-            </StackPanel>
         </Grid>
 
-        <Grid Grid.Column="1" Visibility="{Binding ToolWindowState, Converter={StaticResource PropertiesWindowVisibilityConverter}}">
+        <Grid Grid.Column="1" Visibility="{Binding ToolWindowState, Converter={StaticResource PropertiesWindowVisibilityConverter}}"> <!-- properties tool window -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>

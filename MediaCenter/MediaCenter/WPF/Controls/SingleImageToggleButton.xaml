@@ -15,9 +15,15 @@
                 <Setter TargetName="Background" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CheckedBackground}"/>
                 <Setter TargetName="Background" Property="Opacity" Value="0.3"/>
             </Trigger>
-            <Trigger Property="IsChecked" Value="x:Null">
-                <Setter TargetName="ButtonImage" Property="Opacity" Value="0.5"/>
-            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsThreeState" Value="true"/>
+                    <Condition Property="IsChecked" Value="{x:Null}"/>
+                </MultiTrigger.Conditions>
+                <MultiTrigger.Setters>
+                    <Setter TargetName="ButtonImage" Property="Opacity" Value="0.5"/>
+                </MultiTrigger.Setters>
+            </MultiTrigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter TargetName="Background" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=HoverBackground}"/>
                 <Setter TargetName="Background" Property="Opacity" Value="0.5"/>
