@@ -43,7 +43,7 @@
                 <controls:SingleImageToggleButton IsChecked="{Binding PropertyWindowIsVisible}" Image="/Resources/Icons/ic_properties.png" CheckedBackground="{StaticResource AppBrightColor}"/>
             </StackPanel>
             <StackPanel Grid.Row="1" Orientation="Vertical">
-                <controls:ImageToggleButton IsThreeState="True" IsChecked="{Binding SelectedViewMode, Mode=TwoWay, Converter={StaticResource ViewModeToBoolConverter}}" CheckedImage="/Resources/Icons/ic_grid.png" UncheckedImage="/resources/Icons/ic_image.png" />
+                <controls:ImageToggleButton IsChecked="{Binding SelectedViewMode, Mode=TwoWay, Converter={StaticResource ViewModeToBoolConverter}}" CheckedImage="/Resources/Icons/ic_grid.png" UncheckedImage="/resources/Icons/ic_image.png" />
             </StackPanel>
             <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Bottom">
                 <controls:ImageButton Command="{Binding StartSlideShowCommand}" ImageSource="/Resources/Icons/screen.png" Margin="5" />

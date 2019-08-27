@@ -7,7 +7,6 @@
              xmlns:local="clr-namespace:MediaCenter.Sessions.Query"
              xmlns:media="clr-namespace:MediaCenter.Media"
              xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
-             xmlns:wpf="clr-namespace:MediaCenter.WPF"
              xmlns:behaviors="clr-namespace:MediaCenter.WPF.Behaviors"
              xmlns:converters="clr-namespace:MediaCenter.WPF.Converters"
              mc:Ignorable="d" 

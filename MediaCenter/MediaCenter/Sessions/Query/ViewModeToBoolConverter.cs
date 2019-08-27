@@ -13,7 +13,7 @@ namespace MediaCenter.Sessions.Query
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (!(value is ViewMode viewMode))
-                return null;
+                return false;
 
             switch (viewMode)
             {
@@ -22,7 +22,7 @@ namespace MediaCenter.Sessions.Query
                 case ViewMode.Detail:
                     return true;
                 case ViewMode.SlideShow:
-                    return null;
+                    return true;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
