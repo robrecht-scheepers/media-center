@@ -11,7 +11,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Border Grid.RowSpan="3" Background="White" Opacity="0" />
+                        <Border Grid.RowSpan="3" Background="{StaticResource C0}" Opacity="0" />
                         
                         <Viewbox Grid.Row="0">
                             <Path Stroke="{StaticResource AppBrightColor}" StrokeThickness="1" Data=""></Path>
@@ -54,7 +54,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Border Grid.ColumnSpan="3" Background="White" Opacity="0" />
+                        <Border Grid.ColumnSpan="3" Background="{StaticResource C0}" Opacity="0" />
                         <Border x:Name="Border1" Grid.Column="0" BorderBrush="{StaticResource AppBrightColor}" BorderThickness="0 1 0 0" Height="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
                         <Image x:Name="Image" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" 
                        Source="{Binding NullImage, RelativeSource={RelativeSource TemplatedParent}}"

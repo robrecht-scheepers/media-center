@@ -3,15 +3,13 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:controls="clr-namespace:MediaCenter.WPF.Controls">
 
-    <SolidColorBrush x:Key="MainWindowBackground" Color="#6e7f80 " />
-    <SolidColorBrush x:Key="AppStandardBackground" Color="#36454f " />
+    <SolidColorBrush x:Key="C0" Color="#ffffff" />
+    <SolidColorBrush x:Key="MainWindowBackground" Color="#6e7f80" />
+    <SolidColorBrush x:Key="AppStandardBackground" Color="#36454f" />
     <SolidColorBrush x:Key="AppBrightColor" Color="#c5ccd3"/>
     <SolidColorBrush x:Key="AppDarkColor" Color="#36454f"/>
     <SolidColorBrush x:Key="AppAccentColor" Color="#b6bfc8 "/>
     
-    
-    
-
     <sys:Double x:Key="TextButtonHeight">36</sys:Double>
     <Thickness x:Key="CommonMargin" Left="5" Top="5" Right="5" Bottom="5"/>
     <sys:Double x:Key="CommonFontSize">14</sys:Double>

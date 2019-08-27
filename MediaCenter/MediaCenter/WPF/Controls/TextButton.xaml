@@ -3,7 +3,7 @@
                     xmlns:local="clr-namespace:MediaCenter.WPF.Controls">
     <ControlTemplate x:Key="TextButtonDefaultTemplate" TargetType="{x:Type local:TextButton}">
         <Grid>
-            <Border x:Name="Dummy" Background="White" Opacity="0" CornerRadius="3"/>
+            <Border x:Name="Dummy" Background="{StaticResource C0}" Opacity="0" CornerRadius="3"/>
             <Border x:Name="Border" Grid.RowSpan="2" BorderBrush="{TemplateBinding Foreground}" BorderThickness="2" IsHitTestVisible="True" CornerRadius="3">
                 <TextBlock Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding Text}" HorizontalAlignment="Center" VerticalAlignment="Center" />
             </Border>

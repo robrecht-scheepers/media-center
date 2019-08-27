@@ -29,11 +29,11 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Name="CurrentTime" Foreground="White"/>
+            <TextBlock Grid.Column="0" Name="CurrentTime" Foreground="{StaticResource C0}"/>
             <controls:SeekBar Grid.Column="1" x:Name="SeekBar" 
-                              Margin="5" HorizontalAlignment="Stretch" Height="10" Background="White" Foreground="{StaticResource MainWindowBackground}"
+                              Margin="5" HorizontalAlignment="Stretch" Height="10" Background="{StaticResource C0}" Foreground="{StaticResource MainWindowBackground}"
                               DragStarted="SeekSlider_DragStarted" DragCompleted="SeekSlider_OnDragCompleted" ValueChanged="SeekSlider_OnValueChanged" />
-            <TextBlock Grid.Column="2" Name="TotalTime" Foreground="White"/>
+            <TextBlock Grid.Column="2" Name="TotalTime" Foreground="{StaticResource C0}"/>
         </Grid>
         <StackPanel Grid.Row="2"  Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ElementName=Root, Path=HideControls, Converter={StaticResource CollapseWhenTrueConverter}}">
             <controls:ImageButton ImageSource="/Resources/Icons/pause.png" Click="Pause_OnClick"

@@ -23,7 +23,7 @@
                     <ControlTemplate TargetType="Button">
                         <Grid>
                             <Border x:Name="Border" Grid.RowSpan="2" BorderBrush="{StaticResource AppBrightColor}" BorderThickness="2" CornerRadius="3"/>
-                            <Border x:Name="Dummy" Background="White" Opacity="0" CornerRadius="3"/>
+                            <Border x:Name="Dummy" Background="{StaticResource C0}" Opacity="0" CornerRadius="3"/>
                             <ContentPresenter Content="{TemplateBinding Content}"/>
                         </Grid>
                         <ControlTemplate.Triggers>
@@ -57,7 +57,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Border x:Name="dummy" Grid.Column="0" Background="White" Opacity="0"/>
+                <Border x:Name="dummy" Grid.Column="0" Background="{StaticResource C0}" Opacity="0"/>
                 <TextBlock Grid.Column="0" HorizontalAlignment="Center" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Path=Title}"
                        Foreground="{StaticResource AppBrightColor}" FontSize="14" Margin="0 2 0 0"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
