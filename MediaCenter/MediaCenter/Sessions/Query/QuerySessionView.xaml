@@ -11,7 +11,7 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:QuerySessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300"
-             Background="{StaticResource AppStandardBackground}">
+             Background="{StaticResource C4}">
     <UserControl.Resources>
         <ResourceDictionary>
             <local:ToolWindoStateToBoolConverter x:Key="ToolWindowVisibilityConverter"/>
@@ -39,8 +39,8 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Orientation="Vertical">
-                <controls:SingleImageToggleButton IsChecked="{Binding FilterWindowIsVisible}" Image="/Resources/Icons/ic_search.png" CheckedBackground="{StaticResource AppBrightColor}" />
-                <controls:SingleImageToggleButton IsChecked="{Binding PropertyWindowIsVisible}" Image="/Resources/Icons/ic_properties.png" CheckedBackground="{StaticResource AppBrightColor}"/>
+                <controls:SingleImageToggleButton IsChecked="{Binding FilterWindowIsVisible}" Image="/Resources/Icons/ic_search.png" CheckedBackground="{StaticResource C1}" />
+                <controls:SingleImageToggleButton IsChecked="{Binding PropertyWindowIsVisible}" Image="/Resources/Icons/ic_properties.png" CheckedBackground="{StaticResource C1}"/>
             </StackPanel>
             <StackPanel Grid.Row="1" Orientation="Vertical">
                 <controls:ImageToggleButton IsChecked="{Binding SelectedViewMode, Mode=TwoWay, Converter={StaticResource ViewModeToBoolConverter}}" CheckedImage="/Resources/Icons/ic_grid.png" UncheckedImage="/resources/Icons/ic_image.png" />
@@ -60,7 +60,7 @@
 
             <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollection}" Margin="{StaticResource CommonMargin}"/>
             <controls:TextButton Grid.Row="1" Text="{Binding MatchCount, StringFormat='Load {0} matching items'}" Command="{Binding ExecuteQueryCommand}"
-                                     Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}" Background="{StaticResource MainWindowBackground}"
+                                     Foreground="{StaticResource C1}" Margin="{StaticResource CommonMargin}" Background="{StaticResource C3}"
                                      Height="{StaticResource TextButtonHeight}"/>
         </Grid>
 

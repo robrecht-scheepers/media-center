@@ -28,7 +28,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Border Grid.Column="1" BorderBrush="Transparent" Background="{StaticResource AppDarkColor}">
+            <Border Grid.Column="1" BorderBrush="Transparent" Background="{StaticResource C5}">
                 <StackPanel Orientation="Horizontal">
                     <controls:ImageToggleButton IsChecked="{Binding EditMediaInfoViewModel.Favorite, Mode=TwoWay}" IsThreeState="{Binding EditMediaInfoViewModel.MultipleItems}" HorizontalAlignment="Center"
                                                 CheckedImage="/Resources/Icons/heart-filled.png" UncheckedImage="/Resources/Icons/heart.png" NullImage="/Resources/Icons/heart-half.png" />
@@ -38,7 +38,7 @@
                 </StackPanel>
             </Border>
         </Grid>
-        <Border Grid.Row="2" Background="{StaticResource AppDarkColor}" Opacity="0.75" Margin="70 0 70 30">
+        <Border Grid.Row="2" Background="{StaticResource C5}" Opacity="0.75" Margin="70 0 70 30">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>

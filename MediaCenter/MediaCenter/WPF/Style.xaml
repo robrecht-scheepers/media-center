@@ -4,11 +4,11 @@
                     xmlns:controls="clr-namespace:MediaCenter.WPF.Controls">
 
     <SolidColorBrush x:Key="C0" Color="#ffffff" />
-    <SolidColorBrush x:Key="MainWindowBackground" Color="#6e7f80" />
-    <SolidColorBrush x:Key="AppStandardBackground" Color="#36454f" />
-    <SolidColorBrush x:Key="AppBrightColor" Color="#c5ccd3"/>
-    <SolidColorBrush x:Key="AppDarkColor" Color="#36454f"/>
-    <SolidColorBrush x:Key="AppAccentColor" Color="#b6bfc8 "/>
+    <SolidColorBrush x:Key="C1" Color="#c5ccd3"/>
+    <SolidColorBrush x:Key="C2" Color="#b6bfc8 "/>
+    <SolidColorBrush x:Key="C3" Color="#6e7f80" />
+    <SolidColorBrush x:Key="C4" Color="#36454f" />
+    <SolidColorBrush x:Key="C5" Color="#36454f"/>
     
     <sys:Double x:Key="TextButtonHeight">36</sys:Double>
     <Thickness x:Key="CommonMargin" Left="5" Top="5" Right="5" Bottom="5"/>
@@ -20,11 +20,11 @@
     <Style TargetType="TextBox">
         <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Background" Value="{StaticResource AppBrightColor}"/>
+        <Setter Property="Background" Value="{StaticResource C1}"/>
     </Style>
     <Style TargetType="ListBox">
         <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
-        <Setter Property="Background" Value="{StaticResource AppBrightColor}"/>
+        <Setter Property="Background" Value="{StaticResource C1}"/>
     </Style>
     <Style TargetType="TextBlock">
         <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
@@ -32,7 +32,7 @@
     </Style>
     <Style TargetType="ComboBox">
         <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
-        <Setter Property="Background" Value="{StaticResource AppBrightColor}"/>
+        <Setter Property="Background" Value="{StaticResource C1}"/>
     </Style>
     <Style TargetType="DatePicker">
         <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>

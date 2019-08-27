@@ -31,7 +31,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Name="CurrentTime" Foreground="{StaticResource C0}"/>
             <controls:SeekBar Grid.Column="1" x:Name="SeekBar" 
-                              Margin="5" HorizontalAlignment="Stretch" Height="10" Background="{StaticResource C0}" Foreground="{StaticResource MainWindowBackground}"
+                              Margin="5" HorizontalAlignment="Stretch" Height="10" Background="{StaticResource C0}" Foreground="{StaticResource C3}"
                               DragStarted="SeekSlider_DragStarted" DragCompleted="SeekSlider_OnDragCompleted" ValueChanged="SeekSlider_OnValueChanged" />
             <TextBlock Grid.Column="2" Name="TotalTime" Foreground="{StaticResource C0}"/>
         </Grid>

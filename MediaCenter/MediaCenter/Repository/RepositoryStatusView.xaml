@@ -9,7 +9,7 @@
              d:DataContext="{d:DesignInstance Type=local:RepositoryViewModel}">
     <UserControl.Resources>
         <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource AppDarkColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource C5}"/>
         </Style>
     </UserControl.Resources>
     <Grid>

@@ -12,7 +12,7 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:StagingSessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300"
-             Background="{StaticResource AppStandardBackground}">
+             Background="{StaticResource C4}">
     
     <Grid>
         <Grid.RowDefinitions>
@@ -26,13 +26,13 @@
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch">
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
-                <controls:TextButton Command="{Binding AddMediaCommand}" Text="Select media files" Height="{StaticResource TextButtonHeight}" Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}"/>
-                <controls:TextButton Command="{Binding AddDirectoryCommand}" Text="Select folder" Height="{StaticResource TextButtonHeight}" Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}"/>
-                <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource AppBrightColor}" VerticalAlignment="Center"/>
+                <controls:TextButton Command="{Binding AddMediaCommand}" Text="Select media files" Height="{StaticResource TextButtonHeight}" Foreground="{StaticResource C1}" Margin="{StaticResource CommonMargin}"/>
+                <controls:TextButton Command="{Binding AddDirectoryCommand}" Text="Select folder" Height="{StaticResource TextButtonHeight}" Foreground="{StaticResource C1}" Margin="{StaticResource CommonMargin}"/>
+                <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource C1}" VerticalAlignment="Center"/>
             </StackPanel>
             <controls:TextButton DockPanel.Dock="Right" Command="{Binding SaveToRepositoryCommand}" Text="{Binding Path=StagedItems.Count, StringFormat='{}Save {0} staged items'}" 
                                  Visibility="{Binding ElementName=stagedItemsList, Path=HasItems, Converter={StaticResource CollapseWhenFalseConverter}}" 
-                                 Foreground="{StaticResource AppBrightColor}" HorizontalAlignment="Right" Margin="{StaticResource CommonMargin}"/>
+                                 Foreground="{StaticResource C1}" HorizontalAlignment="Right" Margin="{StaticResource CommonMargin}"/>
         </DockPanel>
         <ListBox x:Name="stagedItemsList" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Style="{StaticResource ThumbnailListStyle}" Margin="{StaticResource CommonMargin}"
                  ItemsSource="{Binding StagedItems}" SelectionMode="Extended"

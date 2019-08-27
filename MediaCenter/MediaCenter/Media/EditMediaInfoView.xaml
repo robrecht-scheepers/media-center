@@ -10,7 +10,7 @@
              d:DataContext="{d:DesignInstance local:EditMediaInfoViewModel}">
     <UserControl.Resources>
         <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource AppBrightColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource C1}"/>
             <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
         </Style>
     </UserControl.Resources>
