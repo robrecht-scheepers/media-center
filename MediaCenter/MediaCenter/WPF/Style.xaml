@@ -13,7 +13,8 @@
     <sys:Double x:Key="TextButtonHeight">36</sys:Double>
     <Thickness x:Key="CommonMargin" Left="5" Top="5" Right="5" Bottom="5"/>
     <sys:Double x:Key="CommonFontSize">14</sys:Double>
-    
+    <sys:Double x:Key="SmallFontSize">10</sys:Double>
+
     <Style TargetType="Button">
         <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
     </Style>
@@ -37,4 +38,10 @@
     <Style TargetType="DatePicker">
         <Setter Property="Margin" Value="{StaticResource CommonMargin}"/>
     </Style>
+    <Style TargetType="ToolTip">
+        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}"/>
+        <Setter Property="Background" Value="{StaticResource C4}"/>
+        <Setter Property="Foreground" Value="{StaticResource C1}"/>
+    </Style>
+
 </ResourceDictionary>
