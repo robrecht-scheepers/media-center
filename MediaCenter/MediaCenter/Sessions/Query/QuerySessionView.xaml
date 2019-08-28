@@ -56,14 +56,14 @@
         <!-- filter tool window -->
         <Grid Grid.Column ="1" Visibility="{Binding ToolWindowState, Converter={StaticResource FilterWindowVisibilityConverter}}"> 
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
-            <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollection}" Margin="{StaticResource CommonMargin}"/>
-            <controls:TextButton Grid.Row="1" Text="{Binding MatchCount, StringFormat='Load {0} matching items'}" Command="{Binding ExecuteQueryCommand}"
-                                     Foreground="{StaticResource C1}" Margin="{StaticResource CommonMargin}" Background="{StaticResource C3}"
-                                     Height="{StaticResource TextButtonHeight}"/>
+            <controls:TextButton Grid.Row="0" Text="{Binding MatchCount, StringFormat='Load {0} matching items'}" Command="{Binding ExecuteQueryCommand}"
+                                 Foreground="{StaticResource C1}" Margin="{StaticResource CommonMargin}" Background="{StaticResource C3}"
+                                 Height="{StaticResource TextButtonHeight}"/>
+            <filters:FilterCollectionView Grid.Row="1" DataContext="{Binding Path=FilterCollection}" Margin="{StaticResource CommonMargin}"/>
+            
         </Grid>
 
         <!-- properties tool window -->
