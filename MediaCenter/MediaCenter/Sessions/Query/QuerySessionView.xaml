@@ -23,36 +23,36 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <controls:HideableColumnDefinition Width="*" Visible="{Binding ToolWindowState, Converter={StaticResource ToolWindowVisibilityConverter}}"/>
-            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Button column -->
-        <Border Grid.Column="0" BorderBrush="{StaticResource C1}" BorderThickness="0,0,1,0" Margin="0,0,1,0"> 
-            <Grid> 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+        <Border Grid.Column="0" BorderBrush="{StaticResource C1}" BorderThickness="0,0,1,0" Margin="0,5"/> 
+        <Grid Grid.Column="0"> 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Orientation="Vertical">
-                    <controls:SingleImageToggleButton IsChecked="{Binding FilterWindowIsVisible}" Image="/Resources/Icons/ic_search.png" CheckedBackground="{StaticResource C1}"
-                                                      ToolTip="Show/hide search window"/>
-                    <controls:SingleImageToggleButton IsChecked="{Binding PropertyWindowIsVisible}" Image="/Resources/Icons/ic_properties.png" CheckedBackground="{StaticResource C1}"
-                                                      ToolTip="Show/hide details window"/>
-                </StackPanel>
-                <StackPanel Grid.Row="1" Orientation="Vertical">
-                    <controls:ImageToggleButton IsChecked="{Binding SelectedViewMode, Mode=TwoWay, Converter={StaticResource ViewModeToBoolConverter}}" CheckedImage="/Resources/Icons/ic_grid.png" UncheckedImage="/resources/Icons/ic_image.png" 
-                                                ToolTip="Switch view mode"/>
-                </StackPanel>
-                <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Bottom">
-                        <controls:ImageButton Command="{Binding StartSlideShowCommand}" ImageSource="/Resources/Icons/screen.png" Margin="5" ToolTip="Start slide show" />
-                        <controls:ImageButton Command="{Binding SaveCurrentSelectionToFileCommand}" ImageSource="/Resources/Icons/content-download.png" Margin="5" ToolTip="Download selected items" />
-                        <controls:ImageButton Command="{Binding DeleteCurrentSelectionCommand}" ImageSource="/Resources/Icons/trash-can.png" Margin="5" ToolTip="Delete selected items" />
-                </StackPanel>
-            </Grid>
-        </Border>
+        <StackPanel Grid.Row="0" Orientation="Vertical">
+                <controls:SingleImageToggleButton IsChecked="{Binding FilterWindowIsVisible}" Image="/Resources/Icons/ic_search.png" CheckedBackground="{StaticResource C1}"
+                                                  ToolTip="Show/hide search window"/>
+                <controls:SingleImageToggleButton IsChecked="{Binding PropertyWindowIsVisible}" Image="/Resources/Icons/ic_properties.png" CheckedBackground="{StaticResource C1}"
+                                                  ToolTip="Show/hide details window"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Center">
+                <controls:ImageToggleButton IsChecked="{Binding SelectedViewMode, Mode=TwoWay, Converter={StaticResource ViewModeToBoolConverter}}" CheckedImage="/Resources/Icons/ic_grid.png" UncheckedImage="/resources/Icons/ic_image.png" 
+                                            ToolTip="Switch view mode"/>
+            </StackPanel>
+            <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Bottom">
+                    <controls:ImageButton Command="{Binding StartSlideShowCommand}" ImageSource="/Resources/Icons/screen.png" Margin="5" ToolTip="Start slide show" />
+                    <controls:ImageButton Command="{Binding SaveCurrentSelectionToFileCommand}" ImageSource="/Resources/Icons/content-download.png" Margin="5" ToolTip="Download selected items" />
+                    <controls:ImageButton Command="{Binding DeleteCurrentSelectionCommand}" ImageSource="/Resources/Icons/trash-can.png" Margin="5" ToolTip="Delete selected items" />
+            </StackPanel>
+        </Grid>
 
+        <Border Grid.Column="1" BorderBrush="{StaticResource C1}" BorderThickness="0,0,1,0" Margin="0,5"/>
         <!-- filter tool window -->
         <Grid Grid.Column ="1" Visibility="{Binding ToolWindowState, Converter={StaticResource FilterWindowVisibilityConverter}}"> 
             <Grid.RowDefinitions>
