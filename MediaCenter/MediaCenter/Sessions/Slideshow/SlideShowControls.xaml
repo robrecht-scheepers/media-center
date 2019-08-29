@@ -30,9 +30,9 @@
             </Grid.ColumnDefinitions>
             <Border Grid.Column="1" BorderBrush="Transparent" Background="{StaticResource C5}">
                 <StackPanel Orientation="Horizontal">
-                    <controls:ImageToggleButton IsChecked="{Binding EditMediaInfoViewModel.Favorite, Mode=TwoWay}" IsThreeState="{Binding EditMediaInfoViewModel.MultipleItems}" HorizontalAlignment="Center"
+                    <controls:ImageToggleButton IsChecked="{Binding EditMediaInfoViewModel.Favorite, Mode=TwoWay}" IsThreeState="{Binding EditMediaInfoViewModel.HasMultipleItems}" HorizontalAlignment="Center"
                                                 CheckedImage="/Resources/Icons/heart-filled.png" UncheckedImage="/Resources/Icons/heart.png" NullImage="/Resources/Icons/heart-half.png" />
-                    <controls:ImageToggleButton IsChecked="{Binding EditMediaInfoViewModel.Private, Mode=TwoWay}" IsThreeState="{Binding EditMediaInfoViewModel.MultipleItems}"  HorizontalAlignment="Center"
+                    <controls:ImageToggleButton IsChecked="{Binding EditMediaInfoViewModel.Private, Mode=TwoWay}" IsThreeState="{Binding EditMediaInfoViewModel.HasMultipleItems}"  HorizontalAlignment="Center"
                                                 CheckedImage="/Resources/Icons/lock-locked-filled.png" UncheckedImage="/Resources/Icons/lock-unlocked.png" NullImage="/Resources/Icons/lock-half.png"/>
                     <controls:ImageButton HorizontalAlignment="Center" Command="{Binding DeleteCurrentSelectionCommand}" ImageSource="/Resources/Icons/trash-can.png" Margin="5" />
                 </StackPanel>
