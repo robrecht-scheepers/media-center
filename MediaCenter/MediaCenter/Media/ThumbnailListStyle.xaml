@@ -6,10 +6,11 @@
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                <Grid Margin="5">
+                                <Grid Margin="5" FocusVisualStyle="{x:Null}">
                                     <Border x:Name="Border" BorderThickness="0" >
                                         <ContentPresenter />
                                     </Border>
