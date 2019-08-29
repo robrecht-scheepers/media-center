@@ -133,6 +133,7 @@
     <Compile Include="Sessions\Query\QueryToolWindowState.cs" />
     <Compile Include="Sessions\Query\ToolWindoStateToBoolConverter.cs" />
     <Compile Include="Sessions\Query\ToolWindoStateToVisibilityConverter.cs" />
+    <Compile Include="Sessions\Query\ViewModeToVisibilityConverter.cs" />
     <Compile Include="Sessions\Query\ViewModeToBoolConverter.cs" />
     <Compile Include="WPF\Controls\AirControl\AirControl.xaml.cs">
       <DependentUpon>AirControl.xaml</DependentUpon>
@@ -441,6 +442,8 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\ic_rotateleft.png" />
+    <Resource Include="Resources\Icons\ic_rotateright.png" />
     <Resource Include="Resources\Icons\ic_info.png" />
     <Resource Include="Resources\Icons\ic_edit.png" />
     <Resource Include="Resources\Icons\ic_add.png" />
