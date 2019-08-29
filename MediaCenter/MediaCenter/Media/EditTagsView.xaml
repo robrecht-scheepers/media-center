@@ -81,7 +81,7 @@
                     <KeyBinding Key="Enter" Command="{Binding AddNewTagCommand}"/>
                 </TextBox.InputBindings>
             </TextBox>
-            <controls:ImageButton Grid.Column="1" ImageSource="/Resources/Icons/plus.png" Command="{Binding AddNewTagCommand}" />
+            <controls:ImageButton Grid.Column="1" ImageSource="/Resources/Icons/ic_add.png" Command="{Binding AddNewTagCommand}" />
         </Grid>
         
         
