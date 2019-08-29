@@ -14,6 +14,7 @@
             <Setter Property="Foreground" Value="{StaticResource C1}"/>
         </Style>
         <query:ViewModeToVisibilityConverter x:Key="ShowIfViewModeDetail" VisibilityWhenDetail="Visible" VisibilityWhenGrid="Collapsed" VisibilityWhenSlideshow="Collapsed" />
+        
     </UserControl.Resources>
     <Grid>
         <Grid Visibility="{Binding IsEmpty, Converter={StaticResource CollapseWhenFalseConverter}}">
@@ -56,17 +57,25 @@
                                     <DataTrigger Binding="{Binding HasMultipleItems}" Value="true">
                                         <Setter Property="IsChecked" Value="False"/>
                                     </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName= ShowEditMedia, Path=IsChecked}" Value="True">
+                                        <Setter Property="IsChecked" Value="False"/>
+                                    </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </ctrl:SingleImageToggleButton.Style>
                     </ctrl:SingleImageToggleButton>
-                </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center"
-                            Visibility="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.QueryResultViewModel.SelectedViewMode, Converter={StaticResource ShowIfViewModeDetail}}">
-                    <ctrl:ImageButton Command="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.DetailItem.RotateCounterclockwiseCommand}" 
-                                      ImageSource="/Resources/Icons/ic_rotateleft.png" ></ctrl:ImageButton>
-                    <ctrl:ImageButton Command="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.DetailItem.RotateClockwiseCommand}" 
-                                      ImageSource="/Resources/Icons/ic_rotateright.png" ></ctrl:ImageButton>
+                    <ctrl:SingleImageToggleButton x:Name="ShowEditMedia" Image="/Resources/Icons/ic_editmedia.png" 
+                                                  Visibility="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.SelectedViewMode, Converter={StaticResource ShowIfViewModeDetail}}">
+                        <ctrl:SingleImageToggleButton.Style>
+                            <Style TargetType="ctrl:SingleImageToggleButton" BasedOn="{StaticResource {x:Type ctrl:SingleImageToggleButton}}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName= ShowInfo, Path=IsChecked}" Value="True">
+                                        <Setter Property="IsChecked" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ctrl:SingleImageToggleButton.Style>
+                    </ctrl:SingleImageToggleButton>
                 </StackPanel>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
                     <ctrl:ImageToggleButton IsChecked="{Binding Private, Mode=TwoWay}" IsThreeState="{Binding HasMultipleItems}"  HorizontalAlignment="Center"
@@ -76,7 +85,7 @@
                 </StackPanel>
             </Grid>
             
-            <!-- detailed infos area -->
+            <!-- infos area -->
             <Grid Grid.Row="3" Visibility="{Binding ElementName=ShowInfo, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
@@ -105,6 +114,17 @@
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Id: " VerticalAlignment="Center" />
                 <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Id}" VerticalAlignment="Center" />
             </Grid>
+
+            <!-- edit media area -->
+            <Grid Grid.Row="3" Visibility="{Binding ElementName=ShowEditMedia, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <ctrl:ImageButton Command="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.DetailItem.RotateCounterclockwiseCommand}" 
+                                      ImageSource="/Resources/Icons/ic_rotateleft.png" ></ctrl:ImageButton>
+                    <ctrl:ImageButton Command="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.DetailItem.RotateClockwiseCommand}" 
+                                      ImageSource="/Resources/Icons/ic_rotateright.png" ></ctrl:ImageButton>
+                </StackPanel>
+            </Grid>
+
             <Border Grid.Row="3" BorderThickness="0,0,0,1" BorderBrush="{StaticResource C1}" Margin="5,0"/>
             
             <!-- tag area -->
