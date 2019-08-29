@@ -25,13 +25,13 @@
 
 
         <TextBlock Grid.Row="0" Text="{Binding DateTaken, StringFormat='dd MMM yyyy'}" FontSize="{StaticResource LargeFontSize}" HorizontalAlignment="Right" Margin="{StaticResource CommonMargin}" 
-                   Visibility="{Binding MultipleDateTaken, Converter={StaticResource CollapseWhenNotNullConverter}}" />
+                   Visibility="{Binding MultipleItems, Converter={StaticResource CollapseWhenTrueConverter}}" />
         <TextBlock Grid.Row="0" Text="{Binding MultipleDateTaken}" HorizontalAlignment="Right" FontSize="{StaticResource LargeFontSize}" Margin="{StaticResource CommonMargin}"
-                   Visibility="{Binding MultipleDateTaken, Converter={StaticResource CollapseWhenNullConverter}}" />
+                   Visibility="{Binding MultipleItems, Converter={StaticResource CollapseWhenFalseConverter}}" />
         <TextBlock Grid.Row="1" Text="{Binding DateTaken, StringFormat=HH:mm:ss}" FontSize="{StaticResource LargeFontSize}" HorizontalAlignment="Right" Margin="{StaticResource CommonMargin}"
-                   Visibility="{Binding MultipleDateTaken, Converter={StaticResource HideWhenNotNullConverter}}"/>
+                   Visibility="{Binding MultipleItems, Converter={StaticResource CollapseWhenTrueConverter}}"/>
         <TextBlock Grid.Row="1" Text="{Binding Name}" HorizontalAlignment="Right" FontSize="{StaticResource LargeFontSize}" Margin="{StaticResource CommonMargin}"
-                   Visibility="{Binding MultipleDateTaken, Converter={StaticResource CollapseWhenNullConverter}}" />
+                   Visibility="{Binding MultipleItems, Converter={StaticResource CollapseWhenFalseConverter}}" />
         <Border Grid.Row="1" BorderThickness="0,0,0,1" BorderBrush="{StaticResource C1}" Margin="5,0"/>
 
         <Grid Grid.Row="2">
@@ -43,7 +43,7 @@
 
             <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
                 <controls:SingleImageToggleButton x:Name="ShowInfo" Image="/Resources/Icons/ic_info.png" 
-                                                  Visibility="{Binding MultipleDateTaken, Converter={StaticResource CollapseWhenNotNullConverter}}" >
+                                                  Visibility="{Binding MultipleItems, Converter={StaticResource CollapseWhenTrueConverter}}" >
                     <controls:SingleImageToggleButton.Style>
                         <Style TargetType="controls:SingleImageToggleButton" BasedOn="{StaticResource {x:Type controls:SingleImageToggleButton}}">
                             <Style.Triggers>
