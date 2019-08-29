@@ -59,9 +59,21 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <controls:TextButton Grid.Row="0" Text="{Binding MatchCount, StringFormat='Load {0} matching items'}" Command="{Binding ExecuteQueryCommand}"
+            <controls:TextButton Grid.Row="0" Command="{Binding ExecuteQueryCommand}"
                                  Foreground="{StaticResource C1}" Margin="{StaticResource CommonMargin}" Background="{StaticResource C3}"
-                                 Height="{StaticResource TextButtonHeight}"/>
+                                 Height="{StaticResource TextButtonHeight}">
+                <controls:TextButton.Style> <!-- style to set the button text dependent on the match count -->
+                    <Style TargetType="controls:TextButton" BasedOn="{StaticResource {x:Type controls:TextButton}}">
+                        <Setter Property="Text" Value="{Binding MatchCount, StringFormat='Load {0} matching items'}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding MatchCount}" Value="0">
+                                <Setter Property="controls:TextButton.Text" Value="No matches found"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                    
+                </controls:TextButton.Style>
+            </controls:TextButton>
             <filters:FilterCollectionView Grid.Row="1" DataContext="{Binding Path=FilterCollection}" Margin="{StaticResource CommonMargin}"/>
             
         </Grid>

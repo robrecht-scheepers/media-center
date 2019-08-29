@@ -220,7 +220,13 @@ namespace MediaCenter.Sessions.Query
             return (QueryResultViewModel != null && QueryResultViewModel.SelectedItems.Count > 0);
         }
         
-        public AsyncRelayCommand ExecuteQueryCommand => _executeQueryCommand ?? (_executeQueryCommand = new AsyncRelayCommand(ExecuteQuery));
+        public AsyncRelayCommand ExecuteQueryCommand => _executeQueryCommand ?? (_executeQueryCommand = new AsyncRelayCommand(ExecuteQuery, CanExecuteQuery));
+
+        private bool CanExecuteQuery()
+        {
+            return MatchCount > 0;
+        }
+
         private async Task ExecuteQuery()
         {
             await QueryResultViewModel.LoadQueryResult(await _repository.GetQueryItems(FilterCollection.Filters));
