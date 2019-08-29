@@ -6,7 +6,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="WPF/Style.xaml"/>
+                <ResourceDictionary Source="Style.xaml"/>
                 <ResourceDictionary Source="WPF/Controls/CustomControls.xaml"/>
                 <ResourceDictionary Source="Media/ThumbnailListStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
