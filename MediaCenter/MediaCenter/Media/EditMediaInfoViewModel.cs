@@ -23,7 +23,8 @@ namespace MediaCenter.Media
         private EditTagsViewModel _tagsViewModel;
         private List<string> _originalTagsIntersect;
         private bool _initInProgress;
-        
+        private string _id;
+
         public EditMediaInfoViewModel(IRepository repository, bool saveChangesToRepository)
         {
             _repository = repository;
@@ -40,6 +41,7 @@ namespace MediaCenter.Media
             InitializePrivate();
             InitializeDateTaken();
             InitializeDateAdded();
+            InitializeId();
             InitializeTagsViewModel(_repository.Tags);
             _initInProgress = false;
 
@@ -193,6 +195,16 @@ namespace MediaCenter.Media
         private void InitializeDateAdded()
         {
             DateAdded = MultipleItems ? null : (DateTime?)_items.FirstOrDefault()?.DateAdded;
+        }
+
+        public string Id
+        {
+            get => _id;
+            set => SetValue(ref _id, value);
+        }
+        private void InitializeId()
+        {
+            Id = MultipleItems ? "" : _items.FirstOrDefault()?.Name;
         }
 
         public EditTagsViewModel TagsViewModel
