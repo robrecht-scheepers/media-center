@@ -24,6 +24,7 @@ namespace MediaCenter.Media
         private List<string> _originalTagsIntersect;
         private bool _initInProgress;
         private string _id;
+        private bool _multipleItems;
 
         public EditMediaInfoViewModel(IRepository repository, bool saveChangesToRepository)
         {
@@ -35,6 +36,7 @@ namespace MediaCenter.Media
         public void LoadItems(List<MediaItem> items)
         {
             _items = items;
+            MultipleItems = (items.Count > 1);
 
             _initInProgress = true;
             InitializeFavorite();
@@ -117,7 +119,11 @@ namespace MediaCenter.Media
             ? (_items.First().MediaType == MediaType.Video ? "Video: " : "Image: ") + _items.First().Name
             : $"{_items.Count} items selected";
 
-        public bool MultipleItems => _items.Count > 1;
+        public bool MultipleItems
+        {
+            get => _multipleItems;
+            set => SetValue(ref _multipleItems, value);
+        }
 
         public bool Empty => !_items.Any();
 

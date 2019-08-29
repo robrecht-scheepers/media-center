@@ -43,15 +43,25 @@
 
             <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
                 <controls:SingleImageToggleButton x:Name="ShowInfo" Image="/Resources/Icons/ic_info.png" 
-                                                  Visibility="{Binding MultipleDateTaken, Converter={StaticResource CollapseWhenNotNullConverter}}" />
+                                                  Visibility="{Binding MultipleDateTaken, Converter={StaticResource CollapseWhenNotNullConverter}}" >
+                    <controls:SingleImageToggleButton.Style>
+                        <Style TargetType="controls:SingleImageToggleButton" BasedOn="{StaticResource {x:Type controls:SingleImageToggleButton}}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding MultipleItems}" Value="true">
+                                    <Setter Property="IsChecked" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls:SingleImageToggleButton.Style>
+                </controls:SingleImageToggleButton>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal">
             </StackPanel>
             <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                <controls:ImageToggleButton IsChecked="{Binding Favorite, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}" HorizontalAlignment="Center"
-                                            CheckedImage="/Resources/Icons/ic_favorite.png" UncheckedImage="/Resources/Icons/ic_notfavorite.png" NullImage="/Resources/Icons/heart-half.png" />
                 <controls:ImageToggleButton IsChecked="{Binding Private, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}"  HorizontalAlignment="Center"
                                             CheckedImage="/Resources/Icons/ic_private.png" UncheckedImage="/Resources/Icons/ic_notprivate.png" NullImage="/Resources/Icons/lock-half.png"/>
+                <controls:ImageToggleButton IsChecked="{Binding Favorite, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}" HorizontalAlignment="Center"
+                                            CheckedImage="/Resources/Icons/ic_favorite.png" UncheckedImage="/Resources/Icons/ic_notfavorite.png" NullImage="/Resources/Icons/heart-half.png" />
             </StackPanel>
         </Grid>
         
