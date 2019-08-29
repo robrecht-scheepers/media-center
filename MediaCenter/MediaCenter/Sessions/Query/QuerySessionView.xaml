@@ -11,53 +11,92 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance local:QuerySessionViewModel}"
              d:DesignHeight="300" d:DesignWidth="300"
-             Background="{StaticResource AppStandardBackground}">
+             Background="{StaticResource C4}">
     <UserControl.Resources>
-        <ResourceDictionary>
-            <converters:ViewModeBoolConverter x:Key="ViewModeBoolConverter"/>
-            <converters:ViewModeBoolConverter Invert="True" x:Key="InvertedViewModeBoolConverter"/>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/WPF/Controls/RowColumnToggleButton.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <local:ToolWindoStateToBoolConverter x:Key="ToolWindowVisibilityConverter"/>
+        <local:ToolWindoStateToVisibilityConverter x:Key="FilterWindowVisibilityConverter" TargetWindowState="Filters" />
+        <local:ToolWindoStateToVisibilityConverter x:Key="PropertiesWindowVisibilityConverter" TargetWindowState="Properties" />
+        <local:ViewModeToBoolConverter x:Key="ViewModeToBoolConverter"/>
     </UserControl.Resources>
 
-    <!--
-    <UserControl.InputBindings>
-        <KeyBinding Key="Right" Modifiers="Control" Command="{Binding QueryResultViewModel.SelectNextItemCommand}"/>
-        <KeyBinding Key="Left" Modifiers="Control" Command="{Binding QueryResultViewModel.SelectPreviousItemCommand}"/>
-    </UserControl.InputBindings>
-    -->
     <Grid>
         <Grid.ColumnDefinitions>
-            <controls:HideableColumnDefinition Width="*" Visible="{Binding ElementName=ShowFilter, Path=IsChecked }"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="Auto"/>
-            <controls:HideableColumnDefinition Width="*" Visible="{Binding ElementName=ShowEdit, Path=IsChecked }"/>
+            <controls:HideableColumnDefinition Width="*" Visible="{Binding ToolWindowState, Converter={StaticResource ToolWindowVisibilityConverter}}"/>
+            <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
-        
-        <Grid Grid.Column ="0">
+
+        <!-- Button column -->
+        <Border Grid.Column="0" BorderBrush="{StaticResource C1}" BorderThickness="0,0,1,0" Margin="0,5"/> 
+        <Grid Grid.Column="0"> 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Vertical">
+                <controls:SingleImageToggleButton IsChecked="{Binding FilterWindowIsVisible}" Image="/Resources/Icons/ic_search.png" CheckedBackground="{StaticResource C1}"
+                                                  ToolTip="Show/hide search window"/>
+                <controls:SingleImageToggleButton IsChecked="{Binding PropertyWindowIsVisible}" Image="/Resources/Icons/ic_properties.png" CheckedBackground="{StaticResource C1}"
+                                                  ToolTip="Show/hide details window"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Center">
+                <controls:ImageToggleButton IsChecked="{Binding SelectedViewMode, Mode=TwoWay, Converter={StaticResource ViewModeToBoolConverter}}" CheckedImage="/Resources/Icons/ic_grid.png" UncheckedImage="/resources/Icons/ic_image.png" 
+                                            ToolTip="Switch view mode"/>
+            </StackPanel>
+            <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Bottom">
+                    <controls:ImageButton Command="{Binding StartSlideShowCommand}" ImageSource="/Resources/Icons/ic_slideshow.png" Margin="5" ToolTip="Start slide show" />
+                    <controls:ImageButton Command="{Binding SaveCurrentSelectionToFileCommand}" ImageSource="/Resources/Icons/ic_download.png" Margin="5" ToolTip="Download selected items" />
+                    <controls:ImageButton Command="{Binding DeleteCurrentSelectionCommand}" ImageSource="/Resources/Icons/ic_delete.png" Margin="5" ToolTip="Delete selected items" />
+            </StackPanel>
+        </Grid>
+
+        <Border Grid.Column="1" BorderBrush="{StaticResource C1}" BorderThickness="0,0,1,0" Margin="0,5"/>
+        <!-- filter tool window -->
+        <Grid Grid.Column ="1" Visibility="{Binding ToolWindowState, Converter={StaticResource FilterWindowVisibilityConverter}}"> 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <controls:TextButton Grid.Row="0" Command="{Binding ExecuteQueryCommand}"
+                                 Foreground="{StaticResource C1}" Margin="{StaticResource CommonMargin}" Background="{StaticResource C3}"
+                                 Height="{StaticResource TextButtonHeight}">
+                <controls:TextButton.Style> <!-- style to set the button text dependent on the match count -->
+                    <Style TargetType="controls:TextButton" BasedOn="{StaticResource {x:Type controls:TextButton}}">
+                        <Setter Property="Text" Value="{Binding MatchCount, StringFormat='Load {0} matching items'}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding MatchCount}" Value="0">
+                                <Setter Property="controls:TextButton.Text" Value="No matches found"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                    
+                </controls:TextButton.Style>
+            </controls:TextButton>
+            <filters:FilterCollectionView Grid.Row="1" DataContext="{Binding Path=FilterCollection}" Margin="{StaticResource CommonMargin}"/>
+            
+        </Grid>
+
+        <!-- properties tool window -->
+        <Grid Grid.Column="1" Visibility="{Binding ToolWindowState, Converter={StaticResource PropertiesWindowVisibilityConverter}}"> 
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <filters:FilterCollectionView Grid.Row="0" DataContext="{Binding Path=FilterCollection}" Margin="{StaticResource CommonMargin}"/>
-            <StackPanel Grid.Row="1" Orientation="Vertical">
-                <controls:TextButton Text="{Binding MatchCount, StringFormat='Load {0} matching items'}" Command="{Binding ExecuteQueryCommand}"
-                                     Foreground="{StaticResource AppBrightColor}" Margin="{StaticResource CommonMargin}" Background="{StaticResource MainWindowBackground}"
-                                     Height="{StaticResource TextButtonHeight}"/>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <controls:ImageButton ImageSource="/Resources/Icons/Image-filled.png" Command="{Binding SwitchViewModeToDetailCommand}" />
-                    <controls:ImageButton ImageSource="/Resources/Icons/Tiles-filled.png" Command="{Binding SwitchViewModeToGridCommand}" />
-                </StackPanel>
-            </StackPanel>
+            <media:EditMediaInfoView Grid.Row="0" DataContext="{Binding EditMediaInfoViewModel}" Visibility="{Binding Converter={StaticResource HideWhenNullConverter}}"/>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+            </Grid>
         </Grid>
 
-        <controls:ImageToggleButton Grid.Column="1" x:Name="ShowFilter" Style="{StaticResource ColumnToggleButtonStyle}" Margin="0 5" IsChecked="True"
-                                     CheckedImage="/Resources/Icons/control-180.png" UncheckedImage="/Resources/Icons/control.png"/>
-
+        <!-- query result -->
         <ContentControl Grid.Column="2" Content="{Binding}">
             <ContentControl.Style>
                 <Style TargetType="ContentControl">
@@ -102,29 +141,6 @@
                 </Style>
             </ContentControl.Style>
         </ContentControl>
-
-        <controls:ImageToggleButton Grid.Column="3" x:Name="ShowEdit" Style="{StaticResource ColumnToggleButtonStyle}"  Margin="5" IsChecked="True"
-                                     CheckedImage="/Resources/Icons/control.png" UncheckedImage="/Resources/Icons/control-180.png"/>
         
-        <Grid Grid.Column="4">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-
-            <media:EditMediaInfoView Grid.Row="0" DataContext="{Binding EditMediaInfoViewModel}" Visibility="{Binding Converter={StaticResource HideWhenNullConverter}}"/>
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <controls:ImageButton Grid.Column="0" HorizontalAlignment="Center" Command="{Binding StartSlideShowCommand}" ImageSource="/Resources/Icons/screen.png" Margin="5" HoverBackground="{StaticResource AppBrightColor}" />
-                <controls:ImageButton Grid.Column="1" HorizontalAlignment="Center" Command="{Binding SaveCurrentSelectionToFileCommand}" ImageSource="/Resources/Icons/content-download.png" Margin="5" />
-                <controls:ImageButton Grid.Column="2" HorizontalAlignment="Center" Command="{Binding DeleteCurrentSelectionCommand}" ImageSource="/Resources/Icons/trash-can.png" Margin="5" />
-            </Grid>
-        </Grid>
     </Grid>
-        
-
 </UserControl>

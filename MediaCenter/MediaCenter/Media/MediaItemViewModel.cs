@@ -87,7 +87,7 @@ namespace MediaCenter.Media
         }
 
         public AsyncRelayCommand RotateCounterclockwiseCommand
-            => _rotateCounterclockwiseCommand ?? (_rotateCounterclockwiseCommand = new AsyncRelayCommand(RotateCounterClockwise));
+            => _rotateCounterclockwiseCommand ?? (_rotateCounterclockwiseCommand = new AsyncRelayCommand(RotateCounterClockwise, CanExecuteRotate));
         private async Task RotateCounterClockwise()
         {
             await Rotate(270);

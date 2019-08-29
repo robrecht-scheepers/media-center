@@ -6,14 +6,13 @@
              xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity" 
              xmlns:local="clr-namespace:MediaCenter.Sessions.Query"
              xmlns:media="clr-namespace:MediaCenter.Media"
-             xmlns:wpf="clr-namespace:MediaCenter.WPF"
              xmlns:behaviors="clr-namespace:MediaCenter.WPF.Behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:QuerySessionViewModel}">
     <Grid>
         <ListBox Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding QueryResultViewModel.Items}" 
-                 SelectionMode="Extended" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                 SelectionMode="Extended" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" >
             <interactivity:Interaction.Behaviors>
                 <behaviors:BindSelectionBehavior SelectedItems="{Binding QueryResultViewModel.SelectedItems}"/>
             </interactivity:Interaction.Behaviors>
@@ -24,10 +23,10 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <media:ThumbnailView DataContext="{Binding}" Margin="5">
+                    <media:ThumbnailView DataContext="{Binding}" Margin="5,5,5,1">
                         <media:ThumbnailView.InputBindings>
                             <MouseBinding MouseAction="LeftDoubleClick" 
-                                          Command="{Binding SelectForDetailViewCommand}"
+                                          Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:QueryResultGridView}, Path=DataContext.SelectForDetailViewCommand}"
                                           CommandParameter="{Binding}"/>
                         </media:ThumbnailView.InputBindings>
                     </media:ThumbnailView>

@@ -4,6 +4,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ImageButton.xaml"/>
         <ResourceDictionary Source="ImageToggleButton.xaml"/>
+        <ResourceDictionary Source="SingleImageToggleButton.xaml"/>
         <ResourceDictionary Source="TextButton.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

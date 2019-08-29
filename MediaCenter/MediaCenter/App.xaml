@@ -6,10 +6,11 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Style.xaml"/>
                 <ResourceDictionary Source="WPF/Controls/CustomControls.xaml"/>
-                <ResourceDictionary Source="WPF/Style.xaml"/>
                 <ResourceDictionary Source="Media/ThumbnailListStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
             <converters:NullVisibilityConverter x:Key="HideWhenNullConverter" NotNullVisibility="Visible" NullVisibility="Hidden"/>
             <converters:NullVisibilityConverter x:Key="HideWhenNotNullConverter" NotNullVisibility="Hidden" NullVisibility="Visible"/>
             <converters:NullVisibilityConverter x:Key="CollapseWhenNullConverter" NotNullVisibility="Visible" NullVisibility="Collapsed"/>
@@ -19,6 +20,7 @@
             <converters:ObjectBoolConverter x:Key="FalseWhenNullConverter" Invert="False"/>
             <converters:MediaTypeVisibilityConverter x:Key="ShowIfImage" ImageVisibility="Visible" VideoVisibility="Collapsed" />
             <converters:MediaTypeVisibilityConverter x:Key="ShowIfVideo" ImageVisibility="Collapsed" VideoVisibility="Visible" />
+
 </ResourceDictionary>
     </Application.Resources>
 </Application>

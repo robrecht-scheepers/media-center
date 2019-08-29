@@ -9,7 +9,7 @@
              d:DataContext="{d:DesignInstance Type=local:RepositoryViewModel}">
     <UserControl.Resources>
         <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource AppDarkColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource C5}"/>
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -22,7 +22,7 @@
 
         <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" HorizontalAlignment="Stretch" Margin="2" Background="Transparent" />
         <TextBlock Grid.Column="1" Text="{Binding Path=Location, StringFormat='Repository: {0}'}" Margin="2"/>
-        <Border Grid.Column="2" BorderBrush="WhiteSmoke" BorderThickness="1 0 0 0" Margin="4"/>
+        <Border Grid.Column="2" BorderBrush="{StaticResource C0}" BorderThickness="1 0 0 0" Margin="4"/>
         <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
             
             <TextBlock Text="{Binding Path=ItemCount, StringFormat='{}({0} items: '}" Margin="2"/>

@@ -7,7 +7,6 @@
              xmlns:local="clr-namespace:MediaCenter.Sessions.Query"
              xmlns:media="clr-namespace:MediaCenter.Media"
              xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
-             xmlns:wpf="clr-namespace:MediaCenter.WPF"
              xmlns:behaviors="clr-namespace:MediaCenter.WPF.Behaviors"
              xmlns:converters="clr-namespace:MediaCenter.WPF.Converters"
              mc:Ignorable="d" 
@@ -25,30 +24,26 @@
     </UserControl.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <controls:HideableRowDefinition Height="Auto" Visible="{Binding ElementName=ShowList, Path=IsChecked}"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
 
+        <controls:ImageButton Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding QueryResultViewModel.SelectPreviousItemCommand}" ImageSource="/Resources/Icons/ic_previous.png" />
+        <media:ImageItemView Grid.Column="1" DataContext="{Binding DetailItem}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfImage}}" />
+        <media:VideoItemView Grid.Column="1" DataContext="{Binding DetailItem}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfVideo}}" />
+        <controls:ImageButton Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding QueryResultViewModel.SelectNextItemCommand}" ImageSource="/Resources/Icons/ic_next.png" />
 
-        <media:ImageItemView Grid.Row="0" DataContext="{Binding DetailItem}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfImage}}" />
-        <media:VideoItemView Grid.Row="0" DataContext="{Binding DetailItem}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfVideo}}" />
-        
-        <controls:ImageButton Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding QueryResultViewModel.SelectPreviousItemCommand}" ImageSource="/Resources/Icons/arrow-180.png" Height="32" Width="32"/>
-        <controls:ImageButton Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding QueryResultViewModel.SelectNextItemCommand}" ImageSource="/Resources/Icons/arrow.png" Height="32" Width="32"/>
-
-        <controls:ImageToggleButton Grid.Row="1" x:Name="ShowList" Style="{StaticResource RowToggleButtonStyle}" IsChecked="True"
-                                    CheckedImage="/Resources/Icons/control-90.png" UncheckedImage="/Resources/Icons/control-270.png" />
-
-        <ListBox Grid.Row="2" Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding QueryResultViewModel.Items}" 
-                 SelectedItem="{Binding Path=QueryResultViewModel.SelectedItem, Mode=TwoWay}" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
+        <ListBox Grid.Column="3" Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding QueryResultViewModel.Items}" 
+                 SelectedItem="{Binding Path=QueryResultViewModel.SelectedItem, Mode=TwoWay}" ScrollViewer.VerticalScrollBarVisibility="Auto" >
             <interactivity:Interaction.Behaviors>
                 <behaviors:ScrollIntoViewBehavior/>
             </interactivity:Interaction.Behaviors>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal"/>
+                    <StackPanel Orientation="Vertical"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>

@@ -130,12 +130,18 @@
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
     <Compile Include="Media\PlayState.cs" />
+    <Compile Include="Sessions\Query\QueryToolWindowState.cs" />
+    <Compile Include="Sessions\Query\ToolWindoStateToBoolConverter.cs" />
+    <Compile Include="Sessions\Query\ToolWindoStateToVisibilityConverter.cs" />
+    <Compile Include="Sessions\Query\ViewModeToVisibilityConverter.cs" />
+    <Compile Include="Sessions\Query\ViewModeToBoolConverter.cs" />
     <Compile Include="WPF\Controls\AirControl\AirControl.xaml.cs">
       <DependentUpon>AirControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="WPF\Controls\AirControl\Alpha.xaml.cs">
       <DependentUpon>Alpha.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WPF\Controls\SingleImageToggleButton.cs" />
     <Compile Include="WPF\Converters\MediaTypeVisibilityConverter.cs" />
     <Compile Include="Repository\Database.cs" />
     <Compile Include="Repository\DbRepository.cs" />
@@ -270,6 +276,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="WPF\Controls\ImageToggleButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="WPF\Controls\RowColumnToggleButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -282,7 +292,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WPF\Controls\ImageToggleButton.xaml">
+    <Page Include="WPF\Controls\SingleImageToggleButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -366,7 +376,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WPF\Style.xaml">
+    <Page Include="Style.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -432,6 +442,28 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\ic_upload.png" />
+    <Resource Include="Resources\Icons\ic_addfolder.png" />
+    <Resource Include="Resources\Icons\ic_addimages.png" />
+    <Resource Include="Resources\Icons\ic_editmedia.png" />
+    <Resource Include="Resources\Icons\ic_rotateleft.png" />
+    <Resource Include="Resources\Icons\ic_rotateright.png" />
+    <Resource Include="Resources\Icons\ic_info.png" />
+    <Resource Include="Resources\Icons\ic_edit.png" />
+    <Resource Include="Resources\Icons\ic_add.png" />
+    <Resource Include="Resources\Icons\ic_favorite.png" />
+    <Resource Include="Resources\Icons\ic_notfavorite.png" />
+    <Resource Include="Resources\Icons\ic_notprivate.png" />
+    <Resource Include="Resources\Icons\ic_private.png" />
+    <Resource Include="Resources\Icons\ic_delete.png" />
+    <Resource Include="Resources\Icons\ic_download.png" />
+    <Resource Include="Resources\Icons\ic_slideshow.png" />
+    <Resource Include="Resources\Icons\ic_next.png" />
+    <Resource Include="Resources\Icons\ic_previous.png" />
+    <Resource Include="Resources\Icons\ic_image.png" />
+    <Resource Include="Resources\Icons\ic_grid.png" />
+    <Resource Include="Resources\Icons\ic_properties.png" />
+    <Resource Include="Resources\Icons\ic_search.png" />
     <EmbeddedResource Include="Repository\Sql\CreateDB.sql" />
     <Resource Include="Resources\Icons\stop.png" />
     <Resource Include="Resources\Icons\timer.png" />

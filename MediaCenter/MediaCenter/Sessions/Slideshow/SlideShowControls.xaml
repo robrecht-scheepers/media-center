@@ -28,24 +28,24 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Border Grid.Column="1" BorderBrush="Transparent" Background="{StaticResource AppDarkColor}">
+            <Border Grid.Column="1" BorderBrush="Transparent" Background="{StaticResource C5}">
                 <StackPanel Orientation="Horizontal">
-                    <controls:ImageToggleButton IsChecked="{Binding EditMediaInfoViewModel.Favorite, Mode=TwoWay}" IsThreeState="{Binding EditMediaInfoViewModel.MultipleItems}" HorizontalAlignment="Center"
+                    <controls:ImageToggleButton IsChecked="{Binding EditMediaInfoViewModel.Favorite, Mode=TwoWay}" IsThreeState="{Binding EditMediaInfoViewModel.HasMultipleItems}" HorizontalAlignment="Center"
                                                 CheckedImage="/Resources/Icons/heart-filled.png" UncheckedImage="/Resources/Icons/heart.png" NullImage="/Resources/Icons/heart-half.png" />
-                    <controls:ImageToggleButton IsChecked="{Binding EditMediaInfoViewModel.Private, Mode=TwoWay}" IsThreeState="{Binding EditMediaInfoViewModel.MultipleItems}"  HorizontalAlignment="Center"
+                    <controls:ImageToggleButton IsChecked="{Binding EditMediaInfoViewModel.Private, Mode=TwoWay}" IsThreeState="{Binding EditMediaInfoViewModel.HasMultipleItems}"  HorizontalAlignment="Center"
                                                 CheckedImage="/Resources/Icons/lock-locked-filled.png" UncheckedImage="/Resources/Icons/lock-unlocked.png" NullImage="/Resources/Icons/lock-half.png"/>
                     <controls:ImageButton HorizontalAlignment="Center" Command="{Binding DeleteCurrentSelectionCommand}" ImageSource="/Resources/Icons/trash-can.png" Margin="5" />
                 </StackPanel>
             </Border>
         </Grid>
-        <Border Grid.Row="2" Background="{StaticResource AppDarkColor}" Opacity="0.75" Margin="70 0 70 30">
+        <Border Grid.Row="2" Background="{StaticResource C5}" Opacity="0.75" Margin="70 0 70 30">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding MediaItemViewModel.MediaItem.DateTaken}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" FontSize="24"/>
+                <TextBlock Grid.Column="0" Text="{Binding MediaItemViewModel.MediaItem.DateTaken}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource C0}" FontSize="24"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
                     <controls:ImageButton ImageSource="/Resources/Icons/previous.png" Command="{Binding SelectPreviousItemCommand}" Width="64" Height="64"/>
                     <controls:ImageButton ImageSource="/Resources/Icons/pause.png" Command="{Binding PauseCommand}" Width="64" Height="64"
@@ -65,7 +65,7 @@
                     <controls:ImageToggleButton Grid.Column="0" x:Name="ShowIntervalSlider" CheckedImage="/Resources/Icons/timer.png" UncheckedImage="/Resources/Icons/timer.png" Width="64" Height="64"/>
                     <Slider Grid.Column="1" Value="{Binding Interval, Mode=TwoWay}" Minimum="2" Maximum="10" TickFrequency="1" IsSnapToTickEnabled="True" 
                             Visibility="{Binding ElementName=ShowIntervalSlider, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" VerticalAlignment="Center" />
-                    <TextBlock Grid.Column="2" Text="{Binding Path=Interval, StringFormat={}{0}s}" Foreground="White" FontSize="20"
+                    <TextBlock Grid.Column="2" Text="{Binding Path=Interval, StringFormat={}{0}s}" Foreground="{StaticResource C0}" FontSize="20"
                                Visibility="{Binding ElementName=ShowIntervalSlider, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" VerticalAlignment="Center" />
                     <controls:ImageButton Grid.Column="4" ImageSource="/Resources/Icons/close_circle.png" Command="{Binding CloseCommand}"  Width="64" Height="64" HorizontalAlignment="Right"/>
                 </Grid>

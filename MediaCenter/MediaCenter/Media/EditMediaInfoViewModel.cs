@@ -23,27 +23,33 @@ namespace MediaCenter.Media
         private EditTagsViewModel _tagsViewModel;
         private List<string> _originalTagsIntersect;
         private bool _initInProgress;
-        
+        private string _id;
+        private bool _hasMultipleItems;
+        private bool _isEmpty;
+        private int _itemCount;
+
         public EditMediaInfoViewModel(IRepository repository, bool saveChangesToRepository)
         {
             _repository = repository;
             _saveChangesToRepository = saveChangesToRepository;
-            _items = new List<MediaItem>();
+            LoadItems(new List<MediaItem>());
         }
 
         public void LoadItems(List<MediaItem> items)
         {
             _items = items;
+            HasMultipleItems = (items.Count > 1);
+            IsEmpty = !items.Any();
+            ItemCount = items.Count;
 
             _initInProgress = true;
             InitializeFavorite();
             InitializePrivate();
             InitializeDateTaken();
             InitializeDateAdded();
+            InitializeId();
             InitializeTagsViewModel(_repository.Tags);
             _initInProgress = false;
-
-            RaisePropertyChanged("Name");
         }
 
         private void PublishToItems()
@@ -75,7 +81,7 @@ namespace MediaCenter.Media
 
                 if (TagsViewModel.IsDirty)
                 {
-                    if (MultipleItems)
+                    if (HasMultipleItems)
                     {
                         // add all tags that are new
                         foreach (var newTag in TagsViewModel.SelectedTags.Where(x => !item.Tags.Contains(x)))
@@ -111,13 +117,25 @@ namespace MediaCenter.Media
             }
         }
 
-        public string Name => _items.Count == 1
-            ? (_items.First().MediaType == MediaType.Video ? "Video: " : "Image: ") + _items.First().Name
-            : $"{_items.Count} items selected";
+        public int ItemCount
+        {
+            get => _itemCount;
+            set => SetValue(ref _itemCount, value);
+        }
 
-        public bool MultipleItems => _items.Count > 1;
+        public bool HasMultipleItems
+        {
+            get => _hasMultipleItems;
+            set => SetValue(ref _hasMultipleItems, value);
+        }
 
-        public bool Empty => !_items.Any();
+        public bool IsEmpty
+        {
+            get => _isEmpty;
+            set => SetValue(ref _isEmpty, value);
+        }
+
+        
 
         public bool? Favorite
         {
@@ -162,12 +180,12 @@ namespace MediaCenter.Media
         }
         private void InitializeDateTaken()
         {
-            if (Empty)
+            if (IsEmpty)
             {
                 DateTaken = null;
                 MultipleDateTaken = null;
             }
-            else if (MultipleItems)
+            else if (HasMultipleItems)
             {
                 string dateFormat = "dd.MM.yyyy";
                 DateTaken = null;
@@ -192,7 +210,17 @@ namespace MediaCenter.Media
         }
         private void InitializeDateAdded()
         {
-            DateAdded = MultipleItems ? null : (DateTime?)_items.FirstOrDefault()?.DateAdded;
+            DateAdded = HasMultipleItems ? null : (DateTime?)_items.FirstOrDefault()?.DateAdded;
+        }
+
+        public string Id
+        {
+            get => _id;
+            set => SetValue(ref _id, value);
+        }
+        private void InitializeId()
+        {
+            Id = HasMultipleItems ? "" : _items.FirstOrDefault()?.Name;
         }
 
         public EditTagsViewModel TagsViewModel
@@ -203,9 +231,9 @@ namespace MediaCenter.Media
         private void InitializeTagsViewModel(IEnumerable<string> allTags)
         {
             // in case of multiple items, edit only the tags that are shared by all items
-            var tags = MultipleItems
+            var tags = HasMultipleItems
                 ? (_originalTagsIntersect = _items.Select(x => x.Tags).Cast<IEnumerable<string>>().Aggregate((x, y) => x.Intersect(y)).ToList())
-                : Empty ? new List<string>() : _items.First().Tags.ToList();
+                : IsEmpty ? new List<string>() : _items.First().Tags.ToList();
             TagsViewModel = new EditTagsViewModel(allTags, tags);
             TagsViewModel.SelectedTags.CollectionChanged += (s, a) => PublishToItems();
         }

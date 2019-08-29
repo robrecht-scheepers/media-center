@@ -4,53 +4,121 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MediaCenter.Media"
-             xmlns:controls="clr-namespace:MediaCenter.WPF.Controls"
+             xmlns:ctrl="clr-namespace:MediaCenter.WPF.Controls"
+             xmlns:query="clr-namespace:MediaCenter.Sessions.Query"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:EditMediaInfoViewModel}">
     <UserControl.Resources>
-        <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource AppBrightColor}"/>
-            <Setter Property="FontSize" Value="{StaticResource CommonFontSize}"/>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Foreground" Value="{StaticResource C1}"/>
         </Style>
+        <query:ViewModeToVisibilityConverter x:Key="ShowIfViewModeDetail" VisibilityWhenDetail="Visible" VisibilityWhenGrid="Collapsed" VisibilityWhenSlideshow="Collapsed" />
+        
     </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <TextBlock Grid.Row="0" Text="{Binding Name}"/>
-
-        <Grid Grid.Row="1" Visibility="{Binding DateTaken, Converter={StaticResource CollapseWhenNullConverter}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="0" Text="{Binding DateTaken, StringFormat='{}Date taken: {0:dd.MM.yyyy, HH:mm:ss}'}" Visibility="{Binding ElementName=editToggleButton, Path=IsChecked, Converter={StaticResource CollapseWhenTrueConverter}}" />
-            <DatePicker Grid.Column="0" SelectedDate="{Binding DateTaken, Mode=TwoWay}" SelectedDateFormat="Short" Visibility="{Binding ElementName=editToggleButton, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" />
-            <controls:ImageToggleButton Grid.Column="1" x:Name="editToggleButton" CheckedImage="/Resources/Icons/pen.png" UncheckedImage="/Resources/Icons/pen-filled.png" />
+        <Grid Visibility="{Binding IsEmpty, Converter={StaticResource CollapseWhenFalseConverter}}">
+            <TextBlock Text="No items selected" FontSize="{StaticResource LargeFontSize}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
-        
-        <TextBlock Grid.Row="1" Text="{Binding MultipleDateTaken, StringFormat='{}Date taken: {0}'}" Visibility="{Binding MultipleDateTaken, Converter={StaticResource CollapseWhenNullConverter}}"/>
-        <TextBlock Grid.Row="2" Text="{Binding DateAdded, StringFormat='{}Date added: {0:dd.MM.yyyy, HH:mm:ss}'}" Visibility="{Binding DateAdded, Converter={StaticResource HideWhenNullConverter}}"/>
+        <Grid Visibility="{Binding IsEmpty, Converter={StaticResource CollapseWhenTrueConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <controls:ImageToggleButton Grid.Column="0" IsChecked="{Binding Favorite, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}" HorizontalAlignment="Center"
-                                        CheckedImage="/Resources/Icons/heart-filled.png" UncheckedImage="/Resources/Icons/heart.png" NullImage="/Resources/Icons/heart-half.png" />
-            <controls:ImageToggleButton Grid.Column="1" IsChecked="{Binding Private, Mode=TwoWay}" IsThreeState="{Binding MultipleItems}"  HorizontalAlignment="Center"
-                                        CheckedImage="/Resources/Icons/lock-locked-filled.png" UncheckedImage="/Resources/Icons/lock-unlocked.png" NullImage="/Resources/Icons/lock-half.png"/>
+            <!-- date taken infos -->
+            <TextBlock Grid.Row="0" Text="{Binding DateTaken, StringFormat='dd MMM yyyy'}" FontSize="{StaticResource LargeFontSize}" HorizontalAlignment="Right"  
+                       Visibility="{Binding HasMultipleItems, Converter={StaticResource CollapseWhenTrueConverter}}" />
+            <TextBlock Grid.Row="0" Text="{Binding MultipleDateTaken}" HorizontalAlignment="Right" FontSize="{StaticResource LargeFontSize}" 
+                       Visibility="{Binding HasMultipleItems, Converter={StaticResource CollapseWhenFalseConverter}}" />
+            <TextBlock Grid.Row="1" Text="{Binding DateTaken, StringFormat=HH:mm:ss}" FontSize="{StaticResource LargeFontSize}" HorizontalAlignment="Right" 
+                       Visibility="{Binding HasMultipleItems, Converter={StaticResource CollapseWhenTrueConverter}}"/>
+            <TextBlock Grid.Row="1" Text="{Binding ItemCount, StringFormat={}{0} items selected}" HorizontalAlignment="Right" FontSize="{StaticResource LargeFontSize}" 
+                       Visibility="{Binding HasMultipleItems, Converter={StaticResource CollapseWhenFalseConverter}}" />
+            <Border Grid.Row="1" BorderThickness="0,0,0,1" BorderBrush="{StaticResource C1}" Margin="5,0"/>
+
+            <!-- action buttons -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <ctrl:SingleImageToggleButton x:Name="ShowInfo" Image="/Resources/Icons/ic_info.png" 
+                                                      Visibility="{Binding HasMultipleItems, Converter={StaticResource CollapseWhenTrueConverter}}" >
+                        <ctrl:SingleImageToggleButton.Style>
+                            <Style TargetType="ctrl:SingleImageToggleButton" BasedOn="{StaticResource {x:Type ctrl:SingleImageToggleButton}}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasMultipleItems}" Value="true">
+                                        <Setter Property="IsChecked" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ctrl:SingleImageToggleButton.Style>
+                    </ctrl:SingleImageToggleButton>
+                    <ctrl:SingleImageToggleButton x:Name="ShowEditMedia" Image="/Resources/Icons/ic_editmedia.png" 
+                                                  Visibility="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.SelectedViewMode, Converter={StaticResource ShowIfViewModeDetail}}"/>
+                    
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <ctrl:ImageToggleButton IsChecked="{Binding Private, Mode=TwoWay}" IsThreeState="{Binding HasMultipleItems}"  HorizontalAlignment="Center"
+                                                CheckedImage="/Resources/Icons/ic_private.png" UncheckedImage="/Resources/Icons/ic_notprivate.png" NullImage="/Resources/Icons/lock-half.png"/>
+                    <ctrl:ImageToggleButton IsChecked="{Binding Favorite, Mode=TwoWay}" IsThreeState="{Binding HasMultipleItems}" HorizontalAlignment="Center"
+                                                CheckedImage="/Resources/Icons/ic_favorite.png" UncheckedImage="/Resources/Icons/ic_notfavorite.png" NullImage="/Resources/Icons/heart-half.png" />
+                </StackPanel>
+                
+            </Grid>
+
+            <!-- edit media area -->
+            <Grid Grid.Row="3" Visibility="{Binding ElementName=ShowEditMedia, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <ctrl:ImageButton Command="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.DetailItem.RotateCounterclockwiseCommand}" 
+                                      ImageSource="/Resources/Icons/ic_rotateleft.png" ></ctrl:ImageButton>
+                    <ctrl:ImageButton Command="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.DetailItem.RotateClockwiseCommand}" 
+                                      ImageSource="/Resources/Icons/ic_rotateright.png" ></ctrl:ImageButton>
+                </StackPanel>
+            </Grid>
+
+            <!-- infos area -->
+            <Grid Grid.Row="4" Visibility="{Binding ElementName=ShowInfo, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Created: " VerticalAlignment="Center"  />
+                <Grid Grid.Row="0" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding DateTaken, StringFormat='dd MMM yyyy, HH:mm:ss'}" VerticalAlignment="Center" 
+                               Visibility="{Binding ElementName=editToggleButton, Path=IsChecked, Converter={StaticResource CollapseWhenTrueConverter}}" />
+                    <DatePicker Grid.Column="0" SelectedDate="{Binding DateTaken, Mode=TwoWay}" SelectedDateFormat="Short" VerticalAlignment="Center"  
+                                Visibility="{Binding ElementName=editToggleButton, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" />
+                    <ctrl:SingleImageToggleButton Grid.Column="1" x:Name="editToggleButton" Image="/Resources/Icons/ic_edit.png" Height="25" Width="25" Padding="0" Margin="5,0"  />
+                </Grid>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Added: " VerticalAlignment="Center" Margin="{StaticResource CommonMargin}" />
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DateAdded, StringFormat='dd MMM yyyy, HH:mm:ss'}" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Id: " VerticalAlignment="Center" />
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Id}" VerticalAlignment="Center" />
+            </Grid>
+
+            <Border Grid.Row="4" BorderThickness="0,0,0,1" BorderBrush="{StaticResource C1}" Margin="5,0"/>
+            
+            <!-- tag area -->
+            <local:EditTagsView Grid.Row="5" DataContext="{Binding TagsViewModel}"/>
         </Grid>
-        
-        <local:EditTagsView Grid.Row="5" DataContext="{Binding TagsViewModel}"/>
     </Grid>
 </UserControl>
