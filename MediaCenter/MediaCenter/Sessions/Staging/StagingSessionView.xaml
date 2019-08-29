@@ -15,28 +15,41 @@
              Background="{StaticResource C4}">
     
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
-        <DockPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch">
-            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
-                <controls:TextButton Command="{Binding AddMediaCommand}" Text="Select media files" Height="{StaticResource TextButtonHeight}" Foreground="{StaticResource C1}" Margin="{StaticResource CommonMargin}"/>
-                <controls:TextButton Command="{Binding AddDirectoryCommand}" Text="Select folder" Height="{StaticResource TextButtonHeight}" Foreground="{StaticResource C1}" Margin="{StaticResource CommonMargin}"/>
-                <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource C1}" VerticalAlignment="Center"/>
+
+        <!-- action bar -->
+        <Border Grid.Column="0" BorderBrush="{StaticResource C1}" BorderThickness="0,0,1,0" Margin="0,5"/>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Vertical">
+                <controls:ImageButton Command="{Binding AddMediaCommand}" ImageSource="/Resources/Icons/ic_addimages.png" ToolTip="Open files"/>
+                <controls:ImageButton Command="{Binding AddDirectoryCommand}" ImageSource="/Resources/Icons/ic_addfolder.png" ToolTip="Open folder"/>
+                <controls:ImageButton Command="{Binding SaveToRepositoryCommand}" ImageSource="/Resources/Icons/ic_upload.png" Margin="5" ToolTip="Save to database" />
             </StackPanel>
-            <controls:TextButton DockPanel.Dock="Right" Command="{Binding SaveToRepositoryCommand}" Text="{Binding Path=StagedItems.Count, StringFormat='{}Save {0} staged items'}" 
-                                 Visibility="{Binding ElementName=stagedItemsList, Path=HasItems, Converter={StaticResource CollapseWhenFalseConverter}}" 
-                                 Foreground="{StaticResource C1}" HorizontalAlignment="Right" Margin="{StaticResource CommonMargin}"/>
-        </DockPanel>
-        <ListBox x:Name="stagedItemsList" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Style="{StaticResource ThumbnailListStyle}" Margin="{StaticResource CommonMargin}"
-                 ItemsSource="{Binding StagedItems}" SelectionMode="Extended"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Center">
+                
+            </StackPanel>
+            <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Bottom">
+                <controls:ImageButton Command="{Binding RemoveItemsCommand}" ImageSource="/Resources/Icons/ic_delete.png" Margin="5" ToolTip="Remove selected items" />
+            </StackPanel>
+        </Grid>
+
+        <media:EditMediaInfoView Grid.Column="1" DataContext="{Binding EditMediaInfoViewModel}" 
+                                 Visibility="{Binding Converter={StaticResource HideWhenNullConverter}}" Margin="{StaticResource CommonMargin}"/>
+        <Border Grid.Column="1" BorderBrush="{StaticResource C1}" BorderThickness="0,0,1,0" Margin="0,5"/>
+
+
+        <ListBox x:Name="stagedItemsList" Grid.Column="2" Style="{StaticResource ThumbnailListStyle}" Margin="{StaticResource CommonMargin}"
+                 ItemsSource="{Binding StagedItems}" SelectionMode="Extended" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0">
             <i:Interaction.Behaviors>
                 <behaviors:BindSelectionBehavior SelectedItems="{Binding SelectedItems}"/>
             </i:Interaction.Behaviors>
@@ -47,21 +60,10 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <local:StagedItemView DataContext="{Binding}">
-                        <local:StagedItemView.InputBindings>
-                            <MouseBinding Gesture="LeftDoubleClick" 
-                                          CommandParameter="{Binding}"
-                                          Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:StagingSessionView}}, Path=DataContext.ShowPreviewCommand}" />
-                                          
-                        </local:StagedItemView.InputBindings>
-                    </local:StagedItemView>
+                    <local:StagedItemView DataContext="{Binding}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ListBox>
-        <media:EditMediaInfoView Grid.Row="1" Grid.Column="1" DataContext="{Binding EditMediaInfoViewModel}" 
-                                 Visibility="{Binding Converter={StaticResource HideWhenNullConverter}}" Margin="{StaticResource CommonMargin}"/>
         
-        <controls:ImageButton Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Command="{Binding RemoveItemsCommand}" ImageSource="/Resources/Icons/trash-can.png"
-                              Visibility="{Binding EditMediaInfoViewModel, Converter={StaticResource HideWhenNullConverter}}" Margin="{StaticResource CommonMargin}"  />
     </Grid>
 </UserControl>
