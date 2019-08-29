@@ -441,6 +441,9 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\ic_delete.png" />
+    <Resource Include="Resources\Icons\ic_download.png" />
+    <Resource Include="Resources\Icons\ic_slideshow.png" />
     <Resource Include="Resources\Icons\ic_next.png" />
     <Resource Include="Resources\Icons\ic_previous.png" />
     <Resource Include="Resources\Icons\ic_image.png" />
