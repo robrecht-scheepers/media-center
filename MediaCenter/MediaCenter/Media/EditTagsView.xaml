@@ -33,8 +33,6 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
-        <Border Grid.Row="0" Grid.RowSpan="2" BorderThickness="1" BorderBrush="DarkGray" Margin="1"/>
-
         <StackPanel Grid.Row="0" Orientation="Vertical">
 
             <Border Background="{StaticResource C1}" Margin="5">
@@ -76,7 +74,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Text="{Binding NewTag, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" MinWidth="100" Margin="1 5">
+            <TextBox Grid.Column="0" Text="{Binding NewTag, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" MinWidth="100" Margin="{StaticResource CommonMargin}">
                 <TextBox.InputBindings>
                     <KeyBinding Key="Enter" Command="{Binding AddNewTagCommand}"/>
                 </TextBox.InputBindings>
