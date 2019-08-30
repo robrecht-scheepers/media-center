@@ -130,6 +130,8 @@
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
     <Compile Include="Media\PlayState.cs" />
+    <Compile Include="Repository\IBaseRepository.cs" />
+    <Compile Include="Repository\ICacheRepository.cs" />
     <Compile Include="Sessions\Query\QueryToolWindowState.cs" />
     <Compile Include="Sessions\Query\ToolWindoStateToBoolConverter.cs" />
     <Compile Include="Sessions\Query\ToolWindoStateToVisibilityConverter.cs" />
