@@ -17,7 +17,7 @@ namespace MediaCenter
 
         private async void ApplicationStartup(object sender, StartupEventArgs e)
         {
-            var repoPath = ConfigurationManager.AppSettings["RepositoryPath"];
+            var repoPath = Settings.Default.RepositoryPath;
             var dbPath = Path.Combine(repoPath, "db", "mc.db3");
             var mediaPath = Path.Combine(repoPath, "media");
             var thumbnailPath = Path.Combine(repoPath, "thumbnails");
