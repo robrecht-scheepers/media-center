@@ -14,7 +14,7 @@ using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter.Repository
 {
-    public class DbRepository : IRepository
+    public class DbRepository : IRepository, ICacheRepository
     {
         private readonly string _mediaFolderPath;
         private readonly string _thumbnailFolderPath;
@@ -24,12 +24,14 @@ namespace MediaCenter.Repository
         private CancellationTokenSource _bufferCancellationTokenSource;
         private bool _prefetchInProgress;
 
-        public static bool ChckConnection(string repoPath)
+        private readonly ICacheRepository _cacheRepository;
+
+        public static bool CheckRepositorConnection(string repoPath)
         {
             return File.Exists(Path.Combine(repoPath, "db", "mc.db3"));
         }
 
-        public DbRepository(string repoPath)
+        public DbRepository(string repoPath, ICacheRepository cache = null)
         {
             var dbPath = Path.Combine(repoPath, "db", "mc.db3");
             var mediaFolderPath = Path.Combine(repoPath, "media");
@@ -45,6 +47,8 @@ namespace MediaCenter.Repository
                 Directory.CreateDirectory(thumbnailFolderPath);
 
             _buffer = new ConcurrentDictionary<string, byte[]>();
+
+            _cacheRepository = cache;
         }
 
         public event EventHandler CollectionChanged;
@@ -56,6 +60,8 @@ namespace MediaCenter.Repository
         public async Task Initialize()
         {
             Tags = (await _database.GetAllTags()).ToList();
+            if (_cacheRepository != null)
+                await _cacheRepository.Initialize();
         }
 
         public async Task SaveNewItems(IEnumerable<StagedItem> newItems)
@@ -254,6 +260,18 @@ namespace MediaCenter.Repository
         public async Task<int> GetQueryCount(IEnumerable<Filter> filters)
         {
             return await _database.GetFilteredItemCount(filters);
+        }
+
+        public async Task AddToCache(MediaItem item, string filePath, string thumbnailPath)
+        {
+            await IOHelper.CopyFile(filePath, GetMediaPath(item));
+            await IOHelper.CopyFile(thumbnailPath, GetThumbnailPath(item));
+            await _database.AddMediaInfo(item);
+        }
+
+        public async Task RemoveFromCache(MediaItem item)
+        {
+            await DeleteItem(item);
         }
     }
 }

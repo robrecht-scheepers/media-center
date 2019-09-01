@@ -17,14 +17,28 @@ namespace MediaCenter
 
         private async void ApplicationStartup(object sender, StartupEventArgs e)
         {
-            var repoPath = Settings.Default.RepositoryPath;
-            
-            _repository = new DbRepository(repoPath);
-            var repositoryTask = _repository.Initialize();
+            MainWindowViewModel mainViewModel;
 
             var mainView = new MainWindow();
-            var windowService = new WindowService(mainView); 
-            var mainViewModel = new MainWindowViewModel(_repository,windowService);
+            var windowService = new WindowService(mainView);
+
+            var repositoryPath = Settings.Default.RepositoryPath;
+            var cachePath = Settings.Default.CachePath;
+
+            var cache = new DbRepository(cachePath);
+            if (DbRepository.CheckRepositorConnection(repositoryPath))
+            {
+                _repository = new DbRepository(repositoryPath, cache);
+                mainViewModel = new MainWindowViewModel(_repository, windowService, false);
+            }
+            else
+            {
+                _repository = cache;
+                mainViewModel = new MainWindowViewModel(_repository, windowService, true);
+            }
+
+            var repositoryTask = _repository.Initialize();
+            
             mainView.DataContext = mainViewModel;
             mainView.Show();
 

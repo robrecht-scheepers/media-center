@@ -1,10 +1,11 @@
-﻿using MediaCenter.Media;
+﻿using System.Threading.Tasks;
+using MediaCenter.Media;
 
 namespace MediaCenter.Repository
 {
     public interface ICacheRepository : IBaseRepository
     {
-        void AddToCache(MediaItem item);
-        void RemoveFromCache(MediaItem item);
+        Task AddToCache(MediaItem item, string filePath, string thumbnailPath);
+        Task RemoveFromCache(MediaItem item);
     }
 }
