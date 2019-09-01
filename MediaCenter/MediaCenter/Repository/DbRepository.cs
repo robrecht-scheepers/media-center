@@ -24,8 +24,17 @@ namespace MediaCenter.Repository
         private CancellationTokenSource _bufferCancellationTokenSource;
         private bool _prefetchInProgress;
 
-        public DbRepository(string dbPath, string mediaFolderPath, string thumbnailFolderPath)
+        public static bool ChckConnection(string repoPath)
         {
+            return File.Exists(Path.Combine(repoPath, "db", "mc.db3"));
+        }
+
+        public DbRepository(string repoPath)
+        {
+            var dbPath = Path.Combine(repoPath, "db", "mc.db3");
+            var mediaFolderPath = Path.Combine(repoPath, "media");
+            var thumbnailFolderPath = Path.Combine(repoPath, "thumbnails");
+
             _database = new Database(dbPath);
             _mediaFolderPath = mediaFolderPath;
             if (!Directory.Exists(mediaFolderPath))
