@@ -26,6 +26,8 @@ namespace MediaCenter.Repository
 
         private readonly ICacheRepository _cacheRepository;
 
+        private List<Task> _backgroundTasks;
+
         public static bool CheckRepositorConnection(string repoPath)
         {
             return File.Exists(Path.Combine(repoPath, "db", "mc.db3"));
@@ -33,6 +35,8 @@ namespace MediaCenter.Repository
 
         public DbRepository(string repoPath, ICacheRepository cache = null)
         {
+            _backgroundTasks = new List<Task>();
+
             var dbPath = Path.Combine(repoPath, "db", "mc.db3");
             var mediaFolderPath = Path.Combine(repoPath, "media");
             var thumbnailFolderPath = Path.Combine(repoPath, "thumbnails");
@@ -229,6 +233,20 @@ namespace MediaCenter.Repository
 
         public async Task SaveItem(MediaItem item)
         {
+            if (_cacheRepository != null)
+            {
+                var wasFavorite = await _database.IsFavorite(item.Name);
+                if (item.Favorite && !wasFavorite)
+                {
+                    _backgroundTasks.Add(_cacheRepository.AddToCache(item, GetMediaPath(item), GetThumbnailPath(item)));
+                }
+
+                if (!item.Favorite && wasFavorite)
+                {
+                    _backgroundTasks.Add(_cacheRepository.RemoveFromCache(item));
+                }
+            }
+
             await _database.UpdateMediaInfo(item);
             foreach (var newTag in item.Tags.Where(x => !Tags.Contains(x)))
             {
@@ -264,6 +282,9 @@ namespace MediaCenter.Repository
 
         public async Task AddToCache(MediaItem item, string filePath, string thumbnailPath)
         {
+            if(await _database.ItemExists(item.Name))
+                return;
+
             await IOHelper.CopyFile(filePath, GetMediaPath(item));
             await IOHelper.CopyFile(thumbnailPath, GetThumbnailPath(item));
             await _database.AddMediaInfo(item);

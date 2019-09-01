@@ -125,6 +125,34 @@ namespace MediaCenter.Repository
             return aggregatedTags.Split('#').Where(x => !string.IsNullOrEmpty(x)).ToList();
         }
 
+        public async Task<bool> IsFavorite(string name)
+        {
+            var cmdTxt = $"SELECT Favorite FROM MediaInfo WHERE Name = @name";
+            using (var conn = GetConnection())
+            using (var command = GetCommand(conn, cmdTxt))
+            {
+                command.Parameters.AddWithValue("@name", name);
+                conn.Open();
+                var result = await command.ExecuteScalarAsync();
+                return (long) result > 0;
+            }
+        }
+
+        public async Task<bool> ItemExists(string name)
+        {
+            var cmdTxt = $"SELECT Id FROM MediaInfo WHERE Name = @name";
+            using (var conn = GetConnection())
+            using (var command = GetCommand(conn, cmdTxt))
+            {
+                command.Parameters.AddWithValue("@name", name);
+                conn.Open();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    return reader.HasRows;
+                }
+            }
+        }
+
         public async Task<List<string>> GetNameClashes(string name)
         {
             var result = new List<string>();
