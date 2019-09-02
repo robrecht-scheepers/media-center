@@ -88,11 +88,11 @@ namespace MediaCenter.Repository
         public async Task DeleteMediaInfo(MediaItem item)
         {
             const string cmdTxt =
-                "DELETE FROM MediaInfo WHERE Id = @Id;";
+                "DELETE FROM MediaInfo WHERE Name = @name;";
             using (var conn = GetConnection())
             using (var command = GetCommand(conn, cmdTxt))
             {
-                command.Parameters.AddWithValue("@Id", item.Id);
+                command.Parameters.AddWithValue("@name", item.Name);
                 conn.Open();
                 await command.ExecuteNonQueryAsync();
             }
