@@ -137,6 +137,9 @@
     <Compile Include="Sessions\Query\ToolWindoStateToVisibilityConverter.cs" />
     <Compile Include="Sessions\Query\ViewModeToVisibilityConverter.cs" />
     <Compile Include="Sessions\Query\ViewModeToBoolConverter.cs" />
+    <Compile Include="SplashScreenWindow.xaml.cs">
+      <DependentUpon>SplashScreenWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WPF\Controls\AirControl\AirControl.xaml.cs">
       <DependentUpon>AirControl.xaml</DependentUpon>
     </Compile>
@@ -267,6 +270,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Sessions\Staging\StagedItemPreviewWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SplashScreenWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,0 +1,25 @@
+﻿<Window x:Class="MediaCenter.SplashScreenWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MediaCenter"
+        mc:Ignorable="d"
+        Title="SplashScreenWindow" Height="450" Width="800"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource C5}">
+    <Window.Resources>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Foreground" Value="{StaticResource C1}"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" Text="Initializing repository" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="{StaticResource LargeFontSize}" />
+    </Grid>
+</Window>

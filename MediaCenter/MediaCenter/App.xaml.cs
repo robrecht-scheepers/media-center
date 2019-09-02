@@ -17,6 +17,9 @@ namespace MediaCenter
 
         private async void ApplicationStartup(object sender, StartupEventArgs e)
         {
+            var splashScreen = new SplashScreenWindow();
+            splashScreen.Show();
+
             MainWindowViewModel mainViewModel;
 
             var mainView = new MainWindow();
@@ -37,12 +40,11 @@ namespace MediaCenter
                 mainViewModel = new MainWindowViewModel(_repository, windowService, true);
             }
 
-            var repositoryTask = _repository.Initialize();
-            
+            await _repository.Initialize();
             mainView.DataContext = mainViewModel;
-            mainView.Show();
 
-            await repositoryTask;
+            splashScreen.Close();
+            mainView.Show();
         }
 
         private void ApplicationExit(object sender, ExitEventArgs e)
