@@ -137,7 +137,7 @@ namespace MediaCenter.Repository
                 return (long) result > 0;
             }
         }
-
+        
         public async Task<bool> ItemExists(string name)
         {
             var cmdTxt = $"SELECT Id FROM MediaInfo WHERE Name = @name";

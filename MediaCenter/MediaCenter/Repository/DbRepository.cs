@@ -65,7 +65,13 @@ namespace MediaCenter.Repository
         {
             Tags = (await _database.GetAllTags()).ToList();
             if (_cacheRepository != null)
+            {
                 await _cacheRepository.Initialize();
+                var favorites = await _database.GetFilteredItemList(new List<Filter>
+                    {new FavoriteFilter {FavoriteSetting = FavoriteFilter.FavoriteOption.OnlyFavorite}});
+                await _cacheRepository.SynchronizeCache(favorites.Select(x =>
+                    new Tuple<MediaItem, string, string>(x, GetMediaPath(x), GetThumbnailPath(x))).ToList());
+            }
         }
 
         public async Task SaveNewItems(IEnumerable<StagedItem> newItems)
@@ -293,6 +299,27 @@ namespace MediaCenter.Repository
         public async Task RemoveFromCache(MediaItem item)
         {
             await DeleteItem(item);
+        }
+
+        public async Task SynchronizeCache(List<Tuple<MediaItem, string, string>> items)
+        {
+            var sourceItemDictionary =  items.ToDictionary(x => x.Item1.Name, x => x);
+            var localItems = await _database.GetFilteredItemList(new List<Filter>());
+
+            var itemsToRemove = localItems.Where(x => !sourceItemDictionary.Keys.Contains(x.Name)).ToList();
+            foreach (var item in itemsToRemove)
+            {
+                await RemoveFromCache(item);
+            }
+
+            var localNames = localItems.Select(x => x.Name).ToList();
+            var namesToAdd = sourceItemDictionary.Keys.Where(x => !localNames.Contains(x));
+
+            foreach (var name in namesToAdd)
+            {
+                var itemInfo = sourceItemDictionary[name];
+                await AddToCache(itemInfo.Item1, itemInfo.Item2, itemInfo.Item3);
+            }
         }
     }
 }
