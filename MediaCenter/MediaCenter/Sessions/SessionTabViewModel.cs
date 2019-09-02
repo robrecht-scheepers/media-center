@@ -35,7 +35,7 @@ namespace MediaCenter.Sessions
         public RelayCommand CreateQuerySessionCommand => _createQuerySessionCommand ?? (_createQuerySessionCommand = new RelayCommand(CreateQuerySession));
         private void CreateQuerySession()
         {
-            SessionViewModel = new QuerySessionViewModel(_windowService, _repository);
+            SessionViewModel = new QuerySessionViewModel(_windowService, _repository, ReadOnly);
             SessionCreated?.Invoke(this, EventArgs.Empty);
             RaisePropertyChanged("Name");
         }

@@ -34,8 +34,9 @@ namespace MediaCenter.Sessions.Query
         private bool _propertyWindowIsVisible;
         private bool _toolWindowStateProcessingInProgress;
 
-        public QuerySessionViewModel(IWindowService windowService, IRepository repository) : base(null, windowService)
+        public QuerySessionViewModel(IWindowService windowService, IRepository repository, bool readOnly) : base(null, windowService)
         {
+            ReadOnly = readOnly;
             _repository = repository;
             InitializeViewModesList();
             
@@ -55,6 +56,8 @@ namespace MediaCenter.Sessions.Query
 
             ToolWindowState = QueryToolWindowState.Filters;
         }
+
+        public bool ReadOnly { get; set; }
 
         public override string Name => "View media";
 
@@ -174,7 +177,7 @@ namespace MediaCenter.Sessions.Query
         }
         private bool CanExecuteDeleteCurrentSelection()
         {
-            return (QueryResultViewModel != null && QueryResultViewModel.SelectedItems.Count > 0);
+            return (!ReadOnly && QueryResultViewModel != null && QueryResultViewModel.SelectedItems.Count > 0);
         }
         
 
