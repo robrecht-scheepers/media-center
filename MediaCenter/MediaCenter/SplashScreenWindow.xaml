@@ -15,11 +15,15 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <TextBlock Text="Initializing repository" FontSize="{StaticResource LargeFontSize}" />
+            <TextBlock Name="AnimatedEllipsis" FontSize="{StaticResource LargeFontSize}"/>
+        </StackPanel>
         
-        <TextBlock Grid.Row="0" Text="Initializing repository" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="{StaticResource LargeFontSize}" />
     </Grid>
 </Window>
