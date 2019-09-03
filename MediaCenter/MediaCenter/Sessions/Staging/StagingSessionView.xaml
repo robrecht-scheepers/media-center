@@ -33,6 +33,7 @@
             <StackPanel Grid.Row="0" Orientation="Vertical">
                 <controls:ImageButton Command="{Binding AddMediaCommand}" ImageSource="/Resources/Icons/ic_addimages.png" ToolTip="Open files"/>
                 <controls:ImageButton Command="{Binding AddDirectoryCommand}" ImageSource="/Resources/Icons/ic_addfolder.png" ToolTip="Open folder"/>
+                <Border Background="Transparent" BorderThickness="0,0,0,1" BorderBrush="{StaticResource C2}" Margin="5,0"/>
                 <controls:ImageButton Command="{Binding SaveToRepositoryCommand}" ImageSource="/Resources/Icons/ic_upload.png" Margin="5" ToolTip="Save to database" />
             </StackPanel>
             <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Center">
