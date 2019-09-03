@@ -72,8 +72,8 @@
             <!-- infos area -->
             <Grid Grid.Row="3" Visibility="{Binding ElementName=ShowInfo, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
