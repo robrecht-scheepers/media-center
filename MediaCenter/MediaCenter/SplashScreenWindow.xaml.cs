@@ -23,9 +23,10 @@ namespace MediaCenter
     {
         private DispatcherTimer _timer;
         private int _ellipsisLength;
-        public SplashScreenWindow()
+        public SplashScreenWindow(string message)
         {
             InitializeComponent();
+            Message.Text = message;
             _timer = new DispatcherTimer(DispatcherPriority.Render);
             _timer.Interval = new TimeSpan(0, 0, 0, 0, 500);
             _timer.Tick += TimerOnTick;

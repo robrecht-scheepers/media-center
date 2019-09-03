@@ -22,5 +22,6 @@ namespace MediaCenter.Repository
         Task SaveContentToFile(MediaItem item, string filePath);
         Task SaveMultipleContentToFolder(List<MediaItem> items, string folderPath);
         string StatusMessage { get; }
+        void Close();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Configuration;
 using System.IO;
 using System.Windows;
@@ -14,10 +15,10 @@ namespace MediaCenter
     public partial class App : Application
     {
         private IRepository _repository;
-
+        
         private async void ApplicationStartup(object sender, StartupEventArgs e)
         {
-            var splashScreen = new SplashScreenWindow();
+            var splashScreen = new SplashScreenWindow("Initializing repository");
             splashScreen.Show();
 
             MainWindowViewModel mainViewModel;
@@ -36,15 +37,24 @@ namespace MediaCenter
             }
             else
             {
-                _repository = cache;
-                mainViewModel = new MainWindowViewModel(_repository, windowService, true);
+                mainViewModel = new MainWindowViewModel(cache, windowService, true);
             }
-
+            
             await _repository.Initialize();
             mainView.DataContext = mainViewModel;
+            mainView.Closing += MainViewOnClosing;
 
             splashScreen.Close();
+            MainWindow = mainView;
             mainView.Show();
+        }
+
+        private void MainViewOnClosing(object sender, CancelEventArgs e)
+        {
+            var waitScreen = new SplashScreenWindow("waiting for backgrond operations") {Owner = MainWindow};
+            waitScreen.Show();
+            _repository?.Close();
+            waitScreen.Close();
         }
 
         private void ApplicationExit(object sender, ExitEventArgs e)

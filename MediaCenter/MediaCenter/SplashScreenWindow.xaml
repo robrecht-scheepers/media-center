@@ -21,8 +21,8 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-            <TextBlock Text="Initializing repository" FontSize="{StaticResource LargeFontSize}" />
-            <TextBlock Name="AnimatedEllipsis" FontSize="{StaticResource LargeFontSize}"/>
+            <TextBlock Name="Message" FontSize="{StaticResource LargeFontSize}" Margin="0" />
+            <TextBlock Name="AnimatedEllipsis" FontSize="{StaticResource LargeFontSize}" Margin="0" />
         </StackPanel>
         
     </Grid>

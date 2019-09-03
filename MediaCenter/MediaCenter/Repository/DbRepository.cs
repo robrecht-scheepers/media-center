@@ -26,8 +26,7 @@ namespace MediaCenter.Repository
         private bool _prefetchInProgress;
 
         private readonly ICacheRepository _cacheRepository;
-
-        private List<Task> _backgroundTasks;
+        private readonly List<Task> _backgroundTasks;
 
         public static bool CheckRepositoryConnection(string repoPath)
         {
@@ -268,6 +267,12 @@ namespace MediaCenter.Repository
         {
             task.ContinueWith((t) => _backgroundTasks.Remove(t));
             _backgroundTasks.Add(task);
+        }
+
+        public void Close()
+        {
+            while(_backgroundTasks.Any(x => x != null && !x.IsCompleted))
+                Thread.Sleep(500);
         }
 
         public Uri Location => default(Uri);
