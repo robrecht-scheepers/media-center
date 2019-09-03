@@ -52,7 +52,7 @@ namespace MediaCenter.Sessions.Query
                 await QueryResultViewModelOnSelectionChanged(s,a);
             };
 
-            EditMediaInfoViewModel = new EditMediaInfoViewModel(_repository, true);
+            EditMediaInfoViewModel = new EditMediaInfoViewModel(_repository, true, ReadOnly);
 
             ToolWindowState = QueryToolWindowState.Filters;
         }
