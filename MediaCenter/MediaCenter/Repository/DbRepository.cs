@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using MediaCenter.Helpers;
@@ -14,7 +15,7 @@ using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter.Repository
 {
-    public class DbRepository : IRepository
+    public class DbRepository : IRepository, ICacheRepository
     {
         private readonly string _mediaFolderPath;
         private readonly string _thumbnailFolderPath;
@@ -24,8 +25,22 @@ namespace MediaCenter.Repository
         private CancellationTokenSource _bufferCancellationTokenSource;
         private bool _prefetchInProgress;
 
-        public DbRepository(string dbPath, string mediaFolderPath, string thumbnailFolderPath)
+        private readonly ICacheRepository _cacheRepository;
+        private readonly List<Task> _backgroundTasks;
+
+        public static bool CheckRepositoryConnection(string repoPath)
         {
+            return File.Exists(Path.Combine(repoPath, "db", "mc.db3"));
+        }
+
+        public DbRepository(string repoPath, ICacheRepository cache = null)
+        {
+            _backgroundTasks = new List<Task>();
+
+            var dbPath = Path.Combine(repoPath, "db", "mc.db3");
+            var mediaFolderPath = Path.Combine(repoPath, "media");
+            var thumbnailFolderPath = Path.Combine(repoPath, "thumbnails");
+
             _database = new Database(dbPath);
             _mediaFolderPath = mediaFolderPath;
             if (!Directory.Exists(mediaFolderPath))
@@ -36,6 +51,8 @@ namespace MediaCenter.Repository
                 Directory.CreateDirectory(thumbnailFolderPath);
 
             _buffer = new ConcurrentDictionary<string, byte[]>();
+
+            _cacheRepository = cache;
         }
 
         public event EventHandler CollectionChanged;
@@ -47,6 +64,14 @@ namespace MediaCenter.Repository
         public async Task Initialize()
         {
             Tags = (await _database.GetAllTags()).ToList();
+            if (_cacheRepository != null)
+            {
+                await _cacheRepository.Initialize();
+                var favorites = await _database.GetFilteredItemList(new List<Filter>
+                    {new FavoriteFilter {FavoriteSetting = FavoriteFilter.FavoriteOption.OnlyFavorite}});
+                await _cacheRepository.SynchronizeCache(favorites.Select(x =>
+                    new Tuple<MediaItem, string, string>(x, GetMediaPath(x), GetThumbnailPath(x))).ToList());
+            }
         }
 
         public async Task SaveNewItems(IEnumerable<StagedItem> newItems)
@@ -214,11 +239,40 @@ namespace MediaCenter.Repository
 
         public async Task SaveItem(MediaItem item)
         {
+            if (_cacheRepository != null)
+            {
+                var wasFavorite = await _database.IsFavorite(item.Name);
+                if (item.Favorite)
+                {
+                    if(wasFavorite)
+                        AddToBackgroundTasks(_cacheRepository.UpdateCache(item)); 
+                    else
+                        AddToBackgroundTasks(_cacheRepository.AddToCache(item, GetMediaPath(item), GetThumbnailPath(item)));
+                }
+
+                if (!item.Favorite && wasFavorite)
+                {
+                    AddToBackgroundTasks(_cacheRepository.RemoveFromCache(item));
+                }
+            }
+
             await _database.UpdateMediaInfo(item);
             foreach (var newTag in item.Tags.Where(x => !Tags.Contains(x)))
             {
                 Tags.Add(newTag);
             }
+        }
+
+        private void AddToBackgroundTasks(Task task)
+        {
+            task.ContinueWith((t) => _backgroundTasks.Remove(t));
+            _backgroundTasks.Add(task);
+        }
+
+        public void Close()
+        {
+            while(_backgroundTasks.Any(x => x != null && !x.IsCompleted))
+                Thread.Sleep(500);
         }
 
         public Uri Location => default(Uri);
@@ -245,6 +299,57 @@ namespace MediaCenter.Repository
         public async Task<int> GetQueryCount(IEnumerable<Filter> filters)
         {
             return await _database.GetFilteredItemCount(filters);
+        }
+
+        public async Task AddToCache(MediaItem item, string filePath, string thumbnailPath)
+        {
+            if(await _database.ItemExists(item.Name))
+                return;
+
+            await IOHelper.CopyFile(filePath, GetMediaPath(item));
+            await IOHelper.CopyFile(thumbnailPath, GetThumbnailPath(item));
+            await _database.AddMediaInfo(item);
+        }
+
+        public async Task RemoveFromCache(MediaItem item)
+        {
+            await DeleteItem(item);
+        }
+
+        public async Task SynchronizeCache(List<Tuple<MediaItem, string, string>> syncItems)
+        {
+            var localItems = await _database.GetFilteredItemList(new List<Filter>());
+
+            var syncItemNames =  syncItems.Select(x => x.Item1.Name);
+            var localItemsToRemove = localItems.Where(x => !syncItemNames.Contains(x.Name)).ToList();
+            foreach (var item in localItemsToRemove)
+            {
+                await RemoveFromCache(item);
+            }
+
+            foreach (var tuple in syncItems)
+            {
+                var localItem = localItems.FirstOrDefault(x => x.Name == tuple.Item1.Name);
+                if (localItem == null)
+                {
+                    await AddToCache(tuple.Item1, tuple.Item2, tuple.Item3);
+                }
+                else
+                {
+                    localItem.UpdateFrom(tuple.Item1); // don't directly save the sync item as the id is autogenerated and will not match
+                    await _database.UpdateMediaInfo(localItem);
+                }
+            }
+        }
+
+        public async Task UpdateCache(MediaItem item)
+        {
+            var localItem = await _database.GetItemByName(item.Name);
+            if (localItem == null)
+                return;
+
+            localItem.UpdateFrom(item); // don't directly save the item as the id is autogenerated and will not match
+            await _database.UpdateMediaInfo(localItem);
         }
     }
 }

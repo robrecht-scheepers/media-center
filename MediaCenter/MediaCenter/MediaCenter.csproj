@@ -130,11 +130,19 @@
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
     <Compile Include="Media\PlayState.cs" />
+    <Compile Include="Media\ReadOnlyMediaInfoView.xaml.cs">
+      <DependentUpon>ReadOnlyMediaInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\IBaseRepository.cs" />
+    <Compile Include="Repository\ICacheRepository.cs" />
     <Compile Include="Sessions\Query\QueryToolWindowState.cs" />
     <Compile Include="Sessions\Query\ToolWindoStateToBoolConverter.cs" />
     <Compile Include="Sessions\Query\ToolWindoStateToVisibilityConverter.cs" />
     <Compile Include="Sessions\Query\ViewModeToVisibilityConverter.cs" />
     <Compile Include="Sessions\Query\ViewModeToBoolConverter.cs" />
+    <Compile Include="SplashScreenWindow.xaml.cs">
+      <DependentUpon>SplashScreenWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WPF\Controls\AirControl\AirControl.xaml.cs">
       <DependentUpon>AirControl.xaml</DependentUpon>
     </Compile>
@@ -149,6 +157,7 @@
       <DependentUpon>FilterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Query\ViewMode.cs" />
+    <Compile Include="WPF\Converters\MultiBoolVisibilityConverter.cs" />
     <Compile Include="WPF\Converters\ViewModeBoolConverter.cs" />
     <Compile Include="Sessions\SessionTabViewModel.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowControls.xaml.cs">
@@ -256,6 +265,10 @@
     </Compile>
     <Compile Include="Media\EditTagsViewModel.cs" />
     <Compile Include="WPF\Behaviors\ScrollIntoViewBehavior.cs" />
+    <Page Include="Media\ReadOnlyMediaInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Sessions\Filters\FilterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -265,6 +278,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Sessions\Staging\StagedItemPreviewWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SplashScreenWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

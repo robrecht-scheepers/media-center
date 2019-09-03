@@ -28,8 +28,9 @@ namespace MediaCenter.Media
         private bool _isEmpty;
         private int _itemCount;
 
-        public EditMediaInfoViewModel(IRepository repository, bool saveChangesToRepository)
+        public EditMediaInfoViewModel(IRepository repository, bool saveChangesToRepository, bool readOnly = false)
         {
+            ReadOnly = readOnly;
             _repository = repository;
             _saveChangesToRepository = saveChangesToRepository;
             LoadItems(new List<MediaItem>());
@@ -54,7 +55,7 @@ namespace MediaCenter.Media
 
         private void PublishToItems()
         {
-            if(_initInProgress)
+            if(ReadOnly || _initInProgress)
                 return;
 
             var tasks = new List<Task>();
@@ -117,6 +118,8 @@ namespace MediaCenter.Media
             }
         }
 
+        public bool ReadOnly { get; set; }
+
         public int ItemCount
         {
             get => _itemCount;
@@ -134,8 +137,6 @@ namespace MediaCenter.Media
             get => _isEmpty;
             set => SetValue(ref _isEmpty, value);
         }
-
-        
 
         public bool? Favorite
         {

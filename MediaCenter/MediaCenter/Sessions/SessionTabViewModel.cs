@@ -14,12 +14,15 @@ namespace MediaCenter.Sessions
         private SessionViewModelBase _sessionViewModel;
         private RelayCommand _createQuerySessionCommand;
         private RelayCommand _createStagingSessionCommand;
-
-        public SessionTabViewModel(IRepository repository, IWindowService windowService)
+        
+        public SessionTabViewModel(IRepository repository, IWindowService windowService, bool readOnly)
         {
             _repository = repository;
             _windowService = windowService;
+            ReadOnly = readOnly;
         }
+
+        public bool ReadOnly { get; }
 
         public SessionViewModelBase SessionViewModel
         {
@@ -32,12 +35,17 @@ namespace MediaCenter.Sessions
         public RelayCommand CreateQuerySessionCommand => _createQuerySessionCommand ?? (_createQuerySessionCommand = new RelayCommand(CreateQuerySession));
         private void CreateQuerySession()
         {
-            SessionViewModel = new QuerySessionViewModel(_windowService, _repository);
+            SessionViewModel = new QuerySessionViewModel(_windowService, _repository, ReadOnly);
             SessionCreated?.Invoke(this, EventArgs.Empty);
             RaisePropertyChanged("Name");
         }
 
-        public RelayCommand CreateStagingSessionCommand => _createStagingSessionCommand ?? (_createStagingSessionCommand = new RelayCommand(CreateStagingSession));
+        public RelayCommand CreateStagingSessionCommand => _createStagingSessionCommand ?? (_createStagingSessionCommand = new RelayCommand(CreateStagingSession, CanExecuteCreateStagingSession));
+
+        private bool CanExecuteCreateStagingSession()
+        {
+            return !ReadOnly;
+        }
 
         private void CreateStagingSession()
         {

@@ -7,24 +7,10 @@ using MediaCenter.Sessions.Staging;
 
 namespace MediaCenter.Repository
 {
-    public interface IRepository
+    public interface IRepository : IBaseRepository
     {
-        event EventHandler CollectionChanged;
-        event EventHandler StatusChanged;
-
-        List<string> Tags { get; }
-        Task Initialize();
-        Task<List<MediaItem>> GetQueryItems(IEnumerable<Filter> filters);
-        Task<int> GetQueryCount(IEnumerable<Filter> filters);
         Task SaveNewItems(IEnumerable<StagedItem> newItems); 
         Task DeleteItem(MediaItem item);
-        Task<byte[]> GetThumbnail(MediaItem item);
-        Task<byte[]> GetFullImage(MediaItem item, IEnumerable<MediaItem> prefetch = null);
-        Uri GetContentUri(MediaItem item);
         Task SaveItem(MediaItem item);
-        System.Uri Location { get; }
-        Task SaveContentToFile(MediaItem item, string filePath);
-        Task SaveMultipleContentToFolder(List<MediaItem> items, string folderPath);
-        string StatusMessage { get; }
     }
 }

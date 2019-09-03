@@ -19,8 +19,9 @@ namespace MediaCenter
         private SessionTabViewModel _selectedSessionTab;
 
 
-        public MainWindowViewModel(IRepository repository, IWindowService windowService)
+        public MainWindowViewModel(IRepository repository, IWindowService windowService, bool readOnly)
         {
+            ReadOnly = readOnly;
             _windowService = windowService;
             _repository = repository;
 
@@ -34,6 +35,7 @@ namespace MediaCenter
         public string AppVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
         public RepositoryViewModel RepositoryViewModel { get; }
         public ObservableCollection<SessionTabViewModel> Sessions { get; }
+        public bool ReadOnly { get; }
 
         public SessionTabViewModel SelectedSessionTab
         {
@@ -51,7 +53,7 @@ namespace MediaCenter
 
         private void CreateEmptySessionTab()
         {
-            var newSessionTab = new SessionTabViewModel(_repository,_windowService);
+            var newSessionTab = new SessionTabViewModel(_repository,_windowService, ReadOnly);
             newSessionTab.SessionCreated += NewSessionTabOnSessionCreated;
             Sessions.Add(newSessionTab);
         }

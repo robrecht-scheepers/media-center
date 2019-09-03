@@ -88,24 +88,23 @@
                     <DataTemplate>
                         <Grid>
                             <Grid x:Name="CreateNewSessionGrid" Visibility="Collapsed">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="2*"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" 
                                            Foreground="{StaticResource C1}" FontSize="32" Text="What would you like to do?"/>
-                                <Button Grid.Row="1" Grid.Column="0" Command="{Binding CreateStagingSessionCommand}" 
-                                        Margin="50" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource FlatButtonStyle}">
-                                    <TextBlock Style="{StaticResource ButtonTextStyle}" Text="Add new images and videos"/>
-                                </Button>
-                                <Button Grid.Row="1" Grid.Column="1" Command="{Binding CreateQuerySessionCommand}"
-                                        Margin="50" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource FlatButtonStyle}">
-                                    <TextBlock Style="{StaticResource ButtonTextStyle}" Text="Look at images and videos"/>
-                                </Button>
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                    <Button Command="{Binding CreateStagingSessionCommand}" Visibility="{Binding ReadOnly, Converter={StaticResource CollapseWhenTrueConverter}}"
+                                            Margin="50" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource FlatButtonStyle}">
+                                        <TextBlock Style="{StaticResource ButtonTextStyle}" Text="Add new images and videos"/>
+                                    </Button>
+                                    <Button Command="{Binding CreateQuerySessionCommand}"
+                                            Margin="50" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource FlatButtonStyle}">
+                                        <TextBlock Style="{StaticResource ButtonTextStyle}" Text="Look at images and videos"/>
+                                    </Button>
+                            </StackPanel>
+                                
                             </Grid>
                             <ContentControl x:Name="SessionContent" Content="{Binding SessionViewModel}">
                                 <ContentControl.Resources>

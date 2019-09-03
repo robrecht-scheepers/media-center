@@ -88,11 +88,11 @@ namespace MediaCenter.Repository
         public async Task DeleteMediaInfo(MediaItem item)
         {
             const string cmdTxt =
-                "DELETE FROM MediaInfo WHERE Id = @Id;";
+                "DELETE FROM MediaInfo WHERE Name = @name;";
             using (var conn = GetConnection())
             using (var command = GetCommand(conn, cmdTxt))
             {
-                command.Parameters.AddWithValue("@Id", item.Id);
+                command.Parameters.AddWithValue("@name", item.Name);
                 conn.Open();
                 await command.ExecuteNonQueryAsync();
             }
@@ -123,6 +123,34 @@ namespace MediaCenter.Repository
         private List<string> SeparateTags(string aggregatedTags)
         {
             return aggregatedTags.Split('#').Where(x => !string.IsNullOrEmpty(x)).ToList();
+        }
+
+        public async Task<bool> IsFavorite(string name)
+        {
+            var cmdTxt = $"SELECT Favorite FROM MediaInfo WHERE Name = @name";
+            using (var conn = GetConnection())
+            using (var command = GetCommand(conn, cmdTxt))
+            {
+                command.Parameters.AddWithValue("@name", name);
+                conn.Open();
+                var result = await command.ExecuteScalarAsync();
+                return (long) result > 0;
+            }
+        }
+        
+        public async Task<bool> ItemExists(string name)
+        {
+            var cmdTxt = $"SELECT Id FROM MediaInfo WHERE Name = @name";
+            using (var conn = GetConnection())
+            using (var command = GetCommand(conn, cmdTxt))
+            {
+                command.Parameters.AddWithValue("@name", name);
+                conn.Open();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    return reader.HasRows;
+                }
+            }
         }
 
         public async Task<List<string>> GetNameClashes(string name)
@@ -187,6 +215,39 @@ namespace MediaCenter.Repository
 
             return results;
         }
+
+        public async Task<MediaItem> GetItemByName(string name)
+        {
+            const string commandText =
+                "SELECT Id, Name, Type, Filename, DateTaken, DateAdded, Favorite, Private, Rotation, Tags " +
+                "FROM MediaInfo WHERE Name = @name;";
+
+            using (var conn = GetConnection())
+            using (var command = GetCommand(conn, commandText))
+            {
+                command.Parameters.AddWithValue("@name", name);
+                conn.Open();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if (!reader.HasRows || !reader.Read())
+                        return null;
+
+                    return new MediaItem(reader.GetString(1), (MediaType)reader.GetInt32(2))
+                    {
+                        Id = reader.GetInt32(0),
+                        ContentFileName = reader.GetString(3),
+                        DateTaken = reader.GetDateTime(4),
+                        DateAdded = reader.GetDateTime(5),
+                        Favorite = reader.GetBoolean(6),
+                        Private = reader.GetBoolean(7),
+                        Rotation = reader.GetInt32(8),
+                        Tags = new ObservableCollection<string>(SeparateTags(reader.GetString(9)))
+                    };
+                }
+            }
+        }
+
+
 
         public async Task<int> GetFilteredItemCount(IEnumerable<Filter> filters)
         {
