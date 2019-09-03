@@ -29,7 +29,7 @@ namespace MediaCenter
             var cachePath = Settings.Default.CachePath;
 
             var cache = new DbRepository(cachePath);
-            if (DbRepository.CheckRepositorConnection(repositoryPath))
+            if (DbRepository.CheckRepositoryConnection(repositoryPath))
             {
                 _repository = new DbRepository(repositoryPath, cache);
                 mainViewModel = new MainWindowViewModel(_repository, windowService, false);

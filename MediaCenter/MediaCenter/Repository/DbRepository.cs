@@ -29,7 +29,7 @@ namespace MediaCenter.Repository
 
         private List<Task> _backgroundTasks;
 
-        public static bool CheckRepositorConnection(string repoPath)
+        public static bool CheckRepositoryConnection(string repoPath)
         {
             return File.Exists(Path.Combine(repoPath, "db", "mc.db3"));
         }
