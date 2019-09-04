@@ -37,6 +37,7 @@ namespace MediaCenter
             }
             else
             {
+                _repository = cache;
                 mainViewModel = new MainWindowViewModel(cache, windowService, true);
             }
             
