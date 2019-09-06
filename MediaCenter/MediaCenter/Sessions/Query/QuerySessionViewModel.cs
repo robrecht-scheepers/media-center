@@ -25,7 +25,7 @@ namespace MediaCenter.Sessions.Query
         private AsyncRelayCommand _saveCurrentSelectionToFileCommand;
         private AsyncRelayCommand _executeQueryCommand;
         private readonly IRepository _repository;
-        private RelayCommand<MediaItem> _selectForDetailViewCommand;
+        private AsyncRelayCommand<MediaItem> _selectForDetailViewCommand;
         private MediaItemViewModel _detailItem;
         private AsyncRelayCommand _switchViewModeToDetailCommand;
         private AsyncRelayCommand _switchViewModeToGridCommand;
@@ -154,12 +154,13 @@ namespace MediaCenter.Sessions.Query
         }
         
 
-        public RelayCommand<MediaItem> SelectForDetailViewCommand =>
+        public AsyncRelayCommand<MediaItem> SelectForDetailViewCommand =>
             _selectForDetailViewCommand ??
-            (_selectForDetailViewCommand = new RelayCommand<MediaItem>(SelectForDetailView));
-        private void SelectForDetailView(MediaItem item)
+            (_selectForDetailViewCommand = new AsyncRelayCommand<MediaItem>(SelectForDetailView));
+        private async Task SelectForDetailView(MediaItem item)
         {
             SelectedViewMode = ViewMode.Detail;
+            await DetailItem.Load(item);
         }
 
         public AsyncRelayCommand DeleteCurrentSelectionCommand
