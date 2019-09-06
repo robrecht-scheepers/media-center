@@ -16,7 +16,6 @@
         <local:ToolWindoStateToBoolConverter x:Key="ToolWindowVisibilityConverter"/>
         <local:ToolWindoStateToVisibilityConverter x:Key="FilterWindowVisibilityConverter" TargetWindowState="Filters" />
         <local:ToolWindoStateToVisibilityConverter x:Key="PropertiesWindowVisibilityConverter" TargetWindowState="Properties" />
-        <local:ViewModeToBoolConverter x:Key="ViewModeToBoolConverter"/>
     </UserControl.Resources>
 
     <Grid>
@@ -42,8 +41,10 @@
                                                   ToolTip="Show/hide details window"/>
             </StackPanel>
             <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Center">
-                <controls:ImageToggleButton IsChecked="{Binding SelectedViewMode, Mode=TwoWay, Converter={StaticResource ViewModeToBoolConverter}}" CheckedImage="/Resources/Icons/ic_grid.png" UncheckedImage="/resources/Icons/ic_image.png" 
-                                            ToolTip="Switch view mode"/>
+                <controls:ImageButton ImageSource="/Resources/Icons/ic_image.png" Command="{Binding SwitchViewModeToDetailCommand}" ToolTip="Detail view"
+                                      Visibility="{Binding SelectedViewMode, Converter={StaticResource ShowIfViewModeGridConverter}}"/>
+                <controls:ImageButton ImageSource="/Resources/Icons/ic_grid.png" Command="{Binding SwitchViewModeToGridCommand}" ToolTip="Grid view"
+                                      Visibility="{Binding SelectedViewMode, Converter={StaticResource ShowIfViewModeDetailConverter}}"/>
             </StackPanel>
             <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Bottom">
                     <controls:ImageButton Command="{Binding StartSlideShowCommand}" ImageSource="/Resources/Icons/ic_slideshow.png" Margin="5" ToolTip="Start slide show" />

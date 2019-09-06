@@ -6,13 +6,13 @@
       <Value Profile="(Default)">4</Value>
     </Setting>
     <Setting Name="RepositoryPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">c:\TEMP\MC\Repository\</Value>
+      <Value Profile="(Default)">c:\TEMP\MC\DevRepository\</Value>
     </Setting>
     <Setting Name="UseFavoriteCache" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="CachePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">c:\TEMP\MC\Cache\</Value>
+      <Value Profile="(Default)">c:\TEMP\MC\DevCache\</Value>
     </Setting>
   </Settings>
 </SettingsFile>

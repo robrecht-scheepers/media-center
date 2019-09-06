@@ -139,7 +139,6 @@
     <Compile Include="Sessions\Query\ToolWindoStateToBoolConverter.cs" />
     <Compile Include="Sessions\Query\ToolWindoStateToVisibilityConverter.cs" />
     <Compile Include="Sessions\Query\ViewModeToVisibilityConverter.cs" />
-    <Compile Include="Sessions\Query\ViewModeToBoolConverter.cs" />
     <Compile Include="SplashScreenWindow.xaml.cs">
       <DependentUpon>SplashScreenWindow.xaml</DependentUpon>
     </Compile>

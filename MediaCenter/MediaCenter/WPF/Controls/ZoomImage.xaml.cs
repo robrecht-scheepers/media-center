@@ -10,7 +10,7 @@ namespace MediaCenter.WPF.Controls
     /// </summary>
     public partial class ZoomImage : UserControl
     {
-        private const int DefaultZoom = 5;
+        private const int DefaultZoom = 4;
         private const int MaxZoom = 10;
 
         private Point? _lastDragPoint;
@@ -29,7 +29,7 @@ namespace MediaCenter.WPF.Controls
 
             scrollViewer.ScrollChanged += OnScrollViewerScrollChanged;
             scrollViewer.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
-            scrollViewer.PreviewMouseWheel += OnPreviewMouseWheel;
+            //scrollViewer.PreviewMouseWheel += OnPreviewMouseWheel;
             scrollViewer.MouseMove += OnMouseMove;
             scrollViewer.MouseLeftButtonUp += OnMouseLeftButtonUp;
             scrollViewer.MouseDoubleClick += OnMouseDoubleClick;

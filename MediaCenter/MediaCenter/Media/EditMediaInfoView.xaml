@@ -14,7 +14,6 @@
         <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="Foreground" Value="{StaticResource C1}"/>
         </Style>
-        <query:ViewModeToVisibilityConverter x:Key="ShowIfViewModeDetail" VisibilityWhenDetail="Visible" VisibilityWhenGrid="Collapsed" VisibilityWhenSlideshow="Collapsed" />
         
     </UserControl.Resources>
     <Grid>
@@ -64,7 +63,7 @@
                         </ctrl:SingleImageToggleButton.Style>
                     </ctrl:SingleImageToggleButton>
                     <ctrl:SingleImageToggleButton x:Name="ShowEditMedia" Image="/Resources/Icons/ic_editmedia.png" 
-                                                  Visibility="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.SelectedViewMode, Converter={StaticResource ShowIfViewModeDetail}}"/>
+                                                  Visibility="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.SelectedViewMode, Converter={StaticResource ShowIfViewModeDetailConverter}}"/>
                     
                 </StackPanel>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
