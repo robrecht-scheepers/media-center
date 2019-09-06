@@ -37,7 +37,7 @@ namespace MediaCenter.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:\\TEMP\\MC\\Repository\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\TEMP\\MC\\DevRepository\\")]
         public string RepositoryPath {
             get {
                 return ((string)(this["RepositoryPath"]));
@@ -55,7 +55,7 @@ namespace MediaCenter.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:\\TEMP\\MC\\Cache\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\TEMP\\MC\\DevCache\\")]
         public string CachePath {
             get {
                 return ((string)(this["CachePath"]));
