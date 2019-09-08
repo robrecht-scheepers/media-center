@@ -15,10 +15,10 @@ namespace MediaCenter.WPF.Controls
 
         private Point? _lastDragPoint;
         private Point _zoomMousePoint;
-
-
         private int _zoomLevel = 1;
         private int _previousZoomLevel = 1;
+        private double _previousHorizontalOffset;
+        private double _previousVerticalOffset;
 
         public ZoomImage()
         {
@@ -29,7 +29,7 @@ namespace MediaCenter.WPF.Controls
 
             scrollViewer.ScrollChanged += OnScrollViewerScrollChanged;
             scrollViewer.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
-            //scrollViewer.PreviewMouseWheel += OnPreviewMouseWheel;
+            scrollViewer.PreviewMouseWheel += OnPreviewMouseWheel;
             scrollViewer.MouseMove += OnMouseMove;
             scrollViewer.MouseLeftButtonUp += OnMouseLeftButtonUp;
             scrollViewer.MouseDoubleClick += OnMouseDoubleClick;
@@ -60,6 +60,9 @@ namespace MediaCenter.WPF.Controls
                 return;
 
             _previousZoomLevel = _zoomLevel;
+            _previousHorizontalOffset = scrollViewer.HorizontalOffset;
+            _previousVerticalOffset = scrollViewer.VerticalOffset;
+
             _zoomLevel = newZoomLevel;
             _zoomMousePoint = position;
 
@@ -76,8 +79,8 @@ namespace MediaCenter.WPF.Controls
             if (e.ExtentHeightChange != 0 || e.ExtentWidthChange != 0)
             {
                 var scaleFactor = ((double)_zoomLevel)/((double)_previousZoomLevel);
-                var targetPoint = new Point((scrollViewer.HorizontalOffset + _zoomMousePoint.X)*scaleFactor,
-                    (scrollViewer.VerticalOffset + _zoomMousePoint.Y) * scaleFactor);
+                var targetPoint = new Point((_previousHorizontalOffset + _zoomMousePoint.X)*scaleFactor,
+                    (_previousVerticalOffset + _zoomMousePoint.Y) * scaleFactor);
                 
                 var offsetX = Math.Max(targetPoint.X - _zoomMousePoint.X, 0);
                 var offsetY = Math.Max(targetPoint.Y - _zoomMousePoint.Y, 0);
@@ -141,8 +144,6 @@ namespace MediaCenter.WPF.Controls
         }
         public static readonly DependencyProperty RotationProperty = DependencyProperty.Register("Rotation", typeof(int), typeof(ZoomImage), new PropertyMetadata(0));
         
-
-
         private void Reset()
         {
             AdjustZoom(1);
