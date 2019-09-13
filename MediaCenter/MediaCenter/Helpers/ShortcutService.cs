@@ -11,6 +11,7 @@ namespace MediaCenter.Helpers
     {
         private RelayCommand _toggleFavoriteShortcut;
         private RelayCommand _nextShortcut;
+        private RelayCommand _previousShortcut;
 
         public event EventHandler ToggleFavorite;
         public RelayCommand ToggleFavoriteShortcut => _toggleFavoriteShortcut ?? (_toggleFavoriteShortcut = new RelayCommand(RaiseToggleFavorite));
@@ -24,6 +25,13 @@ namespace MediaCenter.Helpers
         private void RaiseNext()
         {
             Next?.Invoke(this, EventArgs.Empty);
+        }
+
+        public event EventHandler Previous;
+        public RelayCommand PreviousShortcut => _previousShortcut ?? (_previousShortcut = new RelayCommand(RaisePrevious));
+        private void RaisePrevious()
+        {
+            Previous?.Invoke(this, EventArgs.Empty);
         }
     }
 }

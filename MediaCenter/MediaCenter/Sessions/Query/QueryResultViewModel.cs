@@ -31,6 +31,11 @@ namespace MediaCenter.Sessions.Query
                 if (CanExecuteSelectNextItem())
                     SelectNextItem();
             };
+            _shortcutService.Previous += (s, a) =>
+            {
+                if (CanExecuteSelectPreviousItem())
+                    SelectPreviousItem();
+            };
         }
 
         public ObservableCollection<MediaItem> Items { get; }

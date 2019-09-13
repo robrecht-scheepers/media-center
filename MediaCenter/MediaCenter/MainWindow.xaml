@@ -21,8 +21,11 @@
     </Window.Resources>
 
     <Window.InputBindings>
-        <KeyBinding Gesture="Ctrl+F" Command="{Binding SelectedSessionTab.ShortcutService.ToggleFavoriteShortcut}"/>
+        <KeyBinding Key="F" Modifiers="Control" Command="{Binding SelectedSessionTab.ShortcutService.ToggleFavoriteShortcut}"/>
         <KeyBinding Key="Right" Modifiers="Control" Command="{Binding SelectedSessionTab.ShortcutService.NextShortcut}"/>
+        <KeyBinding Key="Down" Modifiers="Control" Command="{Binding SelectedSessionTab.ShortcutService.NextShortcut}"/>
+        <KeyBinding Key="Left" Modifiers="Control" Command="{Binding SelectedSessionTab.ShortcutService.PreviousShortcut}"/>
+        <KeyBinding Key="Up" Modifiers="Control" Command="{Binding SelectedSessionTab.ShortcutService.PreviousShortcut}"/>
     </Window.InputBindings>
 
     <Grid>
