@@ -24,6 +24,7 @@ namespace MediaCenter
             ReadOnly = readOnly;
             _windowService = windowService;
             _repository = repository;
+            
 
             Sessions = new ObservableCollection<SessionTabViewModel>();
             RepositoryViewModel = new RepositoryViewModel(_repository);
@@ -53,7 +54,7 @@ namespace MediaCenter
 
         private void CreateEmptySessionTab()
         {
-            var newSessionTab = new SessionTabViewModel(_repository,_windowService, ReadOnly);
+            var newSessionTab = new SessionTabViewModel(_repository,_windowService, new ShortcutService(), ReadOnly);
             newSessionTab.SessionCreated += NewSessionTabOnSessionCreated;
             Sessions.Add(newSessionTab);
         }

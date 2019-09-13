@@ -25,6 +25,7 @@ namespace MediaCenter.Sessions.Query
         private AsyncRelayCommand _saveCurrentSelectionToFileCommand;
         private AsyncRelayCommand _executeQueryCommand;
         private readonly IRepository _repository;
+        private readonly ShortcutService _shortcutService;
         private AsyncRelayCommand<MediaItem> _selectForDetailViewCommand;
         private MediaItemViewModel _detailItem;
         private AsyncRelayCommand _switchViewModeToDetailCommand;
@@ -34,10 +35,11 @@ namespace MediaCenter.Sessions.Query
         private bool _propertyWindowIsVisible;
         private bool _toolWindowStateProcessingInProgress;
 
-        public QuerySessionViewModel(IWindowService windowService, IRepository repository, bool readOnly) : base(null, windowService)
+        public QuerySessionViewModel(IWindowService windowService, IRepository repository, ShortcutService shortcutService, bool readOnly) : base(null, windowService, shortcutService)
         {
             ReadOnly = readOnly;
             _repository = repository;
+            _shortcutService = shortcutService;
             InitializeViewModesList();
             
             FilterCollection = new FilterCollectionViewModel(_repository.Tags);
@@ -46,13 +48,13 @@ namespace MediaCenter.Sessions.Query
 
             DetailItem = new MediaItemViewModel(_repository);
 
-            QueryResultViewModel = new QueryResultViewModel(_repository);
+            QueryResultViewModel = new QueryResultViewModel(_repository, _shortcutService);
             QueryResultViewModel.SelectionChanged += async (s,a) =>
             {
                 await QueryResultViewModelOnSelectionChanged(s,a);
             };
 
-            EditMediaInfoViewModel = new EditMediaInfoViewModel(_repository, true, ReadOnly);
+            EditMediaInfoViewModel = new EditMediaInfoViewModel(_repository, ShortcutService, true, ReadOnly);
 
             ToolWindowState = QueryToolWindowState.Filters;
         }

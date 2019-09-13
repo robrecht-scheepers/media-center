@@ -128,6 +128,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Helpers\IWindowService.cs" />
+    <Compile Include="Helpers\ShortcutService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
     <Compile Include="Media\PlayState.cs" />
     <Compile Include="Media\ReadOnlyMediaInfoView.xaml.cs">
@@ -254,7 +255,6 @@
     <Compile Include="Sessions\Staging\StagedItemView.xaml.cs">
       <DependentUpon>StagedItemView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sessions\SessionBase.cs" />
     <Compile Include="Sessions\Staging\StagingSessionView.xaml.cs">
       <DependentUpon>StagingSessionView.xaml</DependentUpon>
     </Compile>

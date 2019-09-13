@@ -17,117 +17,84 @@
         Background="{StaticResource C3}">
     
     <Window.Resources>
-        <Style x:Key="FlatButtonStyle" TargetType="Button">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Grid>
-                            <Border x:Name="Border" Grid.RowSpan="2" BorderBrush="{StaticResource C1}" BorderThickness="2" CornerRadius="3"/>
-                            <Border x:Name="Dummy" Background="{StaticResource C0}" Opacity="0" CornerRadius="3"/>
-                            <ContentPresenter Content="{TemplateBinding Content}"/>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="{StaticResource C3}"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Dummy" Property="Opacity" Value="0.2"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style x:Key="ButtonTextStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource C1}"/>
-            <Setter Property="FontSize" Value="24"/>
-            <Setter Property="Margin" Value="20"/>
-        </Style>
+        
     </Window.Resources>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
 
-            <!--
-            <Grid Grid.Row="0" x:Name="TitleBar" MouseDown="TitleBar_OnMouseDown">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Border x:Name="dummy" Grid.Column="0" Background="{StaticResource C0}" Opacity="0"/>
-                <TextBlock Grid.Column="0" HorizontalAlignment="Center" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Path=Title}"
-                       Foreground="{StaticResource C1}" FontSize="14" Margin="0 2 0 0"/>
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <controls:ImageButton x:Name="Minimize" ImageSource="/Resources/Icons/minimize.png" Click="Minimize_OnClick" DockPanel.Dock="Right" VerticalAlignment="Top"  Height="32" Width="32" Margin="0" Padding="10" />
-                    <controls:ImageButton x:Name="Adjust" ImageSource="/Resources/Icons/maximize.png" Click="Adjust_OnClick" DockPanel.Dock="Right" VerticalAlignment="Top"  Height="32" Width="32" Margin="0" Padding="10" />
-                    <controls:ImageButton x:Name="Close" ImageSource="/Resources/Icons/close.png" Click="Close_OnClick" DockPanel.Dock="Right" VerticalAlignment="Top" Height="32" Width="32" Margin="0" Padding="10" HoverBackground="#FF0000"/>
-                </StackPanel>
-            </Grid>
-            -->
-            <TabControl Grid.Row="1" ItemsSource="{Binding Sessions}" SelectedItem="{Binding SelectedSessionTab}" Background="{StaticResource C4}">
-                <TabControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Margin="{StaticResource CommonMargin}"/>
-                            <controls:ImageButton x:Name="CloseButton" ImageSource="/Resources/Icons/cross-grey.png" VerticalAlignment="Center" Height="20" Width="20" Margin="{StaticResource CommonMargin}"
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.CloseSessionCommand}" 
-                                    CommandParameter="{Binding}">
-                            </controls:ImageButton>
-                        </StackPanel>
-                        <DataTemplate.Triggers>
-                            <DataTrigger Binding="{Binding SessionViewModel}" Value="{x:Null}">
-                                <Setter TargetName="CloseButton" Property="Visibility" Value="Collapsed"/>
-                            </DataTrigger>
-                        </DataTemplate.Triggers>
-                    </DataTemplate>
-                </TabControl.ItemTemplate>
-                <TabControl.ContentTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid x:Name="CreateNewSessionGrid" Visibility="Collapsed">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="2*"/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" 
-                                           Foreground="{StaticResource C1}" FontSize="32" Text="What would you like to do?"/>
-                                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-                                    <Button Command="{Binding CreateStagingSessionCommand}" Visibility="{Binding ReadOnly, Converter={StaticResource CollapseWhenTrueConverter}}"
-                                            Margin="50" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource FlatButtonStyle}">
-                                        <TextBlock Style="{StaticResource ButtonTextStyle}" Text="Add new images and videos"/>
-                                    </Button>
-                                    <Button Command="{Binding CreateQuerySessionCommand}"
-                                            Margin="50" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource FlatButtonStyle}">
-                                        <TextBlock Style="{StaticResource ButtonTextStyle}" Text="Look at images and videos"/>
-                                    </Button>
+    <Window.InputBindings>
+        <KeyBinding Key="F" Modifiers="Control" Command="{Binding SelectedSessionTab.ShortcutService.ToggleFavoriteShortcut}"/>
+        <KeyBinding Key="Right" Modifiers="Control" Command="{Binding SelectedSessionTab.ShortcutService.NextShortcut}"/>
+        <KeyBinding Key="Down" Modifiers="Control" Command="{Binding SelectedSessionTab.ShortcutService.NextShortcut}"/>
+        <KeyBinding Key="Left" Modifiers="Control" Command="{Binding SelectedSessionTab.ShortcutService.PreviousShortcut}"/>
+        <KeyBinding Key="Up" Modifiers="Control" Command="{Binding SelectedSessionTab.ShortcutService.PreviousShortcut}"/>
+    </Window.InputBindings>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TabControl Grid.Row="1" ItemsSource="{Binding Sessions}" SelectedItem="{Binding SelectedSessionTab}" Background="{StaticResource C4}">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Margin="{StaticResource CommonMargin}"/>
+                        <controls:ImageButton x:Name="CloseButton" ImageSource="/Resources/Icons/cross-grey.png" VerticalAlignment="Center" Height="20" Width="20" Margin="{StaticResource CommonMargin}"
+                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.CloseSessionCommand}" 
+                                CommandParameter="{Binding}">
+                        </controls:ImageButton>
+                    </StackPanel>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding SessionViewModel}" Value="{x:Null}">
+                            <Setter TargetName="CloseButton" Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid x:Name="CreateNewSessionGrid" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="2*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" 
+                                       Foreground="{StaticResource C1}" FontSize="32" Text="What would you like to do?"/>
+                            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                <Button Command="{Binding CreateStagingSessionCommand}" Visibility="{Binding ReadOnly, Converter={StaticResource CollapseWhenTrueConverter}}"
+                                        Margin="50" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource FlatButtonStyle}">
+                                    <TextBlock Style="{StaticResource ButtonTextStyle}" Text="Add new images and videos"/>
+                                </Button>
+                                <Button Command="{Binding CreateQuerySessionCommand}"
+                                        Margin="50" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource FlatButtonStyle}">
+                                    <TextBlock Style="{StaticResource ButtonTextStyle}" Text="Look at images and videos"/>
+                                </Button>
                             </StackPanel>
-                                
-                            </Grid>
-                            <ContentControl x:Name="SessionContent" Content="{Binding SessionViewModel}">
-                                <ContentControl.Resources>
-                                    <DataTemplate DataType="{x:Type staging:StagingSessionViewModel}">
-                                        <staging:StagingSessionView />
-                                    </DataTemplate>
-                                    <DataTemplate DataType="{x:Type query:QuerySessionViewModel}">
-                                        <query:QuerySessionView />
-                                    </DataTemplate>
-                                </ContentControl.Resources>
-                            </ContentControl>
                         </Grid>
-                        <DataTemplate.Triggers>
-                            <DataTrigger Binding="{Binding SessionViewModel}" Value="{x:Null}">
-                                <Setter TargetName="CreateNewSessionGrid" Property="Visibility" Value="Visible"/>
-                                <Setter TargetName="SessionContent" Property="Visibility" Value="Collapsed"/>
-                            </DataTrigger>
-                        </DataTemplate.Triggers>
-                    
-                    </DataTemplate>
-                </TabControl.ContentTemplate>
-            </TabControl>
+                        <ContentControl x:Name="SessionContent" Content="{Binding SessionViewModel}">
+                            <ContentControl.Resources>
+                                <DataTemplate DataType="{x:Type staging:StagingSessionViewModel}">
+                                    <staging:StagingSessionView />
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type query:QuerySessionViewModel}">
+                                    <query:QuerySessionView />
+                                </DataTemplate>
+                            </ContentControl.Resources>
+                        </ContentControl>
+                    </Grid>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding SessionViewModel}" Value="{x:Null}">
+                            <Setter TargetName="CreateNewSessionGrid" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="SessionContent" Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
 
-            <repository:RepositoryStatusView Grid.Row="2" DataContext="{Binding RepositoryViewModel}"/>
-        </Grid>
+        <repository:RepositoryStatusView Grid.Row="2" DataContext="{Binding RepositoryViewModel}"/>
+    </Grid>
 </Window>

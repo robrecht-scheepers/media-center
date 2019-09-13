@@ -11,18 +11,22 @@ namespace MediaCenter.Sessions
     {
         private IRepository _repository;
         private readonly IWindowService _windowService;
+        
         private SessionViewModelBase _sessionViewModel;
         private RelayCommand _createQuerySessionCommand;
         private RelayCommand _createStagingSessionCommand;
         
-        public SessionTabViewModel(IRepository repository, IWindowService windowService, bool readOnly)
+        public SessionTabViewModel(IRepository repository, IWindowService windowService, ShortcutService shortcutService, bool readOnly)
         {
             _repository = repository;
             _windowService = windowService;
+            ShortcutService = shortcutService;
             ReadOnly = readOnly;
         }
 
         public bool ReadOnly { get; }
+
+        public ShortcutService ShortcutService { get; }
 
         public SessionViewModelBase SessionViewModel
         {
@@ -35,7 +39,7 @@ namespace MediaCenter.Sessions
         public RelayCommand CreateQuerySessionCommand => _createQuerySessionCommand ?? (_createQuerySessionCommand = new RelayCommand(CreateQuerySession));
         private void CreateQuerySession()
         {
-            SessionViewModel = new QuerySessionViewModel(_windowService, _repository, ReadOnly);
+            SessionViewModel = new QuerySessionViewModel(_windowService, _repository, ShortcutService, ReadOnly);
             SessionCreated?.Invoke(this, EventArgs.Empty);
             RaisePropertyChanged("Name");
         }
@@ -49,7 +53,7 @@ namespace MediaCenter.Sessions
 
         private void CreateStagingSession()
         {
-            SessionViewModel = new StagingSessionViewModel(_repository, _windowService);
+            SessionViewModel = new StagingSessionViewModel(_repository, _windowService, ShortcutService);
             SessionCreated?.Invoke(this, EventArgs.Empty);
             RaisePropertyChanged("Name");
         }

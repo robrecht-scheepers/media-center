@@ -8,13 +8,16 @@ namespace MediaCenter.Sessions
     {
         protected readonly IRepository Repository;
         protected readonly IWindowService WindowService;
-
-        protected SessionViewModelBase(IRepository repository, IWindowService windowService)
+        
+        protected SessionViewModelBase(IRepository repository, IWindowService windowService, ShortcutService shortcutService)
         {
             Repository = repository;
             WindowService = windowService;
+            ShortcutService = shortcutService;
         }
 
         public abstract string Name { get; }
+
+        public ShortcutService ShortcutService { get; }
     }
 }
