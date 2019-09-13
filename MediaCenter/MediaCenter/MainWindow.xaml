@@ -55,7 +55,7 @@
             <TabControl.ContentTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Grid x:Name="CreateNewSessionGrid" Visibility="Collapsed">
+                        <Grid x:Name="CreateNewSessionGrid" Visibility="{Binding SessionViewModel, Converter={StaticResource CollapseWhenNotNullConverter}}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="2*"/>
@@ -73,7 +73,8 @@
                                 </Button>
                             </StackPanel>
                         </Grid>
-                        <ContentControl x:Name="SessionContent" Content="{Binding SessionViewModel}">
+                        <ContentControl x:Name="SessionContent" Content="{Binding SessionViewModel}" 
+                                        Visibility="{Binding SessionViewModel, Converter={StaticResource CollapseWhenNullConverter}}">
                             <ContentControl.Resources>
                                 <DataTemplate DataType="{x:Type staging:StagingSessionViewModel}">
                                     <staging:StagingSessionView />
@@ -84,13 +85,6 @@
                             </ContentControl.Resources>
                         </ContentControl>
                     </Grid>
-                    <DataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding SessionViewModel}" Value="{x:Null}">
-                            <Setter TargetName="CreateNewSessionGrid" Property="Visibility" Value="Visible"/>
-                            <Setter TargetName="SessionContent" Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
-                    </DataTemplate.Triggers>
-                
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
