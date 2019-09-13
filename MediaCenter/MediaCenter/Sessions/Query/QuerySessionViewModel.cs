@@ -24,7 +24,6 @@ namespace MediaCenter.Sessions.Query
         private AsyncRelayCommand _deleteCurrentSelectionCommand;
         private AsyncRelayCommand _saveCurrentSelectionToFileCommand;
         private AsyncRelayCommand _executeQueryCommand;
-        private readonly ShortcutService _shortcutService;
         private AsyncRelayCommand<MediaItem> _selectForDetailViewCommand;
         private MediaItemViewModel _detailItem;
         private AsyncRelayCommand _switchViewModeToDetailCommand;
@@ -37,7 +36,6 @@ namespace MediaCenter.Sessions.Query
         public QuerySessionViewModel(IWindowService windowService, IRepository repository, ShortcutService shortcutService, bool readOnly) : base(repository, windowService, shortcutService)
         {
             ReadOnly = readOnly;
-            _shortcutService = shortcutService;
             InitializeViewModesList();
             
             FilterCollection = new FilterCollectionViewModel(Repository.Tags);
@@ -46,7 +44,7 @@ namespace MediaCenter.Sessions.Query
 
             DetailItem = new MediaItemViewModel(Repository);
 
-            QueryResultViewModel = new QueryResultViewModel(Repository, _shortcutService);
+            QueryResultViewModel = new QueryResultViewModel(Repository, ShortcutService);
             QueryResultViewModel.SelectionChanged += async (s,a) =>
             {
                 await QueryResultViewModelOnSelectionChanged(s,a);
