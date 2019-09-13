@@ -14,24 +14,23 @@ namespace MediaCenter.Sessions.Query
     public class QueryResultViewModel : PropertyChangedNotifier
     {
         private readonly IRepository _repository;
-        private readonly ShortcutService _shortcutService;
         private RelayCommand _selectNextItemCommand;
         private RelayCommand _selectPreviousItemCommand;
 
         public QueryResultViewModel(IRepository repository, ShortcutService shortcutService)
         {
             _repository = repository;
-            _shortcutService = shortcutService;
+            var shortcutService1 = shortcutService;
             Items = new ObservableCollection<MediaItem>();
             SelectedItems = new BatchObservableCollection<MediaItem>();
             SelectedItems.CollectionChanged += SelectedItemsOnCollectionChanged;
 
-            _shortcutService.Next += (s, a) =>
+            shortcutService1.Next += (s, a) =>
             {
                 if (CanExecuteSelectNextItem())
                     SelectNextItem();
             };
-            _shortcutService.Previous += (s, a) =>
+            shortcutService1.Previous += (s, a) =>
             {
                 if (CanExecuteSelectPreviousItem())
                     SelectPreviousItem();

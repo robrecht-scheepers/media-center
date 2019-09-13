@@ -12,7 +12,6 @@ namespace MediaCenter.Media
     public class EditMediaInfoViewModel : PropertyChangedNotifier
     {
         private readonly IRepository _repository;
-        private readonly ShortcutService _shortcutService;
         private readonly bool _saveChangesToRepository;
 
         private List<MediaItem> _items;
@@ -37,8 +36,7 @@ namespace MediaCenter.Media
             _saveChangesToRepository = saveChangesToRepository;
             LoadItems(new List<MediaItem>());
 
-            _shortcutService = shortcutService;
-            _shortcutService.ToggleFavorite += (s, a) => ToggleFavorite();
+            shortcutService.ToggleFavorite += (s, a) => ToggleFavorite();
         }
 
         public void LoadItems(List<MediaItem> items)
