@@ -27,6 +27,7 @@ namespace MediaCenter.Media
         private bool _hasMultipleItems;
         private bool _isEmpty;
         private int _itemCount;
+        private RelayCommand _toggleFavorite;
 
         public EditMediaInfoViewModel(IRepository repository, bool saveChangesToRepository, bool readOnly = false)
         {
@@ -153,6 +154,22 @@ namespace MediaCenter.Media
                 Favorite = null;
         }
 
+        public RelayCommand ToggleFavoriteCommand =>
+            _toggleFavorite ?? (_toggleFavorite = new RelayCommand(ToggleFavorite, CanExecuteToggleFavorite));
+
+        private bool CanExecuteToggleFavorite()
+        {
+            return !ReadOnly;
+        }
+
+        private void ToggleFavorite()
+        {
+            if (Favorite == null || !Favorite.Value)
+                Favorite = true;
+            else
+                Favorite = false;
+        }
+
         public bool? Private
         {
             get => _private;
@@ -238,6 +255,8 @@ namespace MediaCenter.Media
             TagsViewModel = new EditTagsViewModel(allTags, tags);
             TagsViewModel.SelectedTags.CollectionChanged += (s, a) => PublishToItems();
         }
+
+
 
         
     }

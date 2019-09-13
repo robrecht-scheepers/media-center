@@ -23,6 +23,10 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
+    <UserControl.InputBindings>
+        <KeyBinding Gesture="Ctrl+F" Command="{Binding EditMediaInfoViewModel.ToggleFavoriteCommand}"/>
+    </UserControl.InputBindings>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
