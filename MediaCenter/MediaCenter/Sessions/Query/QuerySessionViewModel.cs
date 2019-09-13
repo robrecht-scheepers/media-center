@@ -24,7 +24,6 @@ namespace MediaCenter.Sessions.Query
         private AsyncRelayCommand _deleteCurrentSelectionCommand;
         private AsyncRelayCommand _saveCurrentSelectionToFileCommand;
         private AsyncRelayCommand _executeQueryCommand;
-        private readonly IRepository _repository;
         private readonly ShortcutService _shortcutService;
         private AsyncRelayCommand<MediaItem> _selectForDetailViewCommand;
         private MediaItemViewModel _detailItem;
@@ -35,26 +34,25 @@ namespace MediaCenter.Sessions.Query
         private bool _propertyWindowIsVisible;
         private bool _toolWindowStateProcessingInProgress;
 
-        public QuerySessionViewModel(IWindowService windowService, IRepository repository, ShortcutService shortcutService, bool readOnly) : base(null, windowService, shortcutService)
+        public QuerySessionViewModel(IWindowService windowService, IRepository repository, ShortcutService shortcutService, bool readOnly) : base(repository, windowService, shortcutService)
         {
             ReadOnly = readOnly;
-            _repository = repository;
             _shortcutService = shortcutService;
             InitializeViewModesList();
             
-            FilterCollection = new FilterCollectionViewModel(_repository.Tags);
+            FilterCollection = new FilterCollectionViewModel(Repository.Tags);
             FilterCollection.FilterChanged += async (sender, args) => await UpdateMatchCount();
             UpdateMatchCount().Wait();
 
-            DetailItem = new MediaItemViewModel(_repository);
+            DetailItem = new MediaItemViewModel(Repository);
 
-            QueryResultViewModel = new QueryResultViewModel(_repository, _shortcutService);
+            QueryResultViewModel = new QueryResultViewModel(Repository, _shortcutService);
             QueryResultViewModel.SelectionChanged += async (s,a) =>
             {
                 await QueryResultViewModelOnSelectionChanged(s,a);
             };
 
-            EditMediaInfoViewModel = new EditMediaInfoViewModel(_repository, ShortcutService, true, ReadOnly);
+            EditMediaInfoViewModel = new EditMediaInfoViewModel(Repository, ShortcutService, true, ReadOnly);
 
             ToolWindowState = QueryToolWindowState.Filters;
         }
@@ -83,7 +81,7 @@ namespace MediaCenter.Sessions.Query
         }
         private async Task UpdateMatchCount()
         {
-            MatchCount = await _repository.GetQueryCount(FilterCollection.Filters);
+            MatchCount = await Repository.GetQueryCount(FilterCollection.Filters);
         }
         
         public EditMediaInfoViewModel EditMediaInfoViewModel
@@ -174,7 +172,7 @@ namespace MediaCenter.Sessions.Query
                 foreach (var item in QueryResultViewModel.SelectedItems.ToList())
                 {
                     QueryResultViewModel.RemoveItem(item);
-                    await _repository.DeleteItem(item);
+                    await Repository.DeleteItem(item);
                 }    
             }
         }
@@ -202,7 +200,7 @@ namespace MediaCenter.Sessions.Query
                 if (!dialogResult.HasValue || !dialogResult.Value || string.IsNullOrEmpty(dialog.FileName))
                     return;
                 
-                await _repository.SaveContentToFile(item, dialog.FileName);
+                await Repository.SaveContentToFile(item, dialog.FileName);
                 message = $"File {Path.GetFileName(dialog.FileName)} was saved successfully.";
             }
             else
@@ -215,7 +213,7 @@ namespace MediaCenter.Sessions.Query
                     return;
 
                 var selectedFolder = dialog.SelectedPath;
-                await _repository.SaveMultipleContentToFolder(QueryResultViewModel.SelectedItems.ToList(), selectedFolder);
+                await Repository.SaveMultipleContentToFolder(QueryResultViewModel.SelectedItems.ToList(), selectedFolder);
                 message = $"{QueryResultViewModel.SelectedItems.Count} files were saved successfully";
             }
 
@@ -235,7 +233,7 @@ namespace MediaCenter.Sessions.Query
 
         private async Task ExecuteQuery()
         {
-            await QueryResultViewModel.LoadQueryResult(await _repository.GetQueryItems(FilterCollection.Filters));
+            await QueryResultViewModel.LoadQueryResult(await Repository.GetQueryItems(FilterCollection.Filters));
             ToolWindowState = QueryToolWindowState.Hidden;
         }
 
