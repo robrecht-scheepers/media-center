@@ -157,7 +157,6 @@
       <DependentUpon>FilterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Query\ViewMode.cs" />
-    <Compile Include="WPF\Converters\MultiBoolVisibilityConverter.cs" />
     <Compile Include="WPF\Converters\ViewModeBoolConverter.cs" />
     <Compile Include="Sessions\SessionTabViewModel.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowControls.xaml.cs">
@@ -428,25 +427,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Icons\cross-button.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Icons\cross.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Icons\arrow.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Icons\arrow-180.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Icons\arrow-circle-315.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Icons\arrow-circle-315-rev.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Icons\film.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\cross-grey.png" />
@@ -488,36 +469,14 @@
     <Resource Include="Resources\Icons\pause.png" />
     <Resource Include="Resources\Icons\play.png" />
     <Resource Include="Resources\Icons\previous.png" />
-    <Resource Include="Resources\Icons\pen-filled.png" />
-    <Resource Include="Resources\Icons\pen.png" />
     <Resource Include="Resources\Icons\close.png" />
-    <Resource Include="Resources\Icons\maximize.png" />
-    <Resource Include="Resources\Icons\minimize.png" />
-    <Resource Include="Resources\Icons\restore.png" />
-    <Resource Include="Resources\Icons\image-filled.png" />
-    <Resource Include="Resources\Icons\tiles-filled.png" />
-    <Resource Include="Resources\Icons\image.png" />
-    <Resource Include="Resources\Icons\tiles.png" />
     <Resource Include="Resources\Icons\heart-half.png" />
-    <Resource Include="Resources\Icons\content-download.png" />
-    <Resource Include="Resources\Icons\screen.png" />
-    <Resource Include="Resources\Icons\trash-can.png" />
-    <Resource Include="Resources\Icons\heart-filled.png" />
-    <Resource Include="Resources\Icons\lock-locked-filled.png" />
-    <Resource Include="Resources\Icons\lock-unlocked.png" />
-    <Resource Include="Resources\Icons\heart.png" />
     <Resource Include="Resources\Icons\arrow-return-180-gray.png" />
     <Resource Include="Resources\Icons\arrow-return-180.png" />
-    <Resource Include="Resources\Icons\control-270.png" />
-    <Resource Include="Resources\Icons\control-90.png" />
-    <Resource Include="Resources\Icons\plus.png" />
-    <Resource Include="Resources\Icons\control-180.png" />
-    <Resource Include="Resources\Icons\control.png" />
     <Resource Include="Resources\Icons\lock-half.png" />
     <Resource Include="Resources\Icons\status-error.png" />
     <Resource Include="Resources\Icons\status-ok.png" />
     <Resource Include="Resources\Images\film-strip.png" />
-    <Resource Include="Resources\Icons\pencil.png" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

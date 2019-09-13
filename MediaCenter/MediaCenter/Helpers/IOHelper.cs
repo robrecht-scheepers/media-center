@@ -30,9 +30,8 @@ namespace MediaCenter.Helpers
                     var ms = new MemoryStream(bytes);
                     return new Bitmap(ms);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    // todo: better error handling
                     return null;
                 }
             });
@@ -82,11 +81,6 @@ namespace MediaCenter.Helpers
         public static async Task DeleteFile(string filePath)
         {
             await Task.Run(() => File.Delete(filePath));
-        }
-
-        public static async Task<FileInfo[]> GetFiles(string directoryPath, string searchPattern)
-        {
-            return await Task.Run(() => new DirectoryInfo(directoryPath).GetFiles(searchPattern));
         }
 
     }
