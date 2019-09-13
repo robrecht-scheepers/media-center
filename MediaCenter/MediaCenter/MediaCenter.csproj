@@ -157,7 +157,6 @@
       <DependentUpon>FilterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sessions\Query\ViewMode.cs" />
-    <Compile Include="WPF\Converters\MultiBoolVisibilityConverter.cs" />
     <Compile Include="WPF\Converters\ViewModeBoolConverter.cs" />
     <Compile Include="Sessions\SessionTabViewModel.cs" />
     <Compile Include="Sessions\Slideshow\SlideShowControls.xaml.cs">
