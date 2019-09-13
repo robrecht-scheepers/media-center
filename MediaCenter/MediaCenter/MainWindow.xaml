@@ -22,6 +22,7 @@
 
     <Window.InputBindings>
         <KeyBinding Gesture="Ctrl+F" Command="{Binding SelectedSessionTab.ShortcutService.ToggleFavoriteShortcut}"/>
+        <KeyBinding Key="Right" Modifiers="Control" Command="{Binding SelectedSessionTab.ShortcutService.NextShortcut}"/>
     </Window.InputBindings>
 
     <Grid>

@@ -10,7 +10,8 @@ namespace MediaCenter.Helpers
     public class ShortcutService
     {
         private RelayCommand _toggleFavoriteShortcut;
-        
+        private RelayCommand _nextShortcut;
+
         public event EventHandler ToggleFavorite;
         public RelayCommand ToggleFavoriteShortcut => _toggleFavoriteShortcut ?? (_toggleFavoriteShortcut = new RelayCommand(RaiseToggleFavorite));
         private void RaiseToggleFavorite()
@@ -18,6 +19,11 @@ namespace MediaCenter.Helpers
             ToggleFavorite?.Invoke(this, EventArgs.Empty);
         }
 
-
+        public event EventHandler Next;
+        public RelayCommand NextShortcut => _nextShortcut ?? (_nextShortcut = new RelayCommand(RaiseNext));
+        private void RaiseNext()
+        {
+            Next?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

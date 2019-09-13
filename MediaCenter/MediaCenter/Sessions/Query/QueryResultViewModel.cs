@@ -25,6 +25,12 @@ namespace MediaCenter.Sessions.Query
             Items = new ObservableCollection<MediaItem>();
             SelectedItems = new BatchObservableCollection<MediaItem>();
             SelectedItems.CollectionChanged += SelectedItemsOnCollectionChanged;
+
+            _shortcutService.Next += (s, a) =>
+            {
+                if (CanExecuteSelectNextItem())
+                    SelectNextItem();
+            };
         }
 
         public ObservableCollection<MediaItem> Items { get; }
