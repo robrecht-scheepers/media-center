@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using MediaCenter.Helpers;
 using MediaCenter.Repository;
 
 namespace MediaCenter.Sessions.Query
@@ -13,12 +14,14 @@ namespace MediaCenter.Sessions.Query
     public class QueryResultViewModel : PropertyChangedNotifier
     {
         private readonly IRepository _repository;
+        private readonly ShortcutService _shortcutService;
         private RelayCommand _selectNextItemCommand;
         private RelayCommand _selectPreviousItemCommand;
 
-        public QueryResultViewModel(IRepository repository)
+        public QueryResultViewModel(IRepository repository, ShortcutService shortcutService)
         {
             _repository = repository;
+            _shortcutService = shortcutService;
             Items = new ObservableCollection<MediaItem>();
             SelectedItems = new BatchObservableCollection<MediaItem>();
             SelectedItems.CollectionChanged += SelectedItemsOnCollectionChanged;

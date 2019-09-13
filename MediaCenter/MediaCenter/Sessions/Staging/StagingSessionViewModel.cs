@@ -29,12 +29,13 @@ namespace MediaCenter.Sessions.Staging
         private StagedItem _previewItem;
         private string _statusMessage;
 
-        public StagingSessionViewModel(IRepository repository, IWindowService windowService) : base(repository, windowService)
+        public StagingSessionViewModel(IRepository repository, IWindowService windowService, ShortcutService shortcutService) 
+            : base(repository, windowService, shortcutService)
         {
             StagedItems = new ObservableCollection<StagedItem>();
             SelectedItems = new BatchObservableCollection<MediaItem>();
             SelectedItems.CollectionChanged += SelectedItemsOnCollectionChanged;
-            EditMediaInfoViewModel = new EditMediaInfoViewModel(Repository, false);
+            EditMediaInfoViewModel = new EditMediaInfoViewModel(Repository, ShortcutService, false);
         }
 
         public override string Name => "Add media";
