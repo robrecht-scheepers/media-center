@@ -45,4 +45,31 @@
         <Setter Property="Foreground" Value="{StaticResource C1}"/>
     </Style>
 
+    <Style x:Key="FlatButtonStyle" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Border x:Name="Border" Grid.RowSpan="2" BorderBrush="{StaticResource C1}" BorderThickness="2" CornerRadius="3"/>
+                        <Border x:Name="Dummy" Background="{StaticResource C0}" Opacity="0" CornerRadius="3"/>
+                        <ContentPresenter Content="{TemplateBinding Content}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource C3}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Dummy" Property="Opacity" Value="0.2"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ButtonTextStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource C1}"/>
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="Margin" Value="20"/>
+    </Style>
+
 </ResourceDictionary>
