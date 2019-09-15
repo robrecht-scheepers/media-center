@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `MediaInfo` (
 	`Private`	INTEGER NOT NULL,
 	`Rotation`	INTEGER NOT NULL,
 	`Tags`	TEXT NOT NULL DEFAULT '',
+	`Crop`	TEXT,
 	PRIMARY KEY(`Id`)
 );
 DROP INDEX IF EXISTS `MediaInfo_Favorite`;
