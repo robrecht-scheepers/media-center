@@ -152,6 +152,9 @@
     <Compile Include="WPF\Controls\AirControl\Alpha.xaml.cs">
       <DependentUpon>Alpha.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WPF\Controls\CropImage.xaml.cs">
+      <DependentUpon>CropImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WPF\Controls\SingleImageToggleButton.cs" />
     <Compile Include="WPF\Converters\MediaTypeVisibilityConverter.cs" />
     <Compile Include="Repository\Database.cs" />
@@ -292,6 +295,10 @@
     <Page Include="WPF\Controls\AirControl\Alpha.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WPF\Controls\CropImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WPF\Controls\ImageToggleButton.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -441,6 +448,7 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\ic_crop.png" />
     <Resource Include="Resources\Icons\ic_upload.png" />
     <Resource Include="Resources\Icons\ic_addfolder.png" />
     <Resource Include="Resources\Icons\ic_addimages.png" />
