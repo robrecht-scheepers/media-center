@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SQLite;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MediaCenter.Media;
 using MediaCenter.Sessions.Filters;
+using Newtonsoft.Json;
 
 namespace MediaCenter.Repository
 {
@@ -56,11 +58,11 @@ namespace MediaCenter.Repository
             }
         }
 
-        public async Task AddMediaInfo(MediaItem item)
+        public async Task AddMediaItem(MediaItem item)
         {
             const string cmdTxt = 
-                "INSERT INTO MediaInfo(Name, Type, Filename, DateTaken, DateAdded, Favorite, Private, Rotation, Tags) " +
-                "VALUES(@name, @type, @filename, @dateTaken, @dateAdded, @favorite, @private, @rotation, @tags);";
+                "INSERT INTO MediaInfo(Name, Type, Filename, DateTaken, DateAdded, Favorite, Private, Rotation, Tags, Crop) " +
+                "VALUES(@name, @type, @filename, @dateTaken, @dateAdded, @favorite, @private, @rotation, @tags, @crop);";
             using (var conn = GetConnection())
             using (var command = GetCommand(conn, cmdTxt))
             {
@@ -70,11 +72,11 @@ namespace MediaCenter.Repository
             }
         }
 
-        public async Task UpdateMediaInfo(MediaItem item)
+        public async Task UpdateMediaItem(MediaItem item)
         {
             const string cmdTxt =
                 "UPDATE MediaInfo " +
-                "SET Name = @name, Type = @type, Filename = @filename, DateTaken = @dateTaken, DateAdded = @dateAdded, Favorite = @favorite, Private = @private, Rotation = @rotation, Tags = @tags " +
+                "SET Name = @name, Type = @type, Filename = @filename, DateTaken = @dateTaken, DateAdded = @dateAdded, Favorite = @favorite, Private = @private, Rotation = @rotation, Tags = @tags, Crop = @crop " +
                 "WHERE Id = @Id;";
             using (var conn = GetConnection())
             using (var command = GetCommand(conn, cmdTxt))
@@ -85,7 +87,7 @@ namespace MediaCenter.Repository
             }
         }
 
-        public async Task DeleteMediaInfo(MediaItem item)
+        public async Task DeleteMediaItem(MediaItem item)
         {
             const string cmdTxt =
                 "DELETE FROM MediaInfo WHERE Name = @name;";
@@ -110,6 +112,7 @@ namespace MediaCenter.Repository
             command.Parameters.AddWithValue("@private", item.Private);
             command.Parameters.AddWithValue("@rotation", item.Rotation);
             command.Parameters.AddWithValue("@tags", AggregateTags(item.Tags.ToList()));
+            command.Parameters.AddWithValue("@crop",  JsonConvert.SerializeObject(item.Crop));
         }
 
         private string AggregateTags(List<string> tags)
@@ -178,7 +181,7 @@ namespace MediaCenter.Repository
         {
             var results = new List<MediaItem>();
             const string baseCommandText =
-                "SELECT Id, Name, Type, Filename, DateTaken, DateAdded, Favorite, Private, Rotation, Tags " +
+                "SELECT Id, Name, Type, Filename, DateTaken, DateAdded, Favorite, Private, Rotation, Tags, Crop " +
                 "FROM MediaInfo WHERE 1 = 1 {0};";
 
             using (var conn = GetConnection())
@@ -207,7 +210,8 @@ namespace MediaCenter.Repository
                             Favorite = reader.GetBoolean(6),
                             Private = reader.GetBoolean(7),
                             Rotation = reader.GetInt32(8),
-                            Tags = new ObservableCollection<string>(SeparateTags(reader.GetString(9)))
+                            Tags = new ObservableCollection<string>(SeparateTags(reader.GetString(9))),
+                            Crop = JsonConvert.DeserializeObject<Rectangle>(reader.GetString(10))
                         });
                     }
                 }
@@ -219,7 +223,7 @@ namespace MediaCenter.Repository
         public async Task<MediaItem> GetItemByName(string name)
         {
             const string commandText =
-                "SELECT Id, Name, Type, Filename, DateTaken, DateAdded, Favorite, Private, Rotation, Tags " +
+                "SELECT Id, Name, Type, Filename, DateTaken, DateAdded, Favorite, Private, Rotation, Tags, Crop " +
                 "FROM MediaInfo WHERE Name = @name;";
 
             using (var conn = GetConnection())
@@ -241,7 +245,8 @@ namespace MediaCenter.Repository
                         Favorite = reader.GetBoolean(6),
                         Private = reader.GetBoolean(7),
                         Rotation = reader.GetInt32(8),
-                        Tags = new ObservableCollection<string>(SeparateTags(reader.GetString(9)))
+                        Tags = new ObservableCollection<string>(SeparateTags(reader.GetString(9))),
+                        Crop = JsonConvert.DeserializeObject<Rectangle>(reader.GetString(10))
                     };
                 }
             }
