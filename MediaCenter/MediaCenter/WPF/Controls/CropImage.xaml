@@ -8,6 +8,12 @@
              d:DesignHeight="450" d:DesignWidth="800"
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
+        <Grid.LayoutTransform>
+            <TransformGroup>
+                <RotateTransform Angle="{Binding Rotation}"/>
+            </TransformGroup>
+        </Grid.LayoutTransform>
+
         <Image x:Name="Image" Source="{Binding ImageContent}" Stretch="Uniform" />
         <Canvas x:Name="Canvas">
 

@@ -51,8 +51,17 @@ namespace MediaCenter.WPF.Controls
 
         public Rectangle FieldOfView
         {
-            get { return (Rectangle) GetValue(FieldOfViewProperty); }
-            set { SetValue(FieldOfViewProperty, value); }
+            get => (Rectangle) GetValue(FieldOfViewProperty);
+            set => SetValue(FieldOfViewProperty, value);
+        }
+
+        public static readonly DependencyProperty RotationProperty = DependencyProperty.Register(
+            "Rotation", typeof(int), typeof(CropImage), new PropertyMetadata(0));
+
+        public int Rotation
+        {
+            get => (int) GetValue(RotationProperty);
+            set => SetValue(RotationProperty, value);
         }
 
     }
