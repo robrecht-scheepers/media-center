@@ -113,8 +113,8 @@ namespace MediaCenter.Media
             set => SetValue(ref _rotation, value);
         }
 
-        private Rectangle _crop;
-        public Rectangle Crop
+        private Crop _crop;
+        public Crop Crop
         {
             get => _crop;
             set => SetValue(ref _crop, value);

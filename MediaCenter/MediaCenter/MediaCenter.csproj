@@ -133,6 +133,7 @@
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\ShortcutService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
+    <Compile Include="Media\Crop.cs" />
     <Compile Include="Media\PlayState.cs" />
     <Compile Include="Media\ReadOnlyMediaInfoView.xaml.cs">
       <DependentUpon>ReadOnlyMediaInfoView.xaml</DependentUpon>

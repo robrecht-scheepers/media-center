@@ -211,7 +211,7 @@ namespace MediaCenter.Repository
                             Private = reader.GetBoolean(7),
                             Rotation = reader.GetInt32(8),
                             Tags = new ObservableCollection<string>(SeparateTags(reader.GetString(9))),
-                            Crop = JsonConvert.DeserializeObject<Rectangle>(reader.GetString(10))
+                            Crop = JsonConvert.DeserializeObject<Crop>(reader.GetString(10))
                         });
                     }
                 }
@@ -246,7 +246,7 @@ namespace MediaCenter.Repository
                         Private = reader.GetBoolean(7),
                         Rotation = reader.GetInt32(8),
                         Tags = new ObservableCollection<string>(SeparateTags(reader.GetString(9))),
-                        Crop = JsonConvert.DeserializeObject<Rectangle>(reader.GetString(10))
+                        Crop = JsonConvert.DeserializeObject<Crop>(reader.GetString(10))
                     };
                 }
             }
