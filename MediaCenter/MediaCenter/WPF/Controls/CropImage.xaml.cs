@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using MediaCenter.Media;
 
 namespace MediaCenter.WPF.Controls
 {
@@ -44,6 +45,7 @@ namespace MediaCenter.WPF.Controls
         private List<Shape> _horizontalEdges;
         private List<Shape> _verticalEdges;
         private RectangleGeometry _overlayClip;
+        private bool _updating;
 
         public byte[] ImageSource { get; set; }
 
@@ -73,17 +75,18 @@ namespace MediaCenter.WPF.Controls
 
         private void InitializeCanvas()
         {
+            var crop = Crop ?? Crop.FullImage();
+            _fovLeft = crop.X * Canvas.ActualWidth;
+            _fovTop = crop.Y * Canvas.ActualHeight;
+            _fovRight = (crop.X + crop.Width) * Canvas.ActualWidth;
+            _fovBottom = (crop.Y + crop.Height) * Canvas.ActualHeight;
+
             Overlay.Clip = new CombinedGeometry
             {
                 GeometryCombineMode = GeometryCombineMode.Exclude,
                 Geometry1 = new RectangleGeometry(new Rect(0, 0, Canvas.ActualWidth, Canvas.ActualHeight)),
                 Geometry2 = _overlayClip = new RectangleGeometry(new Rect(_fovLeft, _fovTop, _fovRight - _fovLeft, _fovBottom - _fovTop))
             };
-
-            _fovLeft = CropX * Canvas.ActualWidth;
-            _fovTop = CropY * Canvas.ActualHeight;
-            _fovRight = (CropX + CropWidth) * Canvas.ActualWidth;
-            _fovBottom = (CropY + CropHeight) * Canvas.ActualHeight;
 
             SetFovLeft(_fovLeft);
             SetFovTop(_fovTop);
@@ -126,6 +129,7 @@ namespace MediaCenter.WPF.Controls
             {
                 SetFovBottom(newPosition.Y);
             }
+            UpdateCrop();
         }
 
         private void SetFovLeft(double pos)
@@ -141,8 +145,6 @@ namespace MediaCenter.WPF.Controls
             }
 
             UpdateFovClip();
-            CropX = _fovLeft / Canvas.ActualWidth;
-            CropWidth = (_fovRight - _fovLeft) / Canvas.ActualWidth;
         }
 
         private void SetFovTop(double pos)
@@ -158,8 +160,6 @@ namespace MediaCenter.WPF.Controls
             }
 
             UpdateFovClip();
-            CropY = _fovTop / Canvas.ActualHeight;
-            CropHeight = (_fovBottom - _fovTop) / Canvas.ActualHeight;
         }
 
         private void SetFovRight(double pos)
@@ -175,7 +175,6 @@ namespace MediaCenter.WPF.Controls
             }
 
             UpdateFovClip();
-            CropWidth = (_fovRight - _fovLeft) / Canvas.ActualWidth;
         }
 
         private void SetFovBottom(double pos)
@@ -191,7 +190,6 @@ namespace MediaCenter.WPF.Controls
             }
 
             UpdateFovClip();
-            CropHeight = (_fovBottom - _fovTop) / Canvas.ActualHeight;
         }
 
         private void UpdateFovClip()
@@ -199,41 +197,36 @@ namespace MediaCenter.WPF.Controls
             _overlayClip.Rect = new Rect(_fovLeft, _fovTop, _fovRight - _fovLeft, _fovBottom - _fovTop);
         }
 
-        public static readonly DependencyProperty CropXProperty = DependencyProperty.Register(
-            "CropX", typeof(double), typeof(CropImage), new PropertyMetadata(0d));
+        public static readonly DependencyProperty CropProperty = DependencyProperty.Register(
+            "Crop", typeof(Crop), typeof(CropImage), new PropertyMetadata(Crop.FullImage(), CropChanged));
 
-        public double CropX
+        
+
+        public Crop Crop
         {
-            get => (double)GetValue(CropXProperty);
-            set => SetValue(CropXProperty, value);
+            get => (Crop) GetValue(CropProperty);
+            set => SetValue(CropProperty, value);
         }
 
-        public static readonly DependencyProperty CropYProperty = DependencyProperty.Register(
-            "CropY", typeof(double), typeof(CropImage), new PropertyMetadata(0d));
-
-        public double CropY
+        private static void CropChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            get => (double)GetValue(CropYProperty);
-            set => SetValue(CropYProperty, value);
+            var me = (CropImage) d;
+            if(me._updating)
+                return;
+
+            me.InitializeCanvas();
         }
 
-        public static readonly DependencyProperty CropWidthProperty = DependencyProperty.Register(
-            "CropWidth", typeof(double), typeof(CropImage), new PropertyMetadata(1d));
-
-        public double CropWidth
+        private void UpdateCrop()
         {
-            get => (double)GetValue(CropWidthProperty);
-            set => SetValue(CropWidthProperty, value);
+            var width = Canvas.ActualWidth;
+            var height = Canvas.ActualHeight;
+
+            _updating = true;
+            Crop = new Crop(_fovLeft/width, _fovTop/height, (_fovRight - _fovLeft)/width, (_fovBottom - _fovTop)/height);
+            _updating = false;
         }
 
-        public static readonly DependencyProperty CropHeightProperty = DependencyProperty.Register(
-            "CropHeight", typeof(double), typeof(CropImage), new PropertyMetadata(1d));
-
-        public double CropHeight
-        {
-            get => (double)GetValue(CropHeightProperty);
-            set => SetValue(CropHeightProperty, value);
-        }
 
     }
 }

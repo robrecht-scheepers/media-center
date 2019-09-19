@@ -18,6 +18,7 @@
       <controls:ZoomImage ImageContent="{Binding Path=ContentBytes}" 
                           Visibility="{Binding IsInCropMode, Converter={StaticResource CollapseWhenTrueConverter}}" />
       <controls:CropImage ImageContent="{Binding Path=ContentBytes}" 
-                          Visibility="{Binding IsInCropMode, Converter={StaticResource CollapseWhenFalseConverter}}" />
+                          Visibility="{Binding IsInCropMode, Converter={StaticResource CollapseWhenFalseConverter}}"
+                          Crop="{Binding Crop, Mode=TwoWay}" />
     </Grid>
 </UserControl>
