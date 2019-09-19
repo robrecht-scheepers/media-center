@@ -11,19 +11,26 @@
              d:DataContext="{d:DesignInstance local:MediaItemViewModel}">
     <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
-            <ctrl:ImageButton Command="{Binding RotateCounterclockwiseCommand}" ImageSource="/Resources/Icons/ic_rotateleft.png" />
-            <ctrl:ImageButton Command="{Binding RotateClockwiseCommand}" ImageSource="/Resources/Icons/ic_rotateright.png" />
+        <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <ctrl:ImageButton Command="{Binding RotateCounterclockwiseCommand}" ImageSource="/Resources/Icons/ic_rotateleft.png" Margin="0"/>
+            <ctrl:ImageButton Command="{Binding RotateClockwiseCommand}" ImageSource="/Resources/Icons/ic_rotateright.png" Margin="0" />
         </StackPanel>
 
-        <ctrl:ImageButton Grid.Column="1" Command="{Binding StartCropCommand}" HorizontalAlignment="Left" ImageSource="/resources/Icons/ic_crop.png"/>
-        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <ctrl:ImageButton Command="{Binding CancelCropCommand}" ImageSource="/Resources/Icons/ic_close.png"/>
-            <ctrl:ImageButton Command="{Binding ConfirmCropCommand}" ImageSource="/Resources/Icons/ic_confirm.png"/>
-        </StackPanel>
-    </Grid>
+        <ctrl:ImageButton Grid.Column="1" Command="{Binding StartCropCommand}" HorizontalAlignment="Left" Margin="0"
+                          ImageSource="/resources/Icons/ic_crop.png" Visibility="{Binding IsInCropMode, Converter={StaticResource CollapseWhenTrueConverter}}"/>
+        
+        <Grid Grid.Column="1" Visibility="{Binding IsInCropMode, Converter={StaticResource CollapseWhenFalseConverter}}">
+            <Border BorderThickness="1" BorderBrush="{StaticResource C1}"/>
+            <Image Source="/Resources/Icons/ic_crop.png" Height="30" HorizontalAlignment="Left" Margin="5"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <ctrl:ImageButton Command="{Binding CancelCropCommand}" ImageSource="/Resources/Icons/ic_close.png" Margin="0"/>
+                <ctrl:ImageButton Command="{Binding ConfirmCropCommand}" ImageSource="/Resources/Icons/ic_confirm.png" Margin="0"/>
+            </StackPanel>
+        </Grid>
+
+      </Grid>
 </UserControl>

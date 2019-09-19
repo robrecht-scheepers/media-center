@@ -46,7 +46,6 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
@@ -66,7 +65,7 @@
                                                   Visibility="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.SelectedViewMode, Converter={StaticResource ShowIfViewModeDetailConverter}}"/>
                     
                 </StackPanel>
-                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                     <ctrl:ImageToggleButton IsChecked="{Binding Private, Mode=TwoWay}" IsThreeState="{Binding HasMultipleItems}"  HorizontalAlignment="Center"
                                                 CheckedImage="/Resources/Icons/ic_private.png" UncheckedImage="/Resources/Icons/ic_notprivate.png" NullImage="/Resources/Icons/lock-half.png"/>
                     <ctrl:ImageToggleButton IsChecked="{Binding Favorite, Mode=TwoWay}" IsThreeState="{Binding HasMultipleItems}" HorizontalAlignment="Center"
@@ -76,10 +75,11 @@
             </Grid>
 
             <!-- edit media area -->
-            <local:EditMediaItemView Grid.Row="3" 
+          <Grid Grid.Row="3" Background="{StaticResource C3}" Margin="5,-5,5,5">
+            <local:EditMediaItemView  
                  DataContext="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.DetailItem}"
                  Visibility="{Binding ElementName=ShowEditMedia, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}"/>
-
+          </Grid>
             <!-- infos area -->
             <Grid Grid.Row="4" Visibility="{Binding ElementName=ShowInfo, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" >
                 <Grid.ColumnDefinitions>
