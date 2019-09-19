@@ -97,7 +97,7 @@ namespace MediaCenter.Helpers
 
                 var croppedImage = new Bitmap(cropRectangle.Width, cropRectangle.Height);
 
-                using (Graphics g = Graphics.FromImage(croppedImage))
+                using (var g = Graphics.FromImage(croppedImage))
                 {
                     g.DrawImage(sourceImage, new Rectangle(0,0,croppedImage.Width, croppedImage.Height), 
                         cropRectangle, GraphicsUnit.Pixel);
@@ -119,20 +119,20 @@ namespace MediaCenter.Helpers
         /// <returns></returns>
         public static byte[] Rotate(byte[] image, int angle)
         {
-            RotateFlipType rotationtype;
+            RotateFlipType rotationType;
             switch (angle)
             {
                 case 0:
-                    rotationtype = RotateFlipType.RotateNoneFlipNone;
+                    rotationType = RotateFlipType.RotateNoneFlipNone;
                     break;
                 case 90:
-                    rotationtype = RotateFlipType.Rotate90FlipNone;
+                    rotationType = RotateFlipType.Rotate90FlipNone;
                     break;
                 case 180:
-                    rotationtype = RotateFlipType.Rotate180FlipNone;
+                    rotationType = RotateFlipType.Rotate180FlipNone;
                     break;
                 case 270:
-                    rotationtype = RotateFlipType.Rotate270FlipNone;
+                    rotationType = RotateFlipType.Rotate270FlipNone;
                     break;
                 default:
                     throw new ArgumentException($"{angle} is not a valid image rotation angle. Only 0, 90 180 and 270 are valid rotation angles.");
@@ -142,7 +142,7 @@ namespace MediaCenter.Helpers
             {
                 var bitmap = Image.FromStream(sourceStream);
 
-                bitmap.RotateFlip(rotationtype);
+                bitmap.RotateFlip(rotationType);
 
                 using (var destinationStream = new MemoryStream())
                 {

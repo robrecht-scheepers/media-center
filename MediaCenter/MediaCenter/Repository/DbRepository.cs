@@ -144,6 +144,12 @@ namespace MediaCenter.Repository
             return Path.Combine(_thumbnailFolderPath, item.Name + "_T.jpg");
         }
 
+        private string GetOriginalMediaPath(MediaItem item)
+        {
+            var mediaPath = GetMediaPath(item);
+            return Path.Combine(Path.GetDirectoryName(mediaPath)??"", Path.GetFileNameWithoutExtension(mediaPath) + "_o" + Path.GetExtension(mediaPath)??"");
+        }
+
         public Uri GetContentUri(MediaItem item)
         {
             return new Uri(GetMediaPath(item));
@@ -263,10 +269,25 @@ namespace MediaCenter.Repository
             }
         }
 
-        public Task<byte[]> GetOriginalFullImage(MediaItem item)
+        public async Task<byte[]> GetOriginalFullImage(MediaItem item)
         {
-            // tmp code
-            return GetFullImage(item);
+            return await IOHelper.OpenBytes(GetOriginalMediaPath(item));
+        }
+
+        public async Task SaveEditedImage(MediaItem item, byte[] image)
+        {
+            var currentImage = GetMediaPath(item);
+
+            var originalImage = GetOriginalMediaPath(item);
+            if(!File.Exists(originalImage))
+                File.Move(currentImage, GetOriginalMediaPath(item));
+
+            await IOHelper.SaveBytes(image, currentImage);
+        }
+
+        public async Task SaveEditedThumbnail(MediaItem item, byte[] thumbnail)
+        {
+            await IOHelper.SaveBytes(thumbnail, GetThumbnailPath(item));
         }
 
         private void AddToBackgroundTasks(Task task)

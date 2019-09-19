@@ -13,5 +13,7 @@ namespace MediaCenter.Repository
         Task DeleteItem(MediaItem item);
         Task SaveItem(MediaItem item);
         Task<byte[]> GetOriginalFullImage(MediaItem item);
+        Task SaveEditedImage(MediaItem item, byte[] image);
+        Task SaveEditedThumbnail(MediaItem item, byte[] thumbnail);
     }
 }

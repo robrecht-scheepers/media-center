@@ -128,17 +128,15 @@ namespace MediaCenter.Media
 
         private async Task StartCrop()
         {
-            // if item is already edited, get the original image
-            if (MediaItem.Crop != null)
+            // if an original image is available, switch to the original one
+            var original = await _repository.GetOriginalFullImage(MediaItem);
+            if (original != null)
             {
-                _imageBeforeCrop = ContentBytes;
-                ContentBytes = await _repository.GetOriginalFullImage(MediaItem);
-                Crop = MediaItem.Crop.Clone();
+                _imageBeforeCrop = ContentBytes; // store for returning on cancel without reloading
+                ContentBytes = original;
             }
-            else
-            {
-                Crop = Crop.FullImage();
-            }
+
+            Crop = MediaItem.Crop?.Clone() ?? Crop.FullImage();
 
             IsInCropMode = true;
         }
@@ -170,15 +168,12 @@ namespace MediaCenter.Media
             ContentBytes = croppedImage;
             IsInCropMode = false;
 
-            //var croppedThumbnail = ImageHelper.CreateThumbnail(croppedImage, 100);
-
+            MediaItem.Thumbnail = ImageHelper.CreateThumbnail(croppedImage, 100);
             MediaItem.Crop = Crop;
+            await _repository.SaveEditedImage(MediaItem, ContentBytes);
+            await _repository.SaveEditedThumbnail(MediaItem, MediaItem.Thumbnail);
             await _repository.SaveItem(MediaItem);
-
-            
         }
-
-
 
 
         private void PlayStateChanged()
