@@ -15,7 +15,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
+        <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
             <ctrl:ImageButton Command="{Binding RotateCounterclockwiseCommand}" ImageSource="/Resources/Icons/ic_rotateleft.png" />
             <ctrl:ImageButton Command="{Binding RotateClockwiseCommand}" ImageSource="/Resources/Icons/ic_rotateright.png" />
         </StackPanel>
