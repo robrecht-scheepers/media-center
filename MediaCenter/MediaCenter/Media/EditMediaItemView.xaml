@@ -20,6 +20,6 @@
             <ctrl:ImageButton Command="{Binding RotateClockwiseCommand}" ImageSource="/Resources/Icons/ic_rotateright.png" />
         </StackPanel>
 
-        <ctrl:ImageButton Grid.Column="1" HorizontalAlignment="Left" ImageSource="/resources/Icons/ic_crop.png"/>
+        <ctrl:ImageButton Grid.Column="1" Command="{Binding StartCropCommand}" HorizontalAlignment="Left" ImageSource="/resources/Icons/ic_crop.png"/>
     </Grid>
 </UserControl>

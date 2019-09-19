@@ -113,7 +113,12 @@ namespace MediaCenter.Media
             return MediaItem != null;
         }
 
-        public AsyncRelayCommand StartCropCommand => _startCropCommand ?? (_startCropCommand = new AsyncRelayCommand(StartCrop));
+        public AsyncRelayCommand StartCropCommand => _startCropCommand ?? (_startCropCommand = new AsyncRelayCommand(StartCrop, CanExecuteStartCrop));
+
+        private bool CanExecuteStartCrop()
+        {
+            return !IsInCropMode && MediaItem?.MediaType == MediaType.Image;
+        }
 
         private async Task StartCrop()
         {

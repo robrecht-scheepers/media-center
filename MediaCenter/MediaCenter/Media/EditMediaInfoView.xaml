@@ -76,14 +76,9 @@
             </Grid>
 
             <!-- edit media area -->
-            <Grid Grid.Row="3" Visibility="{Binding ElementName=ShowEditMedia, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <ctrl:ImageButton Command="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.DetailItem.RotateCounterclockwiseCommand}" 
-                                      ImageSource="/Resources/Icons/ic_rotateleft.png" ></ctrl:ImageButton>
-                    <ctrl:ImageButton Command="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.DetailItem.RotateClockwiseCommand}" 
-                                      ImageSource="/Resources/Icons/ic_rotateright.png" ></ctrl:ImageButton>
-                </StackPanel>
-            </Grid>
+            <local:EditMediaItemView Grid.Row="3" 
+                 DataContext="{Binding RelativeSource={RelativeSource AncestorType=query:QuerySessionView}, Path=DataContext.DetailItem}"
+                 Visibility="{Binding ElementName=ShowEditMedia, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}"/>
 
             <!-- infos area -->
             <Grid Grid.Row="4" Visibility="{Binding ElementName=ShowInfo, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" >
