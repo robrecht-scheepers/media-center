@@ -10,7 +10,7 @@ namespace MediaCenter.WPF.Controls
     /// </summary>
     public partial class ZoomImage : UserControl
     {
-        private const int DefaultZoom = 4;
+        private const int DefaultZoom = 3;
         private const int MaxZoom = 10;
 
         private Point? _lastDragPoint;
@@ -24,26 +24,26 @@ namespace MediaCenter.WPF.Controls
         {
             InitializeComponent();
 
-            scaleTransform.CenterX = 0.5;
-            scaleTransform.CenterY = 0.5;
+            ScaleTransform.CenterX = 0.5;
+            ScaleTransform.CenterY = 0.5;
 
-            scrollViewer.ScrollChanged += OnScrollViewerScrollChanged;
-            scrollViewer.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
-            scrollViewer.PreviewMouseWheel += OnPreviewMouseWheel;
-            scrollViewer.MouseMove += OnMouseMove;
-            scrollViewer.MouseLeftButtonUp += OnMouseLeftButtonUp;
-            scrollViewer.MouseDoubleClick += OnMouseDoubleClick;
+            ScrollViewer.ScrollChanged += OnScrollViewerScrollChanged;
+            ScrollViewer.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
+            ScrollViewer.PreviewMouseWheel += OnPreviewMouseWheel;
+            ScrollViewer.MouseMove += OnMouseMove;
+            ScrollViewer.MouseLeftButtonUp += OnMouseLeftButtonUp;
+            ScrollViewer.MouseDoubleClick += OnMouseDoubleClick;
         }
 
         private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (e.Delta > 0)
             {
-                AdjustZoom(Math.Min(_zoomLevel + 1, MaxZoom), e.GetPosition(scrollViewer));
+                AdjustZoom(Math.Min(_zoomLevel + 1, MaxZoom), e.GetPosition(ScrollViewer));
             }
             else if (e.Delta < 0)
             {
-                AdjustZoom(Math.Max(1, _zoomLevel - 1), e.GetPosition(scrollViewer));
+                AdjustZoom(Math.Max(1, _zoomLevel - 1), e.GetPosition(ScrollViewer));
             }
 
             e.Handled = true;
@@ -51,7 +51,7 @@ namespace MediaCenter.WPF.Controls
 
         private void OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            AdjustZoom(_zoomLevel > 1 ? 1 : DefaultZoom, e.GetPosition(scrollViewer));
+            AdjustZoom(_zoomLevel > 1 ? 1 : DefaultZoom, e.GetPosition(ScrollViewer));
         }
 
         private void AdjustZoom(int newZoomLevel, Point position = default(Point))
@@ -60,15 +60,15 @@ namespace MediaCenter.WPF.Controls
                 return;
 
             _previousZoomLevel = _zoomLevel;
-            _previousHorizontalOffset = scrollViewer.HorizontalOffset;
-            _previousVerticalOffset = scrollViewer.VerticalOffset;
+            _previousHorizontalOffset = ScrollViewer.HorizontalOffset;
+            _previousVerticalOffset = ScrollViewer.VerticalOffset;
 
             _zoomLevel = newZoomLevel;
             _zoomMousePoint = position;
 
             // handle the zooming here, the panning will be done in the scrollChanged event handler 
-            scaleTransform.ScaleX = newZoomLevel;
-            scaleTransform.ScaleY = newZoomLevel;
+            ScaleTransform.ScaleX = newZoomLevel;
+            ScaleTransform.ScaleY = newZoomLevel;
         }
 
         void OnScrollViewerScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -85,8 +85,8 @@ namespace MediaCenter.WPF.Controls
                 var offsetX = Math.Max(targetPoint.X - _zoomMousePoint.X, 0);
                 var offsetY = Math.Max(targetPoint.Y - _zoomMousePoint.Y, 0);
 
-                scrollViewer.ScrollToHorizontalOffset(offsetX);
-                scrollViewer.ScrollToVerticalOffset(offsetY);
+                ScrollViewer.ScrollToHorizontalOffset(offsetX);
+                ScrollViewer.ScrollToVerticalOffset(offsetY);
             }
         }
 
@@ -95,29 +95,29 @@ namespace MediaCenter.WPF.Controls
             if (_zoomLevel == 1)
                 return;
 
-            var mousePos = e.GetPosition(scrollViewer);
-            scrollViewer.Cursor = Cursors.SizeAll;
+            var mousePos = e.GetPosition(ScrollViewer);
+            ScrollViewer.Cursor = Cursors.SizeAll;
             _lastDragPoint = mousePos;
-            Mouse.Capture(scrollViewer);
+            Mouse.Capture(ScrollViewer);
         }
 
         void OnMouseMove(object sender, MouseEventArgs e)
         {
             if (!_lastDragPoint.HasValue) return;
 
-            var posNow = e.GetPosition(scrollViewer);
+            var posNow = e.GetPosition(ScrollViewer);
             var dX = posNow.X - _lastDragPoint.Value.X;
             var dY = posNow.Y - _lastDragPoint.Value.Y;
 
             _lastDragPoint = posNow;
 
-            scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - dX);
-            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - dY);
+            ScrollViewer.ScrollToHorizontalOffset(ScrollViewer.HorizontalOffset - dX);
+            ScrollViewer.ScrollToVerticalOffset(ScrollViewer.VerticalOffset - dY);
         }
         void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            scrollViewer.Cursor = Cursors.Arrow;
-            scrollViewer.ReleaseMouseCapture();
+            ScrollViewer.Cursor = Cursors.Arrow;
+            ScrollViewer.ReleaseMouseCapture();
             _lastDragPoint = null;
         }
 
@@ -136,13 +136,6 @@ namespace MediaCenter.WPF.Controls
             var me = (ZoomImage) d;
             me.Reset();
         }
-
-        public int Rotation
-        {
-            get => (int) GetValue(RotationProperty);
-            set => SetValue(RotationProperty, value);
-        }
-        public static readonly DependencyProperty RotationProperty = DependencyProperty.Register("Rotation", typeof(int), typeof(ZoomImage), new PropertyMetadata(0));
         
         private void Reset()
         {

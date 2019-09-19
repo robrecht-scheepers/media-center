@@ -19,7 +19,7 @@ namespace MediaCenter.Helpers
             // run ffmpeg.exe from command line in a separate process to
             // extract the first frame into a temp file. Then read the temp 
             // file and delete it afterwards
-            var firstFrameFile = @"C:\TEMP\thumbnail.jpg";
+            var firstFrameFile = Path.Combine(Path.GetTempPath(), "MC_thumbnail.jpg");
 
             if (File.Exists(firstFrameFile))
                 await IOHelper.DeleteFile(firstFrameFile);
@@ -81,9 +81,9 @@ namespace MediaCenter.Helpers
             ffprobe.Close();
 
             int result = 0;
-            if (!string.IsNullOrEmpty(output.ToString()))
+            if (!string.IsNullOrEmpty(output))
             {
-                int.TryParse(output.ToString(), out result);
+                int.TryParse(output, out result);
             }
             return result;
         }

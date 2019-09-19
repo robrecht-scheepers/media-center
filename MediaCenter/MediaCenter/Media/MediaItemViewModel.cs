@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using MediaCenter.Helpers;
 using MediaCenter.MVVM;
 using MediaCenter.Repository;
 
@@ -14,12 +15,19 @@ namespace MediaCenter.Media
         private AsyncRelayCommand _rotateClockwiseCommand;
         private AsyncRelayCommand _rotateCounterclockwiseCommand;
         private PlayState _videoPlayState;
+        private AsyncRelayCommand _startCropCommand;
+        private bool _isInCropMode;
+        private Crop _crop;
+        private byte[] _imageBeforeCrop;
+        private RelayCommand _cancelCropCommand;
+        private AsyncRelayCommand _confirmCropCommand;
 
         public event EventHandler VideoPlayFinished;
         
         public MediaItemViewModel(IRepository repository)
         {
             _repository = repository;
+            IsInCropMode = false;
         }
 
         public MediaItem MediaItem
@@ -44,6 +52,18 @@ namespace MediaCenter.Media
         {
             get => _videoPlayState;
             set => SetValue(ref _videoPlayState, value, PlayStateChanged);
+        }
+
+        public bool IsInCropMode
+        {
+            get => _isInCropMode;
+            set => SetValue(ref _isInCropMode, value);
+        }
+
+        public Crop Crop
+        {
+            get => _crop;
+            set => SetValue(ref _crop, value);
         }
 
         public async Task Load(MediaItem item)
@@ -71,6 +91,7 @@ namespace MediaCenter.Media
                 ContentUri = _repository.GetContentUri(item);
             }
             MediaItem = item;
+            IsInCropMode = false;
         }
 
         public async Task Rotate(int angle)
@@ -98,11 +119,70 @@ namespace MediaCenter.Media
             return MediaItem != null;
         }
 
+        public AsyncRelayCommand StartCropCommand => _startCropCommand ?? (_startCropCommand = new AsyncRelayCommand(StartCrop, CanExecuteStartCrop));
+
+        private bool CanExecuteStartCrop()
+        {
+            return !IsInCropMode && MediaItem?.MediaType == MediaType.Image;
+        }
+
+        private async Task StartCrop()
+        {
+            // if an original image is available, switch to the original one
+            var original = await _repository.GetOriginalFullImage(MediaItem);
+            if (original != null)
+            {
+                _imageBeforeCrop = ContentBytes; // store for returning on cancel without reloading
+                ContentBytes = original;
+            }
+
+            Crop = MediaItem.Crop?.Clone() ?? Crop.FullImage();
+
+            IsInCropMode = true;
+        }
+
+        public RelayCommand CancelCropCommand => _cancelCropCommand ?? (_cancelCropCommand = new RelayCommand(CancelCrop, CanExecuteCancelCrop));
+        private bool CanExecuteCancelCrop()
+        {
+            return IsInCropMode;
+        }
+        private void CancelCrop()
+        {
+            if (_imageBeforeCrop != null)
+            {
+                ContentBytes = _imageBeforeCrop;
+                _imageBeforeCrop = null;
+            }
+
+            IsInCropMode = false;
+        }
+
+        public AsyncRelayCommand ConfirmCropCommand => _confirmCropCommand ?? (_confirmCropCommand = new AsyncRelayCommand(ConfirmCrop, CanExecuteConfirmCrop));
+        private bool CanExecuteConfirmCrop()
+        {
+            return IsInCropMode;
+        }
+        private async Task ConfirmCrop()
+        {
+            var croppedImage = ImageHelper.CropImage(ContentBytes, Crop);
+            ContentBytes = croppedImage;
+            IsInCropMode = false;
+
+            MediaItem.Thumbnail = ImageHelper.CreateThumbnail(croppedImage, 100);
+            MediaItem.Crop = Crop;
+            await _repository.SaveEditedImage(MediaItem, ContentBytes);
+            await _repository.SaveEditedThumbnail(MediaItem, MediaItem.Thumbnail);
+            await _repository.SaveItem(MediaItem);
+        }
+
+
         private void PlayStateChanged()
         {
             if(VideoPlayState == PlayState.Finished)
                 VideoPlayFinished?.Invoke(this,EventArgs.Empty);
         }
+
+
 
     }
 }

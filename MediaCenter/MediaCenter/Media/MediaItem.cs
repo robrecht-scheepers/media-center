@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using MediaCenter.MVVM;
 
 namespace MediaCenter.Media
@@ -29,8 +30,8 @@ namespace MediaCenter.Media
         private string _name;
         public string Name
         {
-            get { return _name; }
-            set { SetValue(ref _name, value); }
+            get => _name;
+            set => SetValue(ref _name, value);
         }
 
         public MediaType MediaType { get; set; }
@@ -38,8 +39,8 @@ namespace MediaCenter.Media
         private MediaItemStatus _status;
         public MediaItemStatus Status
         {
-            get { return _status; }
-            set { SetValue(ref _status,  value); }
+            get => _status;
+            set => SetValue(ref _status,  value);
         }
 
         public string StatusMessage
@@ -51,8 +52,8 @@ namespace MediaCenter.Media
         private DateTime _dateTaken;
         public DateTime DateTaken
         {
-            get { return _dateTaken; }
-            set { SetValue(ref _dateTaken, value); }
+            get => _dateTaken;
+            set => SetValue(ref _dateTaken, value);
         }
 
         public DateTime DateAdded { get; set; }
@@ -62,14 +63,14 @@ namespace MediaCenter.Media
         private bool _favorite;
         public bool Favorite
         {
-            get { return _favorite; }
+            get => _favorite;
             set { SetValue(ref _favorite, value, () => IsInfoDirty = true); }
         }
 
         private bool _private;
         public bool Private
         {
-            get { return _private; }
+            get => _private;
             set { SetValue(ref _private, value, () => IsInfoDirty = true); }
         }
 
@@ -77,30 +78,30 @@ namespace MediaCenter.Media
 
         public byte[] Thumbnail
         {
-            get { return _thumbnail; }
-            set { SetValue(ref _thumbnail, value); }
+            get => _thumbnail;
+            set => SetValue(ref _thumbnail, value);
         }
 
         private byte[] _content;
         
         public byte[] Content
         {
-            get { return _content; }
-            set {SetValue(ref _content, value); }
+            get => _content;
+            set => SetValue(ref _content, value);
         }
 
         private Uri _contentUri;
         public Uri ContentUri
         {
-            get { return _contentUri; }
-            set { _contentUri = value; }
+            get => _contentUri;
+            set => _contentUri = value;
         }
 
         private string _contentFileName;
         public string ContentFileName
         {
-            get { return _contentFileName; }
-            set { SetValue(ref _contentFileName, value); }
+            get => _contentFileName;
+            set => SetValue(ref _contentFileName, value);
         }
 
         private int _rotation;
@@ -108,8 +109,15 @@ namespace MediaCenter.Media
 
         public int Rotation
         {
-            get { return _rotation; }
-            set { SetValue(ref _rotation, value); }
+            get => _rotation;
+            set => SetValue(ref _rotation, value);
+        }
+
+        private Crop _crop;
+        public Crop Crop
+        {
+            get => _crop;
+            set => SetValue(ref _crop, value);
         }
 
         public virtual void UpdateFrom(MediaItem item)
@@ -119,6 +127,8 @@ namespace MediaCenter.Media
             DateTaken = item.DateTaken;
             DateAdded = item.DateAdded;
             Favorite = item.Favorite;
+            Private = item.Private;
+            Crop = item.Crop;
             Tags.Clear();
             foreach (var tag in item.Tags)
             {

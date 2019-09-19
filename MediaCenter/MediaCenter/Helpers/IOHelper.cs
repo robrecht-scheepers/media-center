@@ -10,9 +10,12 @@ namespace MediaCenter.Helpers
     {
         public static async Task CopyFile(string sourceFile, string destinationFile)
         {
-            using (var sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan))
-            using (var destinationStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan))
-                await sourceStream.CopyToAsync(destinationStream);
+            await Task.Run(() => File.Copy(sourceFile, destinationFile, true));
+        }
+
+        public static async Task MoveFile(string sourceFile, string destinationFile)
+        {
+            await Task.Run(() => File.Move(sourceFile, destinationFile));
         }
 
         public static async Task SaveImage(Image image, string filePath, ImageFormat format)
@@ -39,6 +42,9 @@ namespace MediaCenter.Helpers
 
         public static async Task<byte[]> OpenBytes(string filePath)
         {
+            if (!File.Exists(filePath))
+                return null;
+
             return await Task.Run(() => File.ReadAllBytes(filePath));
         }
 
@@ -57,6 +63,9 @@ namespace MediaCenter.Helpers
 
         public static async Task<string> OpenText(string filePath)
         {
+            if (!File.Exists(filePath))
+                return null;
+
             string content = null;
             using (StreamReader reader = File.OpenText(filePath))
             {
@@ -73,6 +82,9 @@ namespace MediaCenter.Helpers
 
         public static async Task<T> OpenObject<T>(string filePath)
         {
+            if (!File.Exists(filePath))
+                return default(T);
+
             string serialized = await OpenText(filePath);
             T result = SerializationHelper.Deserialize<T>(serialized);
             return result;

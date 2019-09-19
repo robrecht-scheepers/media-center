@@ -53,6 +53,7 @@ namespace MediaCenter.Sessions.Query
             EditMediaInfoViewModel = new EditMediaInfoViewModel(Repository, ShortcutService, true, ReadOnly);
 
             ToolWindowState = QueryToolWindowState.Filters;
+            SelectedViewMode = ViewMode.Detail;
         }
 
         public bool ReadOnly { get; set; }

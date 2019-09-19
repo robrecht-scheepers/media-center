@@ -35,9 +35,9 @@
             </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Vertical">
-                <controls:SingleImageToggleButton IsChecked="{Binding FilterWindowIsVisible}" Image="/Resources/Icons/ic_search.png" CheckedBackground="{StaticResource C1}"
+                <controls:SingleImageToggleButton IsChecked="{Binding FilterWindowIsVisible}" Image="/Resources/Icons/ic_search.png" 
                                                   ToolTip="Show/hide search window"/>
-                <controls:SingleImageToggleButton IsChecked="{Binding PropertyWindowIsVisible}" Image="/Resources/Icons/ic_properties.png" CheckedBackground="{StaticResource C1}"
+                <controls:SingleImageToggleButton IsChecked="{Binding PropertyWindowIsVisible}" Image="/Resources/Icons/ic_properties.png" 
                                                   ToolTip="Show/hide details window"/>
             </StackPanel>
             <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Center">

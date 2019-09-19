@@ -54,6 +54,9 @@
     <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAPICodePack.Shell.1.1.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -130,10 +133,15 @@
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\ShortcutService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
+    <Compile Include="Media\Crop.cs" />
+    <Compile Include="Media\EditMediaItemView.xaml.cs">
+      <DependentUpon>EditMediaItemView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Media\PlayState.cs" />
     <Compile Include="Media\ReadOnlyMediaInfoView.xaml.cs">
       <DependentUpon>ReadOnlyMediaInfoView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Repository\DbDataReaderExtension.cs" />
     <Compile Include="Repository\IBaseRepository.cs" />
     <Compile Include="Repository\ICacheRepository.cs" />
     <Compile Include="Sessions\Query\QueryToolWindowState.cs" />
@@ -148,6 +156,9 @@
     </Compile>
     <Compile Include="WPF\Controls\AirControl\Alpha.xaml.cs">
       <DependentUpon>Alpha.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WPF\Controls\CropImage.xaml.cs">
+      <DependentUpon>CropImage.xaml</DependentUpon>
     </Compile>
     <Compile Include="WPF\Controls\SingleImageToggleButton.cs" />
     <Compile Include="WPF\Converters\MediaTypeVisibilityConverter.cs" />
@@ -201,7 +212,6 @@
     </Compile>
     <Compile Include="MVVM\BatchObservableCollection.cs" />
     <Compile Include="Repository\IRepository.cs" />
-    <Compile Include="Repository\MediaInfo.cs" />
     <Compile Include="MVVM\AsyncRelayCommand.cs" />
     <Compile Include="MVVM\CommandBase.cs" />
     <Compile Include="MVVM\IAsyncCommand.cs" />
@@ -263,6 +273,10 @@
     </Compile>
     <Compile Include="Media\EditTagsViewModel.cs" />
     <Compile Include="WPF\Behaviors\ScrollIntoViewBehavior.cs" />
+    <Page Include="Media\EditMediaItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Media\ReadOnlyMediaInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -290,6 +304,10 @@
     <Page Include="WPF\Controls\AirControl\Alpha.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WPF\Controls\CropImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WPF\Controls\ImageToggleButton.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -439,6 +457,9 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\ic_close.png" />
+    <Resource Include="Resources\Icons\ic_confirm.png" />
+    <Resource Include="Resources\Icons\ic_crop.png" />
     <Resource Include="Resources\Icons\ic_upload.png" />
     <Resource Include="Resources\Icons\ic_addfolder.png" />
     <Resource Include="Resources\Icons\ic_addimages.png" />
