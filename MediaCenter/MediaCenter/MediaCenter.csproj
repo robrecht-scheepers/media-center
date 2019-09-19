@@ -141,6 +141,7 @@
     <Compile Include="Media\ReadOnlyMediaInfoView.xaml.cs">
       <DependentUpon>ReadOnlyMediaInfoView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Repository\DbDataReaderExtension.cs" />
     <Compile Include="Repository\IBaseRepository.cs" />
     <Compile Include="Repository\ICacheRepository.cs" />
     <Compile Include="Sessions\Query\QueryToolWindowState.cs" />
