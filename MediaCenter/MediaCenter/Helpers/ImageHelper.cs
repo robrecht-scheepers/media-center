@@ -83,6 +83,34 @@ namespace MediaCenter.Helpers
             return 0;
         }
 
+        public static byte[] CropImage(byte[] image, Crop crop)
+        {
+            using (var sourceStream = new MemoryStream(image))
+            {
+                var sourceImage = Image.FromStream(sourceStream);
+
+                var cropRectangle = new Rectangle(
+                    (int)(crop.X * sourceImage.Width),
+                    (int)(crop.Y * sourceImage.Height),
+                    (int)(crop.Width * sourceImage.Width),
+                    (int)(crop.Height * sourceImage.Height));
+
+                var croppedImage = new Bitmap(cropRectangle.Width, cropRectangle.Height);
+
+                using (Graphics g = Graphics.FromImage(croppedImage))
+                {
+                    g.DrawImage(sourceImage, new Rectangle(0,0,croppedImage.Width, croppedImage.Height), 
+                        cropRectangle, GraphicsUnit.Pixel);
+                }
+
+                using (var destinationStream = new MemoryStream())
+                {
+                    croppedImage.Save(destinationStream, ImageFormat.Jpeg);
+                    return destinationStream.ToArray();
+                }
+            }
+        }
+
         /// <summary>
         /// returns a rotated version of the original image 
         /// </summary>

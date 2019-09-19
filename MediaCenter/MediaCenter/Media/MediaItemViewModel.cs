@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using MediaCenter.Helpers;
 using MediaCenter.MVVM;
 using MediaCenter.Repository;
 
@@ -17,7 +18,10 @@ namespace MediaCenter.Media
         private AsyncRelayCommand _startCropCommand;
         private bool _isInCropMode;
         private Crop _crop;
-        
+        private byte[] _imageBeforeCrop;
+        private RelayCommand _cancelCropCommand;
+        private AsyncRelayCommand _confirmCropCommand;
+
         public event EventHandler VideoPlayFinished;
         
         public MediaItemViewModel(IRepository repository)
@@ -127,6 +131,7 @@ namespace MediaCenter.Media
             // if item is already edited, get the original image
             if (MediaItem.Crop != null)
             {
+                _imageBeforeCrop = ContentBytes;
                 ContentBytes = await _repository.GetOriginalFullImage(MediaItem);
                 Crop = MediaItem.Crop.Clone();
             }
@@ -137,6 +142,44 @@ namespace MediaCenter.Media
 
             IsInCropMode = true;
         }
+
+        public RelayCommand CancelCropCommand => _cancelCropCommand ?? (_cancelCropCommand = new RelayCommand(CancelCrop, CanExecuteCancelCrop));
+        private bool CanExecuteCancelCrop()
+        {
+            return IsInCropMode;
+        }
+        private void CancelCrop()
+        {
+            if (_imageBeforeCrop != null)
+            {
+                ContentBytes = _imageBeforeCrop;
+                _imageBeforeCrop = null;
+            }
+
+            IsInCropMode = false;
+        }
+
+        public AsyncRelayCommand ConfirmCropCommand => _confirmCropCommand ?? (_confirmCropCommand = new AsyncRelayCommand(ConfirmCrop, CanExecuteConfirmCrop));
+        private bool CanExecuteConfirmCrop()
+        {
+            return IsInCropMode;
+        }
+        private async Task ConfirmCrop()
+        {
+            var croppedImage = ImageHelper.CropImage(ContentBytes, Crop);
+            ContentBytes = croppedImage;
+            IsInCropMode = false;
+
+            //var croppedThumbnail = ImageHelper.CreateThumbnail(croppedImage, 100);
+
+            MediaItem.Crop = Crop;
+            await _repository.SaveItem(MediaItem);
+
+            
+        }
+
+
+
 
         private void PlayStateChanged()
         {

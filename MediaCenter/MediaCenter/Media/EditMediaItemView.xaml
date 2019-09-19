@@ -21,5 +21,9 @@
         </StackPanel>
 
         <ctrl:ImageButton Grid.Column="1" Command="{Binding StartCropCommand}" HorizontalAlignment="Left" ImageSource="/resources/Icons/ic_crop.png"/>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <ctrl:ImageButton Command="{Binding CancelCropCommand}" ImageSource="/Resources/Icons/ic_close.png"/>
+            <ctrl:ImageButton Command="{Binding ConfirmCropCommand}" ImageSource="/Resources/Icons/ic_confirm.png"/>
+        </StackPanel>
     </Grid>
 </UserControl>

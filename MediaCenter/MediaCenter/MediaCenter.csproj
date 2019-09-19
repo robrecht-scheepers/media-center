@@ -456,6 +456,8 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\ic_close.png" />
+    <Resource Include="Resources\Icons\ic_confirm.png" />
     <Resource Include="Resources\Icons\ic_crop.png" />
     <Resource Include="Resources\Icons\ic_upload.png" />
     <Resource Include="Resources\Icons\ic_addfolder.png" />
