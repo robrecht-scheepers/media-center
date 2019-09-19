@@ -134,6 +134,9 @@
     <Compile Include="Helpers\ShortcutService.cs" />
     <Compile Include="Helpers\WindowService.cs" />
     <Compile Include="Media\Crop.cs" />
+    <Compile Include="Media\EditMediaItemView.xaml.cs">
+      <DependentUpon>EditMediaItemView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Media\PlayState.cs" />
     <Compile Include="Media\ReadOnlyMediaInfoView.xaml.cs">
       <DependentUpon>ReadOnlyMediaInfoView.xaml</DependentUpon>
@@ -269,6 +272,10 @@
     </Compile>
     <Compile Include="Media\EditTagsViewModel.cs" />
     <Compile Include="WPF\Behaviors\ScrollIntoViewBehavior.cs" />
+    <Page Include="Media\EditMediaItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Media\ReadOnlyMediaInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

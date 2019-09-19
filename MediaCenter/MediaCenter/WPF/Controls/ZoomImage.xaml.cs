@@ -136,13 +136,6 @@ namespace MediaCenter.WPF.Controls
             var me = (ZoomImage) d;
             me.Reset();
         }
-
-        public int Rotation
-        {
-            get => (int) GetValue(RotationProperty);
-            set => SetValue(RotationProperty, value);
-        }
-        public static readonly DependencyProperty RotationProperty = DependencyProperty.Register("Rotation", typeof(int), typeof(ZoomImage), new PropertyMetadata(0));
         
         private void Reset()
         {

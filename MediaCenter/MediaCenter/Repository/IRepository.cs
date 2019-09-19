@@ -12,5 +12,6 @@ namespace MediaCenter.Repository
         Task SaveNewItems(IEnumerable<StagedItem> newItems); 
         Task DeleteItem(MediaItem item);
         Task SaveItem(MediaItem item);
+        Task<byte[]> GetOriginalFullImage(MediaItem item);
     }
 }

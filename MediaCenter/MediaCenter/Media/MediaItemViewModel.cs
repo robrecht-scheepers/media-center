@@ -14,7 +14,10 @@ namespace MediaCenter.Media
         private AsyncRelayCommand _rotateClockwiseCommand;
         private AsyncRelayCommand _rotateCounterclockwiseCommand;
         private PlayState _videoPlayState;
-
+        private AsyncRelayCommand _startCropCommand;
+        private bool _isInCropMode;
+        private Crop _crop;
+        
         public event EventHandler VideoPlayFinished;
         
         public MediaItemViewModel(IRepository repository)
@@ -44,6 +47,18 @@ namespace MediaCenter.Media
         {
             get => _videoPlayState;
             set => SetValue(ref _videoPlayState, value, PlayStateChanged);
+        }
+
+        public bool IsInCropMode
+        {
+            get => _isInCropMode;
+            set => SetValue(ref _isInCropMode, value);
+        }
+
+        public Crop Crop
+        {
+            get => _crop;
+            set => SetValue(ref _crop, value);
         }
 
         public async Task Load(MediaItem item)
@@ -98,11 +113,31 @@ namespace MediaCenter.Media
             return MediaItem != null;
         }
 
+        public AsyncRelayCommand StartCropCommand => _startCropCommand ?? (_startCropCommand = new AsyncRelayCommand(StartCrop));
+
+        private async Task StartCrop()
+        {
+            // if item is already edited, get the original image
+            if (MediaItem.Crop != null)
+            {
+                ContentBytes = await _repository.GetOriginalFullImage(MediaItem);
+                Crop = MediaItem.Crop.Clone();
+            }
+            else
+            {
+                Crop = Crop.FullImage();
+            }
+
+            IsInCropMode = true;
+        }
+
         private void PlayStateChanged()
         {
             if(VideoPlayState == PlayState.Finished)
                 VideoPlayFinished?.Invoke(this,EventArgs.Empty);
         }
+
+
 
     }
 }

@@ -28,5 +28,15 @@ namespace MediaCenter.Media
         public double Y { get; set; }
         public double Width { get; set; }
         public double Height { get; set; }
+
+        public Crop Clone()
+        {
+            return new Crop(X,Y,Width,Height);
+        }
+
+        public static Crop FullImage()
+        {
+            return new Crop(0,0,1,1);
+        }
     }
 }

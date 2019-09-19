@@ -10,9 +10,14 @@
              d:DataContext="{d:DesignInstance Type=local:MediaItemViewModel}">
     
     <Grid>
-      <!-- 
-      <controls:ZoomImage ImageContent="{Binding Path=ContentBytes}" Rotation="{Binding Path=MediaItem.Rotation}" />
-      -->
-      <controls:CropImage ImageContent="{Binding ContentBytes}" Rotation="{Binding MediaItem.Rotation}" />
+        <Grid.LayoutTransform>
+            <TransformGroup>
+                <RotateTransform Angle="{Binding MediaItem.Rotation}"/>
+            </TransformGroup>
+        </Grid.LayoutTransform>
+      <controls:ZoomImage ImageContent="{Binding Path=ContentBytes}" 
+                          Visibility="{Binding IsInCropMode, Converter={StaticResource CollapseWhenTrueConverter}}" />
+      <controls:CropImage ImageContent="{Binding ContentBytes}" 
+                          Visibility="{Binding IsInCropMode, Converter={StaticResource CollapseWhenFalseConverter}}" />
     </Grid>
 </UserControl>

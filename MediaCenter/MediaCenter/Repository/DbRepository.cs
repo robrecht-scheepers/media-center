@@ -263,6 +263,12 @@ namespace MediaCenter.Repository
             }
         }
 
+        public Task<byte[]> GetOriginalFullImage(MediaItem item)
+        {
+            // tmp code
+            return GetFullImage(item);
+        }
+
         private void AddToBackgroundTasks(Task task)
         {
             task.ContinueWith((t) => _backgroundTasks.Remove(t));
