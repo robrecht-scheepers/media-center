@@ -10,7 +10,7 @@ namespace MediaCenter.WPF.Controls
     /// </summary>
     public partial class ZoomImage : UserControl
     {
-        private const int DefaultZoom = 4;
+        private const int DefaultZoom = 3;
         private const int MaxZoom = 10;
 
         private Point? _lastDragPoint;
