@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MediaCenter.WPF.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <Grid Background="Black">
         <Image x:Name="Image" Source="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:CropImage}}, Path=ImageContent}" Stretch="Uniform" />
         <Canvas x:Name ="Canvas" Width="{Binding ElementName=Image, Path=ActualWidth}" Height="{Binding ElementName=Image, Path=ActualHeight}" 
                 VerticalAlignment="Center" HorizontalAlignment="Center">

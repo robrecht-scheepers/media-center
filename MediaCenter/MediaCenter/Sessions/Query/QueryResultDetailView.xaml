@@ -32,9 +32,11 @@
         </Grid.ColumnDefinitions>
 
         <controls:ImageButton Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding QueryResultViewModel.SelectPreviousItemCommand}" ImageSource="/Resources/Icons/ic_previous.png" />
-        <media:ImageItemView Grid.Column="1" DataContext="{Binding DetailItem}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfImage}}" />
-        <media:VideoItemView Grid.Column="1" DataContext="{Binding DetailItem}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfVideo}}" />
-        <controls:ImageButton Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding QueryResultViewModel.SelectNextItemCommand}" ImageSource="/Resources/Icons/ic_next.png" />
+      <Grid Grid.Column="1" Visibility="{Binding DetailItem.MediaItem, Converter={StaticResource HideWhenNullConverter}}">
+          <media:ImageItemView DataContext="{Binding DetailItem}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfImage}}" />
+          <media:VideoItemView DataContext="{Binding DetailItem}" Visibility="{Binding MediaItem.MediaType, Converter={StaticResource ShowIfVideo}}" />
+      </Grid>
+      <controls:ImageButton Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding QueryResultViewModel.SelectNextItemCommand}" ImageSource="/Resources/Icons/ic_next.png" />
 
         <ListBox Grid.Column="3" Style="{StaticResource ThumbnailListStyle}" ItemsSource="{Binding QueryResultViewModel.Items}" 
                  SelectedItem="{Binding Path=QueryResultViewModel.SelectedItem, Mode=TwoWay}" ScrollViewer.VerticalScrollBarVisibility="Auto" >
