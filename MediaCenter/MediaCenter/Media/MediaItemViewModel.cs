@@ -23,6 +23,7 @@ namespace MediaCenter.Media
         public MediaItemViewModel(IRepository repository)
         {
             _repository = repository;
+            IsInCropMode = false;
         }
 
         public MediaItem MediaItem
@@ -86,6 +87,7 @@ namespace MediaCenter.Media
                 ContentUri = _repository.GetContentUri(item);
             }
             MediaItem = item;
+            IsInCropMode = false;
         }
 
         public async Task Rotate(int angle)

@@ -5,10 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MediaCenter.WPF.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             DataContext="{Binding RelativeSource={RelativeSource Self}}">
+             d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Image x:Name="Image" Source="{Binding ImageContent}" Stretch="Uniform" />
+        <Image x:Name="Image" Source="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:CropImage}}, Path=ImageContent}" Stretch="Uniform" />
         <Canvas x:Name ="Canvas" Width="{Binding ElementName=Image, Path=ActualWidth}" Height="{Binding ElementName=Image, Path=ActualHeight}" 
                 VerticalAlignment="Center" HorizontalAlignment="Center">
           <Rectangle x:Name="Overlay" Fill="Black" Opacity="0.7" Canvas.Top="0" Canvas.Left="0" 

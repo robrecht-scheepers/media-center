@@ -67,6 +67,7 @@ namespace MediaCenter.WPF.Controls
             Canvas.MouseMove += ElementMove;
             Canvas.MouseUp += ElementEndMove;
 
+            Canvas.Loaded += (s, a) => InitializeCanvas();
             Canvas.SizeChanged += (s, a) => InitializeCanvas();
         }
 

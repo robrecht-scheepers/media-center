@@ -53,6 +53,7 @@ namespace MediaCenter.Sessions.Query
             EditMediaInfoViewModel = new EditMediaInfoViewModel(Repository, ShortcutService, true, ReadOnly);
 
             ToolWindowState = QueryToolWindowState.Filters;
+            SelectedViewMode = ViewMode.Detail;
         }
 
         public bool ReadOnly { get; set; }
@@ -232,7 +233,9 @@ namespace MediaCenter.Sessions.Query
         private async Task ExecuteQuery()
         {
             await QueryResultViewModel.LoadQueryResult(await Repository.GetQueryItems(FilterCollection.Filters));
-            ToolWindowState = QueryToolWindowState.Hidden;
+            // DEBUG CODE
+            //ToolWindowState = QueryToolWindowState.Hidden;
+            ToolWindowState = QueryToolWindowState.Properties;
         }
 
         public AsyncRelayCommand StartSlideShowCommand => _startSlideShowCommand ?? (_startSlideShowCommand = new AsyncRelayCommand(StartSlideShow));

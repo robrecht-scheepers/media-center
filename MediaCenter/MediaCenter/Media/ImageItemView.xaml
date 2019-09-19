@@ -17,7 +17,7 @@
         </Grid.LayoutTransform>
       <controls:ZoomImage ImageContent="{Binding Path=ContentBytes}" 
                           Visibility="{Binding IsInCropMode, Converter={StaticResource CollapseWhenTrueConverter}}" />
-      <controls:CropImage ImageContent="{Binding ContentBytes}" 
+      <controls:CropImage ImageContent="{Binding Path=ContentBytes}" 
                           Visibility="{Binding IsInCropMode, Converter={StaticResource CollapseWhenFalseConverter}}" />
     </Grid>
 </UserControl>
