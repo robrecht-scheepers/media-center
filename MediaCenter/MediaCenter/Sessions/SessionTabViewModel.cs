@@ -42,7 +42,7 @@ namespace MediaCenter.Sessions
         public RelayCommand CreateQuerySessionCommand => _createQuerySessionCommand ?? (_createQuerySessionCommand = new RelayCommand(CreateQuerySession));
         private void CreateQuerySession()
         {
-            SessionViewModel = new QuerySessionViewModel(_windowService, _repository, ShortcutService, ReadOnly);
+            SessionViewModel = new QuerySessionViewModel(_windowService, _repository, ShortcutService, _statusService, ReadOnly);
             SessionCreated?.Invoke(this, EventArgs.Empty);
             RaisePropertyChanged("Name");
         }
@@ -56,7 +56,7 @@ namespace MediaCenter.Sessions
 
         private void CreateStagingSession()
         {
-            SessionViewModel = new StagingSessionViewModel(_repository, _windowService, ShortcutService);
+            SessionViewModel = new StagingSessionViewModel(_repository, _windowService, ShortcutService, _statusService);
             SessionCreated?.Invoke(this, EventArgs.Empty);
             RaisePropertyChanged("Name");
         }

@@ -33,7 +33,8 @@ namespace MediaCenter.Sessions.Query
         private bool _propertyWindowIsVisible;
         private bool _toolWindowStateProcessingInProgress;
 
-        public QuerySessionViewModel(IWindowService windowService, IRepository repository, ShortcutService shortcutService, bool readOnly) : base(repository, windowService, shortcutService)
+        public QuerySessionViewModel(IWindowService windowService, IRepository repository, ShortcutService shortcutService, IStatusService statusService, bool readOnly) 
+            : base(repository, windowService, shortcutService, statusService)
         {
             ReadOnly = readOnly;
             InitializeViewModesList();

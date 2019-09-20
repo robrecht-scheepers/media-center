@@ -29,8 +29,8 @@ namespace MediaCenter.Sessions.Staging
         private StagedItem _previewItem;
         private string _statusMessage;
 
-        public StagingSessionViewModel(IRepository repository, IWindowService windowService, ShortcutService shortcutService) 
-            : base(repository, windowService, shortcutService)
+        public StagingSessionViewModel(IRepository repository, IWindowService windowService, ShortcutService shortcutService, IStatusService statusService) 
+            : base(repository, windowService, shortcutService, statusService)
         {
             StagedItems = new ObservableCollection<StagedItem>();
             SelectedItems = new BatchObservableCollection<MediaItem>();

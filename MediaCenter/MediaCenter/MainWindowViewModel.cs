@@ -27,14 +27,14 @@ namespace MediaCenter
             
 
             Sessions = new ObservableCollection<SessionTabViewModel>();
-            RepositoryViewModel = new RepositoryViewModel(_repository);
+            StatusViewModel = new StatusViewModel(_repository);
             CreateEmptySessionTab();
             SelectedSessionTab = Sessions.First();
         }
 
 
         public string AppVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
-        public RepositoryViewModel RepositoryViewModel { get; }
+        public StatusViewModel StatusViewModel { get; }
         public ObservableCollection<SessionTabViewModel> Sessions { get; }
         public bool ReadOnly { get; }
 
@@ -54,7 +54,7 @@ namespace MediaCenter
 
         private void CreateEmptySessionTab()
         {
-            var newSessionTab = new SessionTabViewModel(_repository,_windowService, new ShortcutService(), ReadOnly);
+            var newSessionTab = new SessionTabViewModel(_repository,_windowService, new ShortcutService(), StatusViewModel, ReadOnly);
             newSessionTab.SessionCreated += NewSessionTabOnSessionCreated;
             Sessions.Add(newSessionTab);
         }
