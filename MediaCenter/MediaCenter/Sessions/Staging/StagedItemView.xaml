@@ -20,7 +20,7 @@
         <Border Grid.Row="0" x:Name="overlayBackground" Background="Black">
             <Border.Style>
                 <Style TargetType="Border">
-                    <Setter Property="Opacity" Value="0.4"/>
+                    <Setter Property="Opacity" Value="0.3"/>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Status}">
                             <DataTrigger.Value>
@@ -32,7 +32,7 @@
                 </Style>
             </Border.Style>
         </Border>
-        <Image Grid.Row="0" Stretch="Fill" HorizontalAlignment="Center" Width="48" Height="48" VerticalAlignment="Center" Margin="5" Opacity="0.9">
+        <Image Grid.Row="0" Stretch="Fill" HorizontalAlignment="Center" Width="40" Height="40" VerticalAlignment="Center" Margin="5" Opacity="0.9">
             <Image.Style>
                 <Style TargetType="Image">
                     <Style.Triggers>
