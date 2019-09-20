@@ -121,9 +121,14 @@ namespace MediaCenter.Repository
             }
         }
 
+        private string CreateBaseName(MediaItem item)
+        {
+            return item.DateTaken.ToString("yyyyMMddHHmmss");
+        }
+
         private async Task<string> CreateUniqueName(MediaItem item)
         {
-            var baseName = item.DateTaken.ToString("yyyyMMddHHmmss");
+            var baseName = CreateBaseName(item);
             
             var nameClashes = await _database.GetNameClashes(baseName);
             if (!nameClashes.Any())
@@ -288,6 +293,29 @@ namespace MediaCenter.Repository
         public async Task SaveEditedThumbnail(MediaItem item, byte[] thumbnail)
         {
             await IOHelper.SaveBytes(thumbnail, GetThumbnailPath(item));
+        }
+
+        public async Task<bool> IsDuplicate(StagedItem stagedItem)
+        {
+            var duplicateCandidates = await _database.GetNameClashes(CreateBaseName(stagedItem)); // duplicate --> same date --> name clash
+
+            foreach (var duplicateCandidateName in duplicateCandidates)
+            {
+                var item = await  _database.GetItemByName(duplicateCandidateName);
+                var newFile = new FileInfo(stagedItem.FilePath);
+                var existingFile = File.Exists(GetOriginalMediaPath(item))
+                    ? new FileInfo(GetOriginalMediaPath(item))
+                    : new FileInfo(GetMediaPath(item));
+                if (newFile.Length == existingFile.Length)
+                {
+                    var newBytes = await IOHelper.OpenBytes(newFile.FullName);
+                    var existingBytes = await IOHelper.OpenBytes(existingFile.FullName);
+                    if(newBytes.SequenceEqual(existingBytes))
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         private void AddToBackgroundTasks(Task task)
