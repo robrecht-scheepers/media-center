@@ -135,7 +135,7 @@ namespace MediaCenter.Sessions.Staging
             {
                 stagedItem.Status = MediaItemStatus.Staged;
             }
-            await Repository.SaveNewItems(StagedItems);
+            await Repository.SaveNewItems(StagedItems.Where(x => x.Status == MediaItemStatus.Staged));
             ClearSavedItems();
             StatusMessage = "";
         }

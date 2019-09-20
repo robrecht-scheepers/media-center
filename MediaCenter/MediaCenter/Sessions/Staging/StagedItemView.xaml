@@ -17,9 +17,10 @@
         </Grid.RowDefinitions>
 
         <media:ThumbnailView Grid.Row="0" DataContext="{Binding}" Margin="5"/>
-        <Border Grid.Row="0" x:Name="overlayBackground" Background="Black" Opacity="0.6">
+        <Border Grid.Row="0" x:Name="overlayBackground" Background="Black">
             <Border.Style>
                 <Style TargetType="Border">
+                    <Setter Property="Opacity" Value="0.4"/>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Status}">
                             <DataTrigger.Value>
@@ -49,7 +50,7 @@
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Status}">
                             <DataTrigger.Value>
-                                <media:MediaItemStatus>Error</media:MediaItemStatus>
+                                <media:MediaItemStatus>StagedDuplicate</media:MediaItemStatus>
                             </DataTrigger.Value>
                             <Setter Property="Source" Value="/resources/Icons/ic_statusduplicate.png"/>
                         </DataTrigger>
