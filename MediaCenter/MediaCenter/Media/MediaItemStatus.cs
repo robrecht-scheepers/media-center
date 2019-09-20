@@ -4,6 +4,7 @@
     {
         Staged,
         Saved,
-        Error
+        Error,
+        StagedDuplicate
     }
 }

@@ -15,5 +15,6 @@ namespace MediaCenter.Repository
         Task<byte[]> GetOriginalFullImage(MediaItem item);
         Task SaveEditedImage(MediaItem item, byte[] image);
         Task SaveEditedThumbnail(MediaItem item, byte[] thumbnail);
+        Task<bool> IsDuplicate(StagedItem stagedItem);
     }
 }

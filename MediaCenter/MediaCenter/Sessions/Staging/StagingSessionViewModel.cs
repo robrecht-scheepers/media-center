@@ -135,7 +135,7 @@ namespace MediaCenter.Sessions.Staging
             {
                 stagedItem.Status = MediaItemStatus.Staged;
             }
-            await Repository.SaveNewItems(StagedItems);
+            await Repository.SaveNewItems(StagedItems.Where(x => x.Status == MediaItemStatus.Staged));
             ClearSavedItems();
             StatusMessage = "";
         }
@@ -158,6 +158,7 @@ namespace MediaCenter.Sessions.Staging
                 
                 try
                 {
+                    StagedItem newStagedItem = null;
                     if (_supportedImageExtensions.Contains(extension))
                     {
                         using (var image = await IOHelper.OpenImage(filePath))
@@ -172,7 +173,7 @@ namespace MediaCenter.Sessions.Staging
                             var thumbnail = ImageHelper.CreateThumbnail(image, 100);
                             var rotation = ImageHelper.ReadRotation(image);
                             
-                            StagedItems.Add(new StagedItem(MediaType.Image)
+                            StagedItems.Add(newStagedItem = new StagedItem(MediaType.Image)
                             {
                                 FilePath = filePath,
                                 Status = MediaItemStatus.Staged,
@@ -189,7 +190,7 @@ namespace MediaCenter.Sessions.Staging
                         var thumbnail = await VideoHelper.CreateThumbnail(filePath, 100);
                         var rotation = VideoHelper.ReadRotation(filePath);
 
-                        StagedItems.Add(new StagedItem(MediaType.Video)
+                        StagedItems.Add(newStagedItem = new StagedItem(MediaType.Video)
                         {
                             FilePath = filePath,
                             Status = MediaItemStatus.Staged,
@@ -199,6 +200,9 @@ namespace MediaCenter.Sessions.Staging
                             Rotation = rotation
                         });
                     }
+
+                    if (newStagedItem != null && await Repository.IsDuplicate(newStagedItem))
+                        newStagedItem.Status = MediaItemStatus.StagedDuplicate;
                 }
                 catch (Exception e)
                 {

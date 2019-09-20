@@ -17,7 +17,22 @@
         </Grid.RowDefinitions>
 
         <media:ThumbnailView Grid.Row="0" DataContext="{Binding}" Margin="5"/>
-        <Image Grid.Row="0" Stretch="Fill" HorizontalAlignment="Center" Width="48" Height="48" VerticalAlignment="Center" Margin="5" Opacity="0.9">
+        <Border Grid.Row="0" x:Name="overlayBackground" Background="Black">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Opacity" Value="0.3"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Status}">
+                            <DataTrigger.Value>
+                                <media:MediaItemStatus>Staged</media:MediaItemStatus>
+                            </DataTrigger.Value>
+                            <Setter Property="Opacity" Value="0"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>
+        <Image Grid.Row="0" Stretch="Fill" HorizontalAlignment="Center" Width="40" Height="40" VerticalAlignment="Center" Margin="5" Opacity="0.9">
             <Image.Style>
                 <Style TargetType="Image">
                     <Style.Triggers>
@@ -25,13 +40,19 @@
                             <DataTrigger.Value>
                                 <media:MediaItemStatus>Saved</media:MediaItemStatus>
                             </DataTrigger.Value>
-                            <Setter Property="Source" Value="/resources/Icons/status-ok.png"/>
+                            <Setter Property="Source" Value="/Resources/Icons/ic_statusok.png"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Status}">
                             <DataTrigger.Value>
                                 <media:MediaItemStatus>Error</media:MediaItemStatus>
                             </DataTrigger.Value>
-                            <Setter Property="Source" Value="/resources/Icons/status-error.png"/>
+                            <Setter Property="Source" Value="/resources/Icons/ic_statuserror.png"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Status}">
+                            <DataTrigger.Value>
+                                <media:MediaItemStatus>StagedDuplicate</media:MediaItemStatus>
+                            </DataTrigger.Value>
+                            <Setter Property="Source" Value="/resources/Icons/ic_statusduplicate.png"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
