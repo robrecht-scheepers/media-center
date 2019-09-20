@@ -130,8 +130,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\IStatusService.cs" />
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\ShortcutService.cs" />
+    <Compile Include="Helpers\StatusViewModel.cs" />
     <Compile Include="Helpers\WindowService.cs" />
     <Compile Include="Media\Crop.cs" />
     <Compile Include="Media\EditMediaItemView.xaml.cs">

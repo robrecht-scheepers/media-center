@@ -11,16 +11,19 @@ namespace MediaCenter.Sessions
     {
         private IRepository _repository;
         private readonly IWindowService _windowService;
-        
+        private readonly IStatusService _statusService;
+
         private SessionViewModelBase _sessionViewModel;
         private RelayCommand _createQuerySessionCommand;
         private RelayCommand _createStagingSessionCommand;
+
         
-        public SessionTabViewModel(IRepository repository, IWindowService windowService, ShortcutService shortcutService, bool readOnly)
+        public SessionTabViewModel(IRepository repository, IWindowService windowService, ShortcutService shortcutService, IStatusService statusService, bool readOnly)
         {
             _repository = repository;
             _windowService = windowService;
             ShortcutService = shortcutService;
+            _statusService = statusService;
             ReadOnly = readOnly;
         }
 
