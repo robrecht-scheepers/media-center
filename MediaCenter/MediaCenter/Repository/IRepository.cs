@@ -9,7 +9,7 @@ namespace MediaCenter.Repository
 {
     public interface IRepository : IBaseRepository
     {
-        Task SaveNewItems(IEnumerable<StagedItem> newItems); 
+        Task SaveNewItem(StagedItem newItem); 
         Task DeleteItem(MediaItem item);
         Task SaveItem(MediaItem item);
         Task<byte[]> GetOriginalFullImage(MediaItem item);

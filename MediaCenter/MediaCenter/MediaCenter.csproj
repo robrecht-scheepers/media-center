@@ -133,7 +133,10 @@
     <Compile Include="Helpers\IStatusService.cs" />
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\ShortcutService.cs" />
-    <Compile Include="Helpers\StatusViewModel.cs" />
+    <Compile Include="StatusView.xaml.cs">
+      <DependentUpon>StatusView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StatusViewModel.cs" />
     <Compile Include="Helpers\WindowService.cs" />
     <Compile Include="Media\Crop.cs" />
     <Compile Include="Media\EditMediaItemView.xaml.cs">
@@ -296,6 +299,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SplashScreenWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StatusView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

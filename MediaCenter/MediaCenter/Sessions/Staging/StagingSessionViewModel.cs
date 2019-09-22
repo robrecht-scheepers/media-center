@@ -27,26 +27,21 @@ namespace MediaCenter.Sessions.Staging
         private RelayCommand<StagedItem> _showPreviewCommand;
         private AsyncRelayCommand _addDirectoryCommand;
         private StagedItem _previewItem;
-        private string _statusMessage;
-
+        
         public StagingSessionViewModel(IRepository repository, IWindowService windowService, ShortcutService shortcutService, IStatusService statusService) 
             : base(repository, windowService, shortcutService, statusService)
         {
             StagedItems = new ObservableCollection<StagedItem>();
             SelectedItems = new BatchObservableCollection<MediaItem>();
             SelectedItems.CollectionChanged += SelectedItemsOnCollectionChanged;
-            EditMediaInfoViewModel = new EditMediaInfoViewModel(Repository, ShortcutService, false);
+            EditMediaInfoViewModel = new EditMediaInfoViewModel(Repository, ShortcutService, StatusService, false);
         }
 
         public override string Name => "Add media";
         
         public ObservableCollection<StagedItem> StagedItems { get; }
 
-        public string StatusMessage
-        {
-            get { return _statusMessage; }
-            set { SetValue(ref _statusMessage, value); }
-        }
+        
 
         public BatchObservableCollection<MediaItem> SelectedItems { get; }
         private void SelectedItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
@@ -129,15 +124,24 @@ namespace MediaCenter.Sessions.Staging
         }
         public async Task SaveToRepository()
         {
-            StatusMessage = $"Saving {StagedItems.Count} items...";
             // retry error items
             foreach (var stagedItem in StagedItems.Where(x => x.Status == MediaItemStatus.Error))
             {
                 stagedItem.Status = MediaItemStatus.Staged;
             }
-            await Repository.SaveNewItems(StagedItems.Where(x => x.Status == MediaItemStatus.Staged));
+
+            var stagedCount = StagedItems.Count(x => x.Status == MediaItemStatus.Staged);
+            var cnt = 1;
+            StatusService.StartProgress();
+            StatusService.PostStatusMessage($"Saving {stagedCount} items...", true);
+            foreach (var stagedItem in StagedItems.Where(x => x.Status == MediaItemStatus.Staged))
+            {
+                await Repository.SaveNewItem(stagedItem);
+                StatusService.UpdateProgress(cnt++*100/stagedCount);
+            }
+            StatusService.EndProgress();
+            StatusService.PostStatusMessage($"Saved {StagedItems.Count(x => x.Status == MediaItemStatus.Saved)} items...");
             ClearSavedItems();
-            StatusMessage = "";
         }
 
 
@@ -146,12 +150,16 @@ namespace MediaCenter.Sessions.Staging
             var newItemsList = newItems.ToList();
             var total = newItemsList.Count();
             var cnt = 1;
+            var loaded = 0;
 
             var errors = new StringBuilder();
 
+            StatusService.StartProgress();
+            StatusService.PostStatusMessage($"loading {total} media files", true);
             foreach (var filePath in newItemsList)
             {
-                StatusMessage = $"Loading item {cnt++} of {total}.";
+                StatusService.UpdateProgress((cnt++*100)/total);
+
                 if (string.IsNullOrEmpty(filePath))
                     continue;
                 var extension = Path.GetExtension(filePath).ToLower();
@@ -203,13 +211,16 @@ namespace MediaCenter.Sessions.Staging
 
                     if (newStagedItem != null && await Repository.IsDuplicate(newStagedItem))
                         newStagedItem.Status = MediaItemStatus.StagedDuplicate;
+                    loaded++;
                 }
                 catch (Exception e)
                 {
                     errors.AppendLine($"Error with file {filePath}: {e.Message}");
                 }
             }
-            StatusMessage = "";
+            StatusService.EndProgress();
+            StatusService.PostStatusMessage($"loaded {loaded} media files");
+
             if (errors.Length > 0)
                 WindowService.ShowMessage(errors.ToString(), "Fehler");
         }

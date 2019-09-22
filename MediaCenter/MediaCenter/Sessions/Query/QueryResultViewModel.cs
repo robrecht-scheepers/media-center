@@ -14,12 +14,14 @@ namespace MediaCenter.Sessions.Query
     public class QueryResultViewModel : PropertyChangedNotifier
     {
         private readonly IRepository _repository;
+        private readonly IStatusService _statusService;
         private RelayCommand _selectNextItemCommand;
         private RelayCommand _selectPreviousItemCommand;
 
-        public QueryResultViewModel(IRepository repository, ShortcutService shortcutService)
+        public QueryResultViewModel(IRepository repository, ShortcutService shortcutService, IStatusService statusService)
         {
             _repository = repository;
+            _statusService = statusService;
             var shortcutService1 = shortcutService;
             Items = new ObservableCollection<MediaItem>();
             SelectedItems = new BatchObservableCollection<MediaItem>();
@@ -69,10 +71,15 @@ namespace MediaCenter.Sessions.Query
             if(Items.Any())
                 SelectedItems.Add(Items.First());
 
+            var total = Items.Count;
+            var cnt = 1;
+            _statusService.StartProgress();
             foreach (var mediaItem in Items)
             {
+                _statusService.UpdateProgress(cnt++*100/total);
                 mediaItem.Thumbnail = await _repository.GetThumbnail(mediaItem);
             }
+            _statusService.EndProgress();
         }
 
         public void RemoveItem(MediaItem item)

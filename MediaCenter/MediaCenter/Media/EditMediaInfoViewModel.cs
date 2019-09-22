@@ -12,6 +12,7 @@ namespace MediaCenter.Media
     public class EditMediaInfoViewModel : PropertyChangedNotifier
     {
         private readonly IRepository _repository;
+        private readonly IStatusService _statusService;
         private readonly bool _saveChangesToRepository;
 
         private List<MediaItem> _items;
@@ -29,10 +30,11 @@ namespace MediaCenter.Media
         private bool _isEmpty;
         private int _itemCount;
 
-        public EditMediaInfoViewModel(IRepository repository, ShortcutService shortcutService, bool saveChangesToRepository, bool readOnly = false)
+        public EditMediaInfoViewModel(IRepository repository, ShortcutService shortcutService, IStatusService statusService, bool saveChangesToRepository, bool readOnly = false)
         {
             ReadOnly = readOnly;
             _repository = repository;
+            _statusService = statusService;
             _saveChangesToRepository = saveChangesToRepository;
             LoadItems(new List<MediaItem>());
 
@@ -62,6 +64,7 @@ namespace MediaCenter.Media
                 return;
 
             var tasks = new List<Task>();
+
             foreach (var item in _items)
             {
                 bool updated = false;
@@ -115,10 +118,15 @@ namespace MediaCenter.Media
                     tasks.Add(_repository.SaveItem(item));
             }
 
+            var totalTasks = tasks.Count;
+            var cnt = 1;
+            _statusService.StartProgress();
             foreach (var task in tasks)
             {
+                _statusService.UpdateProgress(cnt++*100/totalTasks);
                 task.Wait();
             }
+            _statusService.EndProgress();
         }
 
         public bool ReadOnly { get; set; }

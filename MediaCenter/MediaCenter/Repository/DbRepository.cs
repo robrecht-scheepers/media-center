@@ -74,50 +74,41 @@ namespace MediaCenter.Repository
             }
         }
 
-        public async Task SaveNewItems(IEnumerable<StagedItem> newItems)
+        public async Task SaveNewItem(StagedItem newItem)
         {
-            var itemsToSave = newItems.Where(x => x.Status == MediaItemStatus.Staged).ToList();
-            var count = itemsToSave.Count;
-            var i = 1;
-
-            foreach (var newItem in itemsToSave)
+            if (string.IsNullOrEmpty(newItem.FilePath))
             {
-                StatusMessage = $"Saving item {i++} of {count}";
+                newItem.Status = MediaItemStatus.Error;
+                newItem.StatusMessage = "File path is missing";
+                return;
+            }
+            
+            var originalName = newItem.Name;
+            newItem.Name = await CreateUniqueName(newItem);
+            newItem.ContentFileName = newItem.Name + Path.GetExtension(newItem.FilePath);
+            var mediaItemFilePath = GetMediaPath(newItem);
+            var thumbnailFilePath = GetThumbnailPath(newItem);
 
-                if (string.IsNullOrEmpty(newItem.FilePath))
+            try
+            {
+                await IOHelper.CopyFile(newItem.FilePath, mediaItemFilePath);
+                await IOHelper.SaveBytes(newItem.Thumbnail, GetThumbnailPath(newItem));
+                await _database.AddMediaItem(newItem);
+                newItem.Status = MediaItemStatus.Saved;
+                foreach (var newTag in newItem.Tags.Where(x => !Tags.Contains(x)))
                 {
-                    newItem.Status = MediaItemStatus.Error;
-                    newItem.StatusMessage = "File path is missing";
-                    continue;
+                    Tags.Add(newTag);
                 }
-                
-                var originalName = newItem.Name;
-                newItem.Name = await CreateUniqueName(newItem);
-                newItem.ContentFileName = newItem.Name + Path.GetExtension(newItem.FilePath);
-                var mediaItemFilePath = GetMediaPath(newItem);
-                var thumbnailFilePath = GetThumbnailPath(newItem);
+            }
+            catch (Exception e)
+            {
+                newItem.Name = originalName;
+                newItem.ContentFileName = "";
+                newItem.Status = MediaItemStatus.Error;
+                newItem.StatusMessage = e.Message;
 
-                try
-                {
-                    await IOHelper.CopyFile(newItem.FilePath, mediaItemFilePath);
-                    await IOHelper.SaveBytes(newItem.Thumbnail, GetThumbnailPath(newItem));
-                    await _database.AddMediaItem(newItem);
-                    newItem.Status = MediaItemStatus.Saved;
-                    foreach (var newTag in newItem.Tags.Where(x => !Tags.Contains(x)))
-                    {
-                        Tags.Add(newTag);
-                    }
-                }
-                catch (Exception e)
-                {
-                    newItem.Name = originalName;
-                    newItem.ContentFileName = "";
-                    newItem.Status = MediaItemStatus.Error;
-                    newItem.StatusMessage = e.Message;
-
-                    await IOHelper.DeleteFile(mediaItemFilePath);
-                    await IOHelper.DeleteFile(thumbnailFilePath);
-                }
+                await IOHelper.DeleteFile(mediaItemFilePath);
+                await IOHelper.DeleteFile(thumbnailFilePath);
             }
         }
 

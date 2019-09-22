@@ -45,13 +45,13 @@ namespace MediaCenter.Sessions.Query
 
             DetailItem = new MediaItemViewModel(Repository);
 
-            QueryResultViewModel = new QueryResultViewModel(Repository, ShortcutService);
+            QueryResultViewModel = new QueryResultViewModel(Repository, ShortcutService, StatusService);
             QueryResultViewModel.SelectionChanged += async (s,a) =>
             {
                 await QueryResultViewModelOnSelectionChanged(s,a);
             };
 
-            EditMediaInfoViewModel = new EditMediaInfoViewModel(Repository, ShortcutService, true, ReadOnly);
+            EditMediaInfoViewModel = new EditMediaInfoViewModel(Repository, ShortcutService, StatusService, true, ReadOnly);
 
             ToolWindowState = QueryToolWindowState.Filters;
             SelectedViewMode = ViewMode.Detail;

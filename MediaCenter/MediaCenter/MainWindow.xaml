@@ -89,6 +89,6 @@
             </TabControl.ContentTemplate>
         </TabControl>
 
-        <repository:RepositoryStatusView Grid.Row="2" DataContext="{Binding RepositoryViewModel}"/>
+        <local:StatusView Grid.Row="2" DataContext="{Binding StatusViewModel}" />
     </Grid>
 </Window>

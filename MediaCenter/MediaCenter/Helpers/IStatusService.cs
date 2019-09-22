@@ -8,7 +8,13 @@ namespace MediaCenter.Helpers
 {
     public interface IStatusService
     {
-        void PostStatusMessage(string message);
+        /// <summary>
+        /// Sends a message to be shown as status
+        /// </summary>
+        /// <param name="message">the message to be shown</param>
+        /// <param name="keep">true if the message should not be automatically disappear after the status timeout. Default value is false</param>
+        void PostStatusMessage(string message, bool keep = false);
+
         void StartProgress();
 
         /// <summary>
