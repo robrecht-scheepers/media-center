@@ -67,7 +67,6 @@ namespace MediaCenter.Sessions.Query
             if(_thumbnailsTask != null && !_thumbnailsTask.IsCompleted)
             {
                 _thumbnailCancellationTokenSource.Cancel();
-                await _thumbnailsTask;
             }
 
             SelectedItems.ReplaceAllItems(new List<MediaItem>());
@@ -120,7 +119,6 @@ namespace MediaCenter.Sessions.Query
             if (_thumbnailsTask != null && !_thumbnailsTask.IsCompleted)
             {
                 _thumbnailCancellationTokenSource.Cancel();
-                _thumbnailsTask.Wait();
             }
         }
 
