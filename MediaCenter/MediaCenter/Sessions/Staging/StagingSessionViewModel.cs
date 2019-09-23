@@ -38,7 +38,11 @@ namespace MediaCenter.Sessions.Staging
         }
 
         public override string Name => "Add media";
-        
+        public override Task Close()
+        {
+            return Task.CompletedTask;
+        }
+
         public ObservableCollection<StagedItem> StagedItems { get; }
 
         

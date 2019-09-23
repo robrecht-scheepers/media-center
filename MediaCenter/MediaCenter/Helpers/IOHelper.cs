@@ -25,6 +25,9 @@ namespace MediaCenter.Helpers
 
         public static async Task<Image> OpenImage(string filePath)
         {
+            if (!File.Exists(filePath))
+                return null;
+
             return await Task.Run(() =>
             {
                 try
