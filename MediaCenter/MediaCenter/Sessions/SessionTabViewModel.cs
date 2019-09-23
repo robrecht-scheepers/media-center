@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MediaCenter.Helpers;
 using MediaCenter.MVVM;
 using MediaCenter.Repository;
@@ -59,6 +60,12 @@ namespace MediaCenter.Sessions
             SessionViewModel = new StagingSessionViewModel(_repository, _windowService, ShortcutService, _statusService);
             SessionCreated?.Invoke(this, EventArgs.Empty);
             RaisePropertyChanged("Name");
+        }
+
+        public async Task Close()
+        {
+            if (SessionViewModel != null)
+                await SessionViewModel.Close();
         }
 
         public event EventHandler SessionCreated;

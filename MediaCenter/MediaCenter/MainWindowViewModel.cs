@@ -7,6 +7,7 @@ using MediaCenter.Sessions.Staging;
 using System.Reflection;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using MediaCenter.Helpers;
 
 namespace MediaCenter
@@ -15,7 +16,7 @@ namespace MediaCenter
     {
         private readonly IWindowService _windowService;
         private readonly IRepository _repository;
-        private RelayCommand<SessionTabViewModel> _closeSessionCommand;
+        private AsyncRelayCommand<SessionTabViewModel> _closeSessionCommand;
         private SessionTabViewModel _selectedSessionTab;
 
 
@@ -45,10 +46,11 @@ namespace MediaCenter
         }
 
         
-        public RelayCommand<SessionTabViewModel> CloseSessionCommand =>
-            _closeSessionCommand ?? (_closeSessionCommand = new RelayCommand<SessionTabViewModel>(CloseSession));
-        public void CloseSession(SessionTabViewModel session)
+        public AsyncRelayCommand<SessionTabViewModel> CloseSessionCommand =>
+            _closeSessionCommand ?? (_closeSessionCommand = new AsyncRelayCommand<SessionTabViewModel>(CloseSession));
+        public async Task CloseSession(SessionTabViewModel session)
         {
+            await session.Close();
             Sessions.Remove(session);
         }
 

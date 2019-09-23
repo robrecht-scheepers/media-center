@@ -133,6 +133,7 @@
     <Compile Include="Helpers\IStatusService.cs" />
     <Compile Include="Helpers\IWindowService.cs" />
     <Compile Include="Helpers\ShortcutService.cs" />
+    <Compile Include="Helpers\TaskList.cs" />
     <Compile Include="StatusView.xaml.cs">
       <DependentUpon>StatusView.xaml</DependentUpon>
     </Compile>

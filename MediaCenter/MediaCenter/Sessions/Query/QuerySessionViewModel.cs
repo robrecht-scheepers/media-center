@@ -60,6 +60,11 @@ namespace MediaCenter.Sessions.Query
         public bool ReadOnly { get; set; }
 
         public override string Name => "View media";
+        public override async Task Close()
+        {
+            QueryResultViewModel.Close();
+            await EditMediaInfoViewModel.Close();
+        }
 
         public FilterCollectionViewModel FilterCollection { get; }
 

@@ -4,7 +4,9 @@ using MediaCenter.MVVM;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediaCenter.Helpers;
 using MediaCenter.Repository;
@@ -17,6 +19,8 @@ namespace MediaCenter.Sessions.Query
         private readonly IStatusService _statusService;
         private RelayCommand _selectNextItemCommand;
         private RelayCommand _selectPreviousItemCommand;
+        private Task _thumbnailsTask;
+        private CancellationTokenSource _thumbnailCancellationTokenSource;
 
         public QueryResultViewModel(IRepository repository, ShortcutService shortcutService, IStatusService statusService)
         {
@@ -26,6 +30,7 @@ namespace MediaCenter.Sessions.Query
             Items = new ObservableCollection<MediaItem>();
             SelectedItems = new BatchObservableCollection<MediaItem>();
             SelectedItems.CollectionChanged += SelectedItemsOnCollectionChanged;
+            _thumbnailCancellationTokenSource = new CancellationTokenSource();
 
             shortcutService1.Next += (s, a) =>
             {
@@ -59,6 +64,12 @@ namespace MediaCenter.Sessions.Query
 
         public async Task LoadQueryResult(List<MediaItem> queryResult)
         {
+            if(_thumbnailsTask != null && !_thumbnailsTask.IsCompleted)
+            {
+                _thumbnailCancellationTokenSource.Cancel();
+                _thumbnailsTask.Wait();
+            }
+
             SelectedItems.ReplaceAllItems(new List<MediaItem>());
             Items.Clear();
 
@@ -71,15 +82,31 @@ namespace MediaCenter.Sessions.Query
             if(Items.Any())
                 SelectedItems.Add(Items.First());
 
-            var total = Items.Count;
-            var cnt = 1;
-            _statusService.StartProgress();
-            foreach (var mediaItem in Items)
+            
+            _thumbnailsTask = LoadThumbnails(Items.ToList(), _thumbnailCancellationTokenSource.Token);
+        }
+
+        private async Task LoadThumbnails(List<MediaItem> items, CancellationToken cancelToken)
+        {
+            foreach (var item in items)
             {
-                _statusService.UpdateProgress(cnt++*100/total);
-                mediaItem.Thumbnail = await _repository.GetThumbnail(mediaItem);
+                if (cancelToken.IsCancellationRequested)
+                {
+                    Debug.WriteLine("Cancelled");
+                    break;
+                }
+
+                item.Thumbnail = await _repository.GetThumbnail(item);
             }
-            _statusService.EndProgress();
+        }
+
+        public void Close()
+        {
+            if (_thumbnailsTask != null && !_thumbnailsTask.IsCompleted)
+            {
+                _thumbnailCancellationTokenSource.Cancel();
+                _thumbnailsTask.Wait();
+            }
         }
 
         public void RemoveItem(MediaItem item)

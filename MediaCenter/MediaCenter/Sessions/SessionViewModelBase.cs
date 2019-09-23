@@ -1,4 +1,5 @@
-﻿using MediaCenter.Helpers;
+﻿using System.Threading.Tasks;
+using MediaCenter.Helpers;
 using MediaCenter.MVVM;
 using MediaCenter.Repository;
 
@@ -19,6 +20,8 @@ namespace MediaCenter.Sessions
         }
 
         public abstract string Name { get; }
+
+        public abstract Task Close();
 
         public ShortcutService ShortcutService { get; }
     }
