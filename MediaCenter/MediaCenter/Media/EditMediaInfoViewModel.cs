@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediaCenter.Helpers;
 using MediaCenter.MVVM;
@@ -29,10 +30,12 @@ namespace MediaCenter.Media
         private bool _hasMultipleItems;
         private bool _isEmpty;
         private int _itemCount;
-        private Task _saveTask;
+        private Queue<Task> _saveTasks;
 
         public EditMediaInfoViewModel(IRepository repository, ShortcutService shortcutService, IStatusService statusService, bool saveChangesToRepository, bool readOnly = false)
         {
+            _saveTasks = new Queue<Task>();
+
             ReadOnly = readOnly;
             _repository = repository;
             _statusService = statusService;
@@ -61,21 +64,36 @@ namespace MediaCenter.Media
 
         private void StartPublishToItems()
         {
-            _saveTask = PublishToItems(); 
+            var task = new Task(PublishToItems);
+            _saveTasks.Enqueue(task);
+            task.ContinueWith(t => _saveTasks.Dequeue());
+            task.Start();
         }
 
-        private async Task PublishToItems()
+        private void PublishToItems()
         {
             if(ReadOnly || _initInProgress)
                 return;
 
-            var total = _items.Count;
-            var cnt = 1;
-            _statusService.StartProgress();
-
-            foreach (var item in _items)
+            while (_saveTasks.Count > 1)
             {
-                _statusService.UpdateProgress(cnt++ * 100 / total);
+                var waitTask = _saveTasks.Peek();
+                _statusService.PostStatusMessage("Waiting for previous update operation to finish", true);
+                waitTask.Wait();
+            }
+            _statusService.PostStatusMessage("");
+            
+            var total = _items.Count;
+            _statusService.StartProgress();
+            _statusService.PostStatusMessage($"Updating {total} items",true);
+
+            // in a first run publish to the items, then in a second loop do the saving
+            bool[] update = new bool[_items.Count];
+            for (int i = 0; i < _items.Count; i++)
+            {
+                var item = _items[i];
+
+                
 
                 bool updated = false;
                 if (Favorite.HasValue && Favorite.Value != item.Favorite)
@@ -106,8 +124,10 @@ namespace MediaCenter.Media
                             item.Tags.Add(newTag);
                             updated = true;
                         }
+
                         // remove tags that were in the original tags intersect and not in selected tags anymore --> has been deleted by the user
-                        foreach (var deletedTag in _originalTagsIntersect.Where(x => !TagsViewModel.SelectedTags.Contains(x)))
+                        foreach (var deletedTag in _originalTagsIntersect.Where(x =>
+                            !TagsViewModel.SelectedTags.Contains(x)))
                         {
                             item.Tags.Remove(deletedTag);
                             updated = true;
@@ -120,21 +140,40 @@ namespace MediaCenter.Media
                         {
                             item.Tags.Add(selectedTag);
                         }
+
                         updated = true;
                     }
                 }
 
-                if (updated && _saveChangesToRepository)
-                    await _repository.SaveItem(item);
+                update[i] = updated;
             }
+
+            if (_saveChangesToRepository)
+            {
+                for (int i = 0; i < _items.Count; i++)
+                {
+                    _statusService.UpdateProgress(i * 100 / total);
+                    if (update[i])
+                    {
+                        _repository.SaveItem(_items[i]).Wait();
+                    }
+                }
+            }
+
             _statusService.EndProgress();
+            _statusService.PostStatusMessage("");
             
         }
 
         public async Task Close()
         {
-            if (_saveTask != null)
-                await _saveTask;
+            while (_saveTasks.Count > 0)
+            {
+                var waitTask = _saveTasks.Peek();
+                _statusService.PostStatusMessage("Waiting for previous update operation to finish", true);
+                await waitTask;
+            }
+            _statusService.PostStatusMessage("");
         }
 
         public bool ReadOnly { get; set; }
