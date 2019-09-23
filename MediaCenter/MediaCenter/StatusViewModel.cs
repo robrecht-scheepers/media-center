@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Timers;
+using System.Windows.Threading;
 using MediaCenter.Helpers;
 using MediaCenter.MVVM;
 using MediaCenter.Repository;
@@ -36,13 +37,16 @@ namespace MediaCenter
             {
                 _timer.Start();
             }
-            Message = message;
+            Dispatcher.CurrentDispatcher.Invoke(() => Message = message);
         }
 
         public void StartProgress()
         {
-            Progress = 0;
-            ShowProgress = true;
+            Dispatcher.CurrentDispatcher.Invoke(() =>
+            {
+                Progress = 0;
+                ShowProgress = true;
+            });
         }
 
         /// <summary>
@@ -51,12 +55,12 @@ namespace MediaCenter
         /// <param name="progress">Value between 0 and 100</param>
         public void UpdateProgress(int progress)
         {
-            Progress = progress;
+            Dispatcher.CurrentDispatcher.Invoke(() =>  Progress = progress);
         }
 
         public void EndProgress()
         {
-            ShowProgress = false;
+            Dispatcher.CurrentDispatcher.Invoke(() => ShowProgress = false);
         }
 
         public bool ShowProgress

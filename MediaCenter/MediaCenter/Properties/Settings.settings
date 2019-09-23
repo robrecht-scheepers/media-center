@@ -9,7 +9,7 @@
       <Value Profile="(Default)">c:\TEMP\MC\DevRepository\</Value>
     </Setting>
     <Setting Name="UseFavoriteCache" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="CachePath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">c:\TEMP\MC\DevCache\</Value>

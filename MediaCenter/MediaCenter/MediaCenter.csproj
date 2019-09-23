@@ -467,6 +467,8 @@
     <Content Include="Dependencies\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\ic_brokenimage.png" />
+    <Resource Include="Resources\Icons\ic_wait.png" />
     <Resource Include="Resources\Icons\ic_statusduplicate.png" />
     <Resource Include="Resources\Icons\ic_statuserror.png" />
     <Resource Include="Resources\Icons\ic_statusok.png" />

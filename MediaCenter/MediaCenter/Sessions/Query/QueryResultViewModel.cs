@@ -67,7 +67,7 @@ namespace MediaCenter.Sessions.Query
             if(_thumbnailsTask != null && !_thumbnailsTask.IsCompleted)
             {
                 _thumbnailCancellationTokenSource.Cancel();
-                _thumbnailsTask.Wait();
+                await _thumbnailsTask;
             }
 
             SelectedItems.ReplaceAllItems(new List<MediaItem>());
@@ -76,6 +76,7 @@ namespace MediaCenter.Sessions.Query
             queryResult.Sort((x, y) => DateTime.Compare(x.DateTaken, y.DateTaken));
             foreach (var mediaItem in queryResult)
             {
+                mediaItem.Status = MediaItemStatus.ThumbnailLoading;
                 Items.Add(mediaItem);
             }
 
@@ -83,21 +84,35 @@ namespace MediaCenter.Sessions.Query
                 SelectedItems.Add(Items.First());
 
             
-            _thumbnailsTask = LoadThumbnails(Items.ToList(), _thumbnailCancellationTokenSource.Token);
+            _thumbnailsTask = LoadThumbnails(Items.ToList(), (_thumbnailCancellationTokenSource = new CancellationTokenSource()).Token);
         }
 
         private async Task LoadThumbnails(List<MediaItem> items, CancellationToken cancelToken)
         {
+            var total = items.Count;
+            var cnt = 1;
+            _statusService.StartProgress();
             foreach (var item in items)
             {
                 if (cancelToken.IsCancellationRequested)
                 {
-                    Debug.WriteLine("Cancelled");
+                    Debug.WriteLine("LoadThumbnails Cancelled");
+                    _statusService.EndProgress();
                     break;
                 }
-
-                item.Thumbnail = await _repository.GetThumbnail(item);
+                _statusService.UpdateProgress(cnt++*100/total);
+                var thumbnail = await _repository.GetThumbnail(item);
+                if (thumbnail == null)
+                {
+                    item.Status = MediaItemStatus.Error;
+                }
+                else
+                {
+                    item.Thumbnail = thumbnail;
+                    item.Status = MediaItemStatus.Ok;
+                }
             }
+            _statusService.EndProgress();
         }
 
         public void Close()

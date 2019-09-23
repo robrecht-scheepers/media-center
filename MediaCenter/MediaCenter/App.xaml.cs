@@ -30,15 +30,23 @@ namespace MediaCenter
             var cachePath = Settings.Default.CachePath;
 
             var cache = new DbRepository(cachePath);
-            if (DbRepository.CheckRepositoryConnection(repositoryPath))
+            if (Settings.Default.UseFavoriteCache)
             {
-                _repository = new DbRepository(repositoryPath, cache);
-                mainViewModel = new MainWindowViewModel(_repository, windowService, false);
+                if (DbRepository.CheckRepositoryConnection(repositoryPath))
+                {
+                    _repository = new DbRepository(repositoryPath, cache);
+                    mainViewModel = new MainWindowViewModel(_repository, windowService, false);
+                }
+                else
+                {
+                    _repository = cache;
+                    mainViewModel = new MainWindowViewModel(cache, windowService, true);
+                }
             }
             else
             {
-                _repository = cache;
-                mainViewModel = new MainWindowViewModel(cache, windowService, true);
+                _repository = new DbRepository(repositoryPath);
+                mainViewModel = new MainWindowViewModel(_repository, windowService, false);
             }
             
             await _repository.Initialize();

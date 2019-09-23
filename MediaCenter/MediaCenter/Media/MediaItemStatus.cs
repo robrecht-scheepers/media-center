@@ -5,6 +5,8 @@
         Staged,
         Saved,
         Error,
-        StagedDuplicate
+        StagedDuplicate,
+        ThumbnailLoading,
+        Ok
     }
 }
