@@ -124,6 +124,14 @@ namespace MediaCenter.Sessions.Query
 
         public void RemoveItem(MediaItem item)
         {
+            if (SelectedItems.Count == 1 && SelectedItem == item)
+            {
+                var index = Items.IndexOf(item);
+                if (index < Items.Count - 1)
+                    SelectedItem = Items[index + 1];
+                else if (index > 0)
+                    SelectedItem = Items[index - 1];
+            }
             SelectedItems.Remove(item);
             Items.Remove(item);
         }
