@@ -66,12 +66,37 @@
                     
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <ctrl:ImageToggleButton IsChecked="{Binding Private, Mode=TwoWay}" IsThreeState="{Binding HasMultipleItems}"  HorizontalAlignment="Center"
-                                                CheckedImage="/Resources/Icons/ic_private.png" UncheckedImage="/Resources/Icons/ic_notprivate.png" NullImage="/Resources/Icons/lock-half.png"/>
-                    <ctrl:ImageToggleButton IsChecked="{Binding Favorite, Mode=TwoWay}" IsThreeState="{Binding HasMultipleItems}" HorizontalAlignment="Center"
-                                                CheckedImage="/Resources/Icons/ic_favorite.png" UncheckedImage="/Resources/Icons/ic_notfavorite.png" NullImage="/Resources/Icons/heart-half.png" />
+                    <ctrl:ImageButton Command="{Binding TogglePrivateCommand}">
+                        <ctrl:ImageButton.Style>
+                            <Style TargetType="ctrl:ImageButton" BasedOn="{StaticResource {x:Type ctrl:ImageButton}}">
+                                <Setter Property="ImageSource" Value="/Resources/Icons/lock-half.png"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Private}" Value="true">
+                                        <Setter Property="ImageSource" Value="/Resources/Icons/ic_private.png"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Private}" Value="false">
+                                        <Setter Property="ImageSource" Value="/Resources/Icons/ic_notprivate.png"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                              </Style>
+                            </ctrl:ImageButton.Style>
+                    </ctrl:ImageButton>
+                    <ctrl:ImageButton Command="{Binding ToggleFavoriteCommand}">
+                        <ctrl:ImageButton.Style>
+                            <Style TargetType="ctrl:ImageButton" BasedOn="{StaticResource {x:Type ctrl:ImageButton}}">
+                                <Setter Property="ImageSource" Value="/Resources/Icons/heart-half.png"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Favorite}" Value="true">
+                                        <Setter Property="ImageSource" Value="/Resources/Icons/ic_favorite.png"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Favorite}" Value="false">
+                                        <Setter Property="ImageSource" Value="/Resources/Icons/ic_notfavorite.png"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ctrl:ImageButton.Style>
+                    </ctrl:ImageButton>
                 </StackPanel>
-                
             </Grid>
 
             <!-- edit media area -->

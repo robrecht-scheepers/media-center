@@ -32,6 +32,8 @@ namespace MediaCenter.Media
         private int _itemCount;
         private Task _saveTask;
         private CancellationTokenSource _saveCancellationTokenSource;
+        private RelayCommand _toggleFavoriteCommand;
+        private RelayCommand _togglePrivateCommand;
 
         public EditMediaInfoViewModel(IRepository repository, ShortcutService shortcutService, IStatusService statusService, bool saveChangesToRepository, bool readOnly = false)
         {
@@ -86,7 +88,8 @@ namespace MediaCenter.Media
         {
             var total = _items.Count;
             var cnt = 1;
-            _statusService.StartProgress();
+            if(HasMultipleItems)
+                _statusService.StartProgress();
             foreach (var item in _items)
             {
                 if (token.IsCancellationRequested)
@@ -200,6 +203,8 @@ namespace MediaCenter.Media
                 Favorite = null;
         }
 
+        public RelayCommand ToggleFavoriteCommand => _toggleFavoriteCommand ?? (_toggleFavoriteCommand = new RelayCommand(ToggleFavorite));
+
         private void ToggleFavorite()
         {
             if(ReadOnly)
@@ -225,6 +230,20 @@ namespace MediaCenter.Media
             else
                 Private = null;
         }
+
+        public RelayCommand TogglePrivateCommand => _togglePrivateCommand ?? (_togglePrivateCommand = new RelayCommand(TogglePrivate));
+
+        private void TogglePrivate()
+        {
+            if(ReadOnly)
+                return;
+
+            if (Private == null || !Private.Value)
+                Private = true;
+            else
+                Private = false;
+        }
+        
 
         public DateTime? DateTaken
         {
