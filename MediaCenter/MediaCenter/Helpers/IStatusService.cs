@@ -14,6 +14,7 @@ namespace MediaCenter.Helpers
         /// <param name="message">the message to be shown</param>
         /// <param name="keep">true if the message should not be automatically disappear after the status timeout. Default value is false</param>
         void PostStatusMessage(string message, bool keep = false);
+        void ClearStatusMessage();
 
         void StartProgress();
 

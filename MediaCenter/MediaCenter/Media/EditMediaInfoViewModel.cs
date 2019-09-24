@@ -30,23 +30,29 @@ namespace MediaCenter.Media
         private bool _hasMultipleItems;
         private bool _isEmpty;
         private int _itemCount;
-        private Queue<Task> _saveTasks;
+        private Task _saveTask;
+        private CancellationTokenSource _saveCancellationTokenSource;
 
         public EditMediaInfoViewModel(IRepository repository, ShortcutService shortcutService, IStatusService statusService, bool saveChangesToRepository, bool readOnly = false)
         {
-            _saveTasks = new Queue<Task>();
-
             ReadOnly = readOnly;
             _repository = repository;
             _statusService = statusService;
             _saveChangesToRepository = saveChangesToRepository;
-            LoadItems(new List<MediaItem>());
+            LoadItems(new List<MediaItem>()).Wait(); // ok to execute synchronous as there is no running save operation that needs to be awaited
 
             shortcutService.ToggleFavorite += (s, a) => ToggleFavorite();
         }
 
-        public void LoadItems(List<MediaItem> items)
+        public async Task LoadItems(List<MediaItem> items)
         {
+            if (_saveTask != null)
+            {
+                _statusService.PostStatusMessage("Waiting for update operation to finish", true);
+                await _saveTask;
+                _statusService.ClearStatusMessage();
+            }
+
             _items = items;
             HasMultipleItems = (items.Count > 1);
             IsEmpty = !items.Any();
@@ -62,39 +68,34 @@ namespace MediaCenter.Media
             _initInProgress = false;
         }
 
-        private void StartPublishToItems()
+        private void InvokePublishToItems()
         {
-            var task = new Task(PublishToItems);
-            _saveTasks.Enqueue(task);
-            task.ContinueWith(t => _saveTasks.Dequeue());
-            task.Start();
-        }
-
-        private void PublishToItems()
-        {
-            if(ReadOnly || _initInProgress)
+            if (ReadOnly || _initInProgress)
                 return;
 
-            while (_saveTasks.Count > 1)
+            if (_saveTask != null)
             {
-                var waitTask = _saveTasks.Peek();
-                _statusService.PostStatusMessage("Waiting for previous update operation to finish", true);
-                waitTask.Wait();
+                _saveCancellationTokenSource.Cancel();
             }
-            _statusService.PostStatusMessage("");
-            
+
+            _saveCancellationTokenSource = new CancellationTokenSource();
+            _saveTask = Task.Run(async () => await PublishToItems((_saveCancellationTokenSource).Token));
+        }
+
+        private async Task PublishToItems(CancellationToken token)
+        {
             var total = _items.Count;
+            var cnt = 1;
             _statusService.StartProgress();
-            _statusService.PostStatusMessage($"Updating {total} items",true);
-
-            // in a first run publish to the items, then in a second loop do the saving
-            bool[] update = new bool[_items.Count];
-            for (int i = 0; i < _items.Count; i++)
+            foreach (var item in _items)
             {
-                var item = _items[i];
+                if (token.IsCancellationRequested)
+                {
+                    //_statusService.EndProgress();
+                    return;
+                }
 
-                
-
+                _statusService.UpdateProgress(cnt++ * 100 / total);
                 bool updated = false;
                 if (Favorite.HasValue && Favorite.Value != item.Favorite)
                 {
@@ -145,35 +146,23 @@ namespace MediaCenter.Media
                     }
                 }
 
-                update[i] = updated;
-            }
-
-            if (_saveChangesToRepository)
-            {
-                for (int i = 0; i < _items.Count; i++)
+                if (updated && _saveChangesToRepository)
                 {
-                    _statusService.UpdateProgress(i * 100 / total);
-                    if (update[i])
-                    {
-                        _repository.SaveItem(_items[i]).Wait();
-                    }
+                    await _repository.SaveItem(item);
                 }
             }
-
             _statusService.EndProgress();
-            _statusService.PostStatusMessage("");
-            
+            _saveTask = null;
         }
 
         public async Task Close()
         {
-            while (_saveTasks.Count > 0)
+            if (_saveTask != null)
             {
-                var waitTask = _saveTasks.Peek();
-                _statusService.PostStatusMessage("Waiting for previous update operation to finish", true);
-                await waitTask;
+                _statusService.PostStatusMessage("Closing session - waiting for update operation to finish",true);
+                await _saveTask;
+                _statusService.ClearStatusMessage();
             }
-            _statusService.PostStatusMessage("");
         }
 
         public bool ReadOnly { get; set; }
@@ -199,7 +188,7 @@ namespace MediaCenter.Media
         public bool? Favorite
         {
             get => _favorite;
-            set => SetValue(ref _favorite, value, StartPublishToItems);
+            set => SetValue(ref _favorite, value, InvokePublishToItems);
         }
         private void InitializeFavorite()
         {
@@ -225,7 +214,7 @@ namespace MediaCenter.Media
         public bool? Private
         {
             get => _private;
-            set => SetValue(ref _private, value, StartPublishToItems);
+            set => SetValue(ref _private, value, InvokePublishToItems);
         }
         private void InitializePrivate()
         {
@@ -305,7 +294,7 @@ namespace MediaCenter.Media
                 ? (_originalTagsIntersect = _items.Select(x => x.Tags).Cast<IEnumerable<string>>().Aggregate((x, y) => x.Intersect(y)).ToList())
                 : IsEmpty ? new List<string>() : _items.First().Tags.ToList();
             TagsViewModel = new EditTagsViewModel(allTags, tags);
-            TagsViewModel.SelectedTags.CollectionChanged += (s, a) => StartPublishToItems();
+            TagsViewModel.SelectedTags.CollectionChanged += (s, a) => InvokePublishToItems();
         }
 
 

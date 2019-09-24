@@ -152,7 +152,7 @@ namespace MediaCenter.Sessions.Query
 
         private async Task QueryResultViewModelOnSelectionChanged(object sender, EventArgs args)
         {
-            EditMediaInfoViewModel.LoadItems(QueryResultViewModel.SelectedItems.ToList());
+            await EditMediaInfoViewModel.LoadItems(QueryResultViewModel.SelectedItems.ToList());
 
             if (SelectedViewMode != ViewMode.Grid)
                 await DetailItem.Load(QueryResultViewModel.SelectedItems.FirstOrDefault());

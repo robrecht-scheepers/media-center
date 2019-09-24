@@ -33,7 +33,7 @@ namespace MediaCenter.Sessions.Staging
         {
             StagedItems = new ObservableCollection<StagedItem>();
             SelectedItems = new BatchObservableCollection<MediaItem>();
-            SelectedItems.CollectionChanged += SelectedItemsOnCollectionChanged;
+            SelectedItems.CollectionChanged += async (s,a) => await SelectedItemsOnCollectionChanged(s,a);
             EditMediaInfoViewModel = new EditMediaInfoViewModel(Repository, ShortcutService, StatusService, false);
         }
 
@@ -48,7 +48,7 @@ namespace MediaCenter.Sessions.Staging
         
 
         public BatchObservableCollection<MediaItem> SelectedItems { get; }
-        private void SelectedItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        private async Task SelectedItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
             EditMediaInfoViewModel.LoadItems(SelectedItems.ToList());
         }

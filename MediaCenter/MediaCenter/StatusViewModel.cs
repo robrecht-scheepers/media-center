@@ -40,6 +40,11 @@ namespace MediaCenter
             Dispatcher.CurrentDispatcher.Invoke(() => Message = message);
         }
 
+        public void ClearStatusMessage()
+        {
+            Dispatcher.CurrentDispatcher.Invoke(() => Message = "");
+        }
+
         public void StartProgress()
         {
             Dispatcher.CurrentDispatcher.Invoke(() =>
