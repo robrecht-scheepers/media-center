@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Threading;
@@ -128,5 +129,7 @@ namespace MediaCenter
             RepositoryVideoCount = _repository.VideoCount;
             RepositoryTotalCount = RepositoryImageCount + RepositoryVideoCount;
         }
+
+        public string AppVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
     }
 }

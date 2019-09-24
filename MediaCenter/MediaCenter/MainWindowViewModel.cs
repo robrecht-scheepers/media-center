@@ -34,7 +34,7 @@ namespace MediaCenter
         }
 
 
-        public string AppVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        
         public StatusViewModel StatusViewModel { get; }
         public ObservableCollection<SessionTabViewModel> Sessions { get; }
         public bool ReadOnly { get; }
