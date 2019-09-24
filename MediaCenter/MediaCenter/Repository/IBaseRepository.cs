@@ -21,7 +21,9 @@ namespace MediaCenter.Repository
         System.Uri Location { get; }
         Task SaveContentToFile(MediaItem item, string filePath);
         Task SaveMultipleContentToFolder(List<MediaItem> items, string folderPath);
-        string StatusMessage { get; }
         void Close();
+        int ImageCount { get; }
+        int VideoCount { get; }
+
     }
 }

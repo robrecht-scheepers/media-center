@@ -1,9 +1,13 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Threading;
 using MediaCenter.Helpers;
+using MediaCenter.Media;
 using MediaCenter.MVVM;
 using MediaCenter.Repository;
+using MediaCenter.Sessions.Filters;
 
 namespace MediaCenter
 {
@@ -16,6 +20,10 @@ namespace MediaCenter
         private int _progress;
         private string _message;
         private Timer _timer;
+        private string _repositoryLocation;
+        private int _repositoryTotalCount;
+        private int _repositoryImageCount;
+        private int _repositoryVideoCount;
 
         public StatusViewModel(IRepository repository)
         {
@@ -25,8 +33,11 @@ namespace MediaCenter
             Progress = 0;
             _timer = new Timer(MessageTimeout) {AutoReset = false};
             _timer.Elapsed += (s, a) => Message = "";
-        }
 
+            _repository.CollectionChanged += (s, a) => UpdateRepositoryInfo();
+            UpdateRepositoryInfo();
+        }
+        
         public void PostStatusMessage(string message, bool keep = false)
         {
             if (keep)
@@ -84,6 +95,38 @@ namespace MediaCenter
         {
             get => _message;
             set => SetValue(ref _message, value);
+        }
+
+        public string RepositoryLocation
+        {
+            get => _repositoryLocation;
+            set => SetValue(ref _repositoryLocation, value);
+        }
+
+        public int RepositoryTotalCount
+        {
+            get => _repositoryTotalCount;
+            set => SetValue(ref _repositoryTotalCount, value);
+        }
+
+        public int RepositoryImageCount
+        {
+            get => _repositoryImageCount;
+            set => SetValue(ref _repositoryImageCount, value);
+        }
+
+        public int RepositoryVideoCount
+        {
+            get => _repositoryVideoCount;
+            set => SetValue(ref _repositoryVideoCount, value);
+        }
+
+        private void UpdateRepositoryInfo()
+        {
+            RepositoryLocation = _repository.Location.LocalPath;
+            RepositoryImageCount = _repository.ImageCount;
+            RepositoryVideoCount = _repository.VideoCount;
+            RepositoryTotalCount = RepositoryImageCount + RepositoryVideoCount;
         }
     }
 }

@@ -9,7 +9,8 @@
              d:DataContext="{d:DesignInstance local:StatusViewModel}">
     <UserControl.Resources>
         <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-            <Setter Property="Foreground" Value="{StaticResource C1}"/>
+            <Setter Property="Foreground" Value="{StaticResource C2}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
     </UserControl.Resources>
@@ -17,12 +18,22 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
             
         <ProgressBar Grid.Column="0" Visibility="{Binding ShowProgress, Converter={StaticResource CollapseWhenFalseConverter}}" 
                      Minimum="0" Maximum="100" Width="150" Value="{Binding Progress}" Foreground="{StaticResource C2}" Background="{StaticResource C5}" BorderBrush="{StaticResource C2}" />
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Text="{Binding Message}"/>
 
+        <TextBlock Grid.Column="2" Text="{Binding RepositoryLocation}" Margin="2"/>
+        <Border Grid.Column="3" BorderBrush="{StaticResource C1}" BorderThickness="1 0 0 0" Margin="4"/>
+        <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right">
+
+            <TextBlock Text="{Binding Path=RepositoryTotalCount, StringFormat='{}{0} items: '}" Margin="2"/>
+            <TextBlock Text="{Binding Path=RepositoryImageCount, StringFormat='{}{0} images '}" Margin="2"/>
+            <TextBlock Text="{Binding Path=RepositoryVideoCount, StringFormat='{}{0} videos'}" Margin="2"/>
+        </StackPanel>
     </Grid>
 </UserControl>

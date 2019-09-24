@@ -37,6 +37,7 @@ namespace MediaCenter.Repository
         {
             _backgroundTasks = new List<Task>();
 
+            Location = new Uri(repoPath);
             var dbPath = Path.Combine(repoPath, "db", "mc.db3");
             var mediaFolderPath = Path.Combine(repoPath, "media");
             var thumbnailFolderPath = Path.Combine(repoPath, "thumbnails");
@@ -58,7 +59,6 @@ namespace MediaCenter.Repository
         public event EventHandler CollectionChanged;
         public event EventHandler StatusChanged;
 
-        public IEnumerable<MediaItem> Catalog => new List<MediaItem>();
         public List<string> Tags { get; set; }
 
         public async Task Initialize()
@@ -72,6 +72,10 @@ namespace MediaCenter.Repository
                 await _cacheRepository.SynchronizeCache(favorites.Select(x =>
                     new Tuple<MediaItem, string, string>(x, GetMediaPath(x), GetThumbnailPath(x))).ToList());
             }
+
+            ImageCount = await _database.GetFilteredItemCount(new List<Filter>{new MediaTypeFilter{MediaType = MediaType.Image}});
+            VideoCount = await _database.GetFilteredItemCount(new List<Filter> { new MediaTypeFilter{ MediaType = MediaType.Video} });
+            CollectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public async Task SaveNewItem(StagedItem newItem)
@@ -99,6 +103,12 @@ namespace MediaCenter.Repository
                 {
                     Tags.Add(newTag);
                 }
+
+                if (newItem.MediaType == MediaType.Image)
+                    ImageCount++;
+                else
+                    VideoCount++;
+                CollectionChanged?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception e)
             {
@@ -158,6 +168,12 @@ namespace MediaCenter.Repository
                 await IOHelper.DeleteFile(GetMediaPath(item));
                 await IOHelper.DeleteFile(GetThumbnailPath(item));
                 await _database.DeleteMediaItem(item);
+
+                if (item.MediaType == MediaType.Image)
+                    ImageCount--;
+                else
+                    VideoCount--;
+                CollectionChanged?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception e)
             {
@@ -321,7 +337,10 @@ namespace MediaCenter.Repository
                 Thread.Sleep(500);
         }
 
-        public Uri Location => default(Uri);
+        public int ImageCount { get; private set; }
+        public int VideoCount { get; private set; }
+
+        public Uri Location {get; private set; }
         public async Task SaveContentToFile(MediaItem item, string filePath)
         {
             await IOHelper.CopyFile(GetMediaPath(item), filePath);
