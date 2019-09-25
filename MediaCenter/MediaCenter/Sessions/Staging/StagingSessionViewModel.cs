@@ -168,16 +168,18 @@ namespace MediaCenter.Sessions.Staging
                 StagedItem newStagedItem;
                 if (_supportedImageExtensions.Contains(extension))
                 {
-                    newStagedItem = new StagedItem(MediaType.Image);
+                    newStagedItem = new StagedItem(MediaType.Image, filePath);
                 }
                 else if (_supportedVideoExtensions.Contains(extension))
                 {
-                    newStagedItem = new StagedItem(MediaType.Video);
+                    newStagedItem = new StagedItem(MediaType.Video, filePath);
                 }
                 else
                 {
                     continue;
                 }
+
+                StagedItems.Add(newStagedItem);
 
                 try
                 {
@@ -185,43 +187,19 @@ namespace MediaCenter.Sessions.Staging
                     {
                         using (var image = await IOHelper.OpenImage(filePath))
                         {
-                            if (image == null)
-                            {
-                                errors.AppendLine($"Error with file {filePath}: failed to load image.");
-                                continue;
-                            }
-
-                            var dateTaken = ImageHelper.ReadCreationDate(image);
-                            var thumbnail = ImageHelper.CreateThumbnail(image, 100);
-                            var rotation = ImageHelper.ReadRotation(image);
-
-                            StagedItems.Add(newStagedItem = new StagedItem(MediaType.Image)
-                            {
-                                FilePath = filePath,
-                                Status = MediaItemStatus.Staged,
-                                DateTaken = dateTaken,
-                                DateAdded = DateTime.Now,
-                                Thumbnail = thumbnail,
-                                Rotation = rotation
-                            });
+                            newStagedItem.DateTaken = ImageHelper.ReadCreationDate(image);
+                            newStagedItem.Thumbnail = ImageHelper.CreateThumbnail(image, 100);
+                            newStagedItem.Rotation = ImageHelper.ReadRotation(image);
                         }
                     }
-                    else if (_supportedVideoExtensions.Contains(extension))
+                    else // video
                     {
-                        var dateTaken = VideoHelper.ReadCreationDate(filePath);
-                        var thumbnail = await VideoHelper.CreateThumbnail(filePath, 100);
-                        var rotation = VideoHelper.ReadRotation(filePath);
-
-                        StagedItems.Add(newStagedItem = new StagedItem(MediaType.Video)
-                        {
-                            FilePath = filePath,
-                            Status = MediaItemStatus.Staged,
-                            DateTaken = dateTaken,
-                            DateAdded = DateTime.Now,
-                            Thumbnail = thumbnail,
-                            Rotation = rotation
-                        });
+                        newStagedItem.DateTaken = VideoHelper.ReadCreationDate(filePath);
+                        newStagedItem.Thumbnail = await VideoHelper.CreateThumbnail(filePath, 100);
+                        newStagedItem.Rotation = VideoHelper.ReadRotation(filePath);
                     }
+                    newStagedItem.DateAdded = DateTime.Now;
+                    newStagedItem.Status = MediaItemStatus.Staged;
                 }
                 catch (Exception e)
                 {

@@ -8,24 +8,81 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:MediaItem}">
-    <UserControl.Resources>
-        <converters:MediaItemStatusVisibilityConverter x:Key="ShowIfError" MatchStatus="Error" MatchVisibility="Visible" NoMatchVisibility="Collapsed" />
-    </UserControl.Resources>
-    <Grid>
+  <UserControl.Resources>
+    <converters:MediaItemStatusVisibilityConverter x:Key="ShowIfError" MatchStatus="Error" MatchVisibility="Visible" NoMatchVisibility="Collapsed" />
+    <converters:MediaItemStatusVisibilityConverter x:Key="HideIfError" MatchStatus="Error" MatchVisibility="Collapsed" NoMatchVisibility="Visible" />
+    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="Foreground" Value="{StaticResource C3}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Margin" Value="5,5,5,0"/>
+    </Style>
+  </UserControl.Resources>
+  <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="*"/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
     <Image Grid.Row="0" Width="100" Height="100" Source="{Binding Thumbnail, TargetNullValue={x:Null}}" >
-        <Image.LayoutTransform>
-            <RotateTransform Angle="{Binding Rotation}"/>
-        </Image.LayoutTransform>
+      <Image.LayoutTransform>
+        <RotateTransform Angle="{Binding Rotation}"/>
+      </Image.LayoutTransform>
     </Image>
-    <Image Grid.Row="0" Stretch="UniformToFill" Source="/Resources/Images/film-strip.png" Height="100" Width="100" Visibility="{Binding MediaType, Converter={StaticResource ShowIfVideo}}"/>
-    <Image Grid.Row="0" Stretch="None" Source="/Resources/Icons/ic_brokenimage.png" Visibility="{Binding Status, Converter={StaticResource ShowIfError}}" />
+    <Border Grid.Row="0" Background="Black">
+      <Border.Style>
+        <Style TargetType="Border">
+          <Setter Property="Opacity" Value="0.3"/>
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}">
+              <DataTrigger.Value>
+                <local:MediaItemStatus>Staged</local:MediaItemStatus>
+              </DataTrigger.Value>
+              <Setter Property="Opacity" Value="0"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}">
+              <DataTrigger.Value>
+                <local:MediaItemStatus>Ok</local:MediaItemStatus>
+              </DataTrigger.Value>
+              <Setter Property="Opacity" Value="0"/>
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </Border.Style>
+    </Border>
+    <Image Grid.Row="0" Stretch="None">
+      <Image.Style>
+        <Style TargetType="Image">
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}">
+              <DataTrigger.Value>
+                <local:MediaItemStatus>Saved</local:MediaItemStatus>
+              </DataTrigger.Value>
+              <Setter Property="Source" Value="/Resources/Icons/ic_statusok.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}">
+              <DataTrigger.Value>
+                <local:MediaItemStatus>Error</local:MediaItemStatus>
+              </DataTrigger.Value>
+              <Setter Property="Source" Value="/resources/Icons/ic_brokenimage.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}">
+              <DataTrigger.Value>
+                <local:MediaItemStatus>StagedDuplicate</local:MediaItemStatus>
+              </DataTrigger.Value>
+              <Setter Property="Source" Value="/resources/Icons/ic_statusduplicate.png"/>
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </Image.Style>
+    </Image>
+    <Image Grid.Row="0" Stretch="UniformToFill" Source="/Resources/Images/film-strip.png" Height="100" Width="100" 
+           Visibility="{Binding MediaType, Converter={StaticResource ShowIfVideo}}"/>
 
-    <TextBlock Grid.Row="1" Text="{Binding DateTaken, StringFormat=dd MMM yyyy}" Foreground="{StaticResource C3}" FontSize="11" Margin="5,5,5,0" HorizontalAlignment="Left"/>
-    <TextBlock Grid.Row="1" Text="{Binding DateTaken, StringFormat=HH:mm}" Foreground="{StaticResource C3}" FontSize="11" Margin="5,5,5,0" HorizontalAlignment="Right"/>
+    <Grid Grid.Row="1" Visibility="{Binding Status, Converter={StaticResource HideIfError}}">
+      <TextBlock Text="{Binding DateTaken, StringFormat=dd MMM yyyy}" HorizontalAlignment="Left"/>
+      <TextBlock Text="{Binding DateTaken, StringFormat=HH:mm}" HorizontalAlignment="Right"/>
+    </Grid>
+    <TextBlock Grid.Row="1" Text="{Binding ContentFileName}" Visibility="{Binding Status, Converter={StaticResource ShowIfError}}" HorizontalAlignment="Center" />
+
   </Grid>
 </UserControl>
 
