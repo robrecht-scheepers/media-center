@@ -34,6 +34,7 @@ namespace MediaCenter.Media
         private CancellationTokenSource _saveCancellationTokenSource;
         private RelayCommand _toggleFavoriteCommand;
         private RelayCommand _togglePrivateCommand;
+        private MediaItem _singleItem;
 
         public EditMediaInfoViewModel(IRepository repository, ShortcutService shortcutService, IStatusService statusService, bool saveChangesToRepository, bool readOnly = false)
         {
@@ -59,6 +60,7 @@ namespace MediaCenter.Media
             HasMultipleItems = (items.Count > 1);
             IsEmpty = !items.Any();
             ItemCount = items.Count;
+            SingleItem = (HasMultipleItems || IsEmpty) ? null : _items.First();
 
             _initInProgress = true;
             InitializeFavorite();
@@ -186,6 +188,12 @@ namespace MediaCenter.Media
         {
             get => _isEmpty;
             set => SetValue(ref _isEmpty, value);
+        }
+
+        public MediaItem SingleItem
+        {
+            get => _singleItem;
+            set => SetValue(ref _singleItem, value);
         }
 
         public bool? Favorite

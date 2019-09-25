@@ -124,15 +124,15 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{Binding DateTaken, StringFormat='dd MMM yyyy, HH:mm:ss'}" VerticalAlignment="Center" 
-                               Visibility="{Binding ElementName=editToggleButton, Path=IsChecked, Converter={StaticResource CollapseWhenTrueConverter}}" />
+                               Visibility="{Binding ElementName=EditToggleButton, Path=IsChecked, Converter={StaticResource CollapseWhenTrueConverter}}" />
                     <DatePicker Grid.Column="0" SelectedDate="{Binding DateTaken, Mode=TwoWay}" SelectedDateFormat="Short" VerticalAlignment="Center"  
-                                Visibility="{Binding ElementName=editToggleButton, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" />
-                    <ctrl:SingleImageToggleButton Grid.Column="1" x:Name="editToggleButton" Image="/Resources/Icons/ic_edit.png" Height="25" Width="25" Padding="0" Margin="5,0"  />
+                                Visibility="{Binding ElementName=EditToggleButton, Path=IsChecked, Converter={StaticResource CollapseWhenFalseConverter}}" />
+                    <ctrl:SingleImageToggleButton Grid.Column="1" x:Name="EditToggleButton" Image="/Resources/Icons/ic_edit.png" Height="25" Width="25" Padding="0" Margin="5,0"  />
                 </Grid>
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Added: " VerticalAlignment="Center" Margin="{StaticResource CommonMargin}" />
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DateAdded, StringFormat='dd MMM yyyy, HH:mm:ss'}" VerticalAlignment="Center" />
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Id: " VerticalAlignment="Center" />
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Id}" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="File: " VerticalAlignment="Center" />
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SingleItem.ContentFileName}" VerticalAlignment="Center" />
             </Grid>
 
             <Border Grid.Row="4" BorderThickness="0,0,0,1" BorderBrush="{StaticResource C1}" Margin="5,0"/>

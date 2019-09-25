@@ -61,7 +61,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <local:StagedItemView DataContext="{Binding}"/>
+                    <media:ThumbnailView DataContext="{Binding}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ListBox>

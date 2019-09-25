@@ -82,7 +82,7 @@
       <TextBlock Text="{Binding DateTaken, StringFormat=HH:mm}" HorizontalAlignment="Right"/>
     </Grid>
     <TextBlock Grid.Row="1" Text="{Binding ContentFileName}" Visibility="{Binding Status, Converter={StaticResource ShowIfError}}" 
-               HorizontalAlignment="Center" Margin="-2,5,-2,0" />
+               HorizontalAlignment="Center" MaxWidth="100" Margin="0" />
 
   </Grid>
 </UserControl>
