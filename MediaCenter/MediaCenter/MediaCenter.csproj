@@ -167,6 +167,7 @@
       <DependentUpon>CropImage.xaml</DependentUpon>
     </Compile>
     <Compile Include="WPF\Controls\SingleImageToggleButton.cs" />
+    <Compile Include="WPF\Converters\MediaItemStatusVisibilityConverter.cs" />
     <Compile Include="WPF\Converters\MediaTypeVisibilityConverter.cs" />
     <Compile Include="Repository\Database.cs" />
     <Compile Include="Repository\DbRepository.cs" />

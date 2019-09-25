@@ -154,9 +154,6 @@ namespace MediaCenter.Sessions.Staging
             var newItemsList = newItems.ToList();
             var total = newItemsList.Count();
             var cnt = 1;
-            var loaded = 0;
-
-            var errors = new StringBuilder();
 
             StatusService.StartProgress();
             StatusService.PostStatusMessage($"loading {total} media files", true);
@@ -168,23 +165,36 @@ namespace MediaCenter.Sessions.Staging
                     continue;
                 var extension = Path.GetExtension(filePath).ToLower();
                 
+                StagedItem newStagedItem;
+                if (_supportedImageExtensions.Contains(extension))
+                {
+                    newStagedItem = new StagedItem(MediaType.Image);
+                }
+                else if (_supportedVideoExtensions.Contains(extension))
+                {
+                    newStagedItem = new StagedItem(MediaType.Video);
+                }
+                else
+                {
+                    continue;
+                }
+
                 try
                 {
-                    StagedItem newStagedItem = null;
-                    if (_supportedImageExtensions.Contains(extension))
+                    if (newStagedItem.MediaType == MediaType.Image)
                     {
                         using (var image = await IOHelper.OpenImage(filePath))
                         {
                             if (image == null)
                             {
-                                errors.AppendLine($"Error with file { filePath}: failed to load image.");
+                                errors.AppendLine($"Error with file {filePath}: failed to load image.");
                                 continue;
                             }
 
                             var dateTaken = ImageHelper.ReadCreationDate(image);
                             var thumbnail = ImageHelper.CreateThumbnail(image, 100);
                             var rotation = ImageHelper.ReadRotation(image);
-                            
+
                             StagedItems.Add(newStagedItem = new StagedItem(MediaType.Image)
                             {
                                 FilePath = filePath,
@@ -212,21 +222,19 @@ namespace MediaCenter.Sessions.Staging
                             Rotation = rotation
                         });
                     }
-
-                    if (newStagedItem != null && await Repository.IsDuplicate(newStagedItem))
-                        newStagedItem.Status = MediaItemStatus.StagedDuplicate;
-                    loaded++;
                 }
                 catch (Exception e)
                 {
-                    errors.AppendLine($"Error with file {filePath}: {e.Message}");
+                    newStagedItem.Status = MediaItemStatus.Error;
+                    newStagedItem.StatusMessage = e.Message;
+                    continue;
                 }
+
+                if (await Repository.IsDuplicate(newStagedItem))
+                        newStagedItem.Status = MediaItemStatus.StagedDuplicate;
             }
             StatusService.EndProgress();
-            StatusService.PostStatusMessage($"loaded {loaded} media files");
-
-            if (errors.Length > 0)
-                WindowService.ShowMessage(errors.ToString(), "Fehler");
+            StatusService.ClearStatusMessage();
         }
 
         private void ClearSavedItems()
