@@ -27,7 +27,7 @@
         <RotateTransform Angle="{Binding Rotation}"/>
       </Image.LayoutTransform>
     </Image>
-    <Border Grid.Row="0" Background="Black">
+    <Border Grid.Row="0" Background="Black" Width="100" Height="100" VerticalAlignment="Center">
       <Border.Style>
         <Style TargetType="Border">
           <Setter Property="Opacity" Value="0.3"/>
@@ -81,7 +81,8 @@
       <TextBlock Text="{Binding DateTaken, StringFormat=dd MMM yyyy}" HorizontalAlignment="Left"/>
       <TextBlock Text="{Binding DateTaken, StringFormat=HH:mm}" HorizontalAlignment="Right"/>
     </Grid>
-    <TextBlock Grid.Row="1" Text="{Binding ContentFileName}" Visibility="{Binding Status, Converter={StaticResource ShowIfError}}" HorizontalAlignment="Center" />
+    <TextBlock Grid.Row="1" Text="{Binding ContentFileName}" Visibility="{Binding Status, Converter={StaticResource ShowIfError}}" 
+               HorizontalAlignment="Center" Margin="-2,5,-2,0" />
 
   </Grid>
 </UserControl>
