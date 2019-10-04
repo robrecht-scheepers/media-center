@@ -47,7 +47,7 @@
                                       Visibility="{Binding SelectedViewMode, Converter={StaticResource ShowIfViewModeDetailConverter}}"/>
             </StackPanel>
             <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Bottom">
-                    <controls:ImageButton Command="{Binding StartSlideShowCommand}" ImageSource="/Resources/Icons/ic_slideshow.png" Margin="5" ToolTip="Start slide show" />
+                    <!--<controls:ImageButton Command="{Binding StartSlideShowCommand}" ImageSource="/Resources/Icons/ic_slideshow.png" Margin="5" ToolTip="Start slide show" />-->
                     <controls:ImageButton Command="{Binding SaveCurrentSelectionToFileCommand}" ImageSource="/Resources/Icons/ic_download.png" Margin="5" ToolTip="Download selected items" />
                     <controls:ImageButton Command="{Binding DeleteCurrentSelectionCommand}" ImageSource="/Resources/Icons/ic_delete.png" Margin="5" ToolTip="Delete selected items" 
                                           Visibility="{Binding ReadOnly, Converter={StaticResource CollapseWhenTrueConverter}}" />
